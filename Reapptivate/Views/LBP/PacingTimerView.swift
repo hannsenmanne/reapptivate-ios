@@ -1,0 +1,418 @@
+import SwiftUI
+import AVFoundation
+
+struct PacingTimerView: View {
+    @Bindable var viewModel: LbpEnhancementsViewModel
+    @Environment(\.scenePhase) private var scenePhase
+
+    enum TimerState {
+        case idle, active, paused, onBreak, completed
+    }
+
+    @State private var timerState: TimerState = .idle
+    @State private var selectedActivityKey: String?
+    @State private var elapsedSeconds: Int = 0
+    @State private var breakSeconds: Int = 0
+    @State private var timer: Timer?
+    @State private var soundPlayed80 = false
+    @State private var soundPlayed100 = false
+    @State private var audioPlayer: AVAudioPlayer?
+
+    var selectedActivity: TargetActivity? {
+        viewModel.pacingPlan?.targetActivities.first { $0.key == selectedActivityKey }
+    }
+
+    var quotaSeconds: Int {
+        (selectedActivity?.quota ?? 0) * 60
+    }
+
+    var progress: Double {
+        guard quotaSeconds > 0 else { return 0 }
+        return min(1.0, Double(elapsedSeconds) / Double(quotaSeconds))
+    }
+
+    var isDer: Bool {
+        viewModel.subtype == .DER
+    }
+
+    var body: some View {
+        VStack(spacing: 16) {
+            // Header
+            HStack(spacing: 10) {
+                Image(systemName: "clock.fill")
+                    .font(.title3)
+                    .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
+                Text("Aktivitats-Timer")
+                    .font(.headline)
+                    .foregroundStyle(.textPrimary)
+                Spacer()
+            }
+
+            switch timerState {
+            case .idle:
+                idleView
+            case .active, .paused:
+                activeView
+            case .onBreak:
+                breakView
+            case .completed:
+                completedView
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background {
+                timer?.invalidate()
+            }
+        }
+    }
+
+    // MARK: - Idle View
+
+    private var idleView: some View {
+        VStack(spacing: 16) {
+            if let activities = viewModel.pacingPlan?.targetActivities {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Aktivitat auswahlen")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.textPrimary)
+
+                    ForEach(activities) { activity in
+                        Button {
+                            selectedActivityKey = activity.key
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: selectedActivityKey == activity.key ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(selectedActivityKey == activity.key ? .accent : .textSecondary)
+                                Text(activity.label)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.textPrimary)
+                                Spacer()
+                                if let quota = activity.quota {
+                                    Text("Ziel: \(quota) Min")
+                                        .font(.caption)
+                                        .foregroundStyle(.textSecondary)
+                                }
+                            }
+                            .padding(10)
+                            .background(selectedActivityKey == activity.key ? Color.accent.opacity(0.06) : .clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                if selectedActivityKey != nil {
+                    Button {
+                        startTimer()
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "play.fill")
+                            Text("Timer starten")
+                        }
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
+                        .background(Color.subtypeColor(for: viewModel.subtype))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(Color.cardBg)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Active View
+
+    private var activeView: some View {
+        VStack(spacing: 20) {
+            // Timer display
+            Text(timeString(elapsedSeconds))
+                .font(.system(size: 48, weight: .bold, design: .monospaced))
+                .foregroundStyle(.textPrimary)
+
+            // Progress bar
+            VStack(spacing: 4) {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.textSecondary.opacity(0.15))
+                            .frame(height: 12)
+
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(progressColor)
+                            .frame(width: geo.size.width * progress, height: 12)
+                    }
+                }
+                .frame(height: 12)
+
+                HStack {
+                    Text(selectedActivity?.label ?? "")
+                        .font(.caption)
+                        .foregroundStyle(.textSecondary)
+                    Spacer()
+                    if let quota = selectedActivity?.quota {
+                        Text("Ziel: \(quota) Min")
+                            .font(.caption)
+                            .foregroundStyle(.textSecondary)
+                    }
+                }
+            }
+
+            // Warning at 80%
+            if progress >= 0.8 && progress < 1.0 {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.painAmber)
+                    Text("Fast fertig! Bereiten Sie sich auf eine Pause vor.")
+                        .font(.caption)
+                        .foregroundStyle(.textPrimary)
+                }
+                .padding(12)
+                .background(Color.painAmber.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+
+            // Controls
+            HStack(spacing: 16) {
+                Button {
+                    if timerState == .paused {
+                        resumeTimer()
+                    } else {
+                        pauseTimer()
+                    }
+                } label: {
+                    Image(systemName: timerState == .paused ? "play.fill" : "pause.fill")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .frame(width: 56, height: 56)
+                        .background(Color.textSecondary)
+                        .clipShape(Circle())
+                }
+
+                Button {
+                    completeTimer()
+                } label: {
+                    Text("Fertig")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(Color.painGreen)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+
+            // Pacing tips
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Pacing-Tipps")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.textSecondary)
+                Text("Halten Sie sich an Ihre Quota. Es ist besser, etwas unter dem Ziel zu bleiben als daruber.")
+                    .font(.caption)
+                    .foregroundStyle(.textSecondary)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.farBlue.opacity(0.06))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .padding(16)
+        .background(Color.cardBg)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Break View
+
+    private var breakView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "cup.and.saucer.fill")
+                .font(.system(size: 36))
+                .foregroundStyle(.painAmber)
+
+            Text("Pausenzeit!")
+                .font(.title2.bold())
+                .foregroundStyle(.textPrimary)
+
+            Text(timeString(breakSeconds))
+                .font(.system(size: 32, weight: .bold, design: .monospaced))
+                .foregroundStyle(.painAmber)
+
+            if let pauseMin = viewModel.pacingPlan?.rules.mandatoryPauseMinutes {
+                Text("Mindestens \(pauseMin) Minuten Pause einhalten")
+                    .font(.caption)
+                    .foregroundStyle(.textSecondary)
+            }
+
+            Button {
+                endBreak()
+            } label: {
+                Text("Pause beenden")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Color.painAmber)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+        .padding(24)
+        .background(
+            LinearGradient(
+                colors: [Color.painAmber.opacity(0.1), Color.painAmber.opacity(0.03)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Completed View
+
+    private var completedView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 48))
+                .foregroundStyle(.painGreen)
+
+            Text("Abgeschlossen!")
+                .font(.title2.bold())
+                .foregroundStyle(.textPrimary)
+
+            Text("Gesamtzeit: \(timeString(elapsedSeconds))")
+                .font(.headline.monospacedDigit())
+                .foregroundStyle(.textSecondary)
+
+            Button {
+                resetTimer()
+            } label: {
+                Text("Neuen Timer starten")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.accent)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 42)
+                    .background(Color.accent.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .padding(24)
+        .background(Color.painGreen.opacity(0.06))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Timer Logic
+
+    private var progressColor: Color {
+        if progress >= 1.0 { return .painRed }
+        if progress >= 0.8 { return .painAmber }
+        return .farBlue
+    }
+
+    private func startTimer() {
+        timerState = .active
+        elapsedSeconds = 0
+        soundPlayed80 = false
+        soundPlayed100 = false
+        setupAudioSession()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            Task { @MainActor in
+                tick()
+            }
+        }
+    }
+
+    private func tick() {
+        elapsedSeconds += 1
+
+        // Check 80% cue
+        if !soundPlayed80 && quotaSeconds > 0 && Double(elapsedSeconds) / Double(quotaSeconds) >= 0.8 {
+            soundPlayed80 = true
+            playKnockSound()
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }
+
+        // Check 100% cue
+        if !soundPlayed100 && quotaSeconds > 0 && elapsedSeconds >= quotaSeconds {
+            soundPlayed100 = true
+            playAlarmSound()
+            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+
+            // DER: mandatory break
+            if isDer {
+                startBreak()
+            }
+        }
+    }
+
+    private func pauseTimer() {
+        timerState = .paused
+        timer?.invalidate()
+    }
+
+    private func resumeTimer() {
+        timerState = .active
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            Task { @MainActor in
+                tick()
+            }
+        }
+    }
+
+    private func completeTimer() {
+        timer?.invalidate()
+        timerState = .completed
+    }
+
+    private func startBreak() {
+        timer?.invalidate()
+        timerState = .onBreak
+        breakSeconds = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            Task { @MainActor in
+                breakSeconds += 1
+            }
+        }
+    }
+
+    private func endBreak() {
+        timer?.invalidate()
+        timerState = .completed
+    }
+
+    private func resetTimer() {
+        timer?.invalidate()
+        timerState = .idle
+        elapsedSeconds = 0
+        breakSeconds = 0
+        soundPlayed80 = false
+        soundPlayed100 = false
+    }
+
+    // MARK: - Audio
+
+    private func setupAudioSession() {
+        try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        try? AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    private func playKnockSound() {
+        AudioServicesPlaySystemSound(1057) // Tock sound
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            AudioServicesPlaySystemSound(1057)
+        }
+    }
+
+    private func playAlarmSound() {
+        AudioServicesPlaySystemSound(1005) // Alert sound
+    }
+
+    // MARK: - Helpers
+
+    private func timeString(_ totalSeconds: Int) -> String {
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+}
