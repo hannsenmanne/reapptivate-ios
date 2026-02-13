@@ -35,6 +35,7 @@
 		254C27148296B183E2333412 /* neck-screening-config.json in Resources */ = {isa = PBXBuildFile; fileRef = 6BC31BABF9F1BF461A014C18 /* neck-screening-config.json */; };
 		2A4EE9227FE4F3E0E6E13FE9 /* AemResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE70B2D8CE6156D3A9CC001 /* AemResultView.swift */; };
 		2B69E6C5029896BDDDADBC39 /* LbpEnhancementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDB43D091607E9E4B7FD550 /* LbpEnhancementsView.swift */; };
+		2C70D791CA226D7B2F9B1D91 /* EdukationTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F26BAC5BAEB3F1E77BF7E3E /* EdukationTab.swift */; };
 		2D8F2B7B94F8BBC9970724A7 /* UserSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93B5E451FBD2CDC3466223F /* UserSchedule.swift */; };
 		31482E11CA5A8733030FFFAC /* PhaseTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00C94651470E6C0D45A2DE3 /* PhaseTimelineView.swift */; };
 		3372EB701CE6FB7EBEAA6186 /* QuotaProgressionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620074AAA30E749DA22389A1 /* QuotaProgressionView.swift */; };
@@ -175,6 +176,7 @@
 		5359A7494A03CCE028643ABB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		54D5137756963DE2055E5F08 /* ProgressTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTab.swift; sourceTree = "<group>"; };
 		58D41F3BB96503BEB113F742 /* EducationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EducationCard.swift; sourceTree = "<group>"; };
+		5F26BAC5BAEB3F1E77BF7E3E /* EdukationTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdukationTab.swift; sourceTree = "<group>"; };
 		6015A204ED6BF51B4B7D175B /* ExerciseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseProtocol.swift; sourceTree = "<group>"; };
 		620074AAA30E749DA22389A1 /* QuotaProgressionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotaProgressionView.swift; sourceTree = "<group>"; };
 		6BC31BABF9F1BF461A014C18 /* neck-screening-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "neck-screening-config.json"; sourceTree = "<group>"; };
@@ -609,6 +611,7 @@
 			isa = PBXGroup;
 			children = (
 				E006FE9330E514019A494DBA /* DashboardView.swift */,
+				5F26BAC5BAEB3F1E77BF7E3E /* EdukationTab.swift */,
 				352F1721F583F8738A887D2D /* InsightsTab.swift */,
 				98C609B2EEEA0B25CCA73910 /* OverviewTab.swift */,
 				817F8B8AF39CB1D6870D0EF8 /* ProgramTab.swift */,
@@ -791,6 +794,7 @@
 				68CEAB05F307B746A6DD1AFA /* Date+Helpers.swift in Sources */,
 				B8715E6D4F92CEC783E3B446 /* DateFormatters.swift in Sources */,
 				FD63CD68C730DB732303FF4C /* EducationCard.swift in Sources */,
+				2C70D791CA226D7B2F9B1D91 /* EdukationTab.swift in Sources */,
 				7712C03BA297293CC28B84C9 /* EmptyStateView.swift in Sources */,
 				73F3E0102E1260CAF2EDFFBB /* ErrorView.swift in Sources */,
 				C311695674EFFF5CD69A7D9F /* ExerciseCardView.swift in Sources */,

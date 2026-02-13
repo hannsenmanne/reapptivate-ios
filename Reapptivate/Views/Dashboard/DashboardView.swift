@@ -35,6 +35,8 @@ struct DashboardView: View {
                             ProgramTab(exerciseVM: exerciseVM, onExerciseLogged: {
                                 Task { await viewModel?.refresh() }
                             })
+                        case .edukation:
+                            EdukationTab()
                         case .progress:
                             ProgressTab(
                                 viewModel: viewModel,
@@ -136,7 +138,7 @@ struct DashboardTabBar: View {
     let showInsights: Bool
 
     var tabs: [DashboardTab] {
-        var result: [DashboardTab] = [.overview, .program, .progress]
+        var result: [DashboardTab] = [.overview, .program, .edukation, .progress]
         if showInsights {
             result.append(.insights)
         }

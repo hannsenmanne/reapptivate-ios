@@ -39,9 +39,6 @@ struct LbpEnhancementsView: View {
             case .AR:
                 arContent(vm)
             }
-
-            // Micro-modules (all subtypes)
-            MicroModulesList(viewModel: vm)
         }
         .overlay {
             // Success / error toasts

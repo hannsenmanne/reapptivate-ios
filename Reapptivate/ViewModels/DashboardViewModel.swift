@@ -3,6 +3,7 @@ import SwiftUI
 enum DashboardTab: String, CaseIterable {
     case overview = "Ubersicht"
     case program = "Programm"
+    case edukation = "Edukation"
     case progress = "Fortschritt"
     case insights = "Insights"
 }

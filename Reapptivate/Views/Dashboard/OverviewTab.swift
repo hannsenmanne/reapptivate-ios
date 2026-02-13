@@ -37,12 +37,6 @@ struct OverviewTab: View {
                 )
             }
 
-            // Condition-specific modules
-            if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
-                LbpMicroModulesSection(subtype: subtype)
-            } else if appState.isNeck, let severity = appState.currentUser?.ndiSeverity {
-                NeckMicroModulesView(severity: severity)
-            }
         }
         .padding(.bottom, 32)
     }
@@ -83,34 +77,6 @@ struct ExerciseLinkCard: View {
             .cardStyle()
         }
         .buttonStyle(.plain)
-    }
-}
-
-// MARK: - LBP Micro Modules (Overview)
-
-struct LbpMicroModulesSection: View {
-    @Environment(APIClient.self) private var apiClient
-    let subtype: AemSubtype
-
-    @State private var viewModel: LbpEnhancementsViewModel?
-
-    var body: some View {
-        Group {
-            if let vm = viewModel {
-                MicroModulesList(viewModel: vm)
-            } else {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-            }
-        }
-        .task {
-            if viewModel == nil {
-                let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
-                viewModel = vm
-                await vm.loadMicroModules()
-            }
-        }
     }
 }
 
