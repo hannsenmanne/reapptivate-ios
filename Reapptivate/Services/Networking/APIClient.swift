@@ -7,7 +7,7 @@ final class APIClient {
     private let tokenManager: TokenManager
     private let decoder: JSONDecoder
 
-    var onTokenExpired: (() -> Void)?
+    var onTokenExpired: (@MainActor () -> Void)?
     private var hasTriggeredLogout = false
 
     init(

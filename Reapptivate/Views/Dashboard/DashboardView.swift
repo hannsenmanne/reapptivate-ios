@@ -109,7 +109,7 @@ struct DashboardView: View {
     private func loadAll() async {
         // Dashboard VM
         if viewModel == nil {
-            viewModel = DashboardViewModel(apiClient: apiClient)
+            viewModel = DashboardViewModel(apiClient: apiClient, appState: appState)
         }
         await viewModel?.loadDashboard()
 

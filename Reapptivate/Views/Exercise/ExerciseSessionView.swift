@@ -167,10 +167,12 @@ struct ExerciseSessionView: View {
         isHolding = true
         timerSeconds = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            timerSeconds += 1
-            if timerSeconds >= holdTime {
-                stopTimer()
-                completeSet()
+            Task { @MainActor in
+                timerSeconds += 1
+                if timerSeconds >= holdTime {
+                    stopTimer()
+                    completeSet()
+                }
             }
         }
     }
@@ -179,10 +181,12 @@ struct ExerciseSessionView: View {
         isResting = true
         timerSeconds = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            timerSeconds += 1
-            if timerSeconds >= restTime {
-                stopTimer()
-                isResting = false
+            Task { @MainActor in
+                timerSeconds += 1
+                if timerSeconds >= restTime {
+                    stopTimer()
+                    isResting = false
+                }
             }
         }
     }

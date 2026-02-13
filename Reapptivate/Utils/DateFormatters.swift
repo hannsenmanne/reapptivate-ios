@@ -13,7 +13,7 @@ enum DateFormatters: Sendable {
         return formatter
     }()
 
-    static let germanDate: DateFormatter = {
+    nonisolated(unsafe) static let germanDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
         formatter.dateStyle = .medium
@@ -21,7 +21,7 @@ enum DateFormatters: Sendable {
         return formatter
     }()
 
-    static let germanDateTime: DateFormatter = {
+    nonisolated(unsafe) static let germanDateTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
         formatter.dateStyle = .medium

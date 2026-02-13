@@ -109,7 +109,7 @@ struct TrainingScheduleCard: View {
                 // Remove the first selected day (in display order) to make room
                 let displayOrder = days.map(\.id)
                 if let oldest = selectedDays
-                    .sorted(by: { displayOrder.firstIndex(of: $0)! < displayOrder.firstIndex(of: $1)! })
+                    .sorted(by: { (displayOrder.firstIndex(of: $0) ?? 0) < (displayOrder.firstIndex(of: $1) ?? 0) })
                     .first {
                     selectedDays.remove(oldest)
                 }

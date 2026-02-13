@@ -262,11 +262,13 @@ enum APIEndpoints {
 
 private extension APIEndpoints {
     static func get(_ path: String, query: [String: String] = [:]) -> URLRequest {
-        var components = URLComponents(url: baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
+        guard var components = URLComponents(url: baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false) else {
+            return URLRequest(url: baseURL)
+        }
         if !query.isEmpty {
             components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value) }
         }
-        var request = URLRequest(url: components.url!)
+        var request = URLRequest(url: components.url ?? baseURL)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 30

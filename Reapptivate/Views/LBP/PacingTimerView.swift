@@ -61,6 +61,9 @@ struct PacingTimerView: View {
                 completedView
             }
         }
+        .onDisappear {
+            resetTimer()
+        }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .background:

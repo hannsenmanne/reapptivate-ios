@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(AppState.self) private var appState
+    @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
 
     @State private var notificationService = NotificationService.shared
@@ -111,6 +112,7 @@ struct SettingsView: View {
                 Section {
                     Button(role: .destructive) {
                         TokenManager.shared.clearAll()
+                        apiClient.resetLogoutGuard()
                         appState.handleLogout()
                         dismiss()
                     } label: {

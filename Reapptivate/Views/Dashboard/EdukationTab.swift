@@ -8,8 +8,14 @@ struct EdukationTab: View {
         VStack(spacing: 20) {
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 LbpMicroModulesSection(subtype: subtype)
-            } else if appState.isNeck, let severity = appState.currentUser?.ndiSeverity {
-                NeckMicroModulesView(severity: severity)
+            } else if appState.isNeck {
+                if let severity = appState.currentUser?.ndiSeverity {
+                    NeckMicroModulesView(severity: severity)
+                } else {
+                    ProgressView("Nacken-Module laden...")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 32)
+                }
             } else if let user = appState.currentUser {
                 WissenAllCardsView(phase: user.currentPhase)
             }

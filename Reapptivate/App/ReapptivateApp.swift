@@ -63,10 +63,11 @@ struct RootView: View {
                 }
             }
 
-            let vm = AuthViewModel(apiClient: apiClient)
-            authViewModel = vm
+            if authViewModel == nil {
+                authViewModel = AuthViewModel(apiClient: apiClient)
+            }
             apiClient.resetLogoutGuard()
-            await vm.checkExistingAuth(appState: appState)
+            await authViewModel?.checkExistingAuth(appState: appState)
         }
         .onChange(of: networkMonitor.isConnected) { _, isConnected in
             if isConnected {

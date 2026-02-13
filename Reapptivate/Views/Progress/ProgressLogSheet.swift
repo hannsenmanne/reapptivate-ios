@@ -10,7 +10,6 @@ struct ProgressLogSheet: View {
     let showSymptomResponse: Bool
     let onSuccess: () -> Void
 
-    @State private var viewModel: ProgressViewModel?
     @State private var painLevel = 0
     @State private var setsCompleted: Int
     @State private var repsCompleted: Int

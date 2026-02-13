@@ -11,7 +11,6 @@ enum DashboardTab: String, CaseIterable {
 @Observable
 @MainActor
 final class DashboardViewModel {
-    var selectedTab: DashboardTab = .overview
     var phaseStatus: AdaptivePhaseStatus?
     var progressStats: ProgressStats?
     var completedToday: [ProgressEntry] = []
@@ -19,18 +18,11 @@ final class DashboardViewModel {
     var error: String?
 
     private let apiClient: APIClient
+    private weak var appState: AppState?
 
-    init(apiClient: APIClient) {
+    init(apiClient: APIClient, appState: AppState) {
         self.apiClient = apiClient
-    }
-
-    var availableTabs: [DashboardTab] {
-        DashboardTab.allCases.filter { tab in
-            if tab == .insights {
-                return false // LBP-only, checked at view level
-            }
-            return true
-        }
+        self.appState = appState
     }
 
     // MARK: - Data Loading
@@ -54,6 +46,19 @@ final class DashboardViewModel {
         let (phase, stats, today) = await (phaseResult, statsResult, todayResult)
 
         phaseStatus = phase?.phaseStatus
+        if let phaseData = phase?.phaseStatus {
+            appState?.currentUser?.adaptivePhase = phaseData.currentPhase
+        }
+
+        // Populate ndiSeverity for neck patients from screening result
+        if appState?.isNeck == true, appState?.currentUser?.ndiSeverity == nil {
+            let neckResult: NeckScreeningResponse? = await loadSafely { [apiClient] in
+                try await apiClient.request(APIEndpoints.neckResult())
+            }
+            if let result = neckResult?.screening {
+                appState?.currentUser?.ndiSeverity = NdiSeverityGrade.from(ndiScore: result.ndiScore)
+            }
+        }
         if let s = stats?.stats {
             progressStats = ProgressStats(
                 totalSessions: s.totalSessions,

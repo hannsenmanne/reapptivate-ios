@@ -48,7 +48,7 @@ final class EducationCardLoader: @unchecked Sendable {
         let phaseCards = cardsForPhase(phase, isLbp: isLbp)
         guard !phaseCards.isEmpty else { return nil }
 
-        let startOfYear = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: .now))!
+        let startOfYear = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: .now)) ?? .now
         let dayOfYear = Calendar.current.dateComponents([.day], from: startOfYear, to: .now).day ?? 0
         return phaseCards[dayOfYear % phaseCards.count]
     }
