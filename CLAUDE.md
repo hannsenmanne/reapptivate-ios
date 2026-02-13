@@ -18,15 +18,25 @@ xcodegen generate
 xcodebuild -project Reapptivate.xcodeproj -scheme Reapptivate \
   -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 
-# Install & launch on simulator
-xcrun simctl install "iPhone 17 Pro" build/Build/Products/Debug-iphonesimulator/Reapptivate.app
+# Install & launch on simulator (build output goes to DerivedData)
+xcrun simctl install "iPhone 17 Pro" \
+  ~/Library/Developer/Xcode/DerivedData/Reapptivate-*/Build/Products/Debug-iphonesimulator/Reapptivate.app
 xcrun simctl launch "iPhone 17 Pro" com.reapptivate.ios
 
 # Launch with dev token injection (DEBUG builds only)
+# Token MUST come from localhost:3000 (local JWT secret differs from production)
 xcrun simctl launch "iPhone 17 Pro" com.reapptivate.ios --dev-token "$JWT" --dev-user-id "$USER_ID"
+
+# Get a local dev token
+curl -s -X POST "http://localhost:3000/api/onboarding/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"FARtest@test.com","password":"Test1234!"}'
+
+# Switch simulator dark/light mode
+xcrun simctl ui "iPhone 17 Pro" appearance dark   # or light
 ```
 
-Backend must be running at `localhost:3000` for DEBUG builds. Start it from the Physio-App repo: `npm run dev`
+Backend must be running at `localhost:3000` for DEBUG builds. Start it from the Physio-App repo: `cd ../Physio-App && npm run dev`
 
 **No test infrastructure exists.** `project.yml` has `testTargets: []` and there are no test files.
 
@@ -130,6 +140,7 @@ Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `ac
 - **`AnyCodable`** helper in `LbpTypes.swift` wraps dynamic JSON values (used for `ExposureLog.performedDose` which can be String, Int, Double, Bool, or nested).
 - **`UserProfile.id` is `String`**, not UUID.
 - **`@unchecked Sendable`** is used on `TokenManager`, `ProtocolLoader`, and `NetworkMonitor` for cross-actor access in Swift 6.0 strict concurrency mode.
+- **Dev token must come from local backend** — local and production JWT secrets differ, so a production token won't work with `localhost:3000` and vice versa.
 
 ## Domain Models (Models/Domain/)
 
@@ -146,16 +157,63 @@ Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `ac
 ## Design System
 
 ### Design Tokens (`DesignTokens` enum)
-Cards: 14px continuous corners, shadow (black 6%, radius 8, y: 2). Buttons: 12px corners, 50px height, spring scale(0.97). Inputs: 10px corners, 1px gray300 border. Badges: 8px corners, color.opacity(0.1) background.
+Cards: 14px continuous corners, adaptive shadow (black 6% light / white 4% dark, radius 8, y: 2). Buttons: 12px corners, 50px height, spring scale(0.97). Inputs: 10px corners, 1px gray300 border. Badges: 8px corners, color.opacity(0.1) background.
 
-### Colors (`Color+Theme.swift`)
-Background: `#F8F8FA`, Cards: white, Text: `#1A1A1A`/`#6B7280`, Accent: `#10B981` (emerald). ShapeStyle extensions enable `.foregroundStyle(.textPrimary)` syntax. Helpers: `Color.painColor(for:)`, `Color.subtypeColor(for:)`, `Color.severityColor(for:)`.
+### Colors (`Color+Theme.swift`) — Dark Mode Adaptive
+All semantic colors use `Color(UIColor { traitCollection in ... })` via a private `adaptive(light:dark:)` helper:
+
+| Token | Light | Dark |
+|-------|-------|------|
+| appBg | F8F8FA | 121214 |
+| cardBg | FFFFFF | 1C1C1E |
+| textPrimary | 1A1A1A | F2F2F7 |
+| textSecondary | 6B7280 | 8E8E93 |
+| accent | 10B981 | 34D399 |
+
+Domain colors (painGreen, painAmber, painRed, farBlue, etc.) are vivid enough for both modes and don't adapt. ShapeStyle extensions enable `.foregroundStyle(.textPrimary)` syntax. Helpers: `Color.painColor(for:)`, `Color.subtypeColor(for:)`, `Color.severityColor(for:)`.
+
+### Appearance Mode
+`AppearanceMode` enum (system/light/dark) persisted via `@AppStorage("appearanceMode")`. Applied on root `WindowGroup` with `.preferredColorScheme()`. User-facing picker in SettingsView under "Darstellung" section.
 
 ### Typography (`Font+Theme.swift`)
 Outfit font family (6 weights bundled as TTF). Semantic: `.appLargeTitle` (34), `.appTitle` (28), `.appTitle2` (22), `.appHeadline` (17 semibold), `.appBody` (17), `.appCaption` (12). Custom: `Font.outfit(.semibold, size: 18)`.
 
 ### View Modifiers (`ViewModifiers+Design.swift`)
-`.cardStyle()`, `.accentCardStyle(color:)` (4px left accent via `UnevenRoundedRectangle`), `.inputFieldStyle()`, `.badgeStyle(color:)`, `.infoBoxStyle(color:)`. Button styles: `.primary` (dark), `.secondary` (border), `.accentFilled` (emerald).
+`.cardStyle()`, `.accentCardStyle(color:)` (4px left accent via `UnevenRoundedRectangle`), `.inputFieldStyle()`, `.badgeStyle(color:)`, `.infoBoxStyle(color:)`. Button styles: `.primary` (dark), `.secondary` (border, has disabled state with `.gray400`/`.opacity(0.6)`), `.accentFilled` (emerald).
+
+### Common Views
+- `InlineErrorView` — compact error banner with icon + message + retry button, used for recoverable API failures in neck views
+- `EmptyStateView` — icon + title + message for empty data states
+
+## UX Patterns
+
+### Haptic Feedback
+Uses SwiftUI `.sensoryFeedback()` modifier (iOS 17+) with boolean trigger pattern:
+```swift
+@State private var hapticTrigger = false
+.sensoryFeedback(.success, trigger: hapticTrigger)
+// then: hapticTrigger.toggle()
+```
+Applied to: tab selection (`.selection`), set completion (`.impact`), exercise/progress log submit (`.success`), fear hierarchy save, exposure step advance, activity/symptom selection (`.selection`), module marked read (`.success`).
+
+### Audio Cues
+`AudioService.shared` (`@Observable @MainActor` singleton) centralizes system sounds + haptics. Key methods: `playDoubleKnock()` (80% pacing cue), `playTripleBeep()` (100% pacing cue). Must call `activateSession()` before and `deactivateSession()` after timer use.
+
+### Accessibility
+- `@ScaledMetric` on icon container sizes (badges, rank circles, play/pause buttons)
+- `.accessibilityElement(children: .ignore)` + `.accessibilityAdjustableAction` on `PainSliderView` for VoiceOver
+- `.accessibilityAddTraits(.isSelected)` on tab bar, symptom picker, AEM Likert options
+- `.accessibilityHidden(true)` on decorative header icons
+- `.accessibilityLabel()` on icon-only buttons (settings gear, profile menu, move/delete)
+- Contextual loading labels: `ProgressView("Nacken-Module laden...")` instead of bare `ProgressView()`
+
+### Error Handling in Views
+Views that load data from API use a consistent pattern:
+```swift
+@State private var errorMessage: String?
+// In catch block: errorMessage = "Descriptive German message."
+// In body: if let error = errorMessage { InlineErrorView(message: error) { Task { await reload() } } }
+```
 
 ## Key Domain Concepts
 
