@@ -1,11 +1,11 @@
 import SwiftUI
 
 enum DashboardTab: String, CaseIterable {
-    case overview = "Ubersicht"
+    case overview = "Übersicht"
     case program = "Programm"
     case edukation = "Edukation"
     case progress = "Fortschritt"
-    case insights = "Insights"
+    case insights = "Analyse"
 }
 
 @Observable

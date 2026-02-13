@@ -32,7 +32,7 @@ struct CustomExerciseLogSheet: View {
                         Text(exercise.name)
                             .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
-                        Text("Therapeuten-Ubung")
+                        Text("Therapeuten-Übung")
                             .font(.appCaption)
                             .foregroundStyle(.blue)
                     }

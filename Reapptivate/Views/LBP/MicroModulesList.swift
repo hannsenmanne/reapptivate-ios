@@ -64,7 +64,7 @@ struct MicroModulesList: View {
             // Module cards
             if viewModel.microModules.isEmpty {
                 VStack(spacing: 8) {
-                    Text("Keine Module verfugbar")
+                    Text("Keine Module verfügbar")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }

@@ -41,7 +41,7 @@ struct AnalyticsDashboardView: View {
                     EmptyStateView(
                         icon: "chart.bar.xaxis",
                         title: "Noch keine Daten",
-                        message: "Analytics werden nach einigen Trainingseinheiten verfugbar."
+                        message: "Analytics werden nach einigen Trainingseinheiten verfügbar."
                     )
                 }
             }
@@ -60,7 +60,7 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.farBlue)
-                Text("30-Tage Ubersicht")
+                Text("30-Tage Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -185,13 +185,13 @@ struct AnalyticsDashboardView: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 MetricCard(
-                    title: "Uberschreitungsrate",
+                    title: "Überschreitungsrate",
                     value: "\(Int(analytics.breachRate))%",
                     color: analytics.breachRate <= 20 ? .painGreen : .painAmber
                 )
 
                 MetricCard(
-                    title: "Pausen-Adharenz",
+                    title: "Pausen-Adhärenz",
                     value: "\(Int(analytics.pauseAdherence))%",
                     color: analytics.pauseAdherence >= 80 ? .painGreen : .painAmber
                 )
@@ -219,7 +219,7 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.arGray)
-                Text("Ausgeglichene Ubersicht")
+                Text("Ausgeglichene Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -279,8 +279,8 @@ struct AnalyticsDashboardView: View {
     private func ruleDisplayName(_ ruleId: String) -> String {
         switch ruleId {
         case "FLARE_RULE": return "Schmerz-Schub"
-        case "LOW_ADHERENCE_RULE": return "Niedrige Adharenz"
-        case "OVERDOING_RULE_DER": return "Uberbelastung"
+        case "LOW_ADHERENCE_RULE": return "Niedrige Adhärenz"
+        case "OVERDOING_RULE_DER": return "Überbelastung"
         case "FEAR_STUCK_RULE": return "Vermeidung"
         default: return ruleId
         }

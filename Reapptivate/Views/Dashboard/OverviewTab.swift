@@ -60,10 +60,10 @@ struct ExerciseLinkCard: View {
                     }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Ubungsprogramm")
+                    Text("Übungsprogramm")
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
-                    Text("Ubungen anzeigen und protokollieren")
+                    Text("Übungen anzeigen und protokollieren")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }

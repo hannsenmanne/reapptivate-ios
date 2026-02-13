@@ -9,7 +9,7 @@ struct SymptomResponsePicker: View {
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
-            Text("Wie haben sich Ihre Symptome wahrend der Ubung verandert?")
+            Text("Wie haben sich Ihre Symptome während der Übung verändert?")
                 .font(.appCaption)
                 .foregroundStyle(.textSecondary)
 
@@ -18,7 +18,7 @@ struct SymptomResponsePicker: View {
                     response: .centralized,
                     isSelected: selection == .centralized,
                     icon: "arrow.up.to.line",
-                    description: "Symptome haben sich zentralisiert (naher zur Wirbelsaule)"
+                    description: "Symptome haben sich zentralisiert (näher zur Wirbelsäule)"
                 ) {
                     selection = .centralized
                 }
@@ -27,7 +27,7 @@ struct SymptomResponsePicker: View {
                     response: .unchanged,
                     isSelected: selection == .unchanged,
                     icon: "equal",
-                    description: "Symptome sind unverandert geblieben"
+                    description: "Symptome sind unverändert geblieben"
                 ) {
                     selection = .unchanged
                 }

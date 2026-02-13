@@ -10,7 +10,7 @@ struct ExerciseListView: View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack {
-                Text("Heutige Ubungen")
+                Text("Heutige Übungen")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 

@@ -59,8 +59,8 @@ struct OnboardingView: View {
                     }
 
                     // Confirm Password
-                    FormField(label: "Passwort bestatigen") {
-                        SecureField("Passwort bestatigen", text: $viewModel.onboardingPasswordConfirm)
+                    FormField(label: "Passwort bestätigen") {
+                        SecureField("Passwort bestätigen", text: $viewModel.onboardingPasswordConfirm)
                             .textFieldStyle(.roundedBorder)
                             .textContentType(.newPassword)
                             .focused($focusedField, equals: .confirm)
@@ -69,7 +69,7 @@ struct OnboardingView: View {
                     }
 
                     if !viewModel.onboardingPassword.isEmpty && !viewModel.onboardingPasswordConfirm.isEmpty && !viewModel.onboardingPasswordsMatch {
-                        Text("Passworter stimmen nicht uberein")
+                        Text("Passwörter stimmen nicht überein")
                             .font(.appCaption)
                             .foregroundStyle(.painRed)
                             .frame(maxWidth: .infinity, alignment: .leading)

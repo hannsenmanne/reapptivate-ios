@@ -78,7 +78,7 @@ struct WissenAllCardsView: View {
             }
 
             if cards.isEmpty {
-                Text("Keine Artikel fur diese Phase verfugbar")
+                Text("Keine Artikel für diese Phase verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)

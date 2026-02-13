@@ -62,7 +62,7 @@ final class AuthViewModel {
             case .unauthorized:
                 errorMessage = "E-Mail oder Passwort ist falsch."
             case .networkError:
-                errorMessage = "Keine Verbindung zum Server. Bitte uberprufen Sie Ihre Internetverbindung."
+                errorMessage = "Keine Verbindung zum Server. Bitte überprüfen Sie Ihre Internetverbindung."
             default:
                 errorMessage = error.localizedDescription
             }
@@ -166,7 +166,7 @@ final class AuthViewModel {
             return
         }
         guard onboardingPasswordsMatch else {
-            errorMessage = "Passworter stimmen nicht uberein."
+            errorMessage = "Passwörter stimmen nicht überein."
             return
         }
 

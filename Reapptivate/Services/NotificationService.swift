@@ -42,7 +42,7 @@ final class NotificationService {
 
         let content = UNMutableNotificationContent()
         content.title = "Training-Erinnerung"
-        content.body = "Zeit fur Ihre Ubungen! Starten Sie jetzt Ihr Training."
+        content.body = "Zeit für Ihre Übungen! Starten Sie jetzt Ihr Training."
         content.sound = .default
         content.categoryIdentifier = "TRAINING_REMINDER"
 

@@ -119,7 +119,7 @@ struct LbpEnhancementsView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "plus.circle.fill")
-                        Text("Aktivitat protokollieren")
+                        Text("Aktivität protokollieren")
                     }
                     .font(.appBodySemibold)
                     .foregroundStyle(.white)
@@ -185,7 +185,7 @@ struct LbpEnhancementsView: View {
                 Image(systemName: "chart.bar.fill")
                     .font(.appTitle3)
                     .foregroundStyle(.arGray)
-                Text("Adaptive Ubersicht")
+                Text("Adaptive Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()

@@ -118,7 +118,7 @@ struct ExerciseSessionView: View {
                             stopTimer()
                             isResting = false
                         } label: {
-                            Label("Pause uberspringen", systemImage: "forward.fill")
+                            Label("Pause überspringen", systemImage: "forward.fill")
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
                         }

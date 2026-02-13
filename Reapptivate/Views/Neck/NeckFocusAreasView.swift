@@ -21,7 +21,7 @@ struct NeckFocusAreasView: View {
                 ProgressView()
                     .padding(.vertical, 16)
             } else if focusAreas.isEmpty {
-                Text("Keine Schwerpunktbereiche verfugbar")
+                Text("Keine Schwerpunktbereiche verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)

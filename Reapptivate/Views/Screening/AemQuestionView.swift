@@ -10,9 +10,9 @@ struct AemQuestionView: View {
         "Trifft kaum zu",
         "Trifft etwas zu",
         "Trifft teilweise zu",
-        "Trifft uberwiegend zu",
+        "Trifft überwiegend zu",
         "Trifft stark zu",
-        "Trifft vollig zu",
+        "Trifft völlig zu",
     ]
 
     var body: some View {

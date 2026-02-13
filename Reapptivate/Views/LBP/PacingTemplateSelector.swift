@@ -42,7 +42,7 @@ struct PacingTemplateSelector: View {
                     if let template = viewModel.pacingTemplate {
                         // Activities
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Enthaltene Aktivitaten")
+                            Text("Enthaltene Aktivitäten")
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
 

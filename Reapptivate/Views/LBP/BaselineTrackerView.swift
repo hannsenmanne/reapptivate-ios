@@ -52,7 +52,7 @@ struct BaselineTrackerView: View {
 
             // Logging form
             VStack(alignment: .leading, spacing: 16) {
-                Text("Aktivitat loggen")
+                Text("Aktivität loggen")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -135,7 +135,7 @@ struct BaselineTrackerView: View {
                         if isSubmitting {
                             ProgressView().tint(.white)
                         } else {
-                            Text("Aktivitat loggen")
+                            Text("Aktivität loggen")
                         }
                     }
                     .font(.appSubheadlineSemibold)
@@ -152,7 +152,7 @@ struct BaselineTrackerView: View {
             // Logged entries
             if let logs = viewModel.pacingPlan?.baselineLogs, !logs.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Protokollierte Aktivitaten")
+                    Text("Protokollierte Aktivitäten")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 

@@ -50,7 +50,7 @@ struct ExposureLogSheet: View {
                         Button {
                             handleAction()
                         } label: {
-                            Text(step == .prepare ? "Aktivitat durchfuhren" : "Speichern")
+                            Text(step == .prepare ? "Aktivität durchführen" : "Speichern")
                                 .font(.appBodySemibold)
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
@@ -86,7 +86,7 @@ struct ExposureLogSheet: View {
                     Text(item.label)
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
-                    Text("Ursprungliche Angst: \(item.fearRating0To10)/10")
+                    Text("Ursprüngliche Angst: \(item.fearRating0To10)/10")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -125,7 +125,7 @@ struct ExposureLogSheet: View {
                 Image(systemName: "hand.thumbsup.fill")
                     .font(.appTitle2)
                     .foregroundStyle(.painGreen)
-                Text("Bereit? Versuchen Sie jetzt die Aktivitat durchzufuhren.")
+                Text("Bereit? Versuchen Sie jetzt die Aktivität durchzuführen.")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .multilineTextAlignment(.center)
@@ -214,7 +214,7 @@ struct ExposureLogSheet: View {
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
             }
 
-            Text("Jede Exposition hilft Ihrem Gehirn zu lernen, dass diese Aktivitat sicher ist.")
+            Text("Jede Exposition hilft Ihrem Gehirn zu lernen, dass diese Aktivität sicher ist.")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)

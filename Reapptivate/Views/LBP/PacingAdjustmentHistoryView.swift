@@ -46,8 +46,8 @@ struct AdjustmentRow: View {
     var ruleDisplayName: String {
         switch adjustment.ruleId {
         case "FLARE_RULE": return "Schmerz-Schub"
-        case "LOW_ADHERENCE_RULE": return "Niedrige Adharenz"
-        case "OVERDOING_RULE_DER": return "Uberbelastung"
+        case "LOW_ADHERENCE_RULE": return "Niedrige Adhärenz"
+        case "OVERDOING_RULE_DER": return "Überbelastung"
         case "FEAR_STUCK_RULE": return "Vermeidung erkannt"
         default: return adjustment.ruleId
         }

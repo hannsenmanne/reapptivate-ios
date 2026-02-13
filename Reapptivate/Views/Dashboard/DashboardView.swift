@@ -8,6 +8,7 @@ struct DashboardView: View {
     @State private var phaseVM: PhaseViewModel?
     @State private var selectedTab: DashboardTab = .overview
     @State private var showSettings = false
+    @State private var showLogoutConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -77,7 +78,7 @@ struct DashboardView: View {
                                 Divider()
                             }
                             Button("Abmelden", role: .destructive) {
-                                appState.performLogout(apiClient: apiClient)
+                                showLogoutConfirmation = true
                             }
                         } label: {
                             Image(systemName: "person.circle")
@@ -88,6 +89,14 @@ struct DashboardView: View {
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
+            }
+            .alert("Abmelden?", isPresented: $showLogoutConfirmation) {
+                Button("Abbrechen", role: .cancel) { }
+                Button("Abmelden", role: .destructive) {
+                    appState.performLogout(apiClient: apiClient)
+                }
+            } message: {
+                Text("Sie werden ausgeloggt und müssen sich erneut anmelden.")
             }
         }
         .task {
@@ -165,6 +174,8 @@ struct DashboardTabBar: View {
                                 .foregroundStyle(selectedTab == tab ? .textPrimary : .clear)
                         }
                         .padding(.horizontal, 16)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                     }
                 }
             }

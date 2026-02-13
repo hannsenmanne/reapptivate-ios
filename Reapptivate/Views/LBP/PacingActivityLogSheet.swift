@@ -29,7 +29,7 @@ struct PacingActivityLogSheet: View {
     var complianceLabel: String {
         if compliancePercentage <= 90 { return "Gut dosiert" }
         if compliancePercentage <= 110 { return "Im Zielbereich" }
-        return "Uber der Quote"
+        return "Über der Quote"
     }
 
     var body: some View {
@@ -49,7 +49,7 @@ struct PacingActivityLogSheet: View {
             VStack(spacing: 20) {
                 // Activity selection
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Welche Aktivitat haben Sie gemacht?")
+                    Text("Welche Aktivität haben Sie gemacht?")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
@@ -166,7 +166,7 @@ struct PacingActivityLogSheet: View {
                     HStack(spacing: 10) {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.farBlue)
-                        Text("Pacing-Prinzip: Besser unter der Quote bleiben als daruber.")
+                        Text("Pacing-Prinzip: Besser unter der Quote bleiben als darüber.")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -182,7 +182,7 @@ struct PacingActivityLogSheet: View {
                             if isSubmitting {
                                 ProgressView().tint(.white)
                             } else {
-                                Text("Aktivitat protokollieren")
+                                Text("Aktivität protokollieren")
                             }
                         }
                         .font(.appBodySemibold)
@@ -198,7 +198,7 @@ struct PacingActivityLogSheet: View {
             .padding(24)
         }
         .background(Color.appBg)
-        .navigationTitle("Aktivitat protokollieren")
+        .navigationTitle("Aktivität protokollieren")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -225,7 +225,7 @@ struct PacingActivityLogSheet: View {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
-                    Text("Quote uberschritten. Versuchen Sie beim nachsten Mal etwas kurzere Einheiten.")
+                    Text("Quote überschritten. Versuchen Sie beim nächsten Mal etwas kürzere Einheiten.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }

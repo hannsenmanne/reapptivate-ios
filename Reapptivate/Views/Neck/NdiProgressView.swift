@@ -79,7 +79,7 @@ struct NdiProgressView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Rescreening durchfuhren")
+                        Text("Rescreening durchführen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)

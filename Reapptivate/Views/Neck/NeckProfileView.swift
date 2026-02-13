@@ -77,11 +77,11 @@ struct NeckProfileView: View {
     var severityDescription: String {
         switch severity {
         case .LEICHT:
-            "Leichte Einschrankung. Standard-Ubungsprogression mit allen Intensitatsstufen."
+            "Leichte Einschränkung. Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
-            "Moderate Einschrankung. Angepasste Ubungen mit langsamerer Steigerung."
+            "Moderate Einschränkung. Angepasste Übungen mit langsamerer Steigerung."
         case .SCHWER:
-            "Deutliche Einschrankung. Sanfter Beginn mit verlangerten Phasen und reduzierter Belastung."
+            "Deutliche Einschränkung. Sanfter Beginn mit verlängerten Phasen und reduzierter Belastung."
         }
     }
 }

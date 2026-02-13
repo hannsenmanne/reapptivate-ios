@@ -28,7 +28,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .gluteal: "Glutealsehne"
         case .proximalHamstring: "Proximale Hamstringsehne"
         case .plantarFascia: "Plantarfaszie"
-        case .lbpNonspecific: "Unspez. Ruckenschmerz"
+        case .lbpNonspecific: "Unspez. Rückenschmerz"
         case .neckPain: "Nackenschmerz"
         }
     }
@@ -150,7 +150,7 @@ enum SymptomResponse: String, Codable {
     var displayName: String {
         switch self {
         case .centralized: "Zentralisiert"
-        case .unchanged: "Unverandert"
+        case .unchanged: "Unverändert"
         case .peripheralized: "Peripheralisiert"
         }
     }

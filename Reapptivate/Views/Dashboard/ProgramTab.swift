@@ -38,7 +38,7 @@ struct ProgramTab: View {
             if let exerciseVM, !exerciseVM.exercises.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Ubungsprogramm")
+                        Text("Übungsprogramm")
                             .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
 
@@ -68,7 +68,7 @@ struct ProgramTab: View {
                 EmptyStateView(
                     icon: "figure.strengthtraining.traditional",
                     title: "Kein Programm",
-                    message: "Ihr Ubungsprogramm wird geladen..."
+                    message: "Ihr Übungsprogramm wird geladen..."
                 )
             }
 
@@ -77,7 +77,7 @@ struct ProgramTab: View {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Zusatzliche Ubungen")
+                            Text("Zusätzliche Übungen")
                                 .font(.appHeadline)
                                 .foregroundStyle(.textPrimary)
                             Text("Vom Therapeuten")

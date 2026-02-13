@@ -25,10 +25,10 @@ struct FearHierarchyBuilderView: View {
                 VStack(spacing: 20) {
                     // Instructions
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Erstellen Sie eine Liste von Aktivitaten, vor denen Sie Angst haben oder die Sie vermeiden.")
+                        Text("Erstellen Sie eine Liste von Aktivitäten, vor denen Sie Angst haben oder die Sie vermeiden.")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
-                        Text("Bewerten Sie jede Aktivitat mit einem Angst-Level von 0 (keine Angst) bis 10 (maximale Angst).")
+                        Text("Bewerten Sie jede Aktivität mit einem Angst-Level von 0 (keine Angst) bis 10 (maximale Angst).")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
@@ -38,7 +38,7 @@ struct FearHierarchyBuilderView: View {
                     // Suggested activities
                     if showSuggestions && items.count < 3 {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Vorschlage")
+                            Text("Vorschläge")
                                 .font(.appCaptionMedium)
                                 .foregroundStyle(.textSecondary)
 
@@ -65,7 +65,7 @@ struct FearHierarchyBuilderView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "plus")
-                            Text("Aktivitat hinzufugen")
+                            Text("Aktivität hinzufügen")
                         }
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.farBlue)
@@ -203,7 +203,7 @@ struct BuilderItemCard: View {
 
                 VStack(spacing: 8) {
                     // Activity name
-                    TextField("Aktivitat", text: $item.name)
+                    TextField("Aktivität", text: $item.name)
                         .font(.appSubheadline)
                         .padding(10)
                         .background(Color.appBg)

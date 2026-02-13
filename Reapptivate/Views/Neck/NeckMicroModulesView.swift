@@ -50,7 +50,7 @@ struct NeckMicroModulesView: View {
                 ProgressView()
                     .padding(.vertical, 16)
             } else if modules.isEmpty {
-                Text("Keine Module verfugbar")
+                Text("Keine Module verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)

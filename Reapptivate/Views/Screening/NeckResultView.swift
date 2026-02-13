@@ -58,7 +58,7 @@ struct NeckResultView: View {
                     HStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
                             .foregroundStyle(.painAmber)
-                        Text("Radiculopathie erkannt. Ihr Ubungsprogramm ist entsprechend angepasst.")
+                        Text("Radiculopathie erkannt. Ihr Übungsprogramm ist entsprechend angepasst.")
                             .font(.appSubheadline)
                             .foregroundStyle(.textPrimary)
                     }
@@ -83,11 +83,11 @@ struct NeckResultView: View {
     var severityDescription: String {
         switch severity {
         case .LEICHT:
-            "Leichte Einschrankung. Ihr Programm folgt der Standard-Ubungsprogression mit allen Intensitatsstufen."
+            "Leichte Einschränkung. Ihr Programm folgt der Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
-            "Moderate Einschrankung. Ihr Programm enthalt angepasste Ubungen mit langsamerer Steigerung."
+            "Moderate Einschränkung. Ihr Programm enthält angepasste Übungen mit langsamerer Steigerung."
         case .SCHWER:
-            "Deutliche Einschrankung. Ihr Programm beginnt sanft mit verlangerten Phasen und reduzierter Belastung."
+            "Deutliche Einschränkung. Ihr Programm beginnt sanft mit verlängerten Phasen und reduzierter Belastung."
         }
     }
 }

@@ -6,6 +6,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var notificationService = NotificationService.shared
+    @State private var showLogoutConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -111,8 +112,7 @@ struct SettingsView: View {
                 // Logout
                 Section {
                     Button(role: .destructive) {
-                        appState.performLogout(apiClient: apiClient)
-                        dismiss()
+                        showLogoutConfirmation = true
                     } label: {
                         HStack {
                             Spacer()
@@ -131,6 +131,15 @@ struct SettingsView: View {
             }
             .task {
                 await notificationService.checkStatus()
+            }
+            .alert("Abmelden?", isPresented: $showLogoutConfirmation) {
+                Button("Abbrechen", role: .cancel) { }
+                Button("Abmelden", role: .destructive) {
+                    appState.performLogout(apiClient: apiClient)
+                    dismiss()
+                }
+            } message: {
+                Text("Sie werden ausgeloggt und müssen sich erneut anmelden.")
             }
         }
     }

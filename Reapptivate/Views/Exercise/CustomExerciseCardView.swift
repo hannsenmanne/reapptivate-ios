@@ -23,7 +23,7 @@ struct CustomExerciseCardView: View {
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
 
-                    Text("Therapeuten-Ubung")
+                    Text("Therapeuten-Übung")
                         .font(.appCaption)
                         .foregroundStyle(.blue)
                 }
@@ -72,7 +72,7 @@ struct CustomExerciseCardView: View {
                 Button {
                     onLog()
                 } label: {
-                    Text("Erledigt")
+                    Text("Eintragen")
                         .frame(maxWidth: .infinity)
                         .frame(height: 36)
                 }

@@ -156,10 +156,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.logBaseline(body: body))
             pacingPlan = response.plan
-            successMessage = "Baseline-Aktivitat protokolliert"
+            successMessage = "Baseline-Aktivität protokolliert"
             return true
         } catch {
-            errorMessage = "Aktivitat konnte nicht gespeichert werden."
+            errorMessage = "Aktivität konnte nicht gespeichert werden."
             return false
         }
     }
@@ -180,10 +180,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingLogFullResponse = try await apiClient.request(APIEndpoints.logPacing(body: request))
             pacingLogs.insert(response.log, at: 0)
-            successMessage = "Aktivitat protokolliert"
+            successMessage = "Aktivität protokolliert"
             return true
         } catch {
-            errorMessage = "Aktivitat konnte nicht gespeichert werden."
+            errorMessage = "Aktivität konnte nicht gespeichert werden."
             return false
         }
     }

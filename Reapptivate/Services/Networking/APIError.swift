@@ -29,9 +29,9 @@ enum APIError: LocalizedError {
         case .rateLimited:
             "Zu viele Anfragen. Bitte warten Sie einen Moment."
         case .serverError(let code):
-            "Serverfehler (\(code)). Bitte versuchen Sie es spater erneut."
+            "Serverfehler (\(code)). Bitte versuchen Sie es später erneut."
         case .networkError:
-            "Netzwerkfehler. Bitte uberprufen Sie Ihre Verbindung."
+            "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung."
         case .decodingError:
             "Daten konnten nicht verarbeitet werden."
         case .tokenExpired:

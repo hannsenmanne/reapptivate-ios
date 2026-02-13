@@ -46,7 +46,7 @@ struct PacingTimerView: View {
                 Image(systemName: "clock.fill")
                     .font(.appTitle3)
                     .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
-                Text("Aktivitats-Timer")
+                Text("Aktivitäts-Timer")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -111,7 +111,7 @@ struct PacingTimerView: View {
         VStack(spacing: 16) {
             if let activities = viewModel.pacingPlan?.targetActivities {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Aktivitat auswahlen")
+                    Text("Aktivität auswählen")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
@@ -245,7 +245,7 @@ struct PacingTimerView: View {
                 Text("Pacing-Tipps")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
-                Text("Halten Sie sich an Ihre Quota. Es ist besser, etwas unter dem Ziel zu bleiben als daruber.")
+                Text("Halten Sie sich an Ihre Quota. Es ist besser, etwas unter dem Ziel zu bleiben als darüber.")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }

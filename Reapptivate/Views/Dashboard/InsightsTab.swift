@@ -13,7 +13,7 @@ struct InsightsTab: View {
         } else {
             EmptyStateView(
                 icon: "chart.bar.xaxis",
-                title: "Keine Insights verfugbar",
+                title: "Keine Analyse verfügbar",
                 message: "Insights werden nach dem Screening freigeschaltet."
             )
         }

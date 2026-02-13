@@ -77,7 +77,7 @@ struct ExerciseCardView: View {
                 Button {
                     onLog()
                 } label: {
-                    Text("Erledigt")
+                    Text("Eintragen")
                         .frame(maxWidth: .infinity)
                         .frame(height: 36)
                 }

@@ -100,9 +100,9 @@ struct PainSliderView: View {
         if painLevel <= maxPainLevel {
             "Im empfohlenen Bereich"
         } else if painLevel <= maxPainLevel + 1 {
-            "Leicht uber Empfehlung"
+            "Leicht über Empfehlung"
         } else {
-            "Deutlich uber Empfehlung — bitte aufpassen"
+            "Deutlich über Empfehlung — bitte aufpassen"
         }
     }
 }

@@ -46,7 +46,7 @@ struct AemResultView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
-                    Text("Ihr Schmerzgrenzwert: max. \(result.subtype.maxPainLevel)/10 wahrend des Trainings")
+                    Text("Ihr Schmerzgrenzwert: max. \(result.subtype.maxPainLevel)/10 während des Trainings")
                         .font(.appSubheadline)
                         .foregroundStyle(.textPrimary)
                 }
@@ -80,11 +80,11 @@ struct AemResultView: View {
     var subtypeDescription: String {
         switch result.subtype {
         case .FAR:
-            "Sie neigen dazu, Bewegung aus Angst vor Schmerzen zu vermeiden. Ihr Programm enthalt schrittweise Exposition."
+            "Sie neigen dazu, Bewegung aus Angst vor Schmerzen zu vermeiden. Ihr Programm enthält schrittweise Exposition."
         case .DER:
             "Sie neigen dazu, trotz Belastung weiterzumachen. Ihr Programm betont Pacing und geplante Pausen."
         case .EER:
-            "Sie sind hoch motiviert und neigen zu Uberbelastung. Ihr Programm fokussiert auf Qualitat statt Quantitat."
+            "Sie sind hoch motiviert und neigen zu Überbelastung. Ihr Programm fokussiert auf Qualität statt Quantität."
         case .AR:
             "Sie haben ein ausgewogenes Belastungsprofil. Ihr Programm folgt dem Standardprotokoll."
         }
