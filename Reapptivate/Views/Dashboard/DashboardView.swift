@@ -113,12 +113,13 @@ struct DashboardView: View {
 
         // Exercise VM
         if exerciseVM == nil {
-            exerciseVM = ExerciseViewModel()
+            exerciseVM = ExerciseViewModel(apiClient: apiClient)
         }
         if let user = appState.currentUser {
             exerciseVM?.loadExercises(for: user)
             exerciseVM?.updateCompletedToday(from: viewModel?.completedToday ?? [])
         }
+        await exerciseVM?.loadCustomExercises()
 
         // Phase VM
         if phaseVM == nil {

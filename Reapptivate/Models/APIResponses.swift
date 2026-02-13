@@ -125,3 +125,9 @@ struct NeckHistoryResponse: Codable {
 struct NeckFocusAreasResponse: Codable {
     let focusAreas: [NdiFocusArea]
 }
+
+// MARK: - Custom Exercise Wrappers
+
+struct CustomExercisesResponse: Codable {
+    let exercises: [CustomExercise]
+}

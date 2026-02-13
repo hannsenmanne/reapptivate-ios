@@ -4,12 +4,18 @@ import SwiftUI
 @MainActor
 final class ExerciseViewModel {
     var exercises: [ExerciseWithPhase] = []
+    var customExercises: [CustomExercise] = []
     var completedToday: Set<String> = []
     var selectedExercise: ExerciseWithPhase?
     var showProgressLog = false
     var showExerciseSession = false
 
     private let protocolLoader = ProtocolLoader.shared
+    private var apiClient: APIClient?
+
+    init(apiClient: APIClient? = nil) {
+        self.apiClient = apiClient
+    }
 
     // MARK: - Loading
 
@@ -40,6 +46,26 @@ final class ExerciseViewModel {
 
     func isCompleted(_ exerciseId: String) -> Bool {
         completedToday.contains(exerciseId)
+    }
+
+    func loadCustomExercises() async {
+        guard let apiClient else { return }
+        do {
+            let response: CustomExercisesResponse = try await apiClient.request(
+                APIEndpoints.customExercises()
+            )
+            customExercises = response.exercises
+        } catch {
+            Log.exercise.error("Failed to load custom exercises: \(error)")
+        }
+    }
+
+    func isCustomExerciseCompleted(_ exercise: CustomExercise) -> Bool {
+        completedToday.contains("custom_\(exercise.id)")
+    }
+
+    func markCustomExerciseCompleted(_ exercise: CustomExercise) {
+        completedToday.insert("custom_\(exercise.id)")
     }
 
     // MARK: - Actions

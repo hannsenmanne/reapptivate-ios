@@ -10,11 +10,13 @@ struct ProgramTab: View {
     enum ExerciseSheet: Identifiable {
         case progressLog(ExerciseWithPhase)
         case detail(ExerciseWithPhase)
+        case customProgressLog(CustomExercise)
 
         var id: String {
             switch self {
             case .progressLog(let e): "log-\(e.id)"
             case .detail(let e): "detail-\(e.id)"
+            case .customProgressLog(let e): "custom-log-\(e.id)"
             }
         }
     }
@@ -69,6 +71,34 @@ struct ProgramTab: View {
                 )
             }
 
+            // Custom exercises from therapist
+            if let exerciseVM, !exerciseVM.customExercises.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Zusatzliche Ubungen")
+                                .font(.appHeadline)
+                                .foregroundStyle(.textPrimary)
+                            Text("Vom Therapeuten")
+                                .font(.appCaption)
+                                .foregroundStyle(.textSecondary)
+                        }
+                        Spacer()
+                    }
+
+                    ForEach(Array(exerciseVM.customExercises.enumerated()), id: \.element.id) { index, exercise in
+                        CustomExerciseCardView(
+                            exercise: exercise,
+                            index: index,
+                            isCompleted: exerciseVM.isCustomExerciseCompleted(exercise),
+                            onLog: {
+                                activeSheet = .customProgressLog(exercise)
+                            }
+                        )
+                    }
+                }
+            }
+
             // LBP Enhancements (Fear Hierarchy, Pacing, Micro-Modules)
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 LbpEnhancementsView(subtype: subtype)
@@ -107,6 +137,14 @@ struct ProgramTab: View {
                         }
                     }
                 }
+            case .customProgressLog(let exercise):
+                CustomExerciseLogSheet(
+                    exercise: exercise,
+                    onSuccess: {
+                        exerciseVM?.markCustomExerciseCompleted(exercise)
+                        onExerciseLogged?()
+                    }
+                )
             }
         }
     }

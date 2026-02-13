@@ -241,6 +241,12 @@ enum APIEndpoints {
         get("lbp-enhancements/analytics/pacing-compliance")
     }
 
+    // MARK: - Custom Exercises
+
+    static func customExercises() -> URLRequest {
+        get("patient/custom-exercises")
+    }
+
     // MARK: - Config
 
     static func features() -> URLRequest {
