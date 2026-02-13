@@ -81,11 +81,14 @@ RootView
 ├── AemScreeningView (LBP + screening needed)
 ├── NeckScreeningView (Neck + screening needed)
 └── DashboardView (authenticated + screened)
-    ├── OverviewTab — Phase status, condition info
+    ├── OverviewTab — Phase status, Wissen daily card, condition info
     ├── ProgramTab — Exercise list + LBP enhancements
+    ├── EdukationTab — Micro-modules (LBP/Neck) or Wissen cards (tendinopathy)
     ├── ProgressTab — Pain history, statistics
     └── InsightsTab — Analytics (LBP/Neck only)
 ```
+
+EdukationTab is always visible. InsightsTab only appears for LBP/Neck patients. Tab visibility is controlled by `DashboardTabBar.tabs` computed property (not by `DashboardViewModel.availableTabs`, which is unused).
 
 ### Networking
 
@@ -136,6 +139,9 @@ Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `ac
 - `AemTypes.swift` — AEM screening config/results/submission
 - `AuthTypes.swift` — Login/onboarding request/response types
 - `APIResponses.swift` — All backend response wrappers (`{user:}`, `{plan:}`, `{hierarchy:}`, etc.)
+- `EducationCard.swift` — Education card model + `EducationCardLoader` singleton (loads bundled `education-cards.json`, filters by phase/condition, daily rotation via day-of-year modulo)
+- `CustomExercise.swift` — Custom exercises added by users (displayed in ProgramTab alongside protocol exercises)
+- `UserSchedule.swift` — Training schedule data
 
 ## Design System
 
@@ -164,8 +170,9 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 ### Subtype-Conditional Features
 - FAR: Fear hierarchy builder + exposure logging
 - DER/EER: Pacing plans + baseline tracking + pacing timer with audio cues
-- All LBP: Micro-modules (psychoeducation)
-- Neck: Focus areas + NDI rescreening + neck micro-modules
+- All LBP: Micro-modules (psychoeducation) — shown in EdukationTab via `LbpMicroModulesSection`
+- Neck: Focus areas + NDI rescreening + neck micro-modules — shown in EdukationTab via `NeckMicroModulesView`
+- Tendinopathy (no micro-modules): EdukationTab shows all `EducationCard`s for current phase via `WissenAllCardsView`
 
 ## Backend API (~50 endpoints)
 
