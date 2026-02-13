@@ -1,6 +1,4 @@
 import SwiftUI
-import AVFoundation
-import AudioToolbox
 import Combine
 
 struct PacingTimerView: View {
@@ -17,8 +15,10 @@ struct PacingTimerView: View {
     @State private var breakSeconds: Int = 0
     @State private var soundPlayed80 = false
     @State private var soundPlayed100 = false
-    @State private var audioPlayer: AVAudioPlayer?
     @State private var backgroundDate: Date?
+    @State private var activitySelectionTrigger = false
+
+    @ScaledMetric(relativeTo: .title2) private var playPauseSize: CGFloat = 56
 
     private let timerPublisher = Timer.publish(every: 1, on: .main, in: .common)
 
@@ -46,6 +46,7 @@ struct PacingTimerView: View {
                 Image(systemName: "clock.fill")
                     .font(.appTitle3)
                     .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
+                    .accessibilityHidden(true)
                 Text("Aktivitäts-Timer")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
@@ -63,6 +64,7 @@ struct PacingTimerView: View {
                 completedView
             }
         }
+        .sensoryFeedback(.selection, trigger: activitySelectionTrigger)
         .onDisappear {
             resetTimer()
         }
@@ -86,12 +88,10 @@ struct PacingTimerView: View {
                     backgroundDate = nil
                     if timerState == .active {
                         elapsedSeconds += elapsed
-                        // Check if quota was reached while backgrounded
                         if quotaSeconds > 0 && elapsedSeconds >= quotaSeconds {
                             if !soundPlayed100 {
                                 soundPlayed100 = true
-                                playAlarmSound()
-                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                                AudioService.shared.playTripleBeep()
                             }
                             if isDer { startBreak() }
                         }
@@ -118,6 +118,7 @@ struct PacingTimerView: View {
                     ForEach(activities) { activity in
                         Button {
                             selectedActivityKey = activity.key
+                            activitySelectionTrigger.toggle()
                         } label: {
                             HStack(spacing: 10) {
                                 Image(systemName: selectedActivityKey == activity.key ? "checkmark.circle.fill" : "circle")
@@ -137,6 +138,7 @@ struct PacingTimerView: View {
                             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                         }
                         .buttonStyle(.plain)
+                        .accessibilityAddTraits(selectedActivityKey == activity.key ? .isSelected : [])
                     }
                 }
 
@@ -222,10 +224,11 @@ struct PacingTimerView: View {
                     Image(systemName: timerState == .paused ? "play.fill" : "pause.fill")
                         .font(.appTitle2)
                         .foregroundStyle(.white)
-                        .frame(width: 56, height: 56)
+                        .frame(width: playPauseSize, height: playPauseSize)
                         .background(Color.textSecondary)
                         .clipShape(Circle())
                 }
+                .accessibilityLabel(timerState == .paused ? "Fortsetzen" : "Pausieren")
 
                 Button {
                     completeTimer()
@@ -262,6 +265,7 @@ struct PacingTimerView: View {
             Image(systemName: "cup.and.saucer.fill")
                 .font(.system(size: 36))
                 .foregroundStyle(.painAmber)
+                .accessibilityHidden(true)
 
             Text("Pausenzeit!")
                 .font(.appTitle2)
@@ -308,6 +312,7 @@ struct PacingTimerView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 48))
                 .foregroundStyle(.painGreen)
+                .accessibilityHidden(true)
 
             Text("Abgeschlossen!")
                 .font(.appTitle2)
@@ -349,7 +354,7 @@ struct PacingTimerView: View {
         elapsedSeconds = 0
         soundPlayed80 = false
         soundPlayed100 = false
-        setupAudioSession()
+        AudioService.shared.activateSession()
     }
 
     private func tick() {
@@ -358,15 +363,13 @@ struct PacingTimerView: View {
         // Check 80% cue
         if !soundPlayed80 && quotaSeconds > 0 && Double(elapsedSeconds) / Double(quotaSeconds) >= 0.8 {
             soundPlayed80 = true
-            playKnockSound()
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            AudioService.shared.playDoubleKnock()
         }
 
         // Check 100% cue
         if !soundPlayed100 && quotaSeconds > 0 && elapsedSeconds >= quotaSeconds {
             soundPlayed100 = true
-            playAlarmSound()
-            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+            AudioService.shared.playTripleBeep()
 
             // DER: mandatory break
             if isDer {
@@ -402,29 +405,7 @@ struct PacingTimerView: View {
         breakSeconds = 0
         soundPlayed80 = false
         soundPlayed100 = false
-        deactivateAudioSession()
-    }
-
-    // MARK: - Audio
-
-    private func setupAudioSession() {
-        try? AVAudioSession.sharedInstance().setCategory(.ambient)
-        try? AVAudioSession.sharedInstance().setActive(true)
-    }
-
-    private func deactivateAudioSession() {
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-    }
-
-    private func playKnockSound() {
-        AudioServicesPlaySystemSound(1057) // Tock sound
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            AudioServicesPlaySystemSound(1057)
-        }
-    }
-
-    private func playAlarmSound() {
-        AudioServicesPlaySystemSound(1005) // Alert sound
+        AudioService.shared.deactivateSession()
     }
 
     // MARK: - Helpers

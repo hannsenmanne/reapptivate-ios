@@ -1,46 +1,57 @@
 import SwiftUI
 
+// MARK: - Adaptive Color Helper
+
 extension Color {
+    /// Creates a color that adapts to light/dark mode using UIColor's trait collection
+    private static func adaptive(light: String, dark: String) -> Color {
+        Color(UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark
+                ? UIColor(Color(hex: dark))
+                : UIColor(Color(hex: light))
+        })
+    }
+
     // MARK: - Backgrounds (Cool neutral palette)
-    static let appBg = Color(hex: "F8F8FA")        // Cool near-white page background
-    static let cardBg = Color.white                 // White cards
-    static let beigeDark = Color(hex: "EEEEF0")    // Subtle dividers, secondary bg
-    static let beigeLight = Color(hex: "FBFBFD")   // Lightest background
+    static let appBg = adaptive(light: "F8F8FA", dark: "121214")
+    static let cardBg = adaptive(light: "FFFFFF", dark: "1C1C1E")
+    static let beigeDark = adaptive(light: "EEEEF0", dark: "2C2C2E")
+    static let beigeLight = adaptive(light: "FBFBFD", dark: "1A1A1C")
 
     // MARK: - Neutrals (Cool gray scale)
-    static let gray100 = Color(hex: "F5F5F7")
-    static let gray200 = Color(hex: "E5E7EB")      // Borders, dividers
-    static let gray300 = Color(hex: "D1D5DB")       // Input borders
-    static let gray400 = Color(hex: "9CA3AF")       // Disabled text
-    static let gray500 = Color(hex: "6B7280")       // Secondary text
-    static let gray600 = Color(hex: "4B5563")       // Body text alt
+    static let gray100 = adaptive(light: "F5F5F7", dark: "2C2C2E")
+    static let gray200 = adaptive(light: "E5E7EB", dark: "3A3A3C")
+    static let gray300 = adaptive(light: "D1D5DB", dark: "48484A")
+    static let gray400 = adaptive(light: "9CA3AF", dark: "636366")
+    static let gray500 = adaptive(light: "6B7280", dark: "8E8E93")
+    static let gray600 = adaptive(light: "4B5563", dark: "AEAEB2")
 
-    // MARK: - Pain Level Colors
-    static let painGreen = Color(hex: "10B981")     // Emerald — safe/good
-    static let painAmber = Color(hex: "D97706")     // Amber — moderate
-    static let painRed = Color(hex: "EF4444")       // Red — warning/danger
+    // MARK: - Pain Level Colors (vivid — work in both modes)
+    static let painGreen = Color(hex: "10B981")
+    static let painAmber = Color(hex: "D97706")
+    static let painRed = Color(hex: "EF4444")
 
     // MARK: - AEM Subtype Colors
     static let farBlue = Color(hex: "3B82F6")
-    static let derOrange = Color(hex: "FB923C")     // Web: #FB923C (was F97316)
-    static let eerGreen = Color(hex: "10B981")      // Web: emerald (was 22C55E)
-    static let arGray = Color(hex: "6B7280")
+    static let derOrange = Color(hex: "FB923C")
+    static let eerGreen = Color(hex: "10B981")
+    static let arGray = adaptive(light: "6B7280", dark: "8E8E93")
 
     // MARK: - NDI Severity Colors
-    static let severityLeicht = Color(hex: "10B981") // Emerald (was 22C55E)
+    static let severityLeicht = Color(hex: "10B981")
     static let severityMittel = Color(hex: "F59E0B")
     static let severitySchwer = Color(hex: "EF4444")
 
     // MARK: - Phase Decision Colors
-    static let phaseProgress = Color(hex: "10B981")  // Emerald
-    static let phaseHold = Color(hex: "6B7280")       // Gray
-    static let phaseRegress = Color(hex: "EF4444")    // Red
-    static let phaseInitial = Color(hex: "3B82F6")    // Blue
+    static let phaseProgress = Color(hex: "10B981")
+    static let phaseHold = adaptive(light: "6B7280", dark: "8E8E93")
+    static let phaseRegress = Color(hex: "EF4444")
+    static let phaseInitial = Color(hex: "3B82F6")
 
     // MARK: - UI Accents & Text
-    static let accent = Color(hex: "10B981")          // Emerald accent (was 1F2937)
-    static let textPrimary = Color(hex: "1A1A1A")      // Near-black (softer)
-    static let textSecondary = Color(hex: "6B7280")    // Cool gray
+    static let accent = adaptive(light: "10B981", dark: "34D399")
+    static let textPrimary = adaptive(light: "1A1A1A", dark: "F2F2F7")
+    static let textSecondary = adaptive(light: "6B7280", dark: "8E8E93")
 
     // MARK: - Pain Level Helpers
 

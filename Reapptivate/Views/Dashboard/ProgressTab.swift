@@ -20,7 +20,7 @@ struct ProgressTab: View {
             // Phase Timeline
             if let phaseVM {
                 if phaseVM.isLoading {
-                    ProgressView()
+                    ProgressView("Fortschritt laden...")
                         .frame(maxWidth: .infinity)
                         .padding(20)
                 } else {

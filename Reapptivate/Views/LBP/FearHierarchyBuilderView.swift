@@ -7,6 +7,7 @@ struct FearHierarchyBuilderView: View {
     @State private var items: [BuilderItem] = []
     @State private var isSaving = false
     @State private var showSuggestions = true
+    @State private var saveTrigger = false
 
     private let suggestions = [
         "Schweres Heben",
@@ -111,6 +112,7 @@ struct FearHierarchyBuilderView: View {
                     Button("Abbrechen") { dismiss() }
                 }
             }
+            .sensoryFeedback(.success, trigger: saveTrigger)
         }
     }
 
@@ -151,6 +153,7 @@ struct FearHierarchyBuilderView: View {
             )
         }
         if await viewModel.saveFearHierarchy(items: inputItems) {
+            saveTrigger.toggle()
             dismiss()
         }
         isSaving = false
@@ -174,6 +177,8 @@ struct BuilderItemCard: View {
     let onMoveDown: (() -> Void)?
     let onDelete: () -> Void
 
+    @ScaledMetric(relativeTo: .caption) private var rankCircleSize: CGFloat = 22
+
     var body: some View {
         VStack(spacing: 12) {
             HStack(spacing: 8) {
@@ -185,11 +190,12 @@ struct BuilderItemCard: View {
                             .foregroundStyle(onMoveUp != nil ? .textSecondary : .clear)
                     }
                     .disabled(onMoveUp == nil)
+                    .accessibilityLabel("Nach oben verschieben")
 
                     Text("\(rank)")
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
-                        .frame(width: 22, height: 22)
+                        .frame(width: rankCircleSize, height: rankCircleSize)
                         .background(ratingColor)
                         .clipShape(Circle())
 
@@ -199,6 +205,7 @@ struct BuilderItemCard: View {
                             .foregroundStyle(onMoveDown != nil ? .textSecondary : .clear)
                     }
                     .disabled(onMoveDown == nil)
+                    .accessibilityLabel("Nach unten verschieben")
                 }
 
                 VStack(spacing: 8) {
@@ -220,6 +227,8 @@ struct BuilderItemCard: View {
                             set: { item.fearRating = Int($0) }
                         ), in: 0...10, step: 1)
                         .tint(ratingColor)
+                        .accessibilityLabel("Angst-Bewertung")
+                        .accessibilityValue("\(item.fearRating) von 10")
 
                         Text("\(item.fearRating)")
                             .font(.appSubheadlineSemibold.monospacedDigit())
@@ -235,6 +244,7 @@ struct BuilderItemCard: View {
                         .foregroundStyle(.painRed)
                         .frame(width: 32, height: 32)
                 }
+                .accessibilityLabel("Löschen")
             }
         }
         .padding(12)

@@ -56,6 +56,7 @@ struct AemQuestionView: View {
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(.textPrimary)
+                    .accessibilityAddTraits(selectedValue == value ? .isSelected : [])
                 }
             }
             .padding(.horizontal, 24)

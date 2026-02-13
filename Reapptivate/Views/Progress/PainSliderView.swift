@@ -48,9 +48,9 @@ struct PainSliderView: View {
                     // Thumb
                     let thumbX = CGFloat(painLevel) / 10.0 * geometry.size.width
                     Circle()
-                        .fill(.white)
+                        .fill(Color.cardBg)
                         .frame(width: 28, height: 28)
-                        .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+                        .shadow(color: .primary.opacity(0.15), radius: 4, y: 2)
                         .overlay {
                             Circle()
                                 .fill(painColor)
@@ -89,6 +89,20 @@ struct PainSliderView: View {
                 .font(.appSubheadlineMedium)
                 .foregroundStyle(painColor)
                 .frame(maxWidth: .infinity, alignment: .center)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Schmerzskala")
+        .accessibilityValue("\(painLevel) von 10")
+        .accessibilityHint("Wischen Sie nach oben oder unten, um den Wert zu ändern")
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment:
+                painLevel = min(10, painLevel + 1)
+            case .decrement:
+                painLevel = max(0, painLevel - 1)
+            @unknown default:
+                break
+            }
         }
     }
 

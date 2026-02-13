@@ -3,6 +3,7 @@ import SwiftUI
 struct MicroModulesList: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
     @State private var markingReadKey: String?
+    @State private var markReadTrigger = false
 
     var completedCount: Int {
         viewModel.microModules.filter { viewModel.completedModuleKeys.contains($0.key) }.count
@@ -82,11 +83,15 @@ struct MicroModulesList: View {
                 }
             }
         }
+        .sensoryFeedback(.success, trigger: markReadTrigger)
     }
 
     private func markRead(key: String) async {
         markingReadKey = key
-        _ = await viewModel.markModuleRead(key: key)
+        let success = await viewModel.markModuleRead(key: key)
+        if success {
+            markReadTrigger.toggle()
+        }
         markingReadKey = nil
     }
 }

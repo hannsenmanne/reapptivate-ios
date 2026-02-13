@@ -8,6 +8,8 @@ struct ExerciseCardView: View {
     let onLog: () -> Void
     var onDetail: (() -> Void)?
 
+    @ScaledMetric(relativeTo: .caption) private var badgeSize: CGFloat = 28
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header (tappable for detail)
@@ -19,7 +21,7 @@ struct ExerciseCardView: View {
                     Text(String(format: "%02d", index + 1))
                         .font(.appCaptionBold.monospacedDigit())
                         .foregroundStyle(.white)
-                        .frame(width: 28, height: 28)
+                        .frame(width: badgeSize, height: badgeSize)
                         .background(isCompleted ? Color.painGreen : Color.accent)
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
 
@@ -39,10 +41,12 @@ struct ExerciseCardView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.painGreen)
                             .font(.title3)
+                            .accessibilityLabel("Abgeschlossen")
                     } else {
                         Image(systemName: "chevron.right")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
+                            .accessibilityHidden(true)
                     }
                 }
             }

@@ -16,6 +16,9 @@ struct ExerciseSessionView: View {
     @State private var timerActive = false
     @State private var showProgressLog = false
     @State private var backgroundDate: Date?
+    @State private var setCompletedTrigger = false
+    @State private var allSetsDoneTrigger = false
+    @State private var restSkippedTrigger = false
 
     private let timerPublisher = Timer.publish(every: 1, on: .main, in: .common)
 
@@ -34,6 +37,8 @@ struct ExerciseSessionView: View {
                             .frame(height: 4)
                     }
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Satz \(currentSet) von \(totalSets)")
 
                 Spacer()
 
@@ -51,6 +56,7 @@ struct ExerciseSessionView: View {
                             .font(.system(size: 72, weight: .bold, design: .rounded))
                             .foregroundStyle(isResting ? .textSecondary : .accent)
                             .contentTransition(.numericText())
+                            .accessibilityLabel("\(remaining) Sekunden verbleibend")
 
                         // Progress ring
                         ZStack {
@@ -117,6 +123,7 @@ struct ExerciseSessionView: View {
                         Button {
                             stopTimer()
                             isResting = false
+                            restSkippedTrigger.toggle()
                         } label: {
                             Label("Pause überspringen", systemImage: "forward.fill")
                                 .frame(maxWidth: .infinity)
@@ -180,6 +187,9 @@ struct ExerciseSessionView: View {
                     break
                 }
             }
+            .sensoryFeedback(.impact(weight: .light), trigger: setCompletedTrigger)
+            .sensoryFeedback(.success, trigger: allSetsDoneTrigger)
+            .sensoryFeedback(.impact(weight: .medium), trigger: restSkippedTrigger)
             .sheet(isPresented: $showProgressLog) {
                 ProgressLogSheet(
                     exercise: exercise,
@@ -227,8 +237,10 @@ struct ExerciseSessionView: View {
     private func completeSet() {
         if currentSet >= totalSets {
             // All sets done — open progress log
+            allSetsDoneTrigger.toggle()
             showProgressLog = true
         } else {
+            setCompletedTrigger.toggle()
             currentSet += 1
             startRest()
         }

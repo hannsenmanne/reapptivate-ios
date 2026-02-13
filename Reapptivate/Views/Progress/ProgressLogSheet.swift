@@ -19,6 +19,7 @@ struct ProgressLogSheet: View {
     @State private var errorMessage: String?
     @State private var showSuccess = false
     @State private var adaptationResult: AdaptationResult?
+    @State private var submitSuccessTrigger = false
 
     init(exercise: ExerciseWithPhase, maxPainLevel: Int, showSymptomResponse: Bool, onSuccess: @escaping () -> Void) {
         self.exercise = exercise
@@ -134,6 +135,7 @@ struct ProgressLogSheet: View {
                 }
             }
         }
+        .sensoryFeedback(.success, trigger: submitSuccessTrigger)
     }
 
     private func submit() async {
@@ -156,9 +158,11 @@ struct ProgressLogSheet: View {
 
             if let adaptation = response.adaptation, adaptation.phaseChanged {
                 onSuccess()
+                submitSuccessTrigger.toggle()
                 adaptationResult = adaptation
             } else {
                 showSuccess = true
+                submitSuccessTrigger.toggle()
                 onSuccess()
                 try? await Task.sleep(for: .seconds(1.5))
                 dismiss()

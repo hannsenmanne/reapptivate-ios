@@ -4,6 +4,7 @@ struct NeckFocusAreasView: View {
     @Environment(APIClient.self) private var apiClient
     @State private var focusAreas: [NdiFocusArea] = []
     @State private var isLoading = true
+    @State private var errorMessage: String?
 
     var body: some View {
         VStack(spacing: 12) {
@@ -11,6 +12,7 @@ struct NeckFocusAreasView: View {
                 Image(systemName: "scope")
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
+                    .accessibilityHidden(true)
                 Text("Schwerpunktbereiche")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
@@ -18,8 +20,12 @@ struct NeckFocusAreasView: View {
             }
 
             if isLoading {
-                ProgressView()
+                ProgressView("Schwerpunkte laden...")
                     .padding(.vertical, 16)
+            } else if let error = errorMessage {
+                InlineErrorView(message: error) {
+                    Task { await loadFocusAreas() }
+                }
             } else if focusAreas.isEmpty {
                 Text("Keine Schwerpunktbereiche verfügbar")
                     .font(.appSubheadline)
@@ -39,11 +45,12 @@ struct NeckFocusAreasView: View {
 
     private func loadFocusAreas() async {
         isLoading = true
+        errorMessage = nil
         do {
             let response: NeckFocusAreasResponse = try await apiClient.request(APIEndpoints.neckFocusAreas())
             focusAreas = response.focusAreas
         } catch {
-            focusAreas = []
+            errorMessage = "Schwerpunkte konnten nicht geladen werden."
         }
         isLoading = false
     }
@@ -53,6 +60,7 @@ struct NeckFocusAreasView: View {
 
 struct FocusAreaRow: View {
     let area: NdiFocusArea
+    @ScaledMetric(relativeTo: .caption) private var areaIconSize: CGFloat = 24
 
     var areaIcon: String {
         let domain = area.domainLabel.lowercased()
@@ -81,7 +89,8 @@ struct FocusAreaRow: View {
                 Image(systemName: areaIcon)
                     .font(.appCaption)
                     .foregroundStyle(.farBlue)
-                    .frame(width: 24, height: 24)
+                    .frame(width: areaIconSize, height: areaIconSize)
+                    .accessibilityHidden(true)
 
                 Text(area.domainLabel)
                     .font(.appSubheadline)

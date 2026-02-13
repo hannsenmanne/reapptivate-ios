@@ -46,13 +46,14 @@ struct OverviewTab: View {
 
 struct ExerciseLinkCard: View {
     let onTap: () -> Void
+    @ScaledMetric(relativeTo: .body) private var iconContainerSize: CGFloat = 44
 
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 14) {
                 RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous)
                     .fill(Color.accent)
-                    .frame(width: 44, height: 44)
+                    .frame(width: iconContainerSize, height: iconContainerSize)
                     .overlay {
                         Image(systemName: "figure.strengthtraining.traditional")
                             .font(.appBody)

@@ -70,6 +70,7 @@ struct DashboardView: View {
                             Image(systemName: "gearshape")
                                 .font(.appBody)
                         }
+                        .accessibilityLabel("Einstellungen")
 
                         Menu {
                             if let user = appState.currentUser {
@@ -84,6 +85,7 @@ struct DashboardView: View {
                             Image(systemName: "person.circle")
                                 .font(.title3)
                         }
+                        .accessibilityLabel("Profil und Abmelden")
                     }
                 }
             }
@@ -177,6 +179,7 @@ struct DashboardTabBar: View {
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
                     }
+                    .accessibilityAddTraits(selectedTab == tab ? .isSelected : [])
                 }
             }
             .padding(.horizontal, 8)
@@ -188,5 +191,6 @@ struct DashboardTabBar: View {
                 .fill(Color.gray200)
                 .frame(height: 1)
         }
+        .sensoryFeedback(.selection, trigger: selectedTab)
     }
 }

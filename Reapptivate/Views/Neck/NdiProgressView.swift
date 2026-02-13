@@ -5,6 +5,7 @@ struct NdiProgressView: View {
     @State private var history: [NdiHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
+    @State private var errorMessage: String?
 
     var latestScore: Int? {
         history.first?.ndiScore
@@ -16,6 +17,7 @@ struct NdiProgressView: View {
                 Image(systemName: "chart.xyaxis.line")
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
+                    .accessibilityHidden(true)
                 Text("NDI-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
@@ -23,8 +25,12 @@ struct NdiProgressView: View {
             }
 
             if isLoading {
-                ProgressView()
+                ProgressView("NDI-Verlauf laden...")
                     .padding(.vertical, 16)
+            } else if let error = errorMessage {
+                InlineErrorView(message: error) {
+                    Task { await loadHistory() }
+                }
             } else if history.isEmpty {
                 Text("Noch keine Screening-Daten")
                     .font(.appSubheadline)
@@ -40,37 +46,7 @@ struct NdiProgressView: View {
 
                 // History entries
                 ForEach(history) { entry in
-                    HStack(spacing: 12) {
-                        // Score circle
-                        Circle()
-                            .fill(entry.severityGrade.map { Color.severityColor(for: $0) } ?? Color.arGray)
-                            .frame(width: 32, height: 32)
-                            .overlay {
-                                Text("\(entry.ndiScore)")
-                                    .font(.appCaptionBold)
-                                    .foregroundStyle(.white)
-                            }
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("NDI: \(entry.ndiScore)/50")
-                                .font(.appSubheadlineMedium)
-                                .foregroundStyle(.textPrimary)
-                            Text(entry.ndiCategory ?? "")
-                                .font(.appCaption)
-                                .foregroundStyle(.textSecondary)
-                        }
-
-                        Spacer()
-
-                        if let date = entry.createdAtDate {
-                            Text(date.formattedGerman)
-                                .font(.appCaption)
-                                .foregroundStyle(.textSecondary)
-                        }
-                    }
-                    .padding(10)
-                    .background(Color.appBg)
-                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
+                    NdiHistoryRow(entry: entry)
                 }
 
                 // Rescreening button
@@ -101,13 +77,56 @@ struct NdiProgressView: View {
 
     private func loadHistory() async {
         isLoading = true
+        errorMessage = nil
         do {
             let response: NeckHistoryResponse = try await apiClient.request(APIEndpoints.neckHistory())
             history = response.history
         } catch {
-            history = []
+            errorMessage = "NDI-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
+    }
+}
+
+// MARK: - NDI History Row
+
+private struct NdiHistoryRow: View {
+    let entry: NdiHistoryEntry
+    @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
+
+    var body: some View {
+        HStack(spacing: 12) {
+            // Score circle
+            Circle()
+                .fill(entry.severityGrade.map { Color.severityColor(for: $0) } ?? Color.arGray)
+                .frame(width: scoreCircleSize, height: scoreCircleSize)
+                .overlay {
+                    Text("\(entry.ndiScore)")
+                        .font(.appCaptionBold)
+                        .foregroundStyle(.white)
+                }
+                .accessibilityLabel("NDI-Score \(entry.ndiScore)")
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("NDI: \(entry.ndiScore)/50")
+                    .font(.appSubheadlineMedium)
+                    .foregroundStyle(.textPrimary)
+                Text(entry.ndiCategory ?? "")
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+            }
+
+            Spacer()
+
+            if let date = entry.createdAtDate {
+                Text(date.formattedGerman)
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+            }
+        }
+        .padding(10)
+        .background(Color.appBg)
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
     }
 }
 
@@ -152,5 +171,7 @@ struct NdiSparkline: View {
                     .position(x: x, y: y)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("NDI-Verlaufsdiagramm")
     }
 }

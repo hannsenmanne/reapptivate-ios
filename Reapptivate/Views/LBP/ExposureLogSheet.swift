@@ -16,6 +16,7 @@ struct ExposureLogSheet: View {
     @State private var notes: String = ""
     @State private var isSubmitting = false
     @State private var fearReduction: Int = 0
+    @State private var stepAdvanceTrigger = false
 
     var body: some View {
         NavigationStack {
@@ -71,6 +72,7 @@ struct ExposureLogSheet: View {
                     Button("Schliessen") { dismiss() }
                 }
             }
+            .sensoryFeedback(.impact(weight: .light), trigger: stepAdvanceTrigger)
         }
     }
 
@@ -195,6 +197,7 @@ struct ExposureLogSheet: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 56))
                 .foregroundStyle(.painGreen)
+                .accessibilityHidden(true)
 
             Text("Super gemacht!")
                 .font(.appTitle2)
@@ -239,6 +242,7 @@ struct ExposureLogSheet: View {
     private func handleAction() {
         switch step {
         case .prepare:
+            stepAdvanceTrigger.toggle()
             withAnimation { step = .post }
         case .post:
             Task { await submitExposure() }

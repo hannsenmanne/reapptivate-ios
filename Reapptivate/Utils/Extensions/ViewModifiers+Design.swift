@@ -10,7 +10,11 @@ enum DesignTokens {
     static let smallRadius: CGFloat = 8
     static let iconRadius: CGFloat = 10
 
-    static let cardShadowColor = Color.black.opacity(0.06)
+    static let cardShadowColor = Color(UIColor { traitCollection in
+        traitCollection.userInterfaceStyle == .dark
+            ? UIColor.white.withAlphaComponent(0.04)
+            : UIColor.black.withAlphaComponent(0.06)
+    })
     static let cardShadowRadius: CGFloat = 8
     static let cardShadowY: CGFloat = 2
 }
@@ -93,18 +97,21 @@ struct PrimaryButtonStyle: ButtonStyle {
 // MARK: - Secondary Button Style (Border, rounded, spring press)
 
 struct SecondaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.appSubheadlineMedium)
-            .foregroundStyle(.textPrimary)
+            .foregroundStyle(isEnabled ? .textPrimary : .gray400)
             .padding(.horizontal, 16)
             .padding(.vertical, 11)
             .background(Color.cardBg)
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous)
-                    .stroke(Color.gray300, lineWidth: 1)
+                    .stroke(isEnabled ? Color.gray300 : Color.gray200, lineWidth: 1)
             )
+            .opacity(isEnabled ? 1.0 : 0.6)
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }

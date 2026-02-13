@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SymptomResponsePicker: View {
     @Binding var selection: SymptomResponse?
+    @State private var selectionTrigger = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -21,6 +22,7 @@ struct SymptomResponsePicker: View {
                     description: "Symptome haben sich zentralisiert (näher zur Wirbelsäule)"
                 ) {
                     selection = .centralized
+                    selectionTrigger.toggle()
                 }
 
                 SymptomOption(
@@ -30,6 +32,7 @@ struct SymptomResponsePicker: View {
                     description: "Symptome sind unverändert geblieben"
                 ) {
                     selection = .unchanged
+                    selectionTrigger.toggle()
                 }
 
                 SymptomOption(
@@ -39,9 +42,11 @@ struct SymptomResponsePicker: View {
                     description: "Symptome haben sich peripheralisiert (weiter in den Arm)"
                 ) {
                     selection = .peripheralized
+                    selectionTrigger.toggle()
                 }
             }
         }
+        .sensoryFeedback(.selection, trigger: selectionTrigger)
     }
 }
 
@@ -81,5 +86,6 @@ struct SymptomOption: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

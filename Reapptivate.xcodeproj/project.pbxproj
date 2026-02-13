@@ -55,6 +55,7 @@
 		52D8D1BFED284C50E609E964 /* AemQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6D2A6547F78F14108BB6F7 /* AemQuestionView.swift */; };
 		5315BDFBFF8B5CFD3D62118C /* View+Conditional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E194175EAB66F85E076F35D /* View+Conditional.swift */; };
 		53C4D34670D9EE06B45AEC9A /* TrainingScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A5F2CE571648B3749291E2 /* TrainingScheduleCard.swift */; };
+		54FBAAD910DFEA0ECFCE75BB /* InlineErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F4CBEE5796A50514969469 /* InlineErrorView.swift */; };
 		595265252A9A3024B220B920 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1966E14D61D54E483FF42850 /* LoginView.swift */; };
 		59AFCBC86DD61652E2BCF38A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B94AB4C6939224E51A895B /* AuthViewModel.swift */; };
 		5AED58DCAB9C43342789F69F /* PhaseAdaptation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1B67EBCBA454C2785CE46A /* PhaseAdaptation.swift */; };
@@ -225,6 +226,7 @@
 		BD5A892251DFEC39975E5E0C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		BF3F9681A21FCA3E587D0939 /* NeckTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckTypes.swift; sourceTree = "<group>"; };
 		BFAB2ECCB22661BDC6EF43E2 /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
+		C2F4CBEE5796A50514969469 /* InlineErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineErrorView.swift; sourceTree = "<group>"; };
 		C4654AA3ADB590090F824DE2 /* PendingSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSync.swift; sourceTree = "<group>"; };
 		C8186469BFF084D8C6E3C65C /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		CB41DB00D8491D5A671A766D /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 			children = (
 				CD2FAE1A94FAC7F063982A79 /* EmptyStateView.swift */,
 				EBADD85BB3402B9C79ED3ADC /* ErrorView.swift */,
+				C2F4CBEE5796A50514969469 /* InlineErrorView.swift */,
 				12F2B7B9CD9B65FCCAFFA9EC /* LoadingView.swift */,
 			);
 			path = Common;
@@ -807,6 +810,7 @@
 				CA885466E815FCC537927808 /* FearHierarchyBuilderView.swift in Sources */,
 				030AB4FD39FDEAEB6888EA89 /* FearHierarchyView.swift in Sources */,
 				FF810FAB0489406E5999F6BF /* Font+Theme.swift in Sources */,
+				54FBAAD910DFEA0ECFCE75BB /* InlineErrorView.swift in Sources */,
 				338097A8A9B095C7CCED46C0 /* InsightsTab.swift in Sources */,
 				0B545B1D2D8DD0476BF61F63 /* KeychainHelper.swift in Sources */,
 				2B69E6C5029896BDDDADBC39 /* LbpEnhancementsView.swift in Sources */,
