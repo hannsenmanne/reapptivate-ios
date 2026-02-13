@@ -1,0 +1,193 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+# REAPPTIVATE iOS
+
+Native iOS companion app for the Reapptivate physiotherapy platform. Communicates with the same Express/PostgreSQL backend as the web app.
+
+**Tech stack**: iOS 17.0+, Swift 6.0, SwiftUI, @Observable, MVVM, SwiftData, URLSession async/await. Zero external dependencies.
+
+## Build & Run
+
+```bash
+# Generate Xcode project from project.yml (requires xcodegen: brew install xcodegen)
+xcodegen generate
+
+# Build for simulator
+xcodebuild -project Reapptivate.xcodeproj -scheme Reapptivate \
+  -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+
+# Install & launch on simulator
+xcrun simctl install "iPhone 17 Pro" build/Build/Products/Debug-iphonesimulator/Reapptivate.app
+xcrun simctl launch "iPhone 17 Pro" com.reapptivate.ios
+
+# Launch with dev token injection (DEBUG builds only)
+xcrun simctl launch "iPhone 17 Pro" com.reapptivate.ios --dev-token "$JWT" --dev-user-id "$USER_ID"
+```
+
+Backend must be running at `localhost:3000` for DEBUG builds. Start it from the Physio-App repo: `npm run dev`
+
+**No test infrastructure exists.** `project.yml` has `testTargets: []` and there are no test files.
+
+## XcodeGen (`project.yml`)
+
+Resources MUST be in the `sources` array with `buildPhase: resources` — NOT as a separate top-level key:
+
+```yaml
+sources:
+  - path: Reapptivate
+    excludes:
+      - "Tests/**"
+      - "Resources/**"
+  - path: Reapptivate/Resources
+    buildPhase: resources
+```
+
+After any changes to `project.yml`, regenerate: `xcodegen generate`
+
+## Architecture
+
+### MVVM with @Observable
+
+All ViewModels: `@Observable @MainActor final class`. They take `APIClient` via init and are created in views with the lazy optional `@State` + `.task` pattern:
+
+```swift
+@State private var viewModel: SomeViewModel?
+.task {
+    let vm = SomeViewModel(apiClient: apiClient)
+    viewModel = vm
+    await vm.loadData()
+}
+```
+
+The ViewModel is always `Optional` and created once inside `.task`. **Exception:** `ExerciseViewModel` has no `APIClient` dependency — it uses `ProtocolLoader.shared` to load bundled JSON.
+
+### Environment Injection
+
+Three shared `@Observable` objects injected via SwiftUI environment from `ReapptivateApp`:
+- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `needsAemScreening`, `needsNeckScreening`
+- `APIClient` — networking with auto JWT injection, 401 detection + logout callback, 1 retry on network failure
+- `NetworkMonitor` — NWPathMonitor wrapper for connectivity
+
+SwiftData `ModelContainer` is configured at `WindowGroup` level (not in AppState): `.modelContainer(for: [CachedUser.self, CachedProgress.self, PendingSync.self])`. `SyncService` receives its `ModelContext` via a deferred `setModelContext()` call — not at init — because the context comes from the view environment.
+
+### Navigation Flow (RootView)
+
+```
+RootView
+├── LoadingView (isCheckingAuth)
+├── LoginView (not authenticated)
+├── AemScreeningView (LBP + screening needed)
+├── NeckScreeningView (Neck + screening needed)
+└── DashboardView (authenticated + screened)
+    ├── OverviewTab — Phase status, condition info
+    ├── ProgramTab — Exercise list + LBP enhancements
+    ├── ProgressTab — Pain history, statistics
+    └── InsightsTab — Analytics (LBP/Neck only)
+```
+
+### Networking
+
+`APIEndpoints` enum: static methods returning `URLRequest` with 30-second timeout. Base URL switches on `#if DEBUG`:
+- DEBUG: `http://localhost:3000/api`
+- RELEASE: `https://physio-app-server-production.up.railway.app/api`
+
+`APIClient` has three request methods:
+- `request<T: Decodable>()` — decodes response to `T`
+- `requestVoid()` — ignores response body
+- `requestData()` — returns raw `Data`
+
+All requests: Bearer token injection, snake_case → camelCase **decoding only** (uploads use standard camelCase encoding — no `convertToSnakeCase`), ISO8601 date parsing (with/without fractional seconds), 401 → `onTokenExpired` callback, 1 retry with 2s delay **only on network errors** (not on 4xx/5xx).
+
+Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappers defined in `APIResponses.swift`.
+
+### JWT Token Storage
+
+`TokenManager` (singleton, `@unchecked Sendable`) stores JWT + user ID in iOS Keychain via `KeychainHelper`. Checks expiry by decoding JWT payload `exp` claim with 5-minute buffer.
+
+**Important**: Keychain persists across app reinstalls. To clear during testing: `xcrun simctl keychain "iPhone 17 Pro" reset`
+
+### Offline Support (SwiftData)
+
+- `CachedUser` / `CachedProgress` — last-known-good data for offline display (`@Attribute(.unique)` on IDs)
+- `PendingSync` — queued failed requests (max 5 retries, sorted by `createdAt`)
+- `SyncService` drains queue when `NetworkMonitor.isConnected` becomes true
+
+### Protocol Loading
+
+`ProtocolLoader.shared` (`@unchecked Sendable` singleton with in-memory cache) loads bundled JSON from `Resources/Protocols/`. Falls back to bundle root if subdirectory not found (XcodeGen bundles files flat). Uses `convertFromSnakeCase` key decoding. Cache is never invalidated (protocol changes require app restart).
+
+Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`).
+
+## Key Gotchas
+
+- **`adaptivePhase` in `UserProfile`** is optional and NOT populated from `/patient/me`. It comes from the separate `/patient/phase-status` endpoint. `currentPhase` computed property defaults to `1`.
+- **`ExerciseWithPhase`** has a custom decoder that handles both nested (`{"exercise": {...}, "phase": 1}`) and flat (`{"id": "...", "name": "...", "phase": 1}`) JSON formats from protocol files.
+- **`AnyCodable`** helper in `LbpTypes.swift` wraps dynamic JSON values (used for `ExposureLog.performedDose` which can be String, Int, Double, Bool, or nested).
+- **`UserProfile.id` is `String`**, not UUID.
+- **`@unchecked Sendable`** is used on `TokenManager`, `ProtocolLoader`, and `NetworkMonitor` for cross-actor access in Swift 6.0 strict concurrency mode.
+
+## Domain Models (Models/Domain/)
+
+- `SharedTypes.swift` — All shared enums: `TendinopathyType` (10 cases), `ExerciseType`, `AdaptationDecision`, `AemSubtype`, `NdiSeverityGrade`, `SymptomResponse`
+- `LbpTypes.swift` — Largest model file: fear hierarchies, exposure logs, pacing plans/templates/logs, plan adjustments, micro-modules, analytics types, `AnyCodable`
+- `NeckTypes.swift` — NDI screening config/results, focus areas, NDI history
+- `AemTypes.swift` — AEM screening config/results/submission
+- `AuthTypes.swift` — Login/onboarding request/response types
+- `APIResponses.swift` — All backend response wrappers (`{user:}`, `{plan:}`, `{hierarchy:}`, etc.)
+
+## Design System
+
+### Design Tokens (`DesignTokens` enum)
+Cards: 14px continuous corners, shadow (black 6%, radius 8, y: 2). Buttons: 12px corners, 50px height, spring scale(0.97). Inputs: 10px corners, 1px gray300 border. Badges: 8px corners, color.opacity(0.1) background.
+
+### Colors (`Color+Theme.swift`)
+Background: `#F8F8FA`, Cards: white, Text: `#1A1A1A`/`#6B7280`, Accent: `#10B981` (emerald). ShapeStyle extensions enable `.foregroundStyle(.textPrimary)` syntax. Helpers: `Color.painColor(for:)`, `Color.subtypeColor(for:)`, `Color.severityColor(for:)`.
+
+### Typography (`Font+Theme.swift`)
+Outfit font family (6 weights bundled as TTF). Semantic: `.appLargeTitle` (34), `.appTitle` (28), `.appTitle2` (22), `.appHeadline` (17 semibold), `.appBody` (17), `.appCaption` (12). Custom: `Font.outfit(.semibold, size: 18)`.
+
+### View Modifiers (`ViewModifiers+Design.swift`)
+`.cardStyle()`, `.accentCardStyle(color:)` (4px left accent via `UnevenRoundedRectangle`), `.inputFieldStyle()`, `.badgeStyle(color:)`, `.infoBoxStyle(color:)`. Button styles: `.primary` (dark), `.secondary` (border), `.accentFilled` (emerald).
+
+## Key Domain Concepts
+
+### Conditions & Subtypes
+- **Tendinopathies** (8 types): 3-phase progression (Isometric → HSR → Eccentric)
+- **LBP**: AEM subtyping → FAR (fear hierarchy + exposure), DER/EER (pacing plans + timer), AR (standard)
+- **Neck Pain**: NDI severity (LEICHT/MITTEL/SCHWER), 4-phase progression
+
+### Pain-Adaptive Phase Progression
+After every progress log, backend returns `AdaptationResult` with potential phase change (PROGRESS/HOLD/REGRESS). Frontend shows `PhaseChangeAlert` overlay.
+
+### Subtype-Conditional Features
+- FAR: Fear hierarchy builder + exposure logging
+- DER/EER: Pacing plans + baseline tracking + pacing timer with audio cues
+- All LBP: Micro-modules (psychoeducation)
+- Neck: Focus areas + NDI rescreening + neck micro-modules
+
+## Backend API (~50 endpoints)
+
+| Route group | Prefix | Purpose |
+|-------------|--------|---------|
+| Auth | `/onboarding/*` | Login, token validation, registration |
+| Patient | `/patient/*` | Profile, progress, phase status, education, schedule |
+| AEM | `/aem/*` | AEM screening (LBP subtyping) |
+| Neck | `/neck/*` | NDI screening, focus areas, micro-modules |
+| LBP | `/lbp-enhancements/*` | Fear hierarchy, pacing, micro-modules, analytics |
+| Config | `/config/*` | Feature flags, health check |
+
+All endpoint definitions are in `Services/Networking/APIEndpoints.swift`.
+
+## Test Accounts
+
+Same as web app: `FARtest@test.com` / `DERtest@test.com` / `EERtest@test.com` / `ARtest@test.com` — Password: `Test1234!`
+
+## Companion Web App
+
+The backend lives at `../Physio-App/`:
+- Backend: `server/` (Express + PostgreSQL, deployed on Railway)
+- Frontend: `client/` (React + Vite, deployed on Vercel)
+- Shared types: `shared/types/index.ts` (source of truth for domain enums)
+- Protocol data: `client/src/data/mockProtocols.ts` → converted to JSON for iOS bundle
