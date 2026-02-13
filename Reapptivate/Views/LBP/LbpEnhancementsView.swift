@@ -30,23 +30,19 @@ struct LbpEnhancementsView: View {
 
     @ViewBuilder
     private func content(_ vm: LbpEnhancementsViewModel) -> some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                switch subtype {
-                case .FAR:
-                    farContent(vm)
-                case .DER, .EER:
-                    pacingContent(vm)
-                case .AR:
-                    arContent(vm)
-                }
-
-                // Micro-modules (all subtypes)
-                MicroModulesList(viewModel: vm)
+        VStack(spacing: 24) {
+            switch subtype {
+            case .FAR:
+                farContent(vm)
+            case .DER, .EER:
+                pacingContent(vm)
+            case .AR:
+                arContent(vm)
             }
-            .padding(16)
+
+            // Micro-modules (all subtypes)
+            MicroModulesList(viewModel: vm)
         }
-        .background(Color.appBg)
         .overlay {
             // Success / error toasts
             if let msg = vm.successMessage {
@@ -90,12 +86,13 @@ struct LbpEnhancementsView: View {
                 Image(systemName: vm.fearHierarchy != nil ? "pencil" : "plus.circle.fill")
                 Text(vm.fearHierarchy != nil ? "Hierarchie bearbeiten" : "Hierarchie erstellen")
             }
-            .font(.subheadline.weight(.medium))
+            .font(.appSubheadlineMedium)
             .foregroundStyle(.farBlue)
             .frame(maxWidth: .infinity)
             .frame(height: 42)
             .background(Color.farBlue.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
         }
         .sheet(isPresented: $showHierarchyBuilder) {
             FearHierarchyBuilderView(viewModel: vm)
@@ -125,12 +122,12 @@ struct LbpEnhancementsView: View {
                         Image(systemName: "plus.circle.fill")
                         Text("Aktivitat protokollieren")
                     }
-                    .font(.body.weight(.semibold))
+                    .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Color.subtypeColor(for: subtype))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
                 .sheet(isPresented: $showActivityLog) {
                     PacingActivityLogSheet(viewModel: vm)
@@ -150,10 +147,10 @@ struct LbpEnhancementsView: View {
                         .font(.system(size: 36))
                         .foregroundStyle(Color.subtypeColor(for: subtype))
                     Text("Noch kein Pacing-Plan")
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
                     Text("Aktivieren Sie einen auf Ihr Profil zugeschnittenen Plan.")
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                         .multilineTextAlignment(.center)
                 }
@@ -165,20 +162,18 @@ struct LbpEnhancementsView: View {
                         Image(systemName: "sparkles")
                         Text("Plan aktivieren")
                     }
-                    .font(.body.weight(.semibold))
+                    .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Color.subtypeColor(for: subtype))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
                 .sheet(isPresented: $showTemplateSelector) {
                     PacingTemplateSelector(viewModel: vm)
                 }
             }
-            .padding(24)
-            .background(Color.cardBg)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .cardStyle(padding: 24)
         }
     }
 
@@ -189,21 +184,19 @@ struct LbpEnhancementsView: View {
         VStack(spacing: 12) {
             HStack(spacing: 10) {
                 Image(systemName: "chart.bar.fill")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.arGray)
                 Text("Adaptive Ubersicht")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             Text("Als Adaptive Responder haben Sie ein ausgeglichenes Bewältigungsmuster. Ihr Programm folgt der Standard-Progression.")
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 }
 
@@ -236,13 +229,13 @@ struct ToastBanner: View {
             Image(systemName: style.icon)
                 .foregroundStyle(.white)
             Text(message)
-                .font(.subheadline.weight(.medium))
+                .font(.appSubheadlineMedium)
                 .foregroundStyle(.white)
             Spacer()
         }
         .padding(14)
         .background(style.color)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
         .padding(.horizontal, 16)
         .padding(.top, 8)
     }

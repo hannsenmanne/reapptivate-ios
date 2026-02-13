@@ -6,17 +6,15 @@ struct PhaseTimelineView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Phasen-Verlauf")
-                .font(.headline)
+                .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
             if records.isEmpty {
                 Text("Noch keine Phasenentscheidungen.")
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity)
-                    .padding(20)
-                    .background(Color.cardBg)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .cardStyle(padding: 20)
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
@@ -58,7 +56,7 @@ struct TimelineEntryView: View {
             // Timeline line + dot
             VStack(spacing: 0) {
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(color)
 
                 if !isLast {
@@ -74,16 +72,16 @@ struct TimelineEntryView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text(record.decision.displayName)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.appSubheadlineSemibold)
                         .foregroundStyle(color)
 
                     if let prev = record.previousPhase {
                         Text("Phase \(prev) → \(record.currentPhase)")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     } else {
                         Text("Phase \(record.currentPhase)")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
 
@@ -91,12 +89,12 @@ struct TimelineEntryView: View {
                 }
 
                 Text(record.reason)
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
 
                 if let date = record.decidedAtDate {
                     Text(date.formattedShortGerman)
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary.opacity(0.7))
                 }
 
@@ -104,11 +102,11 @@ struct TimelineEntryView: View {
                 HStack(spacing: 12) {
                     if let pain = record.avgPainLevel {
                         Text("Schmerz: \(String(format: "%.1f", pain))")
-                            .font(.caption2)
+                            .font(.appCaption2)
                     }
                     if let compliance = record.compliancePct {
                         Text("Compliance: \(Int(compliance))%")
-                            .font(.caption2)
+                            .font(.appCaption2)
                     }
                 }
                 .foregroundStyle(.textSecondary)

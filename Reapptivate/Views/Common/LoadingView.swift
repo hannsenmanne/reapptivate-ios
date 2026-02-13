@@ -8,7 +8,7 @@ struct LoadingView: View {
             ProgressView()
                 .controlSize(.large)
             Text(message)
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

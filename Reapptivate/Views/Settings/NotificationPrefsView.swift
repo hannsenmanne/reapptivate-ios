@@ -16,19 +16,19 @@ struct NotificationPrefsView: View {
                     switch notificationService.authorizationStatus {
                     case .authorized:
                         Label("Erlaubt", systemImage: "checkmark.circle.fill")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.painGreen)
                     case .denied:
                         Label("Blockiert", systemImage: "xmark.circle.fill")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.painRed)
                     case .notDetermined:
                         Label("Nicht angefragt", systemImage: "questionmark.circle")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     default:
                         Label("Unbekannt", systemImage: "questionmark.circle")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
                 }
@@ -77,10 +77,10 @@ struct NotificationPrefsView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Trainings-Erinnerungen werden an Ihren geplanten Trainingstagen zur eingestellten Uhrzeit gesendet.")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Text("Sie konnen die Trainingstage in den Einstellungen unter 'Trainingsplan' anpassen.")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
             }

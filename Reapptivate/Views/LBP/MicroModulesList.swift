@@ -22,10 +22,10 @@ struct MicroModulesList: View {
             // Header
             HStack(spacing: 10) {
                 Image(systemName: "book.fill")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                 Text("Psychoedukation & Module")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -34,11 +34,11 @@ struct MicroModulesList: View {
             VStack(spacing: 8) {
                 HStack {
                     Text("Fortschritt")
-                        .font(.caption.weight(.medium))
+                        .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
                     Spacer()
                     Text("\(completedCount) / \(totalCount) Module")
-                        .font(.caption.weight(.bold))
+                        .font(.appCaptionBold)
                         .foregroundStyle(.farBlue)
                 }
 
@@ -46,7 +46,7 @@ struct MicroModulesList: View {
                     .tint(.farBlue)
 
                 Text("\(progressPercent)% abgeschlossen")
-                    .font(.caption2)
+                    .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
@@ -58,13 +58,14 @@ struct MicroModulesList: View {
                     endPoint: .bottom
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
 
             // Module cards
             if viewModel.microModules.isEmpty {
                 VStack(spacing: 8) {
                     Text("Keine Module verfugbar")
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
                 .padding(.vertical, 16)

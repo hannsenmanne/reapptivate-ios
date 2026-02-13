@@ -50,7 +50,7 @@ struct PacingActivityLogSheet: View {
                 // Activity selection
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Welche Aktivitat haben Sie gemacht?")
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
                     if let activities = viewModel.pacingPlan?.targetActivities {
@@ -66,23 +66,23 @@ struct PacingActivityLogSheet: View {
                                         .foregroundStyle(selectedActivityKey == activity.key ? .accent : .textSecondary)
 
                                     Text(activity.label)
-                                        .font(.subheadline)
+                                        .font(.appSubheadline)
                                         .foregroundStyle(.textPrimary)
 
                                     Spacer()
 
                                     if let quota = activity.quota {
                                         Text("Ziel: \(quota) \(activity.unit ?? "Min")")
-                                            .font(.caption)
+                                            .font(.appCaption)
                                             .foregroundStyle(.textSecondary)
                                     }
                                 }
                                 .padding(12)
                                 .background(selectedActivityKey == activity.key ? Color.accent.opacity(0.06) : Color.cardBg)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                                 .overlay {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(selectedActivityKey == activity.key ? Color.accent : .clear, lineWidth: 1.5)
+                                    RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous)
+                                        .stroke(selectedActivityKey == activity.key ? Color.accent : Color.gray200, lineWidth: selectedActivityKey == activity.key ? 1.5 : 1)
                                 }
                             }
                             .buttonStyle(.plain)
@@ -94,7 +94,7 @@ struct PacingActivityLogSheet: View {
                 if let activity = selectedActivity {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Dauer (\(activity.unit ?? "Min"))")
-                            .font(.subheadline.weight(.medium))
+                            .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
 
                         HStack(spacing: 16) {
@@ -102,12 +102,12 @@ struct PacingActivityLogSheet: View {
                                 doneQuota = max(0, doneQuota - 5)
                             } label: {
                                 Image(systemName: "minus.circle.fill")
-                                    .font(.title2)
+                                    .font(.appTitle2)
                                     .foregroundStyle(.textSecondary)
                             }
 
                             Text("\(doneQuota)")
-                                .font(.title.weight(.bold).monospacedDigit())
+                                .font(.system(size: 28, weight: .bold, design: .monospaced))
                                 .foregroundStyle(complianceColor)
                                 .frame(width: 60)
 
@@ -115,7 +115,7 @@ struct PacingActivityLogSheet: View {
                                 doneQuota += 5
                             } label: {
                                 Image(systemName: "plus.circle.fill")
-                                    .font(.title2)
+                                    .font(.appTitle2)
                                     .foregroundStyle(.textSecondary)
                             }
                         }
@@ -128,7 +128,7 @@ struct PacingActivityLogSheet: View {
                                     .fill(complianceColor)
                                     .frame(width: 8, height: 8)
                                 Text("\(Int(compliancePercentage))% — \(complianceLabel)")
-                                    .font(.caption)
+                                    .font(.appCaption)
                                     .foregroundStyle(complianceColor)
                             }
                             .frame(maxWidth: .infinity)
@@ -139,26 +139,27 @@ struct PacingActivityLogSheet: View {
                     if let pauseMinutes = viewModel.pacingPlan?.rules.mandatoryPauseMinutes, pauseMinutes > 0 {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Anzahl Pausen")
-                                .font(.subheadline.weight(.medium))
+                                .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
 
                             Stepper("\(donePauses) Pausen", value: $donePauses, in: 0...20)
-                                .font(.subheadline)
+                                .font(.appSubheadline)
                         }
                     }
 
                     // Notes
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Notizen (optional)")
-                            .font(.subheadline.weight(.medium))
+                            .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
 
                         TextEditor(text: $notes)
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .frame(minHeight: 60)
                             .padding(8)
                             .background(Color.cardBg)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
                     }
 
                     // Info box
@@ -166,12 +167,10 @@ struct PacingActivityLogSheet: View {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.farBlue)
                         Text("Pacing-Prinzip: Besser unter der Quote bleiben als daruber.")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
-                    .padding(12)
-                    .background(Color.farBlue.opacity(0.06))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .infoBoxStyle(color: .farBlue)
                 }
 
                 // Submit button
@@ -186,12 +185,12 @@ struct PacingActivityLogSheet: View {
                                 Text("Aktivitat protokollieren")
                             }
                         }
-                        .font(.body.weight(.semibold))
+                        .font(.appBodySemibold)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                         .background(Color.accent)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                     }
                     .disabled(isSubmitting)
                 }
@@ -219,7 +218,7 @@ struct PacingActivityLogSheet: View {
                 .foregroundStyle(.painGreen)
 
             Text("Erfolgreich gespeichert!")
-                .font(.title3.weight(.semibold))
+                .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
 
             if compliancePercentage > 110 {
@@ -227,12 +226,10 @@ struct PacingActivityLogSheet: View {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
                     Text("Quote uberschritten. Versuchen Sie beim nachsten Mal etwas kurzere Einheiten.")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
-                .padding(12)
-                .background(Color.painAmber.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .infoBoxStyle(color: .painAmber)
                 .padding(.horizontal, 24)
             }
 
@@ -242,12 +239,12 @@ struct PacingActivityLogSheet: View {
                 dismiss()
             } label: {
                 Text("Fertig")
-                    .font(.body.weight(.semibold))
+                    .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Color.accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 24)
@@ -264,6 +261,7 @@ struct PacingActivityLogSheet: View {
 
         let request = PacingLogRequest(
             activityKey: key,
+            logDate: nil,
             plannedQuota: quota,
             doneQuota: doneQuota,
             plannedPauses: viewModel.pacingPlan?.rules.mandatoryPauseMinutes != nil ? expectedPauses : nil,

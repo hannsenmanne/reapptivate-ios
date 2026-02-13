@@ -8,7 +8,7 @@ struct PainSliderView: View {
         VStack(spacing: 16) {
             // Threshold indicator
             Text("Fur Ihr Profil empfohlen: max. \(maxPainLevel)/10")
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -21,7 +21,7 @@ struct PainSliderView: View {
                     .animation(.spring(duration: 0.2), value: painLevel)
 
                 Text("/10")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.textSecondary)
             }
 
@@ -76,17 +76,17 @@ struct PainSliderView: View {
             // Scale labels
             HStack {
                 Text("0 (kein Schmerz)")
-                    .font(.caption2)
+                    .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                 Spacer()
                 Text("10 (starkster)")
-                    .font(.caption2)
+                    .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
             }
 
             // Feedback text
             Text(feedbackText)
-                .font(.subheadline.weight(.medium))
+                .font(.appSubheadlineMedium)
                 .foregroundStyle(painColor)
                 .frame(maxWidth: .infinity, alignment: .center)
         }

@@ -1,0 +1,124 @@
+{
+  "version": "1.0.0",
+  "description": "Generic AEM screening items — replace with validated instrument items under appropriate license",
+  "likertScale": {
+    "min": 0,
+    "max": 6,
+    "labels": {
+      "de": ["Trifft gar nicht zu", "Trifft kaum zu", "Trifft etwas zu", "Teils/teils", "Trifft überwiegend zu", "Trifft stark zu", "Trifft völlig zu"],
+      "en": ["Not at all", "Barely", "Slightly", "Somewhat", "Mostly", "Strongly", "Completely"]
+    }
+  },
+  "items": [
+    {
+      "id": "fa_01",
+      "textDe": "Ich vermeide körperliche Aktivitäten, die Beschwerden verursachen könnten.",
+      "textEn": "I avoid physical activities that might cause discomfort.",
+      "subscale": "fear_avoidance",
+      "reverse": false
+    },
+    {
+      "id": "fa_02",
+      "textDe": "Ich habe Angst, dass Bewegung meinen Rücken dauerhaft schädigen könnte.",
+      "textEn": "I worry that movement could permanently damage my back.",
+      "subscale": "fear_avoidance",
+      "reverse": false
+    },
+    {
+      "id": "fa_03",
+      "textDe": "Ich glaube, dass Ruhe die beste Behandlung für meine Rückenschmerzen ist.",
+      "textEn": "I believe rest is the best treatment for my back pain.",
+      "subscale": "fear_avoidance",
+      "reverse": false
+    },
+    {
+      "id": "fa_04",
+      "textDe": "Ich fühle mich sicher, wenn ich mich körperlich betätige.",
+      "textEn": "I feel safe when engaging in physical activity.",
+      "subscale": "fear_avoidance",
+      "reverse": true
+    },
+    {
+      "id": "fa_05",
+      "textDe": "Ich habe das Gefühl, dass mein Körper zerbrechlich ist.",
+      "textEn": "I feel that my body is fragile.",
+      "subscale": "fear_avoidance",
+      "reverse": false
+    },
+    {
+      "id": "de_01",
+      "textDe": "Auch wenn ich Schmerzen habe, mache ich weiter, bis die Aufgabe erledigt ist.",
+      "textEn": "Even when I have pain, I keep going until the task is done.",
+      "subscale": "distress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "de_02",
+      "textDe": "Ich ignoriere Warnsignale meines Körpers, um meine Pflichten zu erfüllen.",
+      "textEn": "I ignore my body's warning signals to fulfill my duties.",
+      "subscale": "distress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "de_03",
+      "textDe": "Ich fühle mich schuldig, wenn ich wegen Schmerzen eine Pause einlege.",
+      "textEn": "I feel guilty when I take a break due to pain.",
+      "subscale": "distress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "de_04",
+      "textDe": "Es fällt mir leicht, bei Beschwerden eine Pause einzulegen.",
+      "textEn": "I find it easy to take a break when I have discomfort.",
+      "subscale": "distress_endurance",
+      "reverse": true
+    },
+    {
+      "id": "de_05",
+      "textDe": "Ich überfordere mich regelmäßig und leide danach stärker.",
+      "textEn": "I regularly overdo it and suffer more afterward.",
+      "subscale": "distress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "ee_01",
+      "textDe": "Körperliche Aktivität hebt meine Stimmung deutlich.",
+      "textEn": "Physical activity clearly lifts my mood.",
+      "subscale": "eustress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "ee_02",
+      "textDe": "Ich trainiere gerne intensiv, auch wenn es anstrengend ist.",
+      "textEn": "I enjoy training hard, even when it is demanding.",
+      "subscale": "eustress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "ee_03",
+      "textDe": "Ich empfinde Muskelkater als positives Zeichen.",
+      "textEn": "I see muscle soreness as a positive sign.",
+      "subscale": "eustress_endurance",
+      "reverse": false
+    },
+    {
+      "id": "ee_04",
+      "textDe": "Ich finde intensive körperliche Belastung eher unangenehm.",
+      "textEn": "I find intense physical exertion rather unpleasant.",
+      "subscale": "eustress_endurance",
+      "reverse": true
+    },
+    {
+      "id": "ee_05",
+      "textDe": "Sport und Bewegung sind ein wichtiger Teil meiner Identität.",
+      "textEn": "Sports and movement are an important part of my identity.",
+      "subscale": "eustress_endurance",
+      "reverse": false
+    }
+  ],
+  "cutoffs": {
+    "fear_avoidance": { "low": 2.0, "high": 3.5 },
+    "distress_endurance": { "low": 2.0, "high": 3.5 },
+    "eustress_endurance": { "low": 2.0, "high": 3.5 }
+  }
+}

@@ -18,14 +18,22 @@ struct LoginView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 32) {
-                    // Logo & Header
+                    // Logo & Header — branded "re**app**tivate" wordmark
                     VStack(spacing: 8) {
-                        Text("Reapptivate")
-                            .font(.largeTitle.bold())
-                            .foregroundStyle(.textPrimary)
+                        HStack(spacing: 0) {
+                            Text("re")
+                                .font(.outfit(.extraBold, size: 34))
+                                .foregroundStyle(.textPrimary)
+                            Text("app")
+                                .font(.outfit(.extraBold, size: 34))
+                                .foregroundStyle(.accent)
+                            Text("tivate")
+                                .font(.outfit(.extraBold, size: 34))
+                                .foregroundStyle(.textPrimary)
+                        }
 
                         Text("Evidenzbasierte Physiotherapie")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
                     .padding(.top, 60)
@@ -34,11 +42,11 @@ struct LoginView: View {
                     VStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("E-Mail")
-                                .font(.subheadline.weight(.medium))
+                                .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textSecondary)
 
                             TextField("ihre@email.de", text: $viewModel.email)
-                                .textFieldStyle(.roundedBorder)
+                                .inputFieldStyle()
                                 .textContentType(.emailAddress)
                                 .keyboardType(.emailAddress)
                                 .autocorrectionDisabled()
@@ -50,11 +58,11 @@ struct LoginView: View {
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Passwort")
-                                .font(.subheadline.weight(.medium))
+                                .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textSecondary)
 
                             SecureField("Passwort", text: $viewModel.password)
-                                .textFieldStyle(.roundedBorder)
+                                .inputFieldStyle()
                                 .textContentType(.password)
                                 .focused($focusedField, equals: .password)
                                 .submitLabel(.go)
@@ -65,7 +73,7 @@ struct LoginView: View {
 
                         if let error = viewModel.errorMessage {
                             Text(error)
-                                .font(.caption)
+                                .font(.appCaption)
                                 .foregroundStyle(.painRed)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
@@ -73,38 +81,32 @@ struct LoginView: View {
                         Button {
                             Task { await viewModel.login(appState: appState) }
                         } label: {
-                            Group {
-                                if viewModel.isLoading {
-                                    ProgressView()
-                                        .tint(.white)
-                                } else {
-                                    Text("Anmelden")
-                                }
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .tint(.white)
+                            } else {
+                                Text("Anmelden")
                             }
-                            .font(.body.weight(.semibold))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 48)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accent)
+                        .buttonStyle(.primary)
                         .disabled(viewModel.isLoading || viewModel.email.isEmpty || viewModel.password.isEmpty)
                     }
                     .padding(.horizontal, 24)
 
                     // Divider
                     HStack {
-                        Rectangle().frame(height: 1).foregroundStyle(.textSecondary.opacity(0.3))
+                        Rectangle().frame(height: 1).foregroundStyle(.gray200)
                         Text("oder")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
-                        Rectangle().frame(height: 1).foregroundStyle(.textSecondary.opacity(0.3))
+                        Rectangle().frame(height: 1).foregroundStyle(.gray200)
                     }
                     .padding(.horizontal, 24)
 
                     // Onboarding Option
                     VStack(spacing: 12) {
                         Text("Haben Sie einen Einladungscode?")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
 
                         HStack(spacing: 12) {
@@ -112,17 +114,21 @@ struct LoginView: View {
                                 viewModel.showQRScanner = true
                             } label: {
                                 Label("QR-Code scannen", systemImage: "qrcode.viewfinder")
-                                    .font(.subheadline.weight(.medium))
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(.secondary)
 
                             NavigationLink {
                                 TokenEntryView(viewModel: viewModel)
                             } label: {
                                 Label("Code eingeben", systemImage: "keyboard")
-                                    .font(.subheadline.weight(.medium))
+                                    .font(.appSubheadlineMedium)
+                                    .foregroundStyle(.textPrimary)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 10)
+                                    .background(Color.cardBg)
+                                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
+                                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous).stroke(Color.gray300, lineWidth: 1))
                             }
-                            .buttonStyle(.bordered)
                         }
                     }
 
@@ -150,41 +156,35 @@ struct TokenEntryView: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("Einladungscode eingeben")
-                .font(.title2.bold())
+                .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
             Text("Geben Sie den Code ein, den Sie von Ihrem Therapeuten erhalten haben.")
-                .font(.body)
+                .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
 
             TextField("Einladungscode", text: $viewModel.invitationToken)
-                .textFieldStyle(.roundedBorder)
+                .inputFieldStyle()
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
 
             if let error = viewModel.errorMessage {
                 Text(error)
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.painRed)
             }
 
             Button {
                 Task { await viewModel.validateInvitationToken() }
             } label: {
-                Group {
-                    if viewModel.isValidatingToken {
-                        ProgressView().tint(.white)
-                    } else {
-                        Text("Weiter")
-                    }
+                if viewModel.isValidatingToken {
+                    ProgressView().tint(.white)
+                } else {
+                    Text("Weiter")
                 }
-                .font(.body.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.accent)
+            .buttonStyle(.primary)
             .disabled(viewModel.invitationToken.isEmpty || viewModel.isValidatingToken)
 
             Spacer()

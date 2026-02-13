@@ -11,11 +11,11 @@ struct ErrorView: View {
                 .foregroundStyle(.painAmber)
 
             Text("Fehler")
-                .font(.title2.bold())
+                .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
             Text(message)
-                .font(.body)
+                .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
@@ -25,10 +25,11 @@ struct ErrorView: View {
                     Task { await retryAction() }
                 } label: {
                     Label("Erneut versuchen", systemImage: "arrow.clockwise")
-                        .font(.body.weight(.medium))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.accent)
+                .buttonStyle(.accentFilled)
+                .padding(.horizontal, 24)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

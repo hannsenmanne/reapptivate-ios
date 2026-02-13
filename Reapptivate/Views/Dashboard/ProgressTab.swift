@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProgressTab: View {
     let viewModel: DashboardViewModel?
+    let phaseVM: PhaseViewModel?
 
     var body: some View {
         VStack(spacing: 20) {
@@ -16,36 +17,15 @@ struct ProgressTab: View {
                 )
             }
 
-            // Pain Sparkline - M6 will add full chart
-            if viewModel?.progressStats?.totalSessions ?? 0 > 0 {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Schmerztrend (30 Tage)")
-                        .font(.headline)
-                        .foregroundStyle(.textPrimary)
-
-                    Text("Schmerzverlauf kommt in M6")
-                        .font(.subheadline)
-                        .foregroundStyle(.textSecondary)
+            // Phase Timeline
+            if let phaseVM {
+                if phaseVM.isLoading {
+                    ProgressView()
                         .frame(maxWidth: .infinity)
-                        .frame(height: 100)
-                        .background(Color.cardBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(20)
+                } else {
+                    PhaseTimelineView(records: phaseVM.phaseHistory)
                 }
-            }
-
-            // Phase Timeline - M6 will add
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Phasen-Verlauf")
-                    .font(.headline)
-                    .foregroundStyle(.textPrimary)
-
-                Text("Phase Timeline kommt in M6")
-                    .font(.subheadline)
-                    .foregroundStyle(.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(20)
-                    .background(Color.cardBg)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
         .padding(.bottom, 32)
@@ -110,16 +90,15 @@ struct ProgressStatCard: View {
                 .foregroundStyle(.textSecondary)
 
             Text(value)
-                .font(.title2.weight(.bold))
+                .font(.appTitle2)
                 .foregroundStyle(valueColor)
 
             Text(label)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle(padding: 0)
     }
 }

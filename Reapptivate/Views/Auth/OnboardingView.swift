@@ -16,20 +16,20 @@ struct OnboardingView: View {
                 // Header
                 VStack(spacing: 8) {
                     Text("Konto erstellen")
-                        .font(.title.bold())
+                        .font(.appTitle)
                         .foregroundStyle(.textPrimary)
 
                     if let details = viewModel.invitationDetails {
                         Text("Willkommen, \(details.patientName)!")
-                            .font(.body)
+                            .font(.appBody)
                             .foregroundStyle(.textSecondary)
 
                         Text(details.tendinopathyType.displayName)
-                            .font(.caption.weight(.medium))
+                            .font(.appCaptionMedium)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 4)
                             .background(Color.accent.opacity(0.1))
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                     }
                 }
 
@@ -70,7 +70,7 @@ struct OnboardingView: View {
 
                     if !viewModel.onboardingPassword.isEmpty && !viewModel.onboardingPasswordConfirm.isEmpty && !viewModel.onboardingPasswordsMatch {
                         Text("Passworter stimmen nicht uberein")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.painRed)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -100,7 +100,7 @@ struct OnboardingView: View {
                 // Error
                 if let error = viewModel.errorMessage {
                     Text(error)
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.painRed)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -116,12 +116,10 @@ struct OnboardingView: View {
                             Text("Registrieren")
                         }
                     }
-                    .font(.body.weight(.semibold))
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.accent)
+                .buttonStyle(.accentFilled)
                 .disabled(!canSubmit)
             }
             .padding(24)
@@ -150,12 +148,12 @@ struct FormField<Content: View>: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(label)
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textSecondary)
                 if let hint {
                     Spacer()
                     Text(hint)
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary.opacity(0.7))
                 }
             }

@@ -2,6 +2,9 @@ import Foundation
 
 // MARK: - Neck Screening Config
 
+// API response from GET /api/neck/config: { version, partA, partB }
+// partA has radiculopathy classification items, partB has NDI items
+
 struct NeckScreeningOption: Codable {
     let value: Int
     let labelDe: String
@@ -9,15 +12,33 @@ struct NeckScreeningOption: Codable {
 
 struct NeckScreeningItem: Codable, Identifiable {
     let id: String
-    let part: String  // "A" or "B"
+    let part: String?  // "A" or "B" (added by client for flat access)
     let textDe: String
-    let type: String  // "yesno", "scale", "likert"
+    let type: String?  // "yesno", "scale", "likert"
     let options: [NeckScreeningOption]?
+}
+
+struct NeckScreeningPartConfig: Codable {
+    let title: String?
+    let description: String?
+    let items: [NeckScreeningItem]
 }
 
 struct NeckScreeningConfig: Codable {
     let version: String
-    let items: [NeckScreeningItem]
+    let partA: NeckScreeningPartConfig?
+    let partB: NeckScreeningPartConfig?
+
+    // Convenience: flatten items with part tags for the VM
+    var items: [NeckScreeningItem] {
+        let aItems = (partA?.items ?? []).map { item in
+            NeckScreeningItem(id: item.id, part: "A", textDe: item.textDe, type: item.type, options: item.options)
+        }
+        let bItems = (partB?.items ?? []).map { item in
+            NeckScreeningItem(id: item.id, part: "B", textDe: item.textDe, type: item.type, options: item.options)
+        }
+        return aItems + bItems
+    }
 }
 
 // MARK: - Neck Screening Submission
@@ -28,16 +49,20 @@ struct NeckScreeningSubmission: Codable {
 
 // MARK: - Neck Screening Result
 
+// API response from POST /api/neck/screening: { screening: { id, subtype, subtypeScore, ndiScore, ndiCategory, createdAt } }
+// API response from GET /api/neck/result: { screening: { id, subtype, ndiScore, ndiCategory, ... } }
 struct NeckScreeningResult: Codable {
-    let userId: String
-    let subtypeResult: NeckSubtype
+    let id: String?
+    let subtype: String?
+    let subtypeScore: Int?
     let ndiScore: Int
     let ndiCategory: String
-    let completedAt: String
+    let createdAt: String?
 }
 
 // MARK: - NDI Focus Area
 
+// API response from GET /api/neck/focus-areas: { focusAreas: [...] }
 struct NdiFocusArea: Codable, Identifiable {
     let domainId: String
     let domainLabel: String
@@ -55,11 +80,12 @@ struct NdiFocusArea: Codable, Identifiable {
 
 // MARK: - NDI History Entry
 
+// API response from GET /api/neck/history: { history: [...] }
 struct NdiHistoryEntry: Codable, Identifiable {
     let id: String
     let ndiScore: Int
-    let ndiCategory: String
-    let severityGrade: NdiSeverityGrade
+    let ndiCategory: String?
+    let severityGrade: NdiSeverityGrade?
     let createdAt: String
 
     var createdAtDate: Date? {

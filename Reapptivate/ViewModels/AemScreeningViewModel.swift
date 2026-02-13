@@ -84,9 +84,10 @@ final class AemScreeningViewModel {
 
         do {
             let submission = AemScreeningSubmission(responses: responses)
-            result = try await apiClient.request(
+            let response: AemScreeningResponse = try await apiClient.request(
                 APIEndpoints.submitAemScreening(body: submission)
             )
+            result = response.screening
             isSubmitting = false
             return true
         } catch {

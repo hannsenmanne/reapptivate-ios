@@ -61,7 +61,7 @@ struct AnalyticsDashboardView: View {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.farBlue)
                 Text("30-Tage Ubersicht")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -87,15 +87,13 @@ struct AnalyticsDashboardView: View {
             if !summary.painTrend.isEmpty {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Schmerztrend")
-                        .font(.caption.weight(.medium))
+                        .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
 
                     PainSparklineView(dataPoints: summary.painTrend)
                         .frame(height: 60)
                 }
-                .padding(12)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .cardStyle(padding: 12)
             }
         }
     }
@@ -108,7 +106,7 @@ struct AnalyticsDashboardView: View {
                 Image(systemName: "target")
                     .foregroundStyle(.farBlue)
                 Text("Expositions-Analyse")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -134,10 +132,10 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 16) {
                 VStack(spacing: 4) {
                     Text("Fruhe Exp.")
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Text(String(format: "%.1f", analytics.earlyAvgFear))
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.appTitle3.monospacedDigit())
                         .foregroundStyle(.painAmber)
                 }
 
@@ -146,29 +144,25 @@ struct AnalyticsDashboardView: View {
 
                 VStack(spacing: 4) {
                     Text("Spate Exp.")
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Text(String(format: "%.1f", analytics.lateAvgFear))
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.appTitle3.monospacedDigit())
                         .foregroundStyle(.painGreen)
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(16)
-            .background(Color.cardBg)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .cardStyle()
 
             if analytics.avoidanceDetected {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.painAmber)
                     Text("Vermeidungsverhalten erkannt. Versuchen Sie, auch hohe Angst-Items zu bearbeiten.")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
-                .padding(12)
-                .background(Color.painAmber.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .infoBoxStyle(color: .painAmber)
             }
         }
     }
@@ -181,7 +175,7 @@ struct AnalyticsDashboardView: View {
                 Image(systemName: "gauge.with.dots.needle.bottom.50percent")
                     .foregroundStyle(Color.subtypeColor(for: subtype))
                 Text("Pacing-Analyse")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -207,15 +201,13 @@ struct AnalyticsDashboardView: View {
             if !analytics.weeklySessionVolume.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Wochentliches Volumen")
-                        .font(.caption.weight(.medium))
+                        .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
 
                     WeeklyBarChart(data: analytics.weeklySessionVolume)
                         .frame(height: 80)
                 }
-                .padding(12)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .cardStyle(padding: 12)
             }
         }
     }
@@ -228,18 +220,16 @@ struct AnalyticsDashboardView: View {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.arGray)
                 Text("Ausgeglichene Ubersicht")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             Text("Als Adaptive Responder zeigen Sie ein ausgeglichenes Belastungsmuster. Halten Sie Ihre aktuelle Routine bei.")
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 
     // MARK: - Trigger Section
@@ -247,24 +237,22 @@ struct AnalyticsDashboardView: View {
     private func triggerSection(_ fires: [TriggerFireCount]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Ausgeloste Regeln")
-                .font(.subheadline.weight(.medium))
+                .font(.appSubheadlineMedium)
                 .foregroundStyle(.textPrimary)
 
             ForEach(fires) { fire in
                 HStack {
                     Text(ruleDisplayName(fire.ruleId))
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textPrimary)
                     Spacer()
                     Text("\(fire.count)x")
-                        .font(.caption.weight(.bold).monospacedDigit())
+                        .font(.appCaptionBold.monospacedDigit())
                         .foregroundStyle(.painAmber)
                 }
             }
         }
-        .padding(12)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .cardStyle(padding: 12)
     }
 
     // MARK: - Load Data
@@ -309,16 +297,14 @@ struct MetricCard: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(value)
-                .font(.title2.weight(.bold).monospacedDigit())
+                .font(.appTitle2.monospacedDigit())
                 .foregroundStyle(color)
             Text(title)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(12)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .cardStyle(padding: 12)
     }
 }
 
@@ -367,10 +353,10 @@ struct WeeklyBarChart: View {
                 ForEach(data) { week in
                     VStack(spacing: 2) {
                         Text("\(week.sessions)")
-                            .font(.caption2.monospacedDigit())
+                            .font(.appCaption2.monospacedDigit())
                             .foregroundStyle(.textSecondary)
 
-                        RoundedRectangle(cornerRadius: 4)
+                        Rectangle()
                             .fill(Color.farBlue)
                             .frame(
                                 width: barWidth,

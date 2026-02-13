@@ -18,10 +18,10 @@ struct NeckMicroModulesView: View {
             // Header
             HStack(spacing: 10) {
                 Image(systemName: "book.fill")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(Color.severityColor(for: severity))
                 Text("Nacken-Wissen")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -31,11 +31,11 @@ struct NeckMicroModulesView: View {
                 VStack(spacing: 6) {
                     HStack {
                         Text("Fortschritt")
-                            .font(.caption.weight(.medium))
+                            .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
                         Text("\(completedCount) / \(modules.count)")
-                            .font(.caption.weight(.bold))
+                            .font(.appCaptionBold)
                             .foregroundStyle(Color.severityColor(for: severity))
                     }
                     ProgressView(value: Double(completedCount), total: max(1, Double(modules.count)))
@@ -43,7 +43,7 @@ struct NeckMicroModulesView: View {
                 }
                 .padding(12)
                 .background(Color.severityColor(for: severity).opacity(0.06))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
             }
 
             if isLoading {
@@ -51,7 +51,7 @@ struct NeckMicroModulesView: View {
                     .padding(.vertical, 16)
             } else if modules.isEmpty {
                 Text("Keine Module verfugbar")
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
             } else {
@@ -73,12 +73,12 @@ struct NeckMicroModulesView: View {
     private func loadModules() async {
         isLoading = true
         do {
-            async let mods: [MicroModule] = apiClient.request(APIEndpoints.neckMicroModules(severity: severity.rawValue))
-            async let completed: [MicroModuleCompletion] = apiClient.request(APIEndpoints.neckCompletedModules())
+            async let modsResp: MicroModulesResponse = apiClient.request(APIEndpoints.neckMicroModules(severity: severity.rawValue))
+            async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.neckCompletedModules())
 
-            let (loadedModules, loadedCompleted) = try await (mods, completed)
-            modules = loadedModules
-            completedKeys = Set(loadedCompleted.compactMap { $0.completedAt != nil ? $0.moduleKey : nil })
+            let (loadedModules, loadedCompleted) = try await (modsResp, completedResp)
+            modules = loadedModules.modules
+            completedKeys = Set(loadedCompleted.completedModules)
         } catch {
             modules = []
         }
@@ -88,8 +88,8 @@ struct NeckMicroModulesView: View {
     private func markRead(key: String) async {
         markingKey = key
         do {
-            let start: MicroModuleCompletion = try await apiClient.request(APIEndpoints.startNeckModule(key: key))
-            let _: MicroModuleCompletion = try await apiClient.request(APIEndpoints.completeNeckModule(completionId: start.id))
+            let start: ModuleCompletionResponse = try await apiClient.request(APIEndpoints.startNeckModule(key: key))
+            let _: [String: Bool] = try await apiClient.request(APIEndpoints.completeNeckModule(completionId: start.completion.id))
             completedKeys.insert(key)
         } catch {
             // Silent fail
@@ -117,14 +117,14 @@ struct NeckModuleCard: View {
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "book.fill")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.farBlue)
                         .frame(width: 28, height: 28)
                         .background(Color.farBlue.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
 
                     Text(module.title)
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
                         .multilineTextAlignment(.leading)
 
@@ -133,11 +133,11 @@ struct NeckModuleCard: View {
                     if isCompleted {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.painGreen)
-                            .font(.caption)
+                            .font(.appCaption)
                     }
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
                 .padding(12)
@@ -149,7 +149,7 @@ struct NeckModuleCard: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text(module.content)
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                         .lineSpacing(3)
 
@@ -157,14 +157,14 @@ struct NeckModuleCard: View {
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "lightbulb.fill")
                                 .foregroundStyle(.painAmber)
-                                .font(.caption)
+                                .font(.appCaption)
                             Text(takeHome)
-                                .font(.caption)
+                                .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
                         .padding(10)
                         .background(Color.painAmber.opacity(0.06))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                     }
 
                     if !isCompleted {
@@ -177,12 +177,12 @@ struct NeckModuleCard: View {
                                     Text("Gelesen")
                                 }
                             }
-                            .font(.caption.weight(.semibold))
+                            .font(.outfit(.semibold, size: 12))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 36)
                             .background(Color.painGreen)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                         }
                         .disabled(isMarking)
                     }
@@ -190,7 +190,6 @@ struct NeckModuleCard: View {
                 .padding(12)
             }
         }
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .cardStyle(padding: 0)
     }
 }

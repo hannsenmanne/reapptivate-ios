@@ -6,11 +6,11 @@ struct SymptomResponsePicker: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Symptomreaktion")
-                .font(.headline)
+                .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
             Text("Wie haben sich Ihre Symptome wahrend der Ubung verandert?")
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
 
             VStack(spacing: 8) {
@@ -56,14 +56,14 @@ struct SymptomOption: View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.body)
+                    .font(.appBody)
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(response.displayName)
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                     Text(description)
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
 
@@ -74,10 +74,10 @@ struct SymptomOption: View {
             }
             .padding(12)
             .background(isSelected ? Color.accent.opacity(0.05) : Color.cardBg)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(isSelected ? Color.accent : .clear, lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                    .stroke(isSelected ? Color.accent : Color.gray200, lineWidth: isSelected ? 1.5 : 1)
             }
         }
         .buttonStyle(.plain)

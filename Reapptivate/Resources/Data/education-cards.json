@@ -1,0 +1,148 @@
+[
+  {
+    "id": "p1-what-is-tendinopathy",
+    "phase": 1,
+    "title": "Was ist eine Tendinopathie?",
+    "body": "Ihre Sehne hat sich durch wiederholte Belastung verändert — das ist keine Entzündung, sondern eine Anpassungsreaktion des Gewebes. Die gute Nachricht: Sehnen können sich durch gezieltes Training regenerieren und stärker werden.",
+    "icon": "biology",
+    "source": "JOSPT Clinical Practice Guidelines"
+  },
+  {
+    "id": "p1-pain-not-damage",
+    "phase": 1,
+    "title": "Schmerz ≠ Schaden",
+    "body": "Schmerz während des Trainings bedeutet nicht, dass Sie Ihre Sehne weiter schädigen. Solange der Schmerz unter 3/10 bleibt, ist die Belastung sicher und fördert die Heilung. Ihr Nervensystem lernt mit der Zeit, Belastung wieder als normal zu bewerten.",
+    "icon": "pain",
+    "source": "Pain Science Research, Adriaan Louw 2023"
+  },
+  {
+    "id": "p1-why-isometric",
+    "phase": 1,
+    "title": "Warum isometrische Übungen?",
+    "body": "Isometrische Übungen (Halten ohne Bewegung) sind der ideale Einstieg: Sie belasten die Sehne gleichmäßig, ohne sie durch Bewegung zusätzlich zu reizen. Das regt die Kollagenproduktion an und kann sogar kurzfristig schmerzlindernd wirken.",
+    "icon": "loading"
+  },
+  {
+    "id": "p2-tendon-adaptation",
+    "phase": 2,
+    "title": "Wie Sehnen sich anpassen",
+    "body": "Sehnen brauchen 12-24 Wochen, um sich strukturell umzubauen — deutlich länger als Muskeln. Das langsame, schwere Training in dieser Phase stimuliert die Kollagensynthese und verbessert die Belastbarkeit Ihrer Sehne Schritt für Schritt.",
+    "icon": "biology",
+    "source": "Magnusson et al., Tendon Adaptation Review"
+  },
+  {
+    "id": "p2-24h-rule",
+    "phase": 2,
+    "title": "Die 24-Stunden-Regel",
+    "body": "Nach dem Training darf Ihr Schmerz kurzzeitig ansteigen — das ist normal. Entscheidend ist: Innerhalb von 24 Stunden sollte er wieder auf Ihr Ausgangsniveau zurückkehren. Wenn nicht, war die Belastung zu hoch.",
+    "icon": "recovery",
+    "source": "Silbernagel et al., Pain Monitoring Model"
+  },
+  {
+    "id": "p2-why-slow",
+    "phase": 2,
+    "title": "Warum langsames Training wirkt",
+    "body": "Das Tempo 3-0-3 (3 Sekunden hoch, 3 Sekunden runter) maximiert die Zeit unter Spannung. Diese mechanische Belastung ist der wichtigste Reiz für die Sehnenanpassung — nicht die Anzahl der Wiederholungen, sondern die Qualität zählt.",
+    "icon": "loading"
+  },
+  {
+    "id": "p3-building-resilience",
+    "phase": 3,
+    "title": "Langfristige Belastbarkeit",
+    "body": "In dieser Phase geht es um Widerstandsfähigkeit: Exzentrische Übungen trainieren Ihre Sehne unter Dehnung und bereiten sie auf Alltagsbelastungen vor. Ihr Gewebe wird nicht nur stärker, sondern auch elastischer.",
+    "icon": "progress"
+  },
+  {
+    "id": "p3-load-management",
+    "phase": 3,
+    "title": "Belastung richtig steuern",
+    "body": "Mehr ist nicht immer besser. Steigern Sie die Belastung nur um 10-15% pro Woche und achten Sie auf die 24-Stunden-Regel. Ihr Körper braucht Erholungstage, damit die Sehne sich zwischen den Trainings aufbauen kann.",
+    "icon": "recovery"
+  },
+  {
+    "id": "p3-return-to-activity",
+    "phase": 3,
+    "title": "Zurück zur vollen Belastung",
+    "body": "Eine Tendinopathie heilt nicht von allein — aber mit konsequentem Training können Sie zu Ihrer vollen Aktivität zurückkehren. Die meisten Patienten erreichen nach 12-16 Wochen eine deutliche Verbesserung. Bleiben Sie dran!",
+    "icon": "progress",
+    "source": "Systematic Reviews, Malliaras et al."
+  },
+  {
+    "id": "lbp-p1-understanding-lbp",
+    "phase": 1,
+    "title": "Rückenschmerzen verstehen",
+    "body": "Unspezifische Rückenschmerzen sind sehr häufig und in den meisten Fällen nicht gefährlich. Ihr Rücken ist stark und belastbar — Schmerzen bedeuten nicht, dass etwas kaputt ist. Bewegung ist die beste Medizin.",
+    "icon": "biology",
+    "source": "NICE Guidelines 2020",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p1-pain-neuroscience",
+    "phase": 1,
+    "title": "Wie Schmerz funktioniert",
+    "body": "Schmerz ist ein Warnsignal des Gehirns, aber bei chronischen Rückenschmerzen ist dieses System oft überempfindlich. Durch gezieltes Training lernt Ihr Nervensystem, Belastung wieder als normal zu bewerten — nicht als Bedrohung.",
+    "icon": "pain",
+    "source": "Moseley & Butler, Pain Neuroscience Education",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p1-movement-is-medicine",
+    "phase": 1,
+    "title": "Bewegung als Medizin",
+    "body": "Studien zeigen eindeutig: Bewegung ist die wirksamste Behandlung bei Rückenschmerzen. Die Übungen in diesem Programm sind sicher und darauf ausgelegt, Ihren Rücken schrittweise an Belastung zu gewöhnen.",
+    "icon": "loading",
+    "source": "Hayden et al. 2021, Cochrane Review",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p2-progressive-loading",
+    "phase": 2,
+    "title": "Schrittweise stärker werden",
+    "body": "Ihr Rücken wird durch progressive Belastung stärker — genau wie ein Muskel. In dieser Phase steigern wir langsam die Intensität. Leichte Beschwerden während des Trainings sind normal und kein Grund zur Sorge.",
+    "icon": "loading",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p2-pacing",
+    "phase": 2,
+    "title": "Belastung richtig dosieren",
+    "body": "Vermeiden Sie das \"Boom-Bust\"-Muster: An guten Tagen zu viel machen und dann tagelang leiden. Halten Sie sich an den Trainingsplan — gleichmäßige Belastung bringt bessere Ergebnisse als unkontrollierte Spitzen.",
+    "icon": "recovery",
+    "source": "Hasenbring et al., Avoidance-Endurance Model",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p2-core-stability",
+    "phase": 2,
+    "title": "Rumpfstabilität aufbauen",
+    "body": "Ein starker Rumpf schützt Ihren Rücken nicht wie ein Korsett — er verbessert die Bewegungskontrolle. Die Übungen trainieren Ihr Zusammenspiel von Bauch-, Rücken- und Gesäßmuskulatur für sichere Alltagsbewegungen.",
+    "icon": "biology",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p3-functional-return",
+    "phase": 3,
+    "title": "Zurück in den Alltag",
+    "body": "In dieser Phase trainieren Sie Bewegungen, die Sie im Alltag brauchen: Heben, Tragen, Bücken. Ihr Rücken ist jetzt deutlich belastbarer. Vertrauen Sie auf Ihre Fortschritte!",
+    "icon": "progress",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p3-long-term",
+    "phase": 3,
+    "title": "Langfristig schmerzfrei",
+    "body": "Regelmäßige körperliche Aktivität ist der beste Schutz vor erneuten Rückenschmerzen. Planen Sie auch nach dem Programm 2-3 Trainingseinheiten pro Woche ein. Ihr Rücken wird es Ihnen danken.",
+    "icon": "recovery",
+    "source": "Steffens et al. 2016, Prevention of LBP",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p3-self-efficacy",
+    "phase": 3,
+    "title": "Vertrauen in den eigenen Körper",
+    "body": "Das wichtigste Ergebnis dieses Programms ist nicht nur weniger Schmerz — sondern das Vertrauen, dass Ihr Rücken belastbar ist. Sie wissen jetzt, wie Sie trainieren können, um stark und schmerzfrei zu bleiben.",
+    "icon": "progress",
+    "source": "O'Sullivan et al. 2018, CFT Approach",
+    "condition": "LBP_NONSPECIFIC"
+  }
+]

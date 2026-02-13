@@ -2,7 +2,9 @@ import SwiftUI
 
 struct OverviewTab: View {
     @Environment(AppState.self) private var appState
+    @Environment(APIClient.self) private var apiClient
     let viewModel: DashboardViewModel?
+    var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 20) {
@@ -21,10 +23,91 @@ struct OverviewTab: View {
                 PhaseStatusQuickCard(status: phaseStatus)
             }
 
-            // Today's Exercises Preview
-            TodaysExercisesSection(viewModel: viewModel)
+            // Exercise Link
+            ExerciseLinkCard(onTap: { onNavigateToProgram?() })
+
+            // Wissen
+            if let user = appState.currentUser {
+                WissenCardView(
+                    phase: user.currentPhase,
+                    isLbp: appState.isLbp
+                )
+            }
+
+            // Condition-specific modules
+            if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
+                LbpMicroModulesSection(subtype: subtype)
+            } else if appState.isNeck, let severity = appState.currentUser?.ndiSeverity {
+                NeckMicroModulesView(severity: severity)
+            }
         }
         .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Exercise Link Card
+
+struct ExerciseLinkCard: View {
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 14) {
+                RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous)
+                    .fill(Color.accent)
+                    .frame(width: 44, height: 44)
+                    .overlay {
+                        Image(systemName: "figure.strengthtraining.traditional")
+                            .font(.appBody)
+                            .foregroundStyle(.white)
+                    }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Ubungsprogramm")
+                        .font(.appSubheadlineSemibold)
+                        .foregroundStyle(.textPrimary)
+                    Text("Ubungen anzeigen und protokollieren")
+                        .font(.appCaption)
+                        .foregroundStyle(.textSecondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+            }
+            .cardStyle()
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - LBP Micro Modules (Overview)
+
+struct LbpMicroModulesSection: View {
+    @Environment(APIClient.self) private var apiClient
+    let subtype: AemSubtype
+
+    @State private var viewModel: LbpEnhancementsViewModel?
+
+    var body: some View {
+        Group {
+            if let vm = viewModel {
+                MicroModulesList(viewModel: vm)
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+            }
+        }
+        .task {
+            if viewModel == nil {
+                let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
+                viewModel = vm
+                await vm.loadMicroModules()
+            }
+        }
     }
 }
 
@@ -68,18 +151,17 @@ struct StatCard: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(label)
-                .font(.caption2)
+                .font(.appCaption2)
                 .foregroundStyle(.textSecondary)
             Text(value)
-                .font(isCompact ? .caption.weight(.semibold) : .subheadline.weight(.semibold))
+                .font(isCompact ? .appCaptionBold : .appSubheadlineSemibold)
                 .foregroundStyle(.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .cardStyle(padding: 0)
     }
 }
 
@@ -93,18 +175,17 @@ struct WelcomeCard: View {
                 .foregroundStyle(.accent)
 
             Text("Willkommen bei Reapptivate!")
-                .font(.headline)
+                .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
             Text("Starten Sie Ihr erstes Training, um Ihren Fortschritt zu verfolgen.")
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(Color.accent.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accentCardStyle(padding: 0)
     }
 }
 
@@ -117,7 +198,7 @@ struct PhaseStatusQuickCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text(status.phaseName)
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
                 Spacer()
@@ -128,19 +209,17 @@ struct PhaseStatusQuickCard: View {
             // Readiness Progress
             HStack(spacing: 4) {
                 ForEach(0..<4, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 2)
+                    Rectangle()
                         .fill(index < status.progressionReadiness.criteriaMetCount ? Color.painGreen : Color.textSecondary.opacity(0.2))
                         .frame(height: 4)
                 }
             }
 
             Text(status.nextEvaluationHint)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 }
 
@@ -158,34 +237,11 @@ struct DecisionBadge: View {
 
     var body: some View {
         Text(decision.displayName)
-            .font(.caption.weight(.medium))
+            .font(.appCaptionMedium)
             .foregroundStyle(color)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color.opacity(0.1))
-            .clipShape(Capsule())
-    }
-}
-
-// MARK: - Today's Exercises
-
-struct TodaysExercisesSection: View {
-    let viewModel: DashboardViewModel?
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Heutige Ubungen")
-                .font(.headline)
-                .foregroundStyle(.textPrimary)
-
-            // M5 will populate this with actual exercise cards
-            Text("Ubungen werden in M5 angezeigt")
-                .font(.subheadline)
-                .foregroundStyle(.textSecondary)
-                .frame(maxWidth: .infinity)
-                .padding(20)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
     }
 }

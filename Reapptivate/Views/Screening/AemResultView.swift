@@ -14,16 +14,16 @@ struct AemResultView: View {
                         .frame(width: 72, height: 72)
                         .overlay {
                             subtypeIcon
-                                .font(.title)
+                                .font(.appTitle)
                                 .foregroundStyle(.white)
                         }
 
                     Text(result.subtype.displayName)
-                        .font(.title2.bold())
+                        .font(.appTitle2)
                         .foregroundStyle(.textPrimary)
 
                     Text(subtypeDescription)
-                        .font(.body)
+                        .font(.appBody)
                         .foregroundStyle(.textSecondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
@@ -33,40 +33,34 @@ struct AemResultView: View {
                 // Subscale scores
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Ihre Ergebnisse")
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
                     ScoreBar(label: "Fear-Avoidance", score: result.subscaleScores.fearAvoidance, maxScore: 6, color: .farBlue)
                     ScoreBar(label: "Distress-Endurance", score: result.subscaleScores.distressEndurance, maxScore: 6, color: .derOrange)
                     ScoreBar(label: "Eustress-Endurance", score: result.subscaleScores.eustressEndurance, maxScore: 6, color: .eerGreen)
                 }
-                .padding(16)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .cardStyle()
 
                 // Pain threshold
                 HStack(spacing: 12) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
                     Text("Ihr Schmerzgrenzwert: max. \(result.subtype.maxPainLevel)/10 wahrend des Trainings")
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textPrimary)
                 }
-                .padding(16)
-                .background(Color.painAmber.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .infoBoxStyle(color: .painAmber)
 
                 // Continue button
                 Button {
                     onContinue()
                 } label: {
                     Text("Weiter zum Dashboard")
-                        .font(.body.weight(.semibold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.accent)
+                .buttonStyle(.accentFilled)
             }
             .padding(24)
         }
@@ -107,20 +101,20 @@ struct ScoreBar: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(label)
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Spacer()
                 Text(String(format: "%.1f", score))
-                    .font(.caption.weight(.semibold))
+                    .font(.appCaptionBold)
                     .foregroundStyle(color)
             }
 
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 3)
+                    Rectangle()
                         .fill(Color.textSecondary.opacity(0.15))
 
-                    RoundedRectangle(cornerRadius: 3)
+                    Rectangle()
                         .fill(color)
                         .frame(width: geometry.size.width * CGFloat(score / maxScore))
                 }

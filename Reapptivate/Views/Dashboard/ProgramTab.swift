@@ -5,9 +5,19 @@ struct ProgramTab: View {
     let exerciseVM: ExerciseViewModel?
     var onExerciseLogged: (() -> Void)?
 
-    @State private var selectedExercise: ExerciseWithPhase?
-    @State private var showProgressLog = false
-    @State private var showDetail = false
+    @State private var activeSheet: ExerciseSheet?
+
+    enum ExerciseSheet: Identifiable {
+        case progressLog(ExerciseWithPhase)
+        case detail(ExerciseWithPhase)
+
+        var id: String {
+            switch self {
+            case .progressLog(let e): "log-\(e.id)"
+            case .detail(let e): "detail-\(e.id)"
+            }
+        }
+    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -43,14 +53,12 @@ struct ProgramTab: View {
                             isCompleted: exerciseVM.isCompleted(exercise.id),
                             userSubtype: appState.currentUser?.aemSubtype,
                             onLog: {
-                                selectedExercise = exercise
-                                showProgressLog = true
+                                activeSheet = .progressLog(exercise)
+                            },
+                            onDetail: {
+                                activeSheet = .detail(exercise)
                             }
                         )
-                        .onTapGesture {
-                            selectedExercise = exercise
-                            showDetail = true
-                        }
                     }
                 }
             } else {
@@ -67,8 +75,9 @@ struct ProgramTab: View {
             }
         }
         .padding(.bottom, 32)
-        .sheet(isPresented: $showProgressLog) {
-            if let exercise = selectedExercise {
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .progressLog(let exercise):
                 ProgressLogSheet(
                     exercise: exercise,
                     maxPainLevel: maxPainLevel,
@@ -78,26 +87,23 @@ struct ProgramTab: View {
                         onExerciseLogged?()
                     }
                 )
-            }
-        }
-        .sheet(isPresented: $showDetail) {
-            if let exercise = selectedExercise {
+            case .detail(let exercise):
                 NavigationStack {
                     ExerciseDetailView(
                         exercise: exercise,
                         onLog: {
-                            showDetail = false
+                            activeSheet = nil
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showProgressLog = true
+                                activeSheet = .progressLog(exercise)
                             }
                         },
                         onStartSession: {
-                            showDetail = false
+                            activeSheet = nil
                         }
                     )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Fertig") { showDetail = false }
+                            Button("Fertig") { activeSheet = nil }
                         }
                     }
                 }

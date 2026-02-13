@@ -21,7 +21,6 @@ final class LbpEnhancementsViewModel {
     // MARK: - Micro-Modules (All)
     var microModules: [MicroModule] = []
     var completedModuleKeys: Set<String> = []
-    private var completionIds: [String: String] = [:] // moduleKey -> completionId
 
     // MARK: - UI State
     var isLoading = false
@@ -60,7 +59,8 @@ final class LbpEnhancementsViewModel {
 
     func loadFearHierarchy() async {
         do {
-            fearHierarchy = try await apiClient.request(APIEndpoints.fearHierarchy())
+            let response: FearHierarchyResponse = try await apiClient.request(APIEndpoints.fearHierarchy())
+            fearHierarchy = response.hierarchy
         } catch let error as APIError where error == .notFound {
             fearHierarchy = nil
         } catch {
@@ -71,7 +71,8 @@ final class LbpEnhancementsViewModel {
     func saveFearHierarchy(items: [FearHierarchyItemInput]) async -> Bool {
         do {
             let request = FearHierarchyCreateRequest(items: items)
-            fearHierarchy = try await apiClient.request(APIEndpoints.createFearHierarchy(body: request))
+            let response: FearHierarchyResponse = try await apiClient.request(APIEndpoints.createFearHierarchy(body: request))
+            fearHierarchy = response.hierarchy
             successMessage = "Hierarchie gespeichert"
             return true
         } catch {
@@ -80,11 +81,10 @@ final class LbpEnhancementsViewModel {
         }
     }
 
-    func logExposure(itemId: String, fearBefore: Int, fearAfter: Int, notes: String?) async -> Bool {
+    func logExposure(itemId: String, request: ExposureLogRequest) async -> Bool {
         do {
-            let request = ExposureLogRequest(fearBefore: fearBefore, fearAfter: fearAfter, notes: notes)
-            let log: ExposureLog = try await apiClient.request(APIEndpoints.logExposure(itemId: itemId, body: request))
-            exposureLogs[itemId, default: []].append(log)
+            let response: ExposureLogResponse = try await apiClient.request(APIEndpoints.logExposure(itemId: itemId, body: request))
+            exposureLogs[itemId, default: []].append(response.log)
             successMessage = "Exposition protokolliert"
             return true
         } catch {
@@ -95,8 +95,8 @@ final class LbpEnhancementsViewModel {
 
     func loadExposures(itemId: String) async {
         do {
-            let logs: [ExposureLog] = try await apiClient.request(APIEndpoints.getExposures(itemId: itemId))
-            exposureLogs[itemId] = logs
+            let response: ExposureLogsResponse = try await apiClient.request(APIEndpoints.getExposures(itemId: itemId))
+            exposureLogs[itemId] = response.logs
         } catch {
             // Silent fail
         }
@@ -106,7 +106,8 @@ final class LbpEnhancementsViewModel {
 
     func loadPacingPlan() async {
         do {
-            pacingPlan = try await apiClient.request(APIEndpoints.pacingPlan())
+            let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.pacingPlan())
+            pacingPlan = response.plan
         } catch {
             pacingPlan = nil
         }
@@ -114,7 +115,8 @@ final class LbpEnhancementsViewModel {
 
     func loadPacingTemplate() async {
         do {
-            pacingTemplate = try await apiClient.request(APIEndpoints.pacingTemplate(subtype: subtype.rawValue))
+            let response: PacingTemplateResponse = try await apiClient.request(APIEndpoints.pacingTemplate(subtype: subtype.rawValue))
+            pacingTemplate = response.template
         } catch {
             errorMessage = "Vorlage konnte nicht geladen werden."
         }
@@ -122,7 +124,8 @@ final class LbpEnhancementsViewModel {
 
     func activateTemplate() async -> Bool {
         do {
-            pacingPlan = try await apiClient.request(APIEndpoints.createPacingPlanFromTemplate())
+            let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.createPacingPlanFromTemplate())
+            pacingPlan = response.plan
             successMessage = "Pacing-Plan aktiviert"
             return true
         } catch {
@@ -133,7 +136,8 @@ final class LbpEnhancementsViewModel {
 
     func startBaseline() async -> Bool {
         do {
-            pacingPlan = try await apiClient.request(APIEndpoints.startBaseline())
+            let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.startBaseline())
+            pacingPlan = response.plan
             successMessage = "Baseline-Phase gestartet"
             return true
         } catch {
@@ -144,12 +148,13 @@ final class LbpEnhancementsViewModel {
 
     func logBaselineActivity(activityKey: String, duration: Int, painLevel: Int) async -> Bool {
         let body: [String: Any] = [
-            "activity_key": activityKey,
+            "activityKey": activityKey,
             "duration": duration,
-            "pain_level": painLevel
+            "painLevel": painLevel
         ]
         do {
-            pacingPlan = try await apiClient.request(APIEndpoints.logBaseline(body: body))
+            let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.logBaseline(body: body))
+            pacingPlan = response.plan
             successMessage = "Baseline-Aktivitat protokolliert"
             return true
         } catch {
@@ -160,7 +165,8 @@ final class LbpEnhancementsViewModel {
 
     func calculateBaseline() async -> Bool {
         do {
-            pacingPlan = try await apiClient.request(APIEndpoints.calculateBaseline())
+            let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.calculateBaseline())
+            pacingPlan = response.plan
             successMessage = "Quoten berechnet"
             return true
         } catch {
@@ -171,8 +177,8 @@ final class LbpEnhancementsViewModel {
 
     func logPacingActivity(request: PacingLogRequest) async -> Bool {
         do {
-            let log: PacingLog = try await apiClient.request(APIEndpoints.logPacing(body: request))
-            pacingLogs.insert(log, at: 0)
+            let response: PacingLogFullResponse = try await apiClient.request(APIEndpoints.logPacing(body: request))
+            pacingLogs.insert(response.log, at: 0)
             successMessage = "Aktivitat protokolliert"
             return true
         } catch {
@@ -183,7 +189,8 @@ final class LbpEnhancementsViewModel {
 
     func loadPacingLogs() async {
         do {
-            pacingLogs = try await apiClient.request(APIEndpoints.pacingLogs())
+            let response: PacingLogsResponse = try await apiClient.request(APIEndpoints.pacingLogs())
+            pacingLogs = response.logs
         } catch {
             pacingLogs = []
         }
@@ -199,7 +206,8 @@ final class LbpEnhancementsViewModel {
 
     func applyProgression() async -> Bool {
         do {
-            pacingPlan = try await apiClient.request(APIEndpoints.applyProgression())
+            let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.applyProgression())
+            pacingPlan = response.plan
             successMessage = "Quoten angepasst"
             quotaSuggestion = nil
             return true
@@ -213,7 +221,8 @@ final class LbpEnhancementsViewModel {
 
     func loadPlanAdjustments() async {
         do {
-            planAdjustments = try await apiClient.request(APIEndpoints.planAdjustments())
+            let response: PlanAdjustmentsResponse = try await apiClient.request(APIEndpoints.planAdjustments())
+            planAdjustments = response.adjustments
         } catch {
             planAdjustments = []
         }
@@ -223,13 +232,12 @@ final class LbpEnhancementsViewModel {
 
     func loadMicroModules() async {
         do {
-            async let modules: [MicroModule] = apiClient.request(APIEndpoints.lbpMicroModules(subtype: subtype.rawValue))
-            async let completions: [MicroModuleCompletion] = apiClient.request(APIEndpoints.lbpCompletedModules())
+            async let modulesResp: MicroModulesResponse = apiClient.request(APIEndpoints.lbpMicroModules(subtype: subtype.rawValue))
+            async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.lbpCompletedModules())
 
-            let (loadedModules, loadedCompletions) = try await (modules, completions)
-            microModules = loadedModules
-            completedModuleKeys = Set(loadedCompletions.compactMap { $0.completedAt != nil ? $0.moduleKey : nil })
-            completionIds = Dictionary(loadedCompletions.map { ($0.moduleKey, $0.id) }, uniquingKeysWith: { _, last in last })
+            let (loadedModules, loadedCompleted) = try await (modulesResp, completedResp)
+            microModules = loadedModules.modules
+            completedModuleKeys = Set(loadedCompleted.completedModules)
         } catch {
             // Silent fail for modules
         }
@@ -238,9 +246,9 @@ final class LbpEnhancementsViewModel {
     func markModuleRead(key: String) async -> Bool {
         do {
             // Start
-            let startResponse: MicroModuleCompletion = try await apiClient.request(APIEndpoints.startLbpModule(key: key))
+            let startResponse: ModuleCompletionResponse = try await apiClient.request(APIEndpoints.startLbpModule(key: key))
             // Complete
-            let _: MicroModuleCompletion = try await apiClient.request(APIEndpoints.completeLbpModule(completionId: startResponse.id))
+            let _: [String: Bool] = try await apiClient.request(APIEndpoints.completeLbpModule(completionId: startResponse.completion.id))
             completedModuleKeys.insert(key)
             return true
         } catch {

@@ -66,6 +66,37 @@ struct ExerciseWithPhase: Codable, Identifiable {
     var id: String { exercise.id }
     var name: String { exercise.name }
 
+    // Manual init for constructing from code
+    init(exercise: Exercise, phase: Int, phaseTitle: String, weeksRange: String, phaseGoal: String, ndiSeverity: NdiSeverityGrade? = nil, dosageModifier: DosageModifier? = nil) {
+        self.exercise = exercise
+        self.phase = phase
+        self.phaseTitle = phaseTitle
+        self.weeksRange = weeksRange
+        self.phaseGoal = phaseGoal
+        self.ndiSeverity = ndiSeverity
+        self.dosageModifier = dosageModifier
+    }
+
+    // Custom decoder: handles both nested {"exercise": {...}, "phase": 1}
+    // and flat {"id": "...", "name": "...", "phase": 1} JSON formats
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Try nested Exercise first, fall back to flat
+        if let nested = try? container.decode(Exercise.self, forKey: .exercise) {
+            exercise = nested
+        } else {
+            exercise = try Exercise(from: decoder)
+        }
+
+        phase = try container.decode(Int.self, forKey: .phase)
+        phaseTitle = try container.decodeIfPresent(String.self, forKey: .phaseTitle) ?? ""
+        weeksRange = try container.decodeIfPresent(String.self, forKey: .weeksRange) ?? ""
+        phaseGoal = try container.decodeIfPresent(String.self, forKey: .phaseGoal) ?? ""
+        ndiSeverity = try container.decodeIfPresent(NdiSeverityGrade.self, forKey: .ndiSeverity)
+        dosageModifier = try container.decodeIfPresent(DosageModifier.self, forKey: .dosageModifier)
+    }
+
     enum CodingKeys: String, CodingKey {
         case exercise, phase, phaseTitle, weeksRange, phaseGoal
         case ndiSeverity, dosageModifier
@@ -73,14 +104,15 @@ struct ExerciseWithPhase: Codable, Identifiable {
 }
 
 // MARK: - Dosage Modifier (neck severity adjustments)
+// JSON format: { "SCHWER": { "sets_multiplier": 0.7, "hold_time_multiplier": 0.6 } }
 
-struct DosageModifier: Codable {
-    let sets: Int?
-    let reps: Int?
-    let holdTime: Int?
-    let restBetweenSets: Int?
-    let intensity: String?
+struct DosageMultipliers: Codable {
+    let setsMultiplier: Double?
+    let repsMultiplier: Double?
+    let holdTimeMultiplier: Double?
 }
+
+typealias DosageModifier = [String: DosageMultipliers]
 
 // MARK: - AEM Progression Rules
 
@@ -103,7 +135,7 @@ struct ExerciseProtocol: Codable, Identifiable {
     let name: String
     let description: String
     let durationWeeks: Int
-    let exercises: [Exercise]
+    let exercises: [ExerciseWithPhase]
     let frequencyPerWeek: Int
     let evidenceBase: [String]
     let maxPhase: Int?

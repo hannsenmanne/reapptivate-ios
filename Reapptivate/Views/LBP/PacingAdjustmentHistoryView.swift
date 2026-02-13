@@ -7,10 +7,10 @@ struct PacingAdjustmentHistoryView: View {
         VStack(spacing: 12) {
             HStack(spacing: 10) {
                 Image(systemName: "arrow.triangle.branch")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.painAmber)
                 Text("Plan-Anpassungen")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -18,10 +18,10 @@ struct PacingAdjustmentHistoryView: View {
             if viewModel.planAdjustments.isEmpty {
                 VStack(spacing: 8) {
                     Text("Keine Anpassungen")
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                     Text("Automatische Anpassungen werden hier angezeigt, wenn Trigger-Regeln aktiviert werden.")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                         .multilineTextAlignment(.center)
                 }
@@ -76,7 +76,7 @@ struct AdjustmentRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: ruleIcon)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(ruleColor)
                 .frame(width: 28, height: 28)
                 .background(ruleColor.opacity(0.12))
@@ -85,30 +85,28 @@ struct AdjustmentRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text(ruleDisplayName)
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
                     if adjustment.applied {
                         Text("Angewandt")
-                            .font(.caption2)
+                            .font(.appCaption2)
                             .foregroundStyle(.painGreen)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.painGreen.opacity(0.1))
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                     }
                 }
 
-                Text(adjustment.triggerReason)
-                    .font(.caption)
+                Text(adjustment.action ?? "")
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                     .lineLimit(2)
             }
 
             Spacer()
         }
-        .padding(12)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .cardStyle(padding: 12)
     }
 }

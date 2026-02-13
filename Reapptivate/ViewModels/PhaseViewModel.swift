@@ -16,7 +16,8 @@ final class PhaseViewModel {
 
     func loadPhaseStatus() async {
         do {
-            phaseStatus = try await apiClient.request(APIEndpoints.phaseStatus())
+            let response: PhaseStatusResponse = try await apiClient.request(APIEndpoints.phaseStatus())
+            phaseStatus = response.phaseStatus
         } catch {
             Log.api.error("Failed to load phase status: \(error)")
         }
@@ -25,7 +26,8 @@ final class PhaseViewModel {
     func loadPhaseHistory() async {
         isLoading = true
         do {
-            phaseHistory = try await apiClient.request(APIEndpoints.phaseHistory())
+            let response: PhaseHistoryResponse = try await apiClient.request(APIEndpoints.phaseHistory())
+            phaseHistory = response.history
         } catch {
             self.error = "Phasenverlauf konnte nicht geladen werden."
             Log.api.error("Failed to load phase history: \(error)")

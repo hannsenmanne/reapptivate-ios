@@ -76,17 +76,19 @@ struct ScheduleEditorView: View {
         isLoading = true
         do {
             let schedule: UserSchedule = try await apiClient.request(APIEndpoints.getSchedule())
-            selectedDays = Set(schedule.days)
-            // Parse time
-            let components = schedule.time.split(separator: ":")
-            if components.count >= 2,
-               let hour = Int(components[0]),
-               let minute = Int(components[1]) {
-                var dateComponents = DateComponents()
-                dateComponents.hour = hour
-                dateComponents.minute = minute
-                if let date = Calendar.current.date(from: dateComponents) {
-                    reminderTime = date
+            selectedDays = Set(schedule.availableDays)
+            // Parse time from preferredTimes
+            if let time = schedule.preferredTimes.first {
+                let parts = time.split(separator: ":")
+                if parts.count >= 2,
+                   let hour = Int(parts[0]),
+                   let minute = Int(parts[1]) {
+                    var dateComponents = DateComponents()
+                    dateComponents.hour = hour
+                    dateComponents.minute = minute
+                    if let date = Calendar.current.date(from: dateComponents) {
+                        reminderTime = date
+                    }
                 }
             }
         } catch {
@@ -110,8 +112,9 @@ struct ScheduleEditorView: View {
         let timeString = String(format: "%02d:%02d", hour, minute)
 
         let request = ScheduleRequest(
-            days: Array(selectedDays).sorted(),
-            time: timeString
+            availableDays: Array(selectedDays).sorted(),
+            preferredTimes: [timeString],
+            notificationsEnabled: true
         )
 
         do {

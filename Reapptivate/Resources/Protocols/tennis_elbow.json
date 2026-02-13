@@ -1,0 +1,97 @@
+{
+  "id": "tennis-elbow-protocol-v1",
+  "tendinopathy_type": "TENNIS_ELBOW",
+  "name": "Lateral Epicondylitis (Tennis Elbow) Rehabilitation Protocol",
+  "description": "Evidence-based protocol for lateral elbow tendinopathy using isometric and heavy-slow resistance training with eccentric emphasis",
+  "duration_weeks": 12,
+  "frequency_per_week": 3,
+  "max_pain_level": 3,
+  "max_phase": 3,
+  "pain_rule": "Schmerz max. 3/10 während der Übung. Vermeiden Sie Greifbewegungen, die Schmerzen auslösen.",
+  "evidence_base": [
+    "JOSPT 2022 Clinical Practice Guidelines: Lateral Elbow Pain and Muscle Function Impairments",
+    "Systematic Review (2024-2025): Eccentric strengthening shows 42% improvement in pain scores",
+    "HSR Loading Literature: Heavy-slow resistance (6RM) superior for collagen turnover"
+  ],
+  "progression_criteria": [
+    "Schmerzfreies Greifen im Alltag möglich",
+    "Sätze/Wiederholungen schmerzfrei absolviert",
+    "Belastungssteigerung um 10-15% pro Woche toleriert"
+  ],
+  "exercises": [
+    {
+      "id": "tennis-iso-wrist-extension",
+      "name": "Isometric Wrist Extension",
+      "type": "ISOMETRIC",
+      "description": "Seated with forearm supported, wrist in neutral position with manual or band resistance",
+      "sets": 5,
+      "reps": 1,
+      "hold_time": 45,
+      "rest_between_sets": 120,
+      "intensity": "Manual resistance or light resistance band",
+      "phase": 1,
+      "phase_title": "Isometric Loading",
+      "weeks_range": "Weeks 1-2",
+      "phase_goal": "Pain reduction and initial tendon adaptation"
+    },
+    {
+      "id": "tennis-eccentric-wrist-ext",
+      "name": "Eccentric Wrist Extension",
+      "type": "ECCENTRIC",
+      "description": "Seated with forearm supported on table, palm down. Lower weight slowly, assist with other hand on way up if needed",
+      "sets": 3,
+      "reps": 15,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "70-80% 1RM (6-8RM)",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 3-4",
+      "phase_goal": "Increase tendon strength, improve collagen turnover, and restore motor control"
+    },
+    {
+      "id": "tennis-wrist-extensor-strength",
+      "name": "Wrist Extensor Strengthening",
+      "type": "HSR",
+      "description": "Forearm supported, wrist over edge of table with dumbbell or resistance band",
+      "sets": 4,
+      "reps": 10,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "Dumbbell or resistance band (progressive loading)",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 5-8",
+      "phase_goal": "Increase tendon strength, improve collagen turnover, and restore motor control"
+    },
+    {
+      "id": "tennis-supinator-strength",
+      "name": "Supinator Strengthening",
+      "type": "CONCENTRIC",
+      "description": "Elbow at 90°, forearm neutral (thumb up). Rotate palm up (supination) and return",
+      "sets": 3,
+      "reps": 12,
+      "rest_between_sets": 90,
+      "tempo": "2-0-2",
+      "intensity": "Light dumbbell or hammer (1-3 lbs to start)",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 5-12",
+      "phase_goal": "Increase tendon strength, improve collagen turnover, and restore motor control"
+    },
+    {
+      "id": "tennis-grip-strength",
+      "name": "Grip Strengthening",
+      "type": "CONCENTRIC",
+      "description": "Overall forearm strength training using hand gripper or stress ball",
+      "sets": 3,
+      "reps": 12,
+      "rest_between_sets": 90,
+      "intensity": "Hand gripper or stress ball",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 5-12",
+      "phase_goal": "Increase tendon strength, improve collagen turnover, and restore motor control"
+    }
+  ]
+}

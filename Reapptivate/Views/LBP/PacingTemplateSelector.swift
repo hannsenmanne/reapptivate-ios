@@ -16,12 +16,12 @@ struct PacingTemplateSelector: View {
                             .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
 
                         Text("Ihr Pacing-Plan wird vorbereitet")
-                            .font(.title3.weight(.semibold))
+                            .font(.appTitle3)
                             .foregroundStyle(.textPrimary)
                             .multilineTextAlignment(.center)
 
                         Text("Basierend auf Ihrem \(viewModel.subtype.displayName)-Profil")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
                     .padding(24)
@@ -36,55 +36,56 @@ struct PacingTemplateSelector: View {
                             endPoint: .bottom
                         )
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
 
                     if let template = viewModel.pacingTemplate {
                         // Activities
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Enthaltene Aktivitaten")
-                                .font(.subheadline.weight(.medium))
+                                .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
 
-                            ForEach(template.targetActivities) { activity in
-                                HStack(spacing: 10) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(.painGreen)
-                                        .font(.caption)
-                                    Text(activity.label)
-                                        .font(.subheadline)
-                                        .foregroundStyle(.textPrimary)
-                                    Spacer()
-                                    if let baseline = activity.baseline {
-                                        Text("\(baseline) \(activity.unit ?? "Min")")
-                                            .font(.caption)
-                                            .foregroundStyle(.textSecondary)
+                            if let activities = template.targetActivities {
+                                ForEach(activities, id: \.key) { activity in
+                                    HStack(spacing: 10) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundStyle(.painGreen)
+                                            .font(.appCaption)
+                                        Text(activity.label)
+                                            .font(.appSubheadline)
+                                            .foregroundStyle(.textPrimary)
+                                        Spacer()
+                                        if let baseline = activity.defaultBaseline {
+                                            Text("\(baseline) Min")
+                                                .font(.appCaption)
+                                                .foregroundStyle(.textSecondary)
+                                        }
                                     }
                                 }
                             }
                         }
-                        .padding(16)
-                        .background(Color.cardBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .cardStyle()
 
                         // Rules
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Regeln & Sicherheitsmechanismen")
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(.textPrimary)
+                        if let rules = template.rules {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Regeln & Sicherheitsmechanismen")
+                                    .font(.appSubheadlineMedium)
+                                    .foregroundStyle(.textPrimary)
 
-                            if let increment = template.rules.quotaIncrementPercent {
-                                RuleRow(icon: "chart.line.uptrend.xyaxis", text: "Steigerung: \(increment)% pro Woche")
+                                if let increment = rules.quotaIncrementPercent {
+                                    RuleRow(icon: "chart.line.uptrend.xyaxis", text: "Steigerung: \(increment)% pro Woche")
+                                }
+                                if let pause = rules.mandatoryPauseMinutes, pause > 0 {
+                                    RuleRow(icon: "pause.circle.fill", text: "Obligatorische Pause: \(pause) Min")
+                                }
+                                if let cap = rules.weeklySessionCap {
+                                    RuleRow(icon: "calendar.badge.clock", text: "Max. \(cap) Einheiten/Woche")
+                                }
                             }
-                            if let pause = template.rules.mandatoryPauseMinutes, pause > 0 {
-                                RuleRow(icon: "pause.circle.fill", text: "Obligatorische Pause: \(pause) Min")
-                            }
-                            if let cap = template.rules.weeklySessionCap {
-                                RuleRow(icon: "calendar.badge.clock", text: "Max. \(cap) Einheiten/Woche")
-                            }
+                            .cardStyle()
                         }
-                        .padding(16)
-                        .background(Color.cardBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     } else {
                         ProgressView("Vorlage laden...")
                             .padding()
@@ -103,12 +104,12 @@ struct PacingTemplateSelector: View {
                                     Text("Plan aktivieren")
                                 }
                             }
-                            .font(.body.weight(.semibold))
+                            .font(.appBodySemibold)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 48)
                             .background(Color.subtypeColor(for: viewModel.subtype))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                         }
                         .disabled(isActivating || viewModel.pacingTemplate == nil)
                     }

@@ -38,23 +38,30 @@ final class DashboardViewModel {
         isLoading = true
         error = nil
 
-        async let phaseResult: AdaptivePhaseStatus? = loadSafely { [apiClient] in
+        async let phaseResult: PhaseStatusResponse? = loadSafely { [apiClient] in
             try await apiClient.request(APIEndpoints.phaseStatus())
         }
 
-        async let statsResult: ProgressStats? = loadSafely { [apiClient] in
+        async let statsResult: StatsResponse? = loadSafely { [apiClient] in
             try await apiClient.request(APIEndpoints.getProgressStats())
         }
 
-        async let todayResult: [ProgressEntry]? = loadSafely { [apiClient] in
+        async let todayResult: TodayProgressResponse? = loadSafely { [apiClient] in
             try await apiClient.request(APIEndpoints.getTodayProgress())
         }
 
         let (phase, stats, today) = await (phaseResult, statsResult, todayResult)
 
-        phaseStatus = phase
-        progressStats = stats
-        completedToday = today ?? []
+        phaseStatus = phase?.phaseStatus
+        if let s = stats?.stats {
+            progressStats = ProgressStats(
+                totalSessions: s.totalSessions,
+                lastSevenDays: s.lastSevenDays,
+                averagePain: s.averagePainLevel,
+                compliancePercent: s.currentWeekCompliance
+            )
+        }
+        completedToday = today?.completedExercises ?? []
 
         isLoading = false
     }

@@ -37,10 +37,10 @@ struct ProgressLogSheet: View {
                     // Exercise name
                     VStack(spacing: 4) {
                         Text(exercise.exercise.name)
-                            .font(.headline)
+                            .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
                         Text(exercise.exercise.type.displayName)
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
 
@@ -51,22 +51,22 @@ struct ProgressLogSheet: View {
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Satze")
-                                .font(.caption)
+                                .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $setsCompleted, in: 0...20) {
                                 Text("\(setsCompleted)")
-                                    .font(.title3.weight(.semibold))
+                                    .font(.appTitle3)
                             }
                         }
                         .frame(maxWidth: .infinity)
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Wiederholungen")
-                                .font(.caption)
+                                .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $repsCompleted, in: 0...50) {
                                 Text("\(repsCompleted)")
-                                    .font(.title3.weight(.semibold))
+                                    .font(.appTitle3)
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -80,7 +80,7 @@ struct ProgressLogSheet: View {
                     // Notes
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Notizen (optional)")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                         TextField("Wie haben Sie sich gefuhlt?", text: $notes, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
@@ -90,7 +90,7 @@ struct ProgressLogSheet: View {
                     // Error
                     if let error = errorMessage {
                         Text(error)
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.painRed)
                     }
 
@@ -105,12 +105,10 @@ struct ProgressLogSheet: View {
                                 Text("Training speichern")
                             }
                         }
-                        .font(.body.weight(.semibold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accent)
+                    .buttonStyle(.accentFilled)
                     .disabled(isSubmitting)
                 }
                 .padding(20)
@@ -187,12 +185,12 @@ struct SuccessBanner: View {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(.white)
                 Text(message)
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.white)
             }
             .padding(16)
             .background(Color.painGreen)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
             .padding(.horizontal, 16)
             .padding(.bottom, 32)
         }
@@ -220,15 +218,15 @@ struct PhaseChangeOverlay: View {
                     .foregroundStyle(isProgress ? .painGreen : .painAmber)
 
                 Text(isProgress ? "Aufgestiegen!" : "Phase angepasst")
-                    .font(.title.bold())
+                    .font(.appTitle)
                     .foregroundStyle(.white)
 
                 Text("Phase \(result.previousPhase) → Phase \(result.currentPhase)")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.white.opacity(0.8))
 
                 Text(result.reason)
-                    .font(.body)
+                    .font(.appBody)
                     .foregroundStyle(.white.opacity(0.7))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)

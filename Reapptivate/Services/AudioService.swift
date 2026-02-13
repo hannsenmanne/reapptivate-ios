@@ -1,4 +1,6 @@
+import AudioToolbox
 import AVFoundation
+import UIKit
 
 @Observable
 @MainActor

@@ -14,15 +14,15 @@ struct PhaseChangeAlert: View {
             VStack {
                 HStack(spacing: 12) {
                     Image(systemName: isProgress ? "arrow.up.circle.fill" : "exclamationmark.triangle.fill")
-                        .font(.title2)
+                        .font(.appTitle2)
                         .foregroundStyle(isProgress ? .painGreen : .painAmber)
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(isProgress ? "Phase aufgestiegen!" : "Phase angepasst")
-                            .font(.subheadline.weight(.semibold))
+                            .font(.appSubheadlineSemibold)
                             .foregroundStyle(.white)
                         Text(phaseName)
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.white.opacity(0.8))
                     }
 
@@ -40,7 +40,7 @@ struct PhaseChangeAlert: View {
                 }
                 .padding(16)
                 .background(isProgress ? Color(hex: "1F2937") : Color.painAmber)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
                 .padding(.horizontal, 16)
 
                 Spacer()

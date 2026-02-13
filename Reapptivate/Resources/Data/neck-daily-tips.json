@@ -1,0 +1,82 @@
+{
+  "ndi_1": {
+    "label": "Schmerzintensität",
+    "tips": [
+      "Versuchen Sie eine 5-minütige Entspannungsübung: Schließen Sie die Augen, atmen Sie tief ein und lassen Sie bei jedem Ausatmen bewusst die Nackenmuskulatur los.",
+      "Wärme kann helfen: Legen Sie ein warmes Tuch für 10-15 Minuten auf den Nacken, um die Durchblutung zu fördern und Verspannungen zu lösen.",
+      "Sanfte Selbstmassage: Streichen Sie mit den Fingerspitzen langsam vom Hinterkopf über den Nacken zu den Schultern. Wiederholen Sie 5x pro Seite."
+    ]
+  },
+  "ndi_2": {
+    "label": "Körperpflege",
+    "tips": [
+      "Beim Haare waschen: Neigen Sie den Kopf nicht zu weit nach hinten. Nutzen Sie ggf. eine Handbrause in aufrechter Position.",
+      "Kleidung anziehen: Legen Sie Kleidung auf Hüfthöhe bereit, sodass Sie sich nicht bücken oder strecken müssen.",
+      "Beim Zähneputzen: Stützen Sie den Ellbogen auf der Waschbeckenablage ab, um den Nacken zu entlasten."
+    ]
+  },
+  "ndi_3": {
+    "label": "Heben",
+    "tips": [
+      "Heben Sie Gegenstände körpernah und mit geradem Rücken. Nutzen Sie die Beine statt den Nacken zu belasten.",
+      "Verteilen Sie schwere Einkäufe auf zwei Taschen, um eine symmetrische Belastung zu erreichen.",
+      "Beim Tragen: Halten Sie Gegenstände auf Hüfthöhe und vermeiden Sie es, sie über Schulterhöhe zu heben."
+    ]
+  },
+  "ndi_4": {
+    "label": "Lesen",
+    "tips": [
+      "Nutzen Sie eine Buchstütze oder ein Tablet-Ständer, um das Lesematerial auf Augenhöhe zu bringen.",
+      "Machen Sie alle 20 Minuten eine kurze Pause: Schauen Sie in die Ferne und drehen Sie den Kopf sanft nach links und rechts.",
+      "Vermeiden Sie das Lesen im Liegen — eine aufrechte Position mit Nackenstütze ist besser für Ihren Nacken."
+    ]
+  },
+  "ndi_5": {
+    "label": "Kopfschmerzen",
+    "tips": [
+      "Chin Tuck-Pausen: Alle 60 Minuten 5x Kinn sanft Richtung Brust ziehen und 5 Sekunden halten — entlastet die obere HWS.",
+      "Trinken Sie ausreichend Wasser (mind. 1,5 L/Tag). Dehydrierung kann Kopfschmerzen verstärken.",
+      "Prüfen Sie Ihre Bildschirmhöhe: Die Oberkante sollte auf Augenhöhe sein, um Nackenüberstreckung zu vermeiden."
+    ]
+  },
+  "ndi_6": {
+    "label": "Konzentration",
+    "tips": [
+      "Nutzen Sie die Pomodoro-Technik: 25 Min. konzentriert arbeiten, dann 5 Min. Pause mit Nackenmobilisation.",
+      "Reduzieren Sie Ablenkungen: Ein ruhiger Arbeitsplatz hilft, die schmerzbedingte Konzentrationsstörung zu minimieren.",
+      "Kurze Atemübung bei Konzentrationsverlust: 4 Sek. einatmen, 4 Sek. halten, 6 Sek. ausatmen. 3x wiederholen."
+    ]
+  },
+  "ndi_7": {
+    "label": "Arbeit",
+    "tips": [
+      "Richten Sie Ihren Arbeitsplatz ergonomisch ein: Bildschirm auf Augenhöhe, Unterarme waagerecht, Füße flach am Boden.",
+      "Wechseln Sie alle 30-45 Minuten die Position: Stehen, Sitzen, kurz gehen — Variabilität ist der Schlüssel.",
+      "Nutzen Sie ein Headset statt das Telefon zwischen Ohr und Schulter zu klemmen."
+    ]
+  },
+  "ndi_8": {
+    "label": "Autofahren",
+    "tips": [
+      "Stellen Sie die Kopfstütze so ein, dass die Mitte des Hinterkopfs aufliegt. Der Abstand zum Kopf sollte max. 4 cm betragen.",
+      "Bei längeren Fahrten: Alle 45-60 Min. eine Pause einlegen und den Nacken sanft mobilisieren.",
+      "Passen Sie den Rückspiegel so an, dass Sie aufrecht sitzen müssen, um hineinzuschauen — ein natürliches Haltungsbiofeedback."
+    ]
+  },
+  "ndi_9": {
+    "label": "Schlafen",
+    "tips": [
+      "Verwenden Sie ein stützendes Kissen: Es sollte die natürliche Kurve der HWS unterstützen — nicht zu hoch, nicht zu flach.",
+      "Vermeiden Sie Bauchlage — Seitenlage mit einem Kissen zwischen den Knien oder Rückenlage sind nackenfreundlicher.",
+      "30 Min. vor dem Schlafen: Sanfte Nackenrotation und Dehnübungen können die Schlafqualität verbessern."
+    ]
+  },
+  "ndi_10": {
+    "label": "Freizeit",
+    "tips": [
+      "Dosieren Sie Ihre Aktivitäten: Lieber 3x 30 Min. am Tag aktiv sein als einmal 2 Stunden durchgehend.",
+      "Wählen Sie nackenfreundliche Aktivitäten: Schwimmen (Rückenschwimmen), Spazierengehen und Yoga sind ideal.",
+      "Planen Sie Erholungspausen ein: Nach anstrengenden Aktivitäten 10-15 Min. entspannen, bevor Sie die nächste beginnen."
+    ]
+  }
+}

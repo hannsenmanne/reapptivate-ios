@@ -17,30 +17,10 @@ struct LoginUser: Codable {
     let name: String
     let email: String
     let tendinopathyType: TendinopathyType
-    let adaptivePhase: Int?
     let aemScreeningCompleted: Bool?
     let aemSubtype: AemSubtype?
     let neckScreeningCompleted: Bool?
-    let neckSubtype: NeckSubtype?
-
-    func toUserProfile() -> UserProfile {
-        UserProfile(
-            id: id,
-            email: email,
-            name: name,
-            tendinopathyType: tendinopathyType,
-            protocolId: nil,
-            startDate: "",
-            createdAt: "",
-            adaptivePhase: adaptivePhase,
-            phaseStartedAt: nil,
-            adaptationEnabled: true,
-            aemScreeningCompleted: aemScreeningCompleted,
-            aemSubtype: aemSubtype,
-            neckScreeningCompleted: neckScreeningCompleted,
-            ndiSeverity: nil
-        )
-    }
+    let neckSubtype: String?
 }
 
 // MARK: - Onboarding

@@ -13,16 +13,16 @@ struct NeckProfileView: View {
                     .frame(width: 44, height: 44)
                     .overlay {
                         Image(systemName: severityIcon)
-                            .font(.title3)
+                            .font(.appTitle3)
                             .foregroundStyle(.white)
                     }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("NDI-Schweregrad")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Text(severity.displayName)
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(Color.severityColor(for: severity))
                 }
 
@@ -30,12 +30,12 @@ struct NeckProfileView: View {
 
                 // Severity pill
                 Text(severityLabel)
-                    .font(.caption2.weight(.medium))
+                    .font(.outfit(.medium, size: 11))
                     .foregroundStyle(Color.severityColor(for: severity))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
                     .background(Color.severityColor(for: severity).opacity(0.1))
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
             }
 
             // Subtype info
@@ -44,22 +44,18 @@ struct NeckProfileView: View {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
                     Text("Radiculopathie — angepasstes Programm")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
-                .padding(10)
-                .background(Color.painAmber.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .infoBoxStyle(color: .painAmber)
             }
 
             // Description
             Text(severityDescription)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 
     var severityIcon: String {

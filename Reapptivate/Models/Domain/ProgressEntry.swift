@@ -4,7 +4,7 @@ import Foundation
 
 struct ProgressEntry: Codable, Identifiable {
     let id: String
-    let userId: String
+    let userId: String?
     let exerciseId: String
     let completedAt: String
     let setsCompleted: Int
@@ -15,18 +15,6 @@ struct ProgressEntry: Codable, Identifiable {
 
     var completedAtDate: Date? {
         Date.fromISO8601(completedAt)
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case exerciseId = "exercise_id"
-        case completedAt = "completed_at"
-        case setsCompleted = "sets_completed"
-        case repsCompleted = "reps_completed"
-        case painLevel = "pain_level"
-        case notes
-        case symptomResponse = "symptom_response"
     }
 }
 
@@ -41,25 +29,11 @@ struct ProgressLogRequest: Codable {
     let symptomResponse: SymptomResponse?
 }
 
-// MARK: - Progress Stats (from /progress/stats)
+// MARK: - Progress Stats (convenience, populated from StatsResponse)
 
-struct ProgressStats: Codable {
+struct ProgressStats {
     let totalSessions: Int
     let lastSevenDays: Int
     let averagePain: Double
     let compliancePercent: Double
-
-    enum CodingKeys: String, CodingKey {
-        case totalSessions = "total_sessions"
-        case lastSevenDays = "last_seven_days"
-        case averagePain = "average_pain"
-        case compliancePercent = "compliance_percent"
-    }
-}
-
-// MARK: - Progress Log Response (includes adaptation)
-
-struct ProgressLogResponse: Codable {
-    let entry: ProgressEntry
-    let adaptation: AdaptationResult?
 }

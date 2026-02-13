@@ -8,10 +8,10 @@ struct PacingPlanView: View {
             // Header
             HStack(spacing: 10) {
                 Image(systemName: "timer")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
                 Text("Pacing-Plan")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -26,7 +26,7 @@ struct PacingPlanView: View {
                 if let rules = Optional(plan.rules) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Regeln")
-                            .font(.caption.weight(.medium))
+                            .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
 
                         if let increment = rules.quotaIncrementPercent {
@@ -42,9 +42,7 @@ struct PacingPlanView: View {
                             RuleRow(icon: "calendar", text: "Max. \(cap) Einheiten/Woche")
                         }
                     }
-                    .padding(12)
-                    .background(Color.cardBg)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .cardStyle(padding: 12)
                 }
             } else {
                 VStack(spacing: 12) {
@@ -52,7 +50,7 @@ struct PacingPlanView: View {
                         .font(.system(size: 32))
                         .foregroundStyle(.textSecondary)
                     Text("Noch kein Pacing-Plan")
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
                 .frame(maxWidth: .infinity)
@@ -75,22 +73,22 @@ struct PacingActivityRow: View {
                 .frame(width: 36, height: 36)
                 .overlay {
                     Image(systemName: activityIcon)
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.farBlue)
                 }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(activity.label)
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
                 if plan.baselineMode {
                     Text("Baseline-Phase")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.painAmber)
                 } else if let quota = activity.quota {
                     Text("Ziel: \(quota) \(activity.unit ?? "Min")")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
             }
@@ -100,17 +98,15 @@ struct PacingActivityRow: View {
             if let baseline = activity.baseline {
                 VStack(alignment: .trailing, spacing: 0) {
                     Text("\(baseline)")
-                        .font(.subheadline.weight(.bold).monospacedDigit())
+                        .font(.appSubheadlineSemibold.monospacedDigit())
                         .foregroundStyle(.textPrimary)
                     Text("Baseline")
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
             }
         }
-        .padding(12)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .cardStyle(padding: 12)
     }
 
     var activityIcon: String {
@@ -133,11 +129,11 @@ struct RuleRow: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.painGreen)
                 .frame(width: 16)
             Text(text)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textPrimary)
         }
     }

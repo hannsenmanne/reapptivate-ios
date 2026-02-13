@@ -28,14 +28,14 @@ struct MicroModuleCard: View {
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: moduleIcon)
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.farBlue)
                         .frame(width: 32, height: 32)
                         .background(Color.farBlue.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.iconRadius, style: .continuous))
 
                     Text(module.title)
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
                         .multilineTextAlignment(.leading)
 
@@ -43,16 +43,16 @@ struct MicroModuleCard: View {
 
                     if isCompleted {
                         Text("Abgeschlossen")
-                            .font(.caption2)
+                            .font(.appCaption2)
                             .foregroundStyle(.painGreen)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
                             .background(Color.painGreen.opacity(0.1))
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                     }
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
                 .padding(14)
@@ -67,7 +67,7 @@ struct MicroModuleCard: View {
                 VStack(alignment: .leading, spacing: 16) {
                     // Body text
                     Text(module.content)
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                         .lineSpacing(4)
 
@@ -76,20 +76,18 @@ struct MicroModuleCard: View {
                         HStack(alignment: .top, spacing: 10) {
                             Image(systemName: "lightbulb.fill")
                                 .foregroundStyle(.painAmber)
-                                .font(.subheadline)
+                                .font(.appSubheadline)
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Kernbotschaft")
-                                    .font(.caption.weight(.semibold))
+                                    .font(.appCaptionBold)
                                     .foregroundStyle(.textPrimary)
                                 Text(takeHome)
-                                    .font(.caption)
+                                    .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
                         }
-                        .padding(12)
-                        .background(Color.painAmber.opacity(0.08))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .infoBoxStyle(color: .painAmber)
                     }
 
                     // Mark as read button
@@ -107,12 +105,12 @@ struct MicroModuleCard: View {
                                     Text("Gelesen")
                                 }
                             }
-                            .font(.subheadline.weight(.medium))
+                            .font(.appSubheadlineMedium)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 40)
                             .background(Color.painGreen)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                         }
                         .disabled(isMarking)
                     }
@@ -121,6 +119,7 @@ struct MicroModuleCard: View {
             }
         }
         .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
     }
 }

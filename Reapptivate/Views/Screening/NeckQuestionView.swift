@@ -9,7 +9,7 @@ struct NeckQuestionView: View {
         VStack(spacing: 24) {
             // Question text
             Text(item.textDe)
-                .font(.title3.weight(.medium))
+                .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
@@ -56,11 +56,11 @@ struct NeckQuestionView: View {
                     } label: {
                         HStack(spacing: 12) {
                             Text("\(option.value)")
-                                .font(.subheadline.weight(.bold).monospacedDigit())
+                                .font(.appSubheadlineSemibold.monospacedDigit())
                                 .frame(width: 28)
 
                             Text(option.labelDe)
-                                .font(.subheadline)
+                                .font(.appSubheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             if selectedValue == option.value {
@@ -71,10 +71,10 @@ struct NeckQuestionView: View {
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
                         .background(selectedValue == option.value ? Color.accent.opacity(0.08) : Color.cardBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
                         .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(selectedValue == option.value ? Color.accent : .clear, lineWidth: 1.5)
+                            RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                                .stroke(selectedValue == option.value ? Color.accent : Color.gray200, lineWidth: selectedValue == option.value ? 1.5 : 1)
                         }
                     }
                     .buttonStyle(.plain)
@@ -100,14 +100,14 @@ struct OptionButton: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .font(.title3.weight(.medium))
+                .font(.appTitle3)
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
                 .background(isSelected ? Color.accent.opacity(0.08) : Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(isSelected ? Color.accent : .clear, lineWidth: 2)
+                    RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                        .stroke(isSelected ? Color.accent : Color.gray200, lineWidth: isSelected ? 2 : 1)
                 }
         }
         .buttonStyle(.plain)

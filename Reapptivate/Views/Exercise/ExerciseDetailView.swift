@@ -12,19 +12,19 @@ struct ExerciseDetailView: View {
                 // Header
                 VStack(alignment: .leading, spacing: 8) {
                     Text(exercise.exercise.type.displayName)
-                        .font(.caption.weight(.medium))
+                        .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Color.accent.opacity(0.1))
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
 
                     Text(exercise.exercise.name)
-                        .font(.title2.bold())
+                        .font(.appTitle2)
                         .foregroundStyle(.textPrimary)
 
                     Text(exercise.phaseTitle)
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
 
@@ -36,7 +36,7 @@ struct ExerciseDetailView: View {
 
                 // Description
                 Text(exercise.exercise.description)
-                    .font(.body)
+                    .font(.appBody)
                     .foregroundStyle(.textPrimary)
 
                 // Parameters Card
@@ -55,9 +55,7 @@ struct ExerciseDetailView: View {
                     ParameterRow(label: "Intensitat", value: exercise.exercise.intensity)
                     ParameterRow(label: "Pause zwischen Satzen", value: "\(exercise.exercise.restBetweenSets) Sek.")
                 }
-                .padding(16)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .cardStyle()
 
                 // Action Buttons
                 VStack(spacing: 12) {
@@ -65,22 +63,19 @@ struct ExerciseDetailView: View {
                         onStartSession()
                     } label: {
                         Label("Training starten", systemImage: "play.fill")
-                            .font(.body.weight(.semibold))
                             .frame(maxWidth: .infinity)
                             .frame(height: 48)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accent)
+                    .buttonStyle(.accentFilled)
 
                     Button {
                         onLog()
                     } label: {
                         Label("Schnell protokollieren", systemImage: "checkmark.circle")
-                            .font(.body.weight(.medium))
                             .frame(maxWidth: .infinity)
                             .frame(height: 44)
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.secondary)
                 }
             }
             .padding(16)
@@ -97,11 +92,11 @@ struct ParameterRow: View {
     var body: some View {
         HStack {
             Text(label)
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
             Spacer()
             Text(value)
-                .font(.subheadline.weight(.medium))
+                .font(.appSubheadlineMedium)
                 .foregroundStyle(.textPrimary)
         }
     }

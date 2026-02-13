@@ -8,10 +8,10 @@ struct QuotaProgressionView: View {
         VStack(spacing: 16) {
             HStack(spacing: 10) {
                 Image(systemName: "chart.line.uptrend.xyaxis")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.painGreen)
                 Text("Quoten-Steigerung")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -30,12 +30,13 @@ struct QuotaProgressionView: View {
                         Image(systemName: "arrow.triangle.2.circlepath")
                         Text("Steigerung prufen")
                     }
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
                     .frame(maxWidth: .infinity)
                     .frame(height: 42)
                     .background(Color.accent.opacity(0.08))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
                 }
             }
         }
@@ -50,43 +51,47 @@ struct QuotaProgressionView: View {
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundStyle(.painGreen)
                 Text("Steigerung empfohlen!")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.appSubheadlineSemibold)
                     .foregroundStyle(.painGreen)
             }
 
             // Current vs suggested
-            VStack(spacing: 8) {
-                ForEach(Array(suggestion.suggestedQuotas.keys.sorted()), id: \.self) { key in
-                    if let current = suggestion.currentQuotas[key],
-                       let suggested = suggestion.suggestedQuotas[key] {
-                        HStack {
-                            Text(key)
-                                .font(.caption)
-                                .foregroundStyle(.textPrimary)
-                            Spacer()
-                            Text("\(current)")
-                                .font(.caption.monospacedDigit())
-                                .foregroundStyle(.textSecondary)
-                            Image(systemName: "arrow.right")
-                                .font(.caption2)
-                                .foregroundStyle(.painGreen)
-                            Text("\(suggested)")
-                                .font(.caption.weight(.bold).monospacedDigit())
-                                .foregroundStyle(.painGreen)
-                            Text("Min")
-                                .font(.caption2)
-                                .foregroundStyle(.textSecondary)
+            if let suggestedQuotas = suggestion.suggestedQuotas {
+                VStack(spacing: 8) {
+                    ForEach(Array(suggestedQuotas.keys.sorted()), id: \.self) { key in
+                        if let current = suggestion.currentQuotas?[key],
+                           let suggested = suggestedQuotas[key] {
+                            HStack {
+                                Text(key)
+                                    .font(.appCaption)
+                                    .foregroundStyle(.textPrimary)
+                                Spacer()
+                                Text("\(current)")
+                                    .font(.appCaption.monospacedDigit())
+                                    .foregroundStyle(.textSecondary)
+                                Image(systemName: "arrow.right")
+                                    .font(.appCaption2)
+                                    .foregroundStyle(.painGreen)
+                                Text("\(suggested)")
+                                    .font(.appCaptionBold.monospacedDigit())
+                                    .foregroundStyle(.painGreen)
+                                Text("Min")
+                                    .font(.appCaption2)
+                                    .foregroundStyle(.textSecondary)
+                            }
                         }
                     }
                 }
+                .padding(12)
+                .background(Color.appBg)
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
             }
-            .padding(12)
-            .background(Color.appBg)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            Text("+\(suggestion.incrementPercent)% Steigerung")
-                .font(.caption)
-                .foregroundStyle(.textSecondary)
+            if let increment = suggestion.incrementPercent {
+                Text("+\(increment)% Steigerung")
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+            }
 
             // Apply button
             Button {
@@ -99,18 +104,19 @@ struct QuotaProgressionView: View {
                         Text("Steigerung anwenden")
                     }
                 }
-                .font(.subheadline.weight(.semibold))
+                .font(.appSubheadlineSemibold)
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 42)
                 .background(Color.painGreen)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
             }
             .disabled(isApplying)
         }
         .padding(16)
         .background(Color.painGreen.opacity(0.06))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
     }
 
     // MARK: - Not Ready Card
@@ -121,18 +127,18 @@ struct QuotaProgressionView: View {
                 Image(systemName: "clock")
                     .foregroundStyle(.textSecondary)
                 Text("Noch nicht bereit")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
             }
 
-            Text(suggestion.reason)
-                .font(.caption)
-                .foregroundStyle(.textSecondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            if let reason = suggestion.reason {
+                Text(reason)
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 
     private func apply() async {

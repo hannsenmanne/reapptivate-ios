@@ -14,19 +14,19 @@ struct EmptyStateView: View {
                 .foregroundStyle(.textSecondary)
 
             Text(title)
-                .font(.title3.bold())
+                .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
 
             Text(message)
-                .font(.body)
+                .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
 
             if let actionLabel, let action {
                 Button(actionLabel, action: action)
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accent)
+                    .buttonStyle(.accentFilled)
+                    .padding(.horizontal, 24)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

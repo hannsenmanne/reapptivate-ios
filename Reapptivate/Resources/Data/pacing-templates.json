@@ -1,0 +1,129 @@
+{
+  "version": "1.0",
+  "templates": {
+    "DER": {
+      "name": "Distress-Endurance Plan",
+      "description": "Für Menschen, die trotz Schmerzen durchhalten – mit schützenden Obergrenzen",
+      "icon": "⚠️",
+      "targetActivities": [
+        {
+          "key": "sitting",
+          "label": "Sitzen",
+          "defaultBaseline": 30,
+          "quotaFromBaseline": 0.75
+        },
+        {
+          "key": "standing",
+          "label": "Stehen",
+          "defaultBaseline": 20,
+          "quotaFromBaseline": 0.75
+        },
+        {
+          "key": "walking",
+          "label": "Gehen",
+          "defaultBaseline": 15,
+          "quotaFromBaseline": 0.75
+        }
+      ],
+      "rules": {
+        "quotaIncrementPercent": 5,
+        "mandatoryPauseMinutes": 5,
+        "pauseFrequencyMinutes": 20,
+        "weeklySessionCap": 4
+      }
+    },
+    "EER": {
+      "name": "Eustress-Endurance Plan",
+      "description": "Für motivierte Menschen – Qualität über Quantität",
+      "icon": "🎯",
+      "targetActivities": [
+        {
+          "key": "sitting",
+          "label": "Sitzen",
+          "defaultBaseline": 35,
+          "quotaFromBaseline": 0.85
+        },
+        {
+          "key": "standing",
+          "label": "Stehen",
+          "defaultBaseline": 25,
+          "quotaFromBaseline": 0.85
+        },
+        {
+          "key": "walking",
+          "label": "Gehen",
+          "defaultBaseline": 20,
+          "quotaFromBaseline": 0.85
+        }
+      ],
+      "rules": {
+        "quotaIncrementPercent": 10,
+        "mandatoryPauseMinutes": 3,
+        "pauseFrequencyMinutes": 30,
+        "weeklySessionCap": 5
+      }
+    },
+    "FAR": {
+      "name": "Angst-Adaptiver Plan",
+      "description": "Sanfte Steigerung mit höherer Schmerztoleranz",
+      "icon": "🔍",
+      "targetActivities": [
+        {
+          "key": "sitting",
+          "label": "Sitzen",
+          "defaultBaseline": 40,
+          "quotaFromBaseline": 0.9
+        },
+        {
+          "key": "bending",
+          "label": "Bücken",
+          "defaultBaseline": 10,
+          "quotaFromBaseline": 0.9
+        },
+        {
+          "key": "lifting",
+          "label": "Heben",
+          "defaultBaseline": 8,
+          "quotaFromBaseline": 0.9
+        }
+      ],
+      "rules": {
+        "quotaIncrementPercent": 15,
+        "mandatoryPauseMinutes": null,
+        "pauseFrequencyMinutes": null,
+        "weeklySessionCap": null
+      }
+    },
+    "AR": {
+      "name": "Ausgewogener Plan",
+      "description": "Balancierter Ansatz für adaptive Bewältigung",
+      "icon": "⚖️",
+      "targetActivities": [
+        {
+          "key": "sitting",
+          "label": "Sitzen",
+          "defaultBaseline": 35,
+          "quotaFromBaseline": 0.8
+        },
+        {
+          "key": "standing",
+          "label": "Stehen",
+          "defaultBaseline": 25,
+          "quotaFromBaseline": 0.8
+        },
+        {
+          "key": "walking",
+          "label": "Gehen",
+          "defaultBaseline": 18,
+          "quotaFromBaseline": 0.8
+        }
+      ],
+      "rules": {
+        "quotaIncrementPercent": 10,
+        "mandatoryPauseMinutes": null,
+        "pauseFrequencyMinutes": null,
+        "weeklySessionCap": null
+      }
+    }
+  }
+}

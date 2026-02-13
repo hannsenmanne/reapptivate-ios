@@ -14,10 +14,10 @@ struct NdiProgressView: View {
         VStack(spacing: 12) {
             HStack(spacing: 10) {
                 Image(systemName: "chart.xyaxis.line")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                 Text("NDI-Verlauf")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -27,7 +27,7 @@ struct NdiProgressView: View {
                     .padding(.vertical, 16)
             } else if history.isEmpty {
                 Text("Noch keine Screening-Daten")
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
             } else {
@@ -43,20 +43,20 @@ struct NdiProgressView: View {
                     HStack(spacing: 12) {
                         // Score circle
                         Circle()
-                            .fill(Color.severityColor(for: entry.severityGrade))
+                            .fill(entry.severityGrade.map { Color.severityColor(for: $0) } ?? Color.arGray)
                             .frame(width: 32, height: 32)
                             .overlay {
                                 Text("\(entry.ndiScore)")
-                                    .font(.caption.weight(.bold))
+                                    .font(.appCaptionBold)
                                     .foregroundStyle(.white)
                             }
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text("NDI: \(entry.ndiScore)/50")
-                                .font(.subheadline.weight(.medium))
+                                .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
-                            Text(entry.ndiCategory)
-                                .font(.caption)
+                            Text(entry.ndiCategory ?? "")
+                                .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
 
@@ -64,13 +64,13 @@ struct NdiProgressView: View {
 
                         if let date = entry.createdAtDate {
                             Text(date.formattedGerman)
-                                .font(.caption)
+                                .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
                     }
                     .padding(10)
                     .background(Color.appBg)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                 }
 
                 // Rescreening button
@@ -81,21 +81,19 @@ struct NdiProgressView: View {
                         Image(systemName: "arrow.triangle.2.circlepath")
                         Text("Rescreening durchfuhren")
                     }
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
                     .frame(maxWidth: .infinity)
                     .frame(height: 42)
                     .background(Color.accent.opacity(0.08))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
                 .sheet(isPresented: $showRescreening) {
                     NeckScreeningView(isRescreening: true)
                 }
             }
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
         .task {
             await loadHistory()
         }
@@ -104,7 +102,8 @@ struct NdiProgressView: View {
     private func loadHistory() async {
         isLoading = true
         do {
-            history = try await apiClient.request(APIEndpoints.neckHistory())
+            let response: NeckHistoryResponse = try await apiClient.request(APIEndpoints.neckHistory())
+            history = response.history
         } catch {
             history = []
         }

@@ -4,28 +4,39 @@ struct InsightsTab: View {
     @Environment(AppState.self) private var appState
 
     var body: some View {
+        if let subtype = appState.currentUser?.aemSubtype {
+            // LBP patients: AEM analytics dashboard
+            AnalyticsDashboardView(subtype: subtype)
+        } else if appState.isNeck {
+            // Neck patients: NDI progress, focus areas, micro-modules
+            NeckInsightsSection()
+        } else {
+            EmptyStateView(
+                icon: "chart.bar.xaxis",
+                title: "Keine Insights verfugbar",
+                message: "Insights werden nach dem Screening freigeschaltet."
+            )
+        }
+    }
+}
+
+// MARK: - Neck Insights
+
+struct NeckInsightsSection: View {
+    @Environment(AppState.self) private var appState
+
+    var body: some View {
         VStack(spacing: 20) {
-            Text("Ihre Fortschritts-Insights (30 Tage)")
-                .font(.headline)
-                .foregroundStyle(.textPrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            // NDI Progress / History
+            NdiProgressView()
 
-            // M10 will implement the full analytics dashboard
-            VStack(spacing: 12) {
-                Text("Analytics Dashboard kommt in M10")
-                    .font(.subheadline)
-                    .foregroundStyle(.textSecondary)
+            // Focus Areas
+            NeckFocusAreasView()
 
-                if let subtype = appState.currentUser?.aemSubtype {
-                    Text("Subtype: \(subtype.displayName)")
-                        .font(.caption)
-                        .foregroundStyle(Color.subtypeColor(for: subtype))
-                }
+            // Neck Micro-Modules
+            if let severity = appState.currentUser?.ndiSeverity {
+                NeckMicroModulesView(severity: severity)
             }
-            .frame(maxWidth: .infinity)
-            .padding(20)
-            .background(Color.cardBg)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .padding(.bottom, 32)
     }

@@ -16,18 +16,16 @@ struct SettingsView: View {
                             Text("Name")
                                 .foregroundStyle(.textSecondary)
                             Spacer()
-                            Text("\(user.firstName) \(user.lastName ?? "")")
+                            Text(user.name)
                                 .foregroundStyle(.textPrimary)
                         }
 
-                        if let email = user.email {
-                            HStack {
-                                Text("E-Mail")
-                                    .foregroundStyle(.textSecondary)
-                                Spacer()
-                                Text(email)
-                                    .foregroundStyle(.textPrimary)
-                            }
+                        HStack {
+                            Text("E-Mail")
+                                .foregroundStyle(.textSecondary)
+                            Spacer()
+                            Text(user.email)
+                                .foregroundStyle(.textPrimary)
                         }
 
                         HStack {
@@ -87,11 +85,11 @@ struct SettingsView: View {
 
                             if notificationService.isAuthorized {
                                 Text("Aktiv")
-                                    .font(.caption)
+                                    .font(.appCaption)
                                     .foregroundStyle(.painGreen)
                             } else {
                                 Text("Inaktiv")
-                                    .font(.caption)
+                                    .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
                         }
@@ -112,7 +110,8 @@ struct SettingsView: View {
                 // Logout
                 Section {
                     Button(role: .destructive) {
-                        appState.logout()
+                        TokenManager.shared.clearAll()
+                        appState.handleLogout()
                         dismiss()
                     } label: {
                         HStack {

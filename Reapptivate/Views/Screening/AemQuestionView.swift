@@ -19,7 +19,7 @@ struct AemQuestionView: View {
         VStack(spacing: 24) {
             // Question text
             Text(item.textDe)
-                .font(.title3.weight(.medium))
+                .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
@@ -33,11 +33,11 @@ struct AemQuestionView: View {
                     } label: {
                         HStack(spacing: 12) {
                             Text("\(value)")
-                                .font(.subheadline.weight(.bold).monospacedDigit())
+                                .font(.appSubheadlineSemibold.monospacedDigit())
                                 .frame(width: 28)
 
                             Text(likertLabels[value])
-                                .font(.subheadline)
+                                .font(.appSubheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             if selectedValue == value {
@@ -48,10 +48,10 @@ struct AemQuestionView: View {
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
                         .background(selectedValue == value ? Color.accent.opacity(0.08) : Color.cardBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
                         .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(selectedValue == value ? Color.accent : .clear, lineWidth: 1.5)
+                            RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                                .stroke(selectedValue == value ? Color.accent : Color.gray200, lineWidth: selectedValue == value ? 1.5 : 1)
                         }
                     }
                     .buttonStyle(.plain)

@@ -25,7 +25,11 @@ struct DashboardView: View {
                         case .overview:
                             OverviewTab(
                                 viewModel: viewModel,
-                                exerciseVM: exerciseVM
+                                onNavigateToProgram: {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        selectedTab = .program
+                                    }
+                                }
                             )
                         case .program:
                             ProgramTab(exerciseVM: exerciseVM, onExerciseLogged: {

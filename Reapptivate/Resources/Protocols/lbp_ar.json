@@ -1,0 +1,243 @@
+{
+  "id": "lbp-nonspecific-protocol-ar-v1",
+  "tendinopathy_type": "LBP_NONSPECIFIC",
+  "name": "Unspezifischer Rückenschmerz — AR-Profil (Adaptive Responder)",
+  "description": "Evidenzbasiertes 12-Wochen-Programm mit Standard-Progression für Adaptive Responder. Fokus: Ausgewogenes Training ohne spezifische Verhaltensmodifikation.",
+  "duration_weeks": 12,
+  "frequency_per_week": 3,
+  "max_pain_level": 4,
+  "max_phase": 3,
+  "pain_rule": "Schmerz max. 4/10 während der Übung. 24-Stunden-Regel beachten.",
+  "evidence_base": [
+    "NICE Guidelines (2020): Exercise for LBP",
+    "Hayden et al. (2021): Exercise therapy - Cochrane Review",
+    "O'Sullivan et al. (2018): Cognitive Functional Therapy"
+  ],
+  "progression_criteria": [
+    "Durchschnittlicher Schmerz ≤3/10",
+    "Compliance ≥66%",
+    "Funktionelle Verbesserungen im Alltag"
+  ],
+  "progression_rules": {
+    "regress_pain_spike": 7,
+    "regress_avg_pain": 5,
+    "hold_min_days": 14,
+    "hold_min_sessions": 4,
+    "progress_avg_pain": 3,
+    "progress_min_compliance": 66
+  },
+  "phase_education": {
+    "1": "**Phase 1: Grundlagen aufbauen (Wochen 1-4)**\n\nIhr Screening zeigt ein adaptives Muster: Sie haben ein ausgewogenes Verhältnis zwischen Aktivität und Erholung. Das ist eine gute Basis.\n\n**Ziel dieser Phase:** Rumpfstabilität und Mobilität verbessern.\n\n**Ihre Strategie:**\n- Fokus auf Core-Aktivierung und kontrollierte Bewegung\n- Schmerz max. 4/10 während der Übung\n- Regelmäßiges Training (3x/Woche) für konstante Adaptation\n- Achten Sie auf Technik - saubere Ausführung ist wichtiger als Volumen\n\n**Wissenschaftliche Basis:** NICE Guidelines (2020): Strukturiertes Exercise-Programm ist First-Line-Intervention bei unspezifischem LBP.",
+    "2": "**Phase 2: Belastbarkeit steigern (Wochen 5-8)**\n\nSie haben eine solide Basis. Jetzt bauen wir Kraft und Kapazität auf.\n\n**Ziel dieser Phase:** Progressive Steigerung von Kraft und Ausdauer.\n\n**Ihre Strategie:**\n- Gewichte hinzufügen, wenn die Form stimmt\n- Progressive Overload: Kleine, konstante Steigerungen\n- Schmerz max. 4/10 bleibt die Grenze\n- Balance zwischen Belastung und Erholung\n\n**Wissenschaftliche Basis:** Hayden et al. (2021): Moderate-high intensity Exercise zeigt beste Outcomes bei chronischem LBP.",
+    "3": "**Phase 3: Funktionelle Integration (Wochen 9-12)**\n\nSie sind bereit für anspruchsvolle, alltagsrelevante Bewegungen.\n\n**Ziel dieser Phase:** Transfer in echte Lebenssituationen.\n\n**Ihre Strategie:**\n- Komplexe Bewegungen: Kreuzheben, Carries, einbeinige Übungen\n- Übertragen Sie das Training auf Alltag und Sport\n- Halten Sie die Balance: Intensität steigern, aber Technik beibehalten\n- Langfristiges Ziel: Nachhaltiger, aktiver Lebensstil\n\n**Wissenschaftliche Basis:** O'Sullivan et al. (2018): Functional restoration programmes mit strukturiertem Exercise reduzieren Disability langfristig."
+  },
+  "exercises": [
+    {
+      "id": "lbp-cat-camel",
+      "name": "Cat-Camel (Katzenbuckel)",
+      "type": "MOTOR_CONTROL",
+      "description": "Vierfüßlerstand. Wechsel zwischen Rundrücken (Katzenbuckel) und Hohlkreuz. Langsam und kontrolliert bewegen.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 90,
+      "intensity": "Körpergewicht",
+      "cognitive_cues": {
+        "FAR": "Ihr Rücken ist belastbar und braucht Bewegung. Diese sanfte Mobilisation ist sicher und schadet nicht. Erkunden Sie den vollen Bewegungsumfang.",
+        "DER": "Bewegen Sie sich langsam und achtsam. Bei ersten Anzeichen von Müdigkeit oder Anstrengung ist eine Pause völlig in Ordnung - das ist kein Zeichen von Schwäche.",
+        "EER": "Nutzen Sie Ihre natürliche Motivation produktiv. Fokus liegt auf Qualität der Bewegung, nicht auf Intensität oder Geschwindigkeit.",
+        "AR": "Führen Sie die Bewegung kontrolliert durch. Achten Sie auf einen fließenden Wechsel zwischen den Positionen."
+      },
+      "phase": 1,
+      "phase_title": "Core-Aktivierung & Mobilität",
+      "weeks_range": "Wochen 1-4",
+      "phase_goal": "Rumpfstabilität aktivieren und schmerzfreie Bewegung wiedererlangen"
+    },
+    {
+      "id": "lbp-pelvic-tilt",
+      "name": "Becken-Kippung (Pelvic Tilt)",
+      "type": "MOTOR_CONTROL",
+      "description": "Rückenlage, Knie angewinkelt. Becken sanft nach vorne und hinten kippen. Rücken bleibt entspannt auf dem Boden.",
+      "sets": 3,
+      "reps": 12,
+      "rest_between_sets": 60,
+      "intensity": "Körpergewicht",
+      "cognitive_cues": {
+        "FAR": "Diese Übung zeigt Ihnen, dass Sie Kontrolle über Ihre Wirbelsäule haben. Bewegung = Heilung. Schmerz bis 5/10 ist normal und sicher.",
+        "DER": "Achten Sie bewusst auf die Muskelaktivität. Stoppen Sie, wenn Sie Anspannung spüren. Weniger ist mehr - Qualität vor Quantität.",
+        "EER": "Ihre Energie ist wertvoll. Nutzen Sie sie gezielt: Jede Wiederholung mit voller Aufmerksamkeit, nicht mechanisch.",
+        "AR": "Konzentrieren Sie sich auf die neutrale Position Ihres Beckens. Kleine, kontrollierte Bewegungen."
+      },
+      "phase": 1,
+      "phase_title": "Core-Aktivierung & Mobilität",
+      "weeks_range": "Wochen 1-4",
+      "phase_goal": "Rumpfstabilität aktivieren und schmerzfreie Bewegung wiedererlangen"
+    },
+    {
+      "id": "lbp-dead-bug",
+      "name": "Dead Bug (Käfer-Übung)",
+      "type": "MOTOR_CONTROL",
+      "description": "Rückenlage, Arme nach oben, Knie 90°. Gegenüberliegendes Bein strecken und Arm nach hinten führen. Abwechselnd.",
+      "sets": 3,
+      "reps": 8,
+      "hold_time": 3,
+      "rest_between_sets": 90,
+      "intensity": "Körpergewicht",
+      "cognitive_cues": {
+        "FAR": "Diese Übung fordert Ihren Rücken - das ist gut! Jede Wiederholung baut Vertrauen auf, dass Ihr Rücken stabil ist.",
+        "DER": "Wenn eine Seite schwerer fällt, machen Sie dort weniger Wiederholungen. Asymmetrie ist okay - Ihr Körper zeigt, was er braucht.",
+        "EER": "Perfektion ist nicht das Ziel. Fokus auf saubere Technik statt maximaler Wiederholungszahl. Lieber 6 gute als 10 unsaubere.",
+        "AR": "Halten Sie die Rumpfspannung während der gesamten Bewegung. Atmen Sie gleichmäßig weiter."
+      },
+      "phase": 1,
+      "phase_title": "Core-Aktivierung & Mobilität",
+      "weeks_range": "Wochen 1-4",
+      "phase_goal": "Rumpfstabilität aktivieren und schmerzfreie Bewegung wiedererlangen"
+    },
+    {
+      "id": "lbp-hip-hinge",
+      "name": "Hip Hinge (Rumänisches Kreuzheben)",
+      "type": "HSR",
+      "description": "Stehend, leichte Hanteln. Hüfte nach hinten schieben, Oberkörper nach vorne neigen. Rücken bleibt gerade.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 120,
+      "tempo": "3-0-3",
+      "intensity": "Leichte Hanteln (2-8kg), progressiv steigern",
+      "cognitive_cues": {
+        "FAR": "Diese Bewegung ist eine der sichersten für Ihren Rücken - sie trainiert genau das Bewegungsmuster, das Sie im Alltag brauchen. Trauen Sie sich, Gewicht zu erhöhen.",
+        "DER": "Gewicht nur steigern, wenn die Technik sauber ist UND Sie sich gut fühlen. Nicht an schlechten Tagen pushen - das ist Intelligenz, nicht Schwäche.",
+        "EER": "Progression bedeutet nicht nur mehr Gewicht. Auch bessere Form ist Fortschritt. Feiern Sie technische Verbesserungen genauso.",
+        "AR": "Halten Sie den Rücken neutral. Bewegung kommt aus der Hüfte, nicht aus dem unteren Rücken."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Belastung",
+      "weeks_range": "Wochen 5-8",
+      "phase_goal": "Belastbarkeit aufbauen und Rückenmuskulatur stärken"
+    },
+    {
+      "id": "lbp-plank",
+      "name": "Plank (Unterarmstütz)",
+      "type": "ISOMETRIC",
+      "description": "Auf Unterarmen und Zehen stützen. Körper bildet eine gerade Linie. Bauch und Gesäß aktiv anspannen.",
+      "sets": 3,
+      "reps": 1,
+      "hold_time": 30,
+      "rest_between_sets": 90,
+      "intensity": "Körpergewicht, Dauer progressiv steigern",
+      "cognitive_cues": {
+        "FAR": "Spannung im Rücken ist ein Zeichen von Aktivität, nicht von Schaden. Sie bauen Kraft auf. Halten Sie durch, auch wenn es unangenehm wird.",
+        "DER": "Wenn Sie anfangen zu zittern: Pause! Das ist Ihr Körper, der \"Stopp\" sagt. Besser 20s sauber als 40s mit Kompensation.",
+        "EER": "Timing ist wichtig: Nutzen Sie einen Timer. Nicht \"noch 5 Sekunden\" anhängen - halten Sie sich an den Plan.",
+        "AR": "Kontrollieren Sie die Atmung. Nicht die Luft anhalten - gleichmäßig weiteratmen."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Belastung",
+      "weeks_range": "Wochen 5-8",
+      "phase_goal": "Belastbarkeit aufbauen und Rückenmuskulatur stärken"
+    },
+    {
+      "id": "lbp-goblet-squat",
+      "name": "Goblet Squat",
+      "type": "HSR",
+      "description": "Stehend, Gewicht vor der Brust halten (Kettlebell oder Hantel). Langsam in Kniebeuge gehen und kontrolliert aufstehen.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 120,
+      "tempo": "3-0-3",
+      "intensity": "Leichte Kettlebell/Hantel (4-12kg)",
+      "cognitive_cues": {
+        "FAR": "Kniebeugen sind exzellent für Ihren Rücken - sie trainieren das gesamte System. Tiefe ist sicher, solange die Form stimmt. Gehen Sie tiefer als Sie denken.",
+        "DER": "Tiefe nur so weit wie schmerzfrei möglich. An manchen Tagen wird das weniger sein - akzeptieren Sie das. Anpassung ist Stärke.",
+        "EER": "Konzentrieren Sie sich auf Tempo 3-0-3. Das ist Ihre Geschwindigkeitsbremse - sie verhindert, dass Enthusiasmus zu Verletzung führt.",
+        "AR": "Brust hoch, Gewicht auf den Fersen. Knie folgen den Zehenspitzen."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Belastung",
+      "weeks_range": "Wochen 5-8",
+      "phase_goal": "Belastbarkeit aufbauen und Rückenmuskulatur stärken"
+    },
+    {
+      "id": "lbp-bird-dog",
+      "name": "Bird Dog",
+      "type": "CONCENTRIC",
+      "description": "Vierfüßlerstand. Gleichzeitig gegenüberliegenden Arm und Bein strecken, 2 Sek. halten, dann wechseln.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 90,
+      "intensity": "Körpergewicht",
+      "cognitive_cues": {
+        "FAR": "Diese Anti-Rotations-Übung zeigt, dass Ihr Rücken stabil bleiben kann auch unter Belastung. Das ist funktionelle Stärke.",
+        "DER": "Balance ist schwierig? Dann reduzieren Sie die Range of Motion. Kürzere Bewegungen mit Kontrolle > lange Bewegungen mit Wackeln.",
+        "EER": "Zählen Sie die Wiederholungen bewusst. Nicht auf Autopilot gehen - jede Wiederholung verdient Aufmerksamkeit.",
+        "AR": "Hüfte und Schultern bleiben parallel zum Boden. Keine Rotation im Rumpf."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Belastung",
+      "weeks_range": "Wochen 5-8",
+      "phase_goal": "Belastbarkeit aufbauen und Rückenmuskulatur stärken"
+    },
+    {
+      "id": "lbp-deadlift",
+      "name": "Kreuzheben",
+      "type": "HSR",
+      "description": "Stehend, Langhantel oder schwere Hanteln. Kontrolliertes Heben mit geradem Rücken aus der Hüfte.",
+      "sets": 4,
+      "reps": 8,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "60-75% 1RM, progressiv steigern",
+      "cognitive_cues": {
+        "FAR": "Kreuzheben ist die König-Übung für einen robusten Rücken. Gewicht auf der Stange = Beweis, dass Ihr Rücken stark ist. Steigern Sie mutig.",
+        "DER": "Form über Gewicht. Immer. Wenn die Technik leidet: Gewicht reduzieren. Das Ego hat hier keinen Platz - Ihre Gesundheit schon.",
+        "EER": "Notieren Sie Ihr Gewicht. Progression muss geplant sein: Max. 2,5kg pro Woche. Schneller = Risiko.",
+        "AR": "Bauchatmung, Rumpfspannung vor dem Heben. Stange bleibt nah am Körper."
+      },
+      "phase": 3,
+      "phase_title": "Funktionelle Bewegungen",
+      "weeks_range": "Wochen 9-12",
+      "phase_goal": "Alltagsbelastung und sportspezifische Vorbereitung"
+    },
+    {
+      "id": "lbp-farmers-carry",
+      "name": "Farmers Carry",
+      "type": "CONCENTRIC",
+      "description": "Schwere Hanteln in jeder Hand, aufrecht gehen (20-30m). Rumpf stabil halten, nicht seitlich kippen.",
+      "sets": 3,
+      "reps": 1,
+      "hold_time": 30,
+      "rest_between_sets": 120,
+      "intensity": "Schwere Hanteln (je 10-20kg)",
+      "cognitive_cues": {
+        "FAR": "Diese Übung simuliert Alltagsbelastung - Einkaufstaschen, Koffer tragen. Sie bereitet Sie auf echtes Leben vor. Das ist funktionelle Stärke.",
+        "DER": "Distanz ist weniger wichtig als symmetrische Belastung. Lieber 15m sauber als 30m mit schiefem Rumpf.",
+        "EER": "Nutzen Sie diese Übung als Test, nicht als Wettkampf. Wenn Sie nach 20m Ihre Form verlieren: Stopp. Kein \"noch ein bisschen\".",
+        "AR": "Schultern zurück, Blick geradeaus. Gleichmäßige Schritte."
+      },
+      "phase": 3,
+      "phase_title": "Funktionelle Bewegungen",
+      "weeks_range": "Wochen 9-12",
+      "phase_goal": "Alltagsbelastung und sportspezifische Vorbereitung"
+    },
+    {
+      "id": "lbp-split-squat",
+      "name": "Split Squat (Bulgarische Kniebeuge)",
+      "type": "HSR",
+      "description": "Ausfallschrittposition, hinterer Fuß erhöht auf Bank. Langsam absenken und hochdrücken.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 120,
+      "tempo": "3-0-3",
+      "intensity": "Körpergewicht, dann Hanteln (5-15kg)",
+      "cognitive_cues": {
+        "FAR": "Einbeinige Übungen sind advanced - Sie sind bereit dafür! Balance-Herausforderung = neurologisches Training. Ihr Rücken profitiert.",
+        "DER": "Eine Seite schwächer? Starten Sie mit der schwachen Seite, machen Sie dort weniger Wiederholungen. Asymmetrie ausgleichen, nicht erzwingen.",
+        "EER": "Gewicht erst hinzufügen, wenn Sie 3 Sessions hintereinander 3x10 sauber geschafft haben. Klare Regel = Schutz vor Übermut.",
+        "AR": "Oberkörper aufrecht, vorderes Knie über Fußspitze. Hinteres Knie Richtung Boden."
+      },
+      "phase": 3,
+      "phase_title": "Funktionelle Bewegungen",
+      "weeks_range": "Wochen 9-12",
+      "phase_goal": "Alltagsbelastung und sportspezifische Vorbereitung"
+    }
+  ]
+}

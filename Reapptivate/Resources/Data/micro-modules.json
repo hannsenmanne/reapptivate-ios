@@ -1,0 +1,287 @@
+{
+  "version": "1.0.0",
+  "modules": [
+    {
+      "key": "expectation_test_intro",
+      "locale": "de",
+      "targetSubtypes": ["FAR"],
+      "title": "Erwartungen testen: Einführung",
+      "bodyMarkdown": "**Was ist ein Erwartungstest?**\n\nBei chronischen Schmerzen entwickeln wir oft Überzeugungen darüber, was uns schadet. Diese Überzeugungen basieren nicht immer auf Fakten.\n\n**Das Experiment:**\n1. Vor einer Aktivität: Vorhersagen, was passieren wird\n2. Aktivität durchführen (kontrolliert)\n3. Ergebnis beobachten\n4. Vorhersage mit Realität vergleichen\n\n**Wissenschaftliche Basis:** Wenn wir wiederholt erleben, dass unsere Angst-Vorhersagen nicht eintreten, lernt unser Gehirn: \"Das ist sicherer als ich dachte.\"\n\nDies ist die Grundlage der Exposure-Therapie - nicht Mut, sondern Evidenz sammeln.",
+      "takeHome": "Erwartungen testen = Daten sammeln über das, was wirklich passiert (nicht was wir befürchten)",
+      "taskType": "expectationTest",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "activity": {"type": "string"},
+          "predictionHarm": {"type": "number", "min": 0, "max": 100},
+          "predictionFear": {"type": "number", "min": 0, "max": 10}
+        }
+      }
+    },
+    {
+      "key": "how_to_build_fear_ladder",
+      "locale": "de",
+      "targetSubtypes": ["FAR"],
+      "title": "Eine Angst-Hierarchie erstellen",
+      "bodyMarkdown": "**Schritt 1: Aktivitäten sammeln**\n\nListen Sie 5-7 Aktivitäten auf, die Sie vermeiden oder mit Angst tun:\n- Rumpfbeuge\n- Schweres Heben\n- Längeres Sitzen\n- Sport/spezifische Bewegungen\n\n**Schritt 2: Angst einschätzen (0-10)**\n\n0 = keine Angst, 10 = extreme Angst\n\n**Schritt 3: Sortieren**\n\nVon niedrigster zu höchster Angst. Sie beginnen mit der niedrigsten.\n\n**Schritt 4: Stufen definieren**\n\nFür jede Aktivität: leichte → mittlere → volle Dosis\n\n**Wichtig:** Sie bestimmen das Tempo. Graduelle Steigerung ist der Schlüssel.",
+      "takeHome": "Eine gute Hierarchie hat klare Stufen und beginnt bei niedrigerer Angst",
+      "taskType": "goalSetting",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "activities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {"type": "string"},
+                "fearRating": {"type": "number", "min": 0, "max": 10}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "distress_checkin_and_recovery",
+      "locale": "de",
+      "targetSubtypes": ["DER"],
+      "title": "Distress-Check und Erholung",
+      "bodyMarkdown": "**Distress erkennen (DER-Profil)**\n\nZeichen, dass Sie im \"Durchhalten-trotz-Distress\" Modus sind:\n- Sie machen weiter, obwohl Schmerz/Erschöpfung zunimmt\n- Schuldgefühle bei Pausen\n- \"Ich muss das noch fertig machen\"\n\n**Der Check:**\n\n3x täglich (oder alle 2h bei Aktivität):\n1. Schmerz? (0-10)\n2. Müdigkeit? (0-10)\n3. Anspannung? (0-10)\n\n**Aktionsregel:**\n\nWenn einer ≥3: **Pause machen** (nicht \"noch schnell fertig\")\n\n**Erholungsoptionen:**\n- 5min Liegen\n- Body Scan\n- Kurzer Spaziergang (leicht!)\n- Dehnung\n\n**Wichtig:** Pause ist nicht Schwäche. Es ist Prävention.",
+      "takeHome": "Regelmäßige Checks + Pausen bei 3/10 = Distress-Management",
+      "taskType": "distressRegulation",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "checkFrequencyHours": {"type": "number"},
+          "actionThreshold": {"type": "number", "default": 3}
+        }
+      }
+    },
+    {
+      "key": "pacing_baseline_and_caps",
+      "locale": "de",
+      "targetSubtypes": ["DER", "EER"],
+      "title": "Pacing: Baseline und Obergrenzen",
+      "bodyMarkdown": "**Schritt 1: Baseline finden**\n\nFür jede Aktivität (Sitzen, Stehen, Training):\n- An einem \"normalen\" Tag: Wie lange bis Symptome kommen?\n- Das ist Ihre Baseline (z.B. 20min Stehen)\n\n**Schritt 2: Startquote = 80% der Baseline**\n\nWenn Baseline 20min → Start mit 16min\n\n**Warum weniger?** Puffer für schlechte Tage.\n\n**Schritt 3: Obergrenze setzen**\n\nDER-Profil:\n- Tägliches Cap: Quota + max 20%\n- Wöchentliches Cap: Geplante Sessions (keine Extras)\n\n**Schritt 4: Progression**\n\n+10% pro Woche, wenn:\n- Schmerz stabil ≤3/10\n- Keine Flare-ups\n\n**Das Schwierige:** An guten Tagen trotzdem bei der Quote bleiben.",
+      "takeHome": "Quota = Schutz vor Boom-Bust. Obergrenze = Schutz vor \"ich schaff noch mehr\"",
+      "taskType": "pacing",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "activities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {"type": "string"},
+                "baseline": {"type": "number"},
+                "startQuota": {"type": "number"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "precommitment_and_timer_caps",
+      "locale": "de",
+      "targetSubtypes": ["EER"],
+      "title": "Vorher-Festlegung und Timer-Caps (EER)",
+      "bodyMarkdown": "**Problem (EER-Profil):**\n\nSie sind motiviert und haben positive Energie - aber manchmal führt \"heute läuft's gut\" zu Überlastung morgen.\n\n**Lösung: Externe Struktur**\n\n**1. Pre-Commitment (Vorher festlegen):**\n\nVOR der Session aufschreiben:\n- Übungen: Welche?\n- Sätze: Wie viele?\n- Reps: Wie viele?\n- Gewicht: Wie schwer?\n\n**2. Timer-Caps:**\n\nFür Halteübungen (Plank, etc.):\n- Timer auf Zielzeit stellen\n- Bei Klingeln: SOFORT stoppen\n- Nicht \"noch 5 Sekunden\"\n\n**3. Rep-Caps:**\n\nBei Kraftübungen:\n- Ziel z.B. 8 Reps\n- Bei 8: Stopp (auch wenn 10 gehen würden)\n\n**Warum?** Ihre Motivation ist Ressource. Heute 80% = morgen wieder bereit. Heute 100% = übermorgen Pause erzwungen.",
+      "takeHome": "Planung schützt vor Impulsivität. Timer/Caps = externe Bremse gegen Übereifer",
+      "taskType": "pacing",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "useTimer": {"type": "boolean"},
+          "useRepCaps": {"type": "boolean"},
+          "preCommitmentLog": {"type": "boolean"}
+        }
+      }
+    },
+    {
+      "key": "flare_up_plan",
+      "locale": "de",
+      "targetSubtypes": ["FAR", "DER", "EER", "AR"],
+      "title": "Flare-Up Management",
+      "bodyMarkdown": "**Was ist ein Flare-Up?**\n\nPlötzliche Schmerzzunahme (+2 Punkte oder mehr in 24-48h) oder deutlich erhöhte Symptome.\n\n**Erste 48h:**\n\n1. **Nicht Panik** - Flare-Ups sind Teil des Prozesses, kein Rückfall\n2. **Belastung reduzieren** (nicht eliminieren!):\n   - Training: Diese Woche wiederholen (nicht aufhören)\n   - Übungen: Halbe Sets oder leichteres Gewicht\n   - Alltag: Pacing strenger als sonst\n\n**Schmerzmanagement:**\n- Wärme oder Kälte (was Sie bevorzugen)\n- Leichte Bewegung (Spazieren, sanfte Mobility)\n- Entspannungstechniken\n\n**Tag 3-7:**\n\n- Schmerz sinkt? → Langsam zurück zum Plan\n- Schmerz gleich? → Woche wiederholen, Therapeut kontaktieren\n- Schmerz steigt? → Therapeut konsultieren\n\n**Lernen:**\n\nWas löste es aus? Überlastung? Stress? Schlafmangel? → Anpassung für Zukunft",
+      "takeHome": "Flare-Up = temporär. Deload (nicht Stop) + Management = Weg zurück",
+      "taskType": "barrierSolving",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "trigger": {"type": "string"},
+          "actionTaken": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "barriers_problem_solving",
+      "locale": "de",
+      "targetSubtypes": ["FAR", "DER", "EER", "AR"],
+      "title": "Hindernisse überwinden",
+      "bodyMarkdown": "**Häufige Hindernisse für Training:**\n\n**1. Zeit:**\n- Lösung: Mini-Sessions (15min statt 45min)\n- Oder: Training in Alltag integrieren (z.B. Calf raises beim Zähneputzen)\n\n**2. Motivation niedrig:**\n- Lösung: \"Nur 1 Übung\" Regel (oft wird's dann mehr)\n- Oder: Kleinste Version machen (1 Set statt 3)\n\n**3. Schmerz höher als erwartet:**\n- Lösung: Bewegungsradius reduzieren (nicht komplett streichen)\n- Oder: Leichtere Übung aus früherer Phase\n\n**4. Unvorhergesehenes (Termine, etc.):**\n- Lösung: Flex-Tag nutzen statt \"aufgeben\"\n- Oder: Session auf 2 Tage aufteilen\n\n**Problem-Solving Framework:**\n\n1. Hindernis benennen\n2. 3 Lösungen brainstormen\n3. Einfachste wählen und testen\n4. Nächste Woche: Funktionierte es?\n\n**Wichtig:** Perfektion ist nicht das Ziel. Konsistenz (auch mit Anpassungen) schlägt Perfektion.",
+      "takeHome": "Kein Hindernis ist perfekt. Aber kleinere Anpassung > kompletter Stopp",
+      "taskType": "barrierSolving",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "barrier": {"type": "string"},
+          "solutions": {"type": "array", "items": {"type": "string"}},
+          "chosenSolution": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_pain_science",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Schmerzwissenschaft: Nacken verstehen",
+      "bodyMarkdown": "**Warum tut mein Nacken weh?**\n\nNackenschmerzen sind sehr häufig — über 70% der Menschen erleben sie mindestens einmal im Leben. In den meisten Fällen gibt es keine strukturelle Schädigung.\n\n**Das Gate-Control-Modell:**\n\nIhr Nervensystem hat \"Tore\" im Rückenmark, die Schmerzsignale filtern. Diese Tore werden beeinflusst durch:\n- **Öffnend:** Stress, Angst, Schlafmangel, Inaktivität\n- **Schließend:** Bewegung, Entspannung, guter Schlaf, positive Erwartungen\n\n**Wichtig zu wissen:**\n\n1. Schmerz ≠ Schaden. Ihr Nacken ist stark und belastbar.\n2. Bildgebung (MRT) zeigt oft \"Befunde\" bei schmerzfreien Menschen\n3. Bewegung ist die beste Medizin — kontrollierte Belastung stärkt Gewebe\n4. Ihr Gehirn kann Schmerz \"hochregulieren\" bei Stress und Angst\n\n**Fazit:** Verstehen, wie Schmerz funktioniert, ist der erste Schritt zur Besserung.",
+      "takeHome": "Schmerz = Alarmsignal des Nervensystems, nicht immer Zeichen von Schaden. Bewegung hilft dem Gewebe.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_posture_myths",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Haltungsmythen entlarvt",
+      "bodyMarkdown": "**\"Sitz gerade oder du bekommst Nackenschmerzen!\"**\n\nDiesen Satz haben wir alle gehört. Aber stimmt das?\n\n**Die Wissenschaft sagt:**\n\n1. Es gibt keine \"perfekte\" Haltung\n2. Studien zeigen: Menschen mit Nackenschmerzen sitzen nicht \"schlechter\" als schmerzfreie\n3. Das Problem ist nicht die Haltung — sondern die **Dauer** ohne Wechsel\n\n**Was wirklich hilft:**\n\n- **Variation** ist der Schlüssel: Die beste Haltung ist die nächste Haltung\n- Alle 30-45 Min. Position wechseln\n- Aufstehen, kurz bewegen, wieder hinsetzen\n- Ihr Nacken mag Bewegung — auch \"schlechte\" Haltung für kurze Zeit ist OK\n\n**Ergonomie-Mythen:**\n\n- Bildschirm muss nicht auf exakter Augenhöhe sein\n- Ein \"ergonomischer\" Stuhl allein verhindert keine Schmerzen\n- Wichtiger als Equipment: **Regelmäßige Bewegungspausen**\n\n**Übung:** Setzen Sie sich 1 Minute bewusst \"schlecht\" hin — passiert etwas? Nein. Ihr Nacken ist robust!",
+      "takeHome": "Die beste Haltung ist die nächste Haltung. Variation > Perfektion.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_sleep_hygiene",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Schlaf und Nackenschmerzen",
+      "bodyMarkdown": "**Wie beeinflusst Schlaf Ihren Nacken?**\n\nSchlechter Schlaf kann Schmerzen verstärken — und Schmerzen stören den Schlaf. Ein Teufelskreis.\n\n**Schlafposition:**\n\n- **Seitenlage** (empfohlen): Kissen sollte die Lücke zwischen Schulter und Kopf füllen\n- **Rückenlage** (gut): Flacheres Kissen, das die natürliche Kurve der HWS unterstützt\n- **Bauchlage** (vermeiden): Erzwingt Rotation der HWS\n\n**Das richtige Kissen:**\n\n- Nicht zu hoch, nicht zu flach\n- Stützend, aber nicht starr\n- Faustregel: Kopf und HWS sollten in einer Linie mit der Brustwirbelsäule sein\n\n**Schlafhygiene-Tipps:**\n\n1. Regelmäßige Schlafenszeit (±30 Min.)\n2. 30 Min. vor dem Schlafen: Kein Bildschirm\n3. Sanfte Nackenrotation vor dem Einschlafen (5x pro Seite)\n4. Raumtemperatur: 16-18°C ideal\n5. Bei Schmerzen: Wärme auf den Nacken (Kirschkernkissen)\n\n**Wichtig:** Sie müssen nicht die ganze Nacht in einer Position bleiben. Umdrehen ist normal und gesund!",
+      "takeHome": "Guter Schlaf = weniger Schmerz. Seitenlage + richtiges Kissen + Routine = bessere Nächte.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_stress_management",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Stress und Nackenspannung",
+      "bodyMarkdown": "**Die Stress-Schmerz-Verbindung:**\n\nBei Stress spannen wir unbewusst die Nacken- und Schultermuskulatur an. Dauerstress = Dauerspannung = mehr Schmerzen.\n\n**Erkennen Sie Ihre Muster:**\n\n- Ziehen Sie die Schultern hoch bei Stress?\n- Beißen Sie die Zähne zusammen?\n- Beugen Sie sich nach vorne zum Bildschirm?\n\n**Schnelle Entlastung (2-Minuten-Reset):**\n\n1. **Schulter-Drop:** Schultern bewusst Richtung Ohren → 5 Sek. halten → loslassen und fallen lassen. 3x\n2. **Kieferentspannung:** Lippen geschlossen, Zähne leicht geöffnet, Zunge an den Gaumen. 30 Sek.\n3. **Atemfokus:** 4 Sek. ein, 6 Sek. aus. 5 Zyklen.\n\n**Langfristige Strategien:**\n\n- Regelmäßige Bewegung (reduziert Cortisol)\n- Body-Scan-Meditation (5-10 Min. täglich)\n- \"Stress-Check\" alle 2 Stunden: Wo ist Spannung? Bewusst loslassen.\n\n**Wissenschaftlich belegt:** Stressmanagement verbessert Nackenschmerzen signifikant — unabhängig von Übungen.",
+      "takeHome": "Stress = Muskelspannung = Schmerz. Bewusstes Loslassen durchbricht den Kreislauf.",
+      "taskType": "distressRegulation",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "technique": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_ergonomics",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Arbeitsplatz-Ergonomie praktisch",
+      "bodyMarkdown": "**Pragmatische Ergonomie (nicht perfektionistisch!):**\n\nDenken Sie daran: Es gibt keine perfekte Haltung. Aber Sie können Ihren Arbeitsplatz so einrichten, dass Variation einfacher wird.\n\n**Bildschirmarbeit:**\n\n- Bildschirm: Armlänge Abstand, Oberkante ca. auf Augenhöhe\n- Bei 2 Monitoren: Hauptmonitor direkt vor Ihnen\n- Laptop: Externes Keyboard + Laptop erhöhen (Bücher, Ständer)\n\n**Smartphone-Nutzung:**\n\n- Handy auf Augenhöhe halten (Ellbogen abstützen)\n- Max. 15 Min. am Stück, dann Pause\n- \"Text-Neck\" ist normal — nur die Dauer ist das Problem\n\n**Sitz-Steh-Wechsel:**\n\n- Ideal: 30 Min. sitzen → 10 Min. stehen → wiederholen\n- Kein Stehschreibtisch? → Alle 30 Min. aufstehen, kurz gehen\n\n**Micro-Breaks (30 Sek.):**\n\n1. Chin Tuck 5x\n2. Schulterkreisen 5x vorwärts, 5x rückwärts\n3. In die Ferne schauen (20-20-20: alle 20 Min., 20 Sek., 20 Fuß)\n\n**Vergessen Sie es nicht:** Stellen Sie sich Timer-Erinnerungen ein!",
+      "takeHome": "Variation > Perfektion. Timer-Erinnerungen für Micro-Breaks sind der effektivste Ergonomie-Tipp.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_nerve_education",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Nerven verstehen: Radikulopathie erklärt",
+      "bodyMarkdown": "**Was passiert bei einer zervikalen Radikulopathie?**\n\nEine Nervenwurzel im Nacken wird gereizt oder komprimiert. Das kann Schmerzen, Kribbeln oder Schwäche im Arm verursachen.\n\n**Wichtig:**\n\n1. **Nerven heilen.** In den meisten Fällen bessern sich die Symptome innerhalb von 6-12 Wochen.\n2. **OP ist selten nötig.** Nur bei fortschreitender Schwäche oder Funktionsverlust.\n3. **Bewegung hilft.** Kontrollierte Belastung fördert die Heilung.\n\n**Nervensensitivität verstehen:**\n\nEin gereizter Nerv ist empfindlicher als normal. Das bedeutet:\n- Aktivitäten, die normalerweise harmlos sind, können Symptome auslösen\n- Das heißt NICHT, dass Sie Schaden anrichten\n- Mit der Zeit wird der Nerv weniger empfindlich\n\n**Zentralisierung vs. Peripheralisierung:**\n\n- **Gut:** Symptome wandern Richtung Nacken (Zentralisierung)\n- **Achtung:** Symptome wandern Richtung Finger (Peripheralisierung) → Übung anpassen\n\n**Ihr Programm** nutzt Neuromobilisation und progressive Belastung, um den Nerv sanft an Bewegung zu gewöhnen.",
+      "takeHome": "Nerven heilen sich selbst. Kontrollierte Bewegung beschleunigt den Prozess. Achten Sie auf Zentralisierung.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_centralization",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Zentralisierung als Wegweiser",
+      "bodyMarkdown": "**Was ist Zentralisierung?**\n\nWenn Ihre Arm-/Handsymptome sich zurückziehen und näher am Nacken spürbar werden, ist das ein **positives Zeichen** — Zentralisierung.\n\n**Warum ist das wichtig?**\n\nZentralisierung zeigt an:\n- Die Nervenwurzel wird entlastet\n- Ihr Körper reagiert positiv auf die Übungen\n- Die Richtung Ihres Programms stimmt\n\n**Beobachten Sie:**\n\n- **Vor der Übung:** Wo spüren Sie die Symptome? (Nacken? Schulter? Oberarm? Hand?)\n- **Nach der Übung:** Sind die Symptome näher am Nacken? → Gut!\n- **Wichtig:** Auch wenn der Nackenschmerz kurzzeitig zunimmt, ist Zentralisierung positiv\n\n**Peripheralisierung — Warnsignal:**\n\nWenn Symptome weiter in den Arm/die Hand wandern:\n1. Übung sofort beenden\n2. Sanfte Zervikalretraktion (Chin Tuck) als Reset\n3. Bei nächster Session: Weniger Intensität\n4. Anhaltend: Therapeut informieren\n\n**In Ihrem Fortschritts-Log:** Sie können nach jeder Session angeben, ob Symptome sich zentralisiert haben.",
+      "takeHome": "Zentralisierung = Ihr Kompass. Symptome zum Nacken = gute Richtung. Symptome zur Hand = Stop und anpassen.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_flare_management",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Flare-Management bei Radikulopathie",
+      "bodyMarkdown": "**Was tun bei einer Symptomverschlechterung?**\n\nFlare-Ups sind normal und kein Zeichen von Rückschritt. Besonders bei Radikulopathie können Symptome schwanken.\n\n**Sofort-Maßnahmen (0-48h):**\n\n1. **Ruhe bewahren.** Panik verschlimmert die Situation.\n2. **Zervikale Retraktion** (Chin Tuck): 10x sanft, alle 2 Stunden\n3. **Entlastungsposition:** Seitenlage mit Kissen, betroffener Arm oben\n4. **Kälte oder Wärme** — was sich besser anfühlt (15 Min.)\n\n**Training während Flare-Up:**\n\n- Phase NICHT überspringen, aber **reduzieren:**\n  - 50% der Wiederholungen\n  - Kein Gewicht oder weniger\n  - Nur schmerzfreie Übungen\n- Neuromobilisation: Nur Slider (kein Tensioner)\n\n**Red Flags — sofort Therapeut kontaktieren:**\n\n- Zunehmende Schwäche in Hand/Arm\n- Blasen-/Darmstörungen\n- Taubheit verschlimmert sich schnell\n\n**Nach dem Flare-Up:**\n\nWenn Symptome 48h stabil: Langsam zurück zum normalen Programm (2-3 Tage für volle Intensität).",
+      "takeHome": "Flare-Up = temporär. Reduzieren statt stoppen. Chin Tuck als erste Hilfe. Red Flags ernst nehmen.",
+      "taskType": "barrierSolving",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "trigger": {"type": "string"},
+          "actionTaken": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_return_to_activity",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Rückkehr zur vollen Aktivität",
+      "bodyMarkdown": "**Wann kann ich wieder alles machen?**\n\nDie Rückkehr zur vollen Aktivität erfolgt schrittweise — nicht auf einmal.\n\n**Kriterien für Rückkehr:**\n\n1. Armsymptome deutlich reduziert oder verschwunden\n2. Volle Kraft in Hand und Arm\n3. Schmerzfreie Kopfbeweglichkeit in allen Richtungen\n4. Phase 4 Übungen ohne Symptomverschlechterung\n\n**Stufenplan:**\n\n**Stufe 1** (Phase 3-4): Alltagsbelastung normal\n- Autofahren, Arbeiten, leichter Sport\n\n**Stufe 2** (Ende Phase 4): Moderate Belastung\n- Laufen, Schwimmen, Fitness-Training\n- Gewicht: 60-70% des vorherigen Niveaus\n\n**Stufe 3** (2-4 Wochen nach Phase 4): Volle Belastung\n- Kontaktsport, Überkopf-Sportarten\n- Volle Gewichte\n- Wettkampf\n\n**Rückfallprävention:**\n\n- 2-3x/Woche Nackenübungen beibehalten (auch wenn schmerzfrei)\n- Ergonomie-Gewohnheiten weiterführen\n- Bei ersten Anzeichen: Sofort Basisübungen (Chin Tuck, Mobilisation)\n\n**Wichtig:** Rückfälle sind möglich und normal. Sie haben jetzt das Werkzeug, damit umzugehen.",
+      "takeHome": "Rückkehr in 3 Stufen. Prävention durch Basisübungen 2-3x/Woche beibehalten. Rückfälle sind handhabbar.",
+      "taskType": "goalSetting",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "goalActivity": {"type": "string"},
+          "targetDate": {"type": "string"}
+        }
+      }
+    }
+  ]
+}

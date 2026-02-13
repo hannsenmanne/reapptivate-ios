@@ -18,55 +18,51 @@ struct NeckResultView: View {
                         .frame(width: 72, height: 72)
                         .overlay {
                             Text("\(result.ndiScore)")
-                                .font(.title.bold())
+                                .font(.appTitle)
                                 .foregroundStyle(.white)
                         }
 
                     Text("NDI-Score: \(result.ndiScore)/50")
-                        .font(.title3.weight(.semibold))
+                        .font(.appTitle3)
                         .foregroundStyle(.textPrimary)
 
                     Text(severity.displayName)
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(Color.severityColor(for: severity))
                         .padding(.horizontal, 16)
                         .padding(.vertical, 6)
                         .background(Color.severityColor(for: severity).opacity(0.1))
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                 }
                 .padding(.top, 32)
 
                 // Severity description
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Ihre Einstufung")
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
                     Text(severityDescription)
-                        .font(.body)
+                        .font(.appBody)
                         .foregroundStyle(.textSecondary)
 
                     Text(result.ndiCategory)
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
                 }
-                .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .cardStyle()
 
                 // Subtype result
-                if result.subtypeResult == .neckRadiculopathy {
+                if result.subtype == "NECK_RADICULOPATHY" {
                     HStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
                             .foregroundStyle(.painAmber)
                         Text("Radiculopathie erkannt. Ihr Ubungsprogramm ist entsprechend angepasst.")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textPrimary)
                     }
-                    .padding(16)
-                    .background(Color.painAmber.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .infoBoxStyle(color: .painAmber)
                 }
 
                 // Continue button
@@ -74,12 +70,10 @@ struct NeckResultView: View {
                     onContinue()
                 } label: {
                     Text("Weiter zum Dashboard")
-                        .font(.body.weight(.semibold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.accent)
+                .buttonStyle(.accentFilled)
             }
             .padding(24)
         }

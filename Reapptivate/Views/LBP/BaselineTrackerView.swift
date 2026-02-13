@@ -14,10 +14,10 @@ struct BaselineTrackerView: View {
             VStack(spacing: 8) {
                 HStack(spacing: 10) {
                     Image(systemName: "chart.bar.doc.horizontal")
-                        .font(.title3)
+                        .font(.appTitle3)
                         .foregroundStyle(.farBlue)
                     Text("Baseline-Tracking Phase")
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
                     Spacer()
                 }
@@ -27,11 +27,11 @@ struct BaselineTrackerView: View {
                 VStack(spacing: 6) {
                     HStack {
                         Text("Fortschritt: \(days)/5 Tage")
-                            .font(.caption.weight(.medium))
+                            .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
                         Text("\(min(100, days * 20))%")
-                            .font(.caption.weight(.bold))
+                            .font(.appCaptionBold)
                             .foregroundStyle(.farBlue)
                     }
 
@@ -47,12 +47,13 @@ struct BaselineTrackerView: View {
                     endPoint: .bottom
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
 
             // Logging form
             VStack(alignment: .leading, spacing: 16) {
                 Text("Aktivitat loggen")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
                 // Activity selector
@@ -66,13 +67,13 @@ struct BaselineTrackerView: View {
                                     Image(systemName: selectedActivityKey == activity.key ? "checkmark.circle.fill" : "circle")
                                         .foregroundStyle(selectedActivityKey == activity.key ? .accent : .textSecondary)
                                     Text(activity.label)
-                                        .font(.subheadline)
+                                        .font(.appSubheadline)
                                         .foregroundStyle(.textPrimary)
                                     Spacer()
                                 }
                                 .padding(10)
                                 .background(selectedActivityKey == activity.key ? Color.accent.opacity(0.06) : .clear)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                             }
                             .buttonStyle(.plain)
                         }
@@ -82,7 +83,7 @@ struct BaselineTrackerView: View {
                 // Duration
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Dauer (Minuten)")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
 
                     HStack(spacing: 16) {
@@ -90,12 +91,12 @@ struct BaselineTrackerView: View {
                             duration = max(5, duration - 5)
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .font(.title2)
+                                .font(.appTitle2)
                                 .foregroundStyle(.textSecondary)
                         }
 
                         Text("\(duration)")
-                            .font(.title2.weight(.bold).monospacedDigit())
+                            .font(.system(size: 22, weight: .bold, design: .monospaced))
                             .foregroundStyle(.textPrimary)
                             .frame(width: 50)
 
@@ -103,7 +104,7 @@ struct BaselineTrackerView: View {
                             duration += 5
                         } label: {
                             Image(systemName: "plus.circle.fill")
-                                .font(.title2)
+                                .font(.appTitle2)
                                 .foregroundStyle(.textSecondary)
                         }
                     }
@@ -114,11 +115,11 @@ struct BaselineTrackerView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
                         Text("Schmerzniveau")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                         Spacer()
                         Text("\(Int(painLevel))/10")
-                            .font(.caption.weight(.bold))
+                            .font(.appCaptionBold)
                             .foregroundStyle(Color.painColor(for: Int(painLevel)))
                     }
 
@@ -137,24 +138,22 @@ struct BaselineTrackerView: View {
                             Text("Aktivitat loggen")
                         }
                     }
-                    .font(.subheadline.weight(.semibold))
+                    .font(.appSubheadlineSemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 42)
                     .background(selectedActivityKey != nil ? Color.farBlue : Color.textSecondary)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
                 .disabled(selectedActivityKey == nil || isSubmitting)
             }
-            .padding(16)
-            .background(Color.cardBg)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .cardStyle()
 
             // Logged entries
             if let logs = viewModel.pacingPlan?.baselineLogs, !logs.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Protokollierte Aktivitaten")
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
                     let grouped = Dictionary(grouping: logs) { $0.date }
@@ -163,32 +162,30 @@ struct BaselineTrackerView: View {
                     ForEach(sortedDays, id: \.self) { date in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(date)
-                                .font(.caption.weight(.medium))
+                                .font(.appCaptionMedium)
                                 .foregroundStyle(.textSecondary)
 
                             ForEach(grouped[date] ?? [], id: \.activityKey) { log in
                                 HStack(spacing: 8) {
                                     Text(log.activityKey)
-                                        .font(.caption)
+                                        .font(.appCaption)
                                         .foregroundStyle(.textPrimary)
                                     Spacer()
                                     Text("\(log.duration) Min")
-                                        .font(.caption.monospacedDigit())
+                                        .font(.appCaption.monospacedDigit())
                                         .foregroundStyle(.textSecondary)
                                     Text("Schmerz: \(log.painLevel)")
-                                        .font(.caption)
+                                        .font(.appCaption)
                                         .foregroundStyle(Color.painColor(for: log.painLevel))
                                 }
                             }
                         }
                         .padding(10)
                         .background(Color.appBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                     }
                 }
-                .padding(16)
-                .background(Color.cardBg)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .cardStyle()
             }
 
             // Calculate button
@@ -204,12 +201,12 @@ struct BaselineTrackerView: View {
                             Text("Baseline berechnen & Quoten setzen")
                         }
                     }
-                    .font(.body.weight(.semibold))
+                    .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Color.painGreen)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
                 .disabled(isCalculating)
             }

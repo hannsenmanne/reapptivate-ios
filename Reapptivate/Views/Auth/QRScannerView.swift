@@ -22,12 +22,12 @@ struct QRScannerView: View {
                     VStack {
                         Spacer()
 
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous)
                             .stroke(Color.white, lineWidth: 3)
                             .frame(width: 250, height: 250)
 
                         Text("QR-Code in den Rahmen halten")
-                            .font(.subheadline.weight(.medium))
+                            .font(.appSubheadlineMedium)
                             .foregroundStyle(.white)
                             .padding(.top, 16)
 
@@ -40,10 +40,10 @@ struct QRScannerView: View {
                             .foregroundStyle(.textSecondary)
 
                         Text("Kamerazugriff erforderlich")
-                            .font(.title3.bold())
+                            .font(.appTitle3)
 
                         Text("Bitte erlauben Sie den Kamerazugriff in den Einstellungen, um QR-Codes zu scannen.")
-                            .font(.body)
+                            .font(.appBody)
                             .foregroundStyle(.textSecondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 32)
@@ -53,8 +53,8 @@ struct QRScannerView: View {
                                 UIApplication.shared.open(url)
                             }
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accent)
+                        .buttonStyle(.accentFilled)
+                        .padding(.horizontal, 24)
                     }
                 } else {
                     ProgressView("Kamera wird geladen...")
@@ -101,10 +101,11 @@ struct QRCameraPreview: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: QRScannerController, context: Context) {}
 }
 
-class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class QRScannerController: UIViewController {
     var onCodeScanned: ((String) -> Void)?
     private var captureSession: AVCaptureSession?
     private var hasScanned = false
+    private let delegateHandler = QRDelegateHandler()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,7 +125,13 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         let output = AVCaptureMetadataOutput()
         if session.canAddOutput(output) {
             session.addOutput(output)
-            output.setMetadataObjectsDelegate(self, queue: .main)
+            delegateHandler.onDetected = { [weak self] value in
+                guard let self, !self.hasScanned else { return }
+                self.hasScanned = true
+                self.captureSession?.stopRunning()
+                self.onCodeScanned?(value)
+            }
+            output.setMetadataObjectsDelegate(delegateHandler, queue: .main)
             output.metadataObjectTypes = [.qr]
         }
 
@@ -142,14 +149,15 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         super.viewWillDisappear(animated)
         captureSession?.stopRunning()
     }
+}
+
+// Separate delegate to avoid main-actor isolation conflict
+private class QRDelegateHandler: NSObject, AVCaptureMetadataOutputObjectsDelegate {
+    var onDetected: ((String) -> Void)?
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard !hasScanned,
-              let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
+        guard let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
               let value = object.stringValue else { return }
-
-        hasScanned = true
-        captureSession?.stopRunning()
-        onCodeScanned?(value)
+        onDetected?(value)
     }
 }

@@ -11,19 +11,19 @@ struct ExerciseListView: View {
             // Header
             HStack {
                 Text("Heutige Ubungen")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
                 Spacer()
 
                 let completed = exercises.filter { completedToday.contains($0.id) }.count
                 Text("\(completed)/\(exercises.count)")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textSecondary)
 
                 let totalMinutes = exercises.reduce(0) { $0 + $1.exercise.estimatedDurationMinutes }
                 Text("~\(totalMinutes) Min.")
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
 

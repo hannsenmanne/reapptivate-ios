@@ -1,0 +1,187 @@
+{
+  "version": "1.0",
+  "partA": {
+    "title": "Subtyp-Klassifikation",
+    "description": "Bitte beantworten Sie die folgenden Fragen zu Ihren Beschwerden.",
+    "items": [
+      {
+        "id": "neck_a1",
+        "textDe": "Strahlen Ihre Schmerzen unterhalb des Ellenbogens in den Arm aus?",
+        "type": "yesno",
+        "scoreYes": 1
+      },
+      {
+        "id": "neck_a2",
+        "textDe": "Haben Sie Taubheit oder Kribbeln in bestimmten Fingern?",
+        "type": "yesno",
+        "scoreYes": 1
+      },
+      {
+        "id": "neck_a3",
+        "textDe": "Verstärken sich die Symptome beim Kopf nach hinten neigen?",
+        "type": "scale",
+        "options": [
+          { "value": 0, "labelDe": "Nie" },
+          { "value": 0, "labelDe": "Manchmal" },
+          { "value": 1, "labelDe": "Immer" }
+        ]
+      },
+      {
+        "id": "neck_a4",
+        "textDe": "Verstärken sich die Symptome beim Husten, Niesen oder Pressen?",
+        "type": "yesno",
+        "scoreYes": 1
+      },
+      {
+        "id": "neck_a5",
+        "textDe": "Haben Sie Kraftverlust in Hand oder Arm bemerkt?",
+        "type": "yesno",
+        "scoreYes": 1
+      },
+      {
+        "id": "neck_a6",
+        "textDe": "Seit wann bestehen die Beschwerden?",
+        "type": "scale",
+        "options": [
+          { "value": 0, "labelDe": "Weniger als 6 Wochen" },
+          { "value": 0, "labelDe": "6–12 Wochen" },
+          { "value": 0, "labelDe": "Mehr als 12 Wochen" }
+        ]
+      }
+    ],
+    "radiculopathyThreshold": 3
+  },
+  "partB": {
+    "title": "Neck Disability Index (NDI)",
+    "description": "Bitte wählen Sie für jede Frage die Aussage, die am besten auf Sie zutrifft.",
+    "items": [
+      {
+        "id": "ndi_1",
+        "textDe": "Schmerzintensität",
+        "options": [
+          { "value": 0, "labelDe": "Ich habe momentan keine Schmerzen" },
+          { "value": 1, "labelDe": "Die Schmerzen sind sehr gering" },
+          { "value": 2, "labelDe": "Die Schmerzen sind mäßig" },
+          { "value": 3, "labelDe": "Die Schmerzen sind ziemlich stark" },
+          { "value": 4, "labelDe": "Die Schmerzen sind sehr stark" },
+          { "value": 5, "labelDe": "Die Schmerzen sind so schlimm wie nur vorstellbar" }
+        ]
+      },
+      {
+        "id": "ndi_2",
+        "textDe": "Körperpflege (Waschen, Anziehen)",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann mich normal um mich kümmern, ohne zusätzliche Schmerzen" },
+          { "value": 1, "labelDe": "Ich kann mich normal um mich kümmern, aber es verursacht zusätzliche Schmerzen" },
+          { "value": 2, "labelDe": "Körperpflege ist schmerzhaft und ich bin langsam und vorsichtig" },
+          { "value": 3, "labelDe": "Ich brauche etwas Hilfe, kann aber das Meiste selbst erledigen" },
+          { "value": 4, "labelDe": "Ich brauche jeden Tag Hilfe bei den meisten Aktivitäten der Körperpflege" },
+          { "value": 5, "labelDe": "Ich kann mich nicht selbst anziehen, wasche mich nur mit Schwierigkeiten und bleibe im Bett" }
+        ]
+      },
+      {
+        "id": "ndi_3",
+        "textDe": "Heben",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann schwere Gegenstände ohne zusätzliche Schmerzen heben" },
+          { "value": 1, "labelDe": "Ich kann schwere Gegenstände heben, aber es verursacht zusätzliche Schmerzen" },
+          { "value": 2, "labelDe": "Schmerzen hindern mich daran, schwere Gegenstände vom Boden zu heben, aber ich schaffe es, wenn sie günstig positioniert sind" },
+          { "value": 3, "labelDe": "Schmerzen hindern mich daran, schwere Gegenstände zu heben, aber ich kann leichte bis mittlere Gegenstände heben" },
+          { "value": 4, "labelDe": "Ich kann nur sehr leichte Gegenstände heben" },
+          { "value": 5, "labelDe": "Ich kann überhaupt nichts heben oder tragen" }
+        ]
+      },
+      {
+        "id": "ndi_4",
+        "textDe": "Lesen",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann so lange lesen wie ich möchte, ohne Nackenschmerzen" },
+          { "value": 1, "labelDe": "Ich kann so lange lesen wie ich möchte, mit leichten Nackenschmerzen" },
+          { "value": 2, "labelDe": "Ich kann so lange lesen wie ich möchte, mit mäßigen Nackenschmerzen" },
+          { "value": 3, "labelDe": "Ich kann wegen mäßiger Nackenschmerzen nicht so lange lesen wie ich möchte" },
+          { "value": 4, "labelDe": "Ich kann wegen starker Nackenschmerzen kaum lesen" },
+          { "value": 5, "labelDe": "Ich kann überhaupt nicht lesen" }
+        ]
+      },
+      {
+        "id": "ndi_5",
+        "textDe": "Kopfschmerzen",
+        "options": [
+          { "value": 0, "labelDe": "Ich habe keine Kopfschmerzen" },
+          { "value": 1, "labelDe": "Ich habe leichte, seltene Kopfschmerzen" },
+          { "value": 2, "labelDe": "Ich habe mäßige, gelegentliche Kopfschmerzen" },
+          { "value": 3, "labelDe": "Ich habe mäßige, häufige Kopfschmerzen" },
+          { "value": 4, "labelDe": "Ich habe starke, häufige Kopfschmerzen" },
+          { "value": 5, "labelDe": "Ich habe fast ständig Kopfschmerzen" }
+        ]
+      },
+      {
+        "id": "ndi_6",
+        "textDe": "Konzentration",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann mich voll konzentrieren, wenn ich möchte" },
+          { "value": 1, "labelDe": "Ich kann mich voll konzentrieren mit leichter Schwierigkeit" },
+          { "value": 2, "labelDe": "Ich habe mäßige Schwierigkeiten, mich zu konzentrieren" },
+          { "value": 3, "labelDe": "Ich habe große Schwierigkeiten, mich zu konzentrieren" },
+          { "value": 4, "labelDe": "Ich habe sehr große Schwierigkeiten, mich zu konzentrieren" },
+          { "value": 5, "labelDe": "Ich kann mich überhaupt nicht konzentrieren" }
+        ]
+      },
+      {
+        "id": "ndi_7",
+        "textDe": "Arbeit",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann so viel arbeiten wie ich möchte" },
+          { "value": 1, "labelDe": "Ich kann meine gewohnte Arbeit verrichten, aber nicht mehr" },
+          { "value": 2, "labelDe": "Ich kann den größten Teil meiner gewohnten Arbeit verrichten, aber nicht mehr" },
+          { "value": 3, "labelDe": "Ich kann meine gewohnte Arbeit nicht verrichten" },
+          { "value": 4, "labelDe": "Ich kann kaum arbeiten" },
+          { "value": 5, "labelDe": "Ich kann überhaupt nicht arbeiten" }
+        ]
+      },
+      {
+        "id": "ndi_8",
+        "textDe": "Autofahren",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann ohne Nackenschmerzen Auto fahren" },
+          { "value": 1, "labelDe": "Ich kann so lange Auto fahren wie ich möchte, mit leichten Nackenschmerzen" },
+          { "value": 2, "labelDe": "Ich kann so lange Auto fahren wie ich möchte, mit mäßigen Nackenschmerzen" },
+          { "value": 3, "labelDe": "Ich kann wegen mäßiger Nackenschmerzen nicht so lange Auto fahren wie ich möchte" },
+          { "value": 4, "labelDe": "Ich kann wegen starker Nackenschmerzen kaum Auto fahren" },
+          { "value": 5, "labelDe": "Ich kann überhaupt nicht Auto fahren" }
+        ]
+      },
+      {
+        "id": "ndi_9",
+        "textDe": "Schlafen",
+        "options": [
+          { "value": 0, "labelDe": "Ich habe keine Schlafprobleme" },
+          { "value": 1, "labelDe": "Mein Schlaf ist minimal gestört (weniger als 1 Stunde schlaflos)" },
+          { "value": 2, "labelDe": "Mein Schlaf ist leicht gestört (1–2 Stunden schlaflos)" },
+          { "value": 3, "labelDe": "Mein Schlaf ist mäßig gestört (2–3 Stunden schlaflos)" },
+          { "value": 4, "labelDe": "Mein Schlaf ist stark gestört (3–5 Stunden schlaflos)" },
+          { "value": 5, "labelDe": "Mein Schlaf ist komplett gestört (5–7 Stunden schlaflos)" }
+        ]
+      },
+      {
+        "id": "ndi_10",
+        "textDe": "Freizeit",
+        "options": [
+          { "value": 0, "labelDe": "Ich kann alle Freizeitaktivitäten ohne Nackenschmerzen ausüben" },
+          { "value": 1, "labelDe": "Ich kann alle Freizeitaktivitäten mit leichten Nackenschmerzen ausüben" },
+          { "value": 2, "labelDe": "Ich kann die meisten, aber nicht alle Freizeitaktivitäten wegen Nackenschmerzen ausüben" },
+          { "value": 3, "labelDe": "Ich kann nur wenige Freizeitaktivitäten wegen Nackenschmerzen ausüben" },
+          { "value": 4, "labelDe": "Ich kann kaum Freizeitaktivitäten wegen Nackenschmerzen ausüben" },
+          { "value": 5, "labelDe": "Ich kann überhaupt keine Freizeitaktivitäten ausüben" }
+        ]
+      }
+    ]
+  },
+  "ndiCategories": [
+    { "min": 0, "max": 4, "labelDe": "Keine Einschränkung" },
+    { "min": 5, "max": 14, "labelDe": "Leichte Einschränkung" },
+    { "min": 15, "max": 24, "labelDe": "Mäßige Einschränkung" },
+    { "min": 25, "max": 34, "labelDe": "Schwere Einschränkung" },
+    { "min": 35, "max": 50, "labelDe": "Komplette Einschränkung" }
+  ]
+}

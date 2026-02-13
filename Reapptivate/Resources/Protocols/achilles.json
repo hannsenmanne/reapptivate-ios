@@ -1,0 +1,83 @@
+{
+  "id": "achilles-protocol-v1",
+  "tendinopathy_type": "ACHILLES",
+  "name": "Achilles Tendinopathy Rehabilitation Protocol",
+  "description": "Evidence-based protocol for Achilles tendinopathy using isometric and heavy-slow resistance training",
+  "duration_weeks": 12,
+  "frequency_per_week": 3,
+  "max_pain_level": 3,
+  "max_phase": 3,
+  "pain_rule": "Schmerz max. 3/10 während der Übung. Schmerz muss innerhalb von 24 Stunden auf Ausgangsniveau zurückkehren.",
+  "evidence_base": [
+    "JOSPT 2024 Achilles Tendinopathy Clinical Practice Guidelines",
+    "Delphi Consensus on Exercise Parameters (2025)",
+    "Systematic Reviews on Heavy-Slow Resistance Training"
+  ],
+  "progression_criteria": [
+    "Schmerzlevel akzeptabel (max. 3/10 während, löst sich innerhalb von 24h)",
+    "Sätze/Wiederholungen in 2 aufeinanderfolgenden Trainings geschafft",
+    "Keine Zunahme der Morgensteifigkeit"
+  ],
+  "exercises": [
+    {
+      "id": "achilles-iso-calf-raise",
+      "name": "Isometric Calf Raise",
+      "type": "ISOMETRIC",
+      "description": "Standing on affected leg in partial plantarflexion position",
+      "sets": 5,
+      "reps": 1,
+      "hold_time": 45,
+      "rest_between_sets": 120,
+      "intensity": "Bodyweight + 10-20kg (if tolerated)",
+      "phase": 1,
+      "phase_title": "Isometric Loading",
+      "weeks_range": "Weeks 1-2",
+      "phase_goal": "Pain reduction and initial tendon adaptation"
+    },
+    {
+      "id": "achilles-bilateral-heel-raises",
+      "name": "Bilateral Heel Raises",
+      "type": "HSR",
+      "description": "Standing heel raises on both legs with controlled tempo",
+      "sets": 3,
+      "reps": 15,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "70-80% 1RM",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 3-4",
+      "phase_goal": "Increase tendon strength and load capacity"
+    },
+    {
+      "id": "achilles-single-leg-heel-raises",
+      "name": "Single-Leg Heel Raises",
+      "type": "HSR",
+      "description": "Standing heel raises on one leg with controlled tempo and external weight",
+      "sets": 4,
+      "reps": 10,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "External weight as tolerated",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 5-8",
+      "phase_goal": "Increase tendon strength and load capacity"
+    },
+    {
+      "id": "achilles-bent-knee-calf-raises",
+      "name": "Bent-Knee Calf Raises",
+      "type": "HSR",
+      "description": "Targets the soleus muscle with knee flexed during calf raises",
+      "sets": 3,
+      "reps": 12,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "Progressive resistance",
+      "phase": 2,
+      "phase_title": "Heavy-Slow Resistance",
+      "weeks_range": "Weeks 5-12",
+      "phase_goal": "Increase tendon strength and load capacity"
+    }
+  ]
+}

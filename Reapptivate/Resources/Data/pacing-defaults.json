@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "subtypeDefaults": {
+    "DER": {
+      "quotaIncrementPercent": 10,
+      "mandatoryPauseMinutes": 5,
+      "dailySessionCap": null,
+      "weeklySessionCap": "planned",
+      "startQuotaPercent": 80,
+      "painThreshold": 3,
+      "description": "Conservative pacing to prevent boom-bust cycles"
+    },
+    "EER": {
+      "quotaIncrementPercent": 10,
+      "mandatoryPauseMinutes": null,
+      "dailySessionCap": null,
+      "weeklySessionCap": "planned_plus_one",
+      "startQuotaPercent": 80,
+      "painThreshold": 3,
+      "timerCapsEnforced": true,
+      "repCapsEnforced": true,
+      "description": "Structured dosing with external limits"
+    },
+    "FAR": {
+      "quotaIncrementPercent": 15,
+      "mandatoryPauseMinutes": null,
+      "dailySessionCap": null,
+      "weeklySessionCap": null,
+      "startQuotaPercent": 60,
+      "painThreshold": 5,
+      "gradedExposureEnabled": true,
+      "description": "Flexible pacing focused on exposure therapy"
+    },
+    "AR": {
+      "quotaIncrementPercent": 10,
+      "mandatoryPauseMinutes": null,
+      "dailySessionCap": null,
+      "weeklySessionCap": null,
+      "startQuotaPercent": 80,
+      "painThreshold": 4,
+      "description": "Standard pacing without specific behavioral modifications"
+    }
+  },
+  "defaultActivities": [
+    {
+      "key": "sitting",
+      "label": "Sitzen",
+      "unit": "minutes",
+      "suggestedBaseline": 30
+    },
+    {
+      "key": "standing",
+      "label": "Stehen",
+      "unit": "minutes",
+      "suggestedBaseline": 20
+    },
+    {
+      "key": "walking",
+      "label": "Gehen",
+      "unit": "minutes",
+      "suggestedBaseline": 15
+    },
+    {
+      "key": "training",
+      "label": "Training",
+      "unit": "minutes",
+      "suggestedBaseline": 30
+    }
+  ]
+}

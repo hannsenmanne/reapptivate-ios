@@ -10,11 +10,11 @@ struct PhaseStatusCard: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(status.phaseName)
-                        .font(.title3.bold())
+                        .font(.appTitle3)
                         .foregroundStyle(.textPrimary)
 
                     Text("Tag \(status.daysInPhase) in dieser Phase")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
 
@@ -33,7 +33,7 @@ struct PhaseStatusCard: View {
             // Readiness Checklist
             VStack(spacing: 8) {
                 Text("Fortschritts-Bereitschaft")
-                    .font(.caption.weight(.medium))
+                    .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -46,7 +46,7 @@ struct PhaseStatusCard: View {
             // Progress bar
             HStack(spacing: 4) {
                 ForEach(0..<4, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 2)
+                    Rectangle()
                         .fill(index < status.progressionReadiness.criteriaMetCount ? Color.painGreen : Color.textSecondary.opacity(0.2))
                         .frame(height: 4)
                 }
@@ -54,12 +54,10 @@ struct PhaseStatusCard: View {
 
             // Hint
             Text(status.nextEvaluationHint)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 }
 
@@ -71,10 +69,10 @@ struct MiniStat: View {
     var body: some View {
         VStack(spacing: 2) {
             Text(value)
-                .font(.subheadline.weight(.bold))
+                .font(.appSubheadlineSemibold)
                 .foregroundStyle(color)
             Text(label)
-                .font(.caption2)
+                .font(.appCaption2)
                 .foregroundStyle(.textSecondary)
         }
         .frame(maxWidth: .infinity)
@@ -89,9 +87,9 @@ struct ReadinessRow: View {
         HStack(spacing: 8) {
             Image(systemName: met ? "checkmark.circle.fill" : "circle")
                 .foregroundStyle(met ? .painGreen : .textSecondary.opacity(0.4))
-                .font(.body)
+                .font(.appBody)
             Text(label)
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(met ? .textPrimary : .textSecondary)
             Spacer()
         }

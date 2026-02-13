@@ -7,20 +7,19 @@ struct UserProfile: Codable, Identifiable {
     let tendinopathyType: TendinopathyType
     let protocolId: String?
     let startDate: String
-    let createdAt: String
-
-    // Adaptive phase
-    let adaptivePhase: Int?
-    let phaseStartedAt: String?
-    let adaptationEnabled: Bool?
+    let createdAt: String?
 
     // AEM (LBP)
-    let aemScreeningCompleted: Bool?
-    let aemSubtype: AemSubtype?
+    var aemScreeningCompleted: Bool?
+    var aemSubtype: AemSubtype?
 
     // Neck
-    let neckScreeningCompleted: Bool?
-    let ndiSeverity: NdiSeverityGrade?
+    var neckScreeningCompleted: Bool?
+    let neckSubtype: String?
+
+    // Populated from phase-status endpoint, not from /me
+    var adaptivePhase: Int?
+    var ndiSeverity: NdiSeverityGrade?
 
     var startDateParsed: Date? {
         Date.fromISO8601(startDate)
@@ -36,20 +35,5 @@ struct UserProfile: Codable, Identifiable {
 
     var maxPhase: Int {
         tendinopathyType.isNeck ? 4 : 3
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case id, email, name
-        case tendinopathyType = "tendinopathy_type"
-        case protocolId = "protocol_id"
-        case startDate = "start_date"
-        case createdAt = "created_at"
-        case adaptivePhase = "adaptive_phase"
-        case phaseStartedAt = "phase_started_at"
-        case adaptationEnabled = "adaptation_enabled"
-        case aemScreeningCompleted = "aem_screening_completed"
-        case aemSubtype = "aem_subtype"
-        case neckScreeningCompleted = "neck_screening_completed"
-        case ndiSeverity = "ndi_severity"
     }
 }

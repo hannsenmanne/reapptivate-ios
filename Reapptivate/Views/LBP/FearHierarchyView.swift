@@ -11,16 +11,16 @@ struct FearHierarchyView: View {
             // Header
             HStack(spacing: 10) {
                 Image(systemName: "target")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                 Text("Angst-Hierarchie")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if let hierarchy = viewModel.fearHierarchy {
-                let sortedItems = hierarchy.items.sorted { $0.rank < $1.rank }
+                let sortedItems = hierarchy.items.sorted { $0.sortOrder < $1.sortOrder }
 
                 ForEach(sortedItems) { item in
                     FearHierarchyItemCard(
@@ -47,7 +47,7 @@ struct FearHierarchyView: View {
                         .font(.system(size: 32))
                         .foregroundStyle(.textSecondary)
                     Text("Noch keine Hierarchie erstellt")
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
                 .frame(maxWidth: .infinity)
@@ -75,8 +75,8 @@ struct FearHierarchyItemCard: View {
     let onLogExposure: () -> Void
 
     var fearColor: Color {
-        if item.initialFearRating <= 3 { return .painGreen }
-        if item.initialFearRating <= 6 { return .painAmber }
+        if item.fearRating0To10 <= 3 { return .painGreen }
+        if item.fearRating0To10 <= 6 { return .painAmber }
         return .painRed
     }
 
@@ -86,26 +86,26 @@ struct FearHierarchyItemCard: View {
             Button(action: onTap) {
                 HStack(spacing: 12) {
                     // Rank badge
-                    Text("\(item.rank)")
-                        .font(.caption.weight(.bold))
+                    Text("\(item.sortOrder)")
+                        .font(.appCaptionBold)
                         .foregroundStyle(.white)
                         .frame(width: 24, height: 24)
                         .background(fearColor)
                         .clipShape(Circle())
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(item.activityName)
-                            .font(.subheadline.weight(.medium))
+                        Text(item.label)
+                            .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
 
                         HStack(spacing: 8) {
-                            Text("Angst: \(item.initialFearRating)/10")
-                                .font(.caption)
+                            Text("Angst: \(item.fearRating0To10)/10")
+                                .font(.appCaption)
                                 .foregroundStyle(fearColor)
 
                             if exposureCount > 0 {
                                 Text("\(exposureCount) Exp.")
-                                    .font(.caption)
+                                    .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
                         }
@@ -114,7 +114,7 @@ struct FearHierarchyItemCard: View {
                     Spacer()
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
                 .padding(12)
@@ -128,7 +128,7 @@ struct FearHierarchyItemCard: View {
 
                 VStack(spacing: 12) {
                     // Fear rating bar
-                    FearRatingBar(rating: item.initialFearRating)
+                    FearRatingBar(rating: item.fearRating0To10)
 
                     // Log exposure button
                     Button(action: onLogExposure) {
@@ -136,19 +136,20 @@ struct FearHierarchyItemCard: View {
                             Image(systemName: "plus.circle.fill")
                             Text("Exposition protokollieren")
                         }
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 40)
                         .background(Color.farBlue)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                     }
                 }
                 .padding(12)
             }
         }
         .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
     }
 }
 
@@ -161,21 +162,21 @@ struct FearRatingBar: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text("Angst-Level")
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Spacer()
                 Text("\(rating)/10")
-                    .font(.caption.weight(.bold))
+                    .font(.appCaptionBold)
                     .foregroundStyle(.textPrimary)
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
+                    Rectangle()
                         .fill(Color.textSecondary.opacity(0.15))
                         .frame(height: 8)
 
-                    RoundedRectangle(cornerRadius: 4)
+                    Rectangle()
                         .fill(barColor)
                         .frame(width: geo.size.width * CGFloat(rating) / 10, height: 8)
                 }

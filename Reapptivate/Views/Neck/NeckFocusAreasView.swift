@@ -9,10 +9,10 @@ struct NeckFocusAreasView: View {
         VStack(spacing: 12) {
             HStack(spacing: 10) {
                 Image(systemName: "scope")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                 Text("Schwerpunktbereiche")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -22,7 +22,7 @@ struct NeckFocusAreasView: View {
                     .padding(.vertical, 16)
             } else if focusAreas.isEmpty {
                 Text("Keine Schwerpunktbereiche verfugbar")
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
             } else {
@@ -31,9 +31,7 @@ struct NeckFocusAreasView: View {
                 }
             }
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
         .task {
             await loadFocusAreas()
         }
@@ -42,7 +40,8 @@ struct NeckFocusAreasView: View {
     private func loadFocusAreas() async {
         isLoading = true
         do {
-            focusAreas = try await apiClient.request(APIEndpoints.neckFocusAreas())
+            let response: NeckFocusAreasResponse = try await apiClient.request(APIEndpoints.neckFocusAreas())
+            focusAreas = response.focusAreas
         } catch {
             focusAreas = []
         }
@@ -80,18 +79,18 @@ struct FocusAreaRow: View {
         VStack(spacing: 8) {
             HStack(spacing: 10) {
                 Image(systemName: areaIcon)
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.farBlue)
                     .frame(width: 24, height: 24)
 
                 Text(area.domainLabel)
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .foregroundStyle(.textPrimary)
 
                 Spacer()
 
                 Text("\(area.score)/5")
-                    .font(.caption.weight(.bold).monospacedDigit())
+                    .font(.appCaptionBold.monospacedDigit())
                     .foregroundStyle(scoreColor)
             }
 
@@ -112,13 +111,13 @@ struct FocusAreaRow: View {
             // Tips
             if let tips = area.dailyTips, let tip = tips.first {
                 Text(tip)
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(10)
         .background(Color.appBg)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
     }
 }

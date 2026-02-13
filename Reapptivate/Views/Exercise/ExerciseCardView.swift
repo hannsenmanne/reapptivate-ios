@@ -6,41 +6,51 @@ struct ExerciseCardView: View {
     let isCompleted: Bool
     var userSubtype: AemSubtype?
     let onLog: () -> Void
+    var onDetail: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Header
-            HStack(alignment: .top) {
-                // Number badge
-                Text(String(format: "%02d", index + 1))
-                    .font(.caption.weight(.bold).monospacedDigit())
-                    .foregroundStyle(.white)
-                    .frame(width: 28, height: 28)
-                    .background(isCompleted ? Color.painGreen : Color.accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+            // Header (tappable for detail)
+            Button {
+                onDetail?()
+            } label: {
+                HStack(alignment: .top) {
+                    // Number badge
+                    Text(String(format: "%02d", index + 1))
+                        .font(.appCaptionBold.monospacedDigit())
+                        .foregroundStyle(.white)
+                        .frame(width: 28, height: 28)
+                        .background(isCompleted ? Color.painGreen : Color.accent)
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(exercise.exercise.name)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.textPrimary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(exercise.exercise.name)
+                            .font(.appSubheadlineSemibold)
+                            .foregroundStyle(.textPrimary)
 
-                    Text(exercise.exercise.type.displayName)
-                        .font(.caption)
-                        .foregroundStyle(.textSecondary)
-                }
+                        Text(exercise.exercise.type.displayName)
+                            .font(.appCaption)
+                            .foregroundStyle(.textSecondary)
+                    }
 
-                Spacer()
+                    Spacer()
 
-                if isCompleted {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.painGreen)
-                        .font(.title3)
+                    if isCompleted {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.painGreen)
+                            .font(.title3)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.appCaption)
+                            .foregroundStyle(.textSecondary)
+                    }
                 }
             }
+            .buttonStyle(.plain)
 
             // Description
             Text(exercise.exercise.description)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(.textSecondary)
                 .lineLimit(3)
 
@@ -54,20 +64,27 @@ struct ExerciseCardView: View {
             ExerciseParameterPills(exercise: exercise.exercise)
 
             // Action Button
-            Button {
-                onLog()
-            } label: {
-                Text(isCompleted ? "Erneut" : "Erledigt")
-                    .font(.subheadline.weight(.medium))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 36)
+            if isCompleted {
+                Button {
+                    onLog()
+                } label: {
+                    Text("Erneut")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 36)
+                }
+                .buttonStyle(.secondary)
+            } else {
+                Button {
+                    onLog()
+                } label: {
+                    Text("Erledigt")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 36)
+                }
+                .buttonStyle(.accentFilled)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(isCompleted ? .textSecondary : .accent)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 }
 
@@ -89,17 +106,17 @@ struct CognitiveCueBadge: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(Color.subtypeColor(for: subtype))
 
             Text(cue)
-                .font(.caption)
+                .font(.appCaption)
                 .foregroundStyle(Color.subtypeColor(for: subtype))
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.subtypeColor(for: subtype).opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
     }
 }
 
@@ -134,15 +151,15 @@ struct ParameterPill: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: icon)
-                .font(.caption2)
+                .font(.appCaption2)
             Text(label)
-                .font(.caption2)
+                .font(.appCaption2)
         }
         .foregroundStyle(.textSecondary)
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .background(Color.textSecondary.opacity(0.1))
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
     }
 }
 

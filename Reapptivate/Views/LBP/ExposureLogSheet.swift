@@ -51,12 +51,12 @@ struct ExposureLogSheet: View {
                             handleAction()
                         } label: {
                             Text(step == .prepare ? "Aktivitat durchfuhren" : "Speichern")
-                                .font(.body.weight(.semibold))
+                                .font(.appBodySemibold)
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 48)
                                 .background(Color.farBlue)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                         }
                     }
                     .padding(.horizontal, 24)
@@ -83,41 +83,39 @@ struct ExposureLogSheet: View {
                 Image(systemName: "target")
                     .foregroundStyle(.farBlue)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(item.activityName)
-                        .font(.subheadline.weight(.medium))
+                    Text(item.label)
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
-                    Text("Ursprungliche Angst: \(item.initialFearRating)/10")
-                        .font(.caption)
+                    Text("Ursprungliche Angst: \(item.fearRating0To10)/10")
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
                 Spacer()
             }
-            .padding(16)
-            .background(Color.farBlue.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .infoBoxStyle(color: .farBlue)
 
             // Pre-fear rating
             VStack(alignment: .leading, spacing: 8) {
                 Text("Aktuelle Angst jetzt")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
                 HStack(spacing: 12) {
                     Slider(value: $preFear, in: 0...10, step: 1)
                         .tint(.farBlue)
                     Text("\(Int(preFear))")
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.appTitle3.monospacedDigit())
                         .foregroundStyle(.farBlue)
                         .frame(width: 28)
                 }
 
                 HStack {
                     Text("Keine Angst")
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Spacer()
                     Text("Maximale Angst")
-                        .font(.caption2)
+                        .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
             }
@@ -125,17 +123,15 @@ struct ExposureLogSheet: View {
             // Encouragement
             VStack(spacing: 8) {
                 Image(systemName: "hand.thumbsup.fill")
-                    .font(.title2)
+                    .font(.appTitle2)
                     .foregroundStyle(.painGreen)
                 Text("Bereit? Versuchen Sie jetzt die Aktivitat durchzufuhren.")
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .multilineTextAlignment(.center)
             }
-            .padding(16)
             .frame(maxWidth: .infinity)
-            .background(Color.painGreen.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .infoBoxStyle(color: .painGreen)
         }
     }
 
@@ -146,14 +142,14 @@ struct ExposureLogSheet: View {
             // Post-fear rating
             VStack(alignment: .leading, spacing: 8) {
                 Text("Angst NACHHER")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
                 HStack(spacing: 12) {
                     Slider(value: $postFear, in: 0...10, step: 1)
                         .tint(.farBlue)
                     Text("\(Int(postFear))")
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.appTitle3.monospacedDigit())
                         .foregroundStyle(.farBlue)
                         .frame(width: 28)
                 }
@@ -162,14 +158,14 @@ struct ExposureLogSheet: View {
             // Post-pain
             VStack(alignment: .leading, spacing: 8) {
                 Text("Schmerz NACHHER")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
                 HStack(spacing: 12) {
                     Slider(value: $postPain, in: 0...10, step: 1)
                         .tint(Color.painColor(for: Int(postPain), maxPainLevel: 5))
                     Text("\(Int(postPain))")
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.appTitle3.monospacedDigit())
                         .foregroundStyle(Color.painColor(for: Int(postPain), maxPainLevel: 5))
                         .frame(width: 28)
                 }
@@ -178,15 +174,16 @@ struct ExposureLogSheet: View {
             // Notes
             VStack(alignment: .leading, spacing: 6) {
                 Text("Notizen (optional)")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
                 TextEditor(text: $notes)
-                    .font(.subheadline)
+                    .font(.appSubheadline)
                     .frame(minHeight: 80)
                     .padding(8)
                     .background(Color.cardBg)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
             }
         }
     }
@@ -200,7 +197,7 @@ struct ExposureLogSheet: View {
                 .foregroundStyle(.painGreen)
 
             Text("Super gemacht!")
-                .font(.title2.bold())
+                .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
             if fearReduction > 0 {
@@ -208,17 +205,17 @@ struct ExposureLogSheet: View {
                     Image(systemName: "arrow.down")
                         .foregroundStyle(.painGreen)
                     Text("Angst-Reduktion: -\(fearReduction) Punkte")
-                        .font(.headline)
+                        .font(.appHeadline)
                         .foregroundStyle(.painGreen)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(Color.painGreen.opacity(0.1))
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
             }
 
             Text("Jede Exposition hilft Ihrem Gehirn zu lernen, dass diese Aktivitat sicher ist.")
-                .font(.subheadline)
+                .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
 
@@ -226,12 +223,12 @@ struct ExposureLogSheet: View {
                 dismiss()
             } label: {
                 Text("Fertig")
-                    .font(.body.weight(.semibold))
+                    .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Color.farBlue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
             }
         }
         .padding(.top, 32)
@@ -254,14 +251,22 @@ struct ExposureLogSheet: View {
         isSubmitting = true
         let fb = Int(preFear)
         let fa = Int(postFear)
+        let pp = Int(postPain)
         fearReduction = fb - fa
 
-        if await viewModel.logExposure(
-            itemId: item.id,
-            fearBefore: fb,
-            fearAfter: fa,
-            notes: notes.isEmpty ? nil : notes
-        ) {
+        let request = ExposureLogRequest(
+            predictedHarm: nil,
+            predictedFear: nil,
+            preFear: fb,
+            prePain: 0,
+            performedDose: nil,
+            postFear: fa,
+            postPain: pp,
+            didAvoid: false,
+            outcomeNotes: notes.isEmpty ? nil : notes
+        )
+
+        if await viewModel.logExposure(itemId: item.id, request: request) {
             withAnimation { step = .complete }
         }
         isSubmitting = false

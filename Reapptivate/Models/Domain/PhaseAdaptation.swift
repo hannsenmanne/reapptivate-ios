@@ -52,7 +52,6 @@ struct AdaptationResult: Codable {
 
 struct PhaseAdaptationRecord: Codable, Identifiable {
     let id: String
-    let userId: String
     let currentPhase: Int
     let previousPhase: Int?
     let decision: AdaptationDecision
@@ -62,23 +61,9 @@ struct PhaseAdaptationRecord: Codable, Identifiable {
     let sessionsInPhase: Int
     let daysInPhase: Int
     let decidedAt: String
-    let therapistOverride: Bool
+    let therapistOverride: Bool?
 
     var decidedAtDate: Date? {
         Date.fromISO8601(decidedAt)
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case currentPhase = "current_phase"
-        case previousPhase = "previous_phase"
-        case decision, reason
-        case avgPainLevel = "avg_pain_level"
-        case compliancePct = "compliance_pct"
-        case sessionsInPhase = "sessions_in_phase"
-        case daysInPhase = "days_in_phase"
-        case decidedAt = "decided_at"
-        case therapistOverride = "therapist_override"
     }
 }
