@@ -7,6 +7,7 @@ struct SettingsView: View {
 
     @State private var notificationService = NotificationService.shared
     @State private var showLogoutConfirmation = false
+    @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
 
     var body: some View {
         NavigationStack {
@@ -94,6 +95,21 @@ struct SettingsView: View {
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
+                        }
+                    }
+                }
+
+                // Appearance
+                Section("Darstellung") {
+                    Picker(selection: $appearanceMode) {
+                        ForEach(AppearanceMode.allCases, id: \.self) { mode in
+                            Text(mode.label).tag(mode)
+                        }
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "circle.lefthalf.filled")
+                                .foregroundStyle(.accent)
+                            Text("Erscheinungsbild")
                         }
                     }
                 }

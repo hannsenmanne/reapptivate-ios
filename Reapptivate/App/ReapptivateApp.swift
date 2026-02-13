@@ -6,6 +6,7 @@ struct ReapptivateApp: App {
     @State private var appState = AppState()
     @State private var apiClient = APIClient()
     @State private var networkMonitor = NetworkMonitor()
+    @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
 
     var body: some Scene {
         WindowGroup {
@@ -13,6 +14,7 @@ struct ReapptivateApp: App {
                 .environment(appState)
                 .environment(apiClient)
                 .environment(networkMonitor)
+                .preferredColorScheme(appearanceMode.colorScheme)
                 .onAppear {
                     apiClient.onTokenExpired = {
                         appState.handleLogout()
@@ -73,6 +75,28 @@ struct RootView: View {
             if isConnected {
                 Task { await syncService?.drainQueue() }
             }
+        }
+    }
+}
+
+// MARK: - Appearance Mode
+
+enum AppearanceMode: String, CaseIterable {
+    case system, light, dark
+
+    var label: String {
+        switch self {
+        case .system: "System"
+        case .light: "Hell"
+        case .dark: "Dunkel"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
         }
     }
 }
