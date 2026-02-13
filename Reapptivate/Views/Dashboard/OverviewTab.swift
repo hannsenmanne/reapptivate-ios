@@ -26,6 +26,9 @@ struct OverviewTab: View {
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
 
+            // Training Schedule
+            TrainingScheduleCard()
+
             // Wissen
             if let user = appState.currentUser {
                 WissenCardView(

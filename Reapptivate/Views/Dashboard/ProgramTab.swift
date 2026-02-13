@@ -21,9 +21,6 @@ struct ProgramTab: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // Training Schedule
-            TrainingScheduleCard()
-
             // AEM Profile (LBP)
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 AemProfileQuickCard(subtype: subtype)
