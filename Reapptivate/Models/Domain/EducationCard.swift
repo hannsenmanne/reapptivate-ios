@@ -20,11 +20,11 @@ final class EducationCardLoader: @unchecked Sendable {
 
     func allCards() -> [EducationCard] {
         lock.lock()
+        defer { lock.unlock() }
+
         if let cache {
-            lock.unlock()
             return cache
         }
-        lock.unlock()
 
         guard let url = Bundle.main.url(forResource: "education-cards", withExtension: "json"),
               let data = try? Data(contentsOf: url),
@@ -32,9 +32,7 @@ final class EducationCardLoader: @unchecked Sendable {
             return []
         }
 
-        lock.lock()
         cache = cards
-        lock.unlock()
         return cards
     }
 

@@ -61,9 +61,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: FearHierarchyResponse = try await apiClient.request(APIEndpoints.fearHierarchy())
             fearHierarchy = response.hierarchy
-        } catch let error as APIError where error == .notFound {
-            fearHierarchy = nil
         } catch {
+            if case .notFound = error as? APIError {
+                fearHierarchy = nil
+            }
             // No hierarchy yet is fine
         }
     }
@@ -272,17 +273,5 @@ final class LbpEnhancementsViewModel {
 
     var isBaselineReady: Bool {
         baselineDaysLogged >= 5
-    }
-}
-
-// MARK: - APIError Equatable helper
-extension APIError: Equatable {
-    static func == (lhs: APIError, rhs: APIError) -> Bool {
-        switch (lhs, rhs) {
-        case (.notFound, .notFound): return true
-        case (.unauthorized, .unauthorized): return true
-        case (.forbidden, .forbidden): return true
-        default: return false
-        }
     }
 }

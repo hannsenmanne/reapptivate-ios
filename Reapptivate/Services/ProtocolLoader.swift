@@ -23,20 +23,18 @@ final class ProtocolLoader: @unchecked Sendable {
         let key = protocolKey(for: type, aemSubtype: aemSubtype)
 
         lock.lock()
+        defer { lock.unlock() }
+
         if let cached = cache[key] {
-            lock.unlock()
             return cached
         }
-        lock.unlock()
 
         guard let proto = loadProtocol(filename: key) else {
             Log.general.error("Failed to load protocol: \(key)")
             return nil
         }
 
-        lock.lock()
         cache[key] = proto
-        lock.unlock()
         return proto
     }
 

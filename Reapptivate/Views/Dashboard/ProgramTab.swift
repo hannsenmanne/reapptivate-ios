@@ -6,6 +6,7 @@ struct ProgramTab: View {
     var onExerciseLogged: (() -> Void)?
 
     @State private var activeSheet: ExerciseSheet?
+    @State private var pendingSheet: ExerciseSheet?
 
     enum ExerciseSheet: Identifiable {
         case progressLog(ExerciseWithPhase)
@@ -105,7 +106,12 @@ struct ProgramTab: View {
             }
         }
         .padding(.bottom, 32)
-        .sheet(item: $activeSheet) { sheet in
+        .sheet(item: $activeSheet, onDismiss: {
+            if let pending = pendingSheet {
+                pendingSheet = nil
+                activeSheet = pending
+            }
+        }) { sheet in
             switch sheet {
             case .progressLog(let exercise):
                 ProgressLogSheet(
@@ -122,10 +128,8 @@ struct ProgramTab: View {
                     ExerciseDetailView(
                         exercise: exercise,
                         onLog: {
+                            pendingSheet = .progressLog(exercise)
                             activeSheet = nil
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                activeSheet = .progressLog(exercise)
-                            }
                         },
                         onStartSession: {
                             activeSheet = nil

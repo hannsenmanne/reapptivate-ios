@@ -106,27 +106,28 @@ struct DashboardView: View {
     }
 
     private func loadAll() async {
-        // Dashboard VM
+        // Dashboard VM (must load first — provides completedToday for exerciseVM)
         if viewModel == nil {
             viewModel = DashboardViewModel(apiClient: apiClient, appState: appState)
         }
         await viewModel?.loadDashboard()
 
-        // Exercise VM
+        // Exercise + Phase VMs can load in parallel
         if exerciseVM == nil {
             exerciseVM = ExerciseViewModel(apiClient: apiClient)
         }
+        if phaseVM == nil {
+            phaseVM = PhaseViewModel(apiClient: apiClient)
+        }
+
         if let user = appState.currentUser {
             exerciseVM?.loadExercises(for: user)
             exerciseVM?.updateCompletedToday(from: viewModel?.completedToday ?? [])
         }
-        await exerciseVM?.loadCustomExercises()
 
-        // Phase VM
-        if phaseVM == nil {
-            phaseVM = PhaseViewModel(apiClient: apiClient)
-        }
-        await phaseVM?.loadPhaseHistory()
+        async let exerciseLoad: () = exerciseVM?.loadCustomExercises() ?? ()
+        async let phaseLoad: () = phaseVM?.loadPhaseHistory() ?? ()
+        _ = await (exerciseLoad, phaseLoad)
     }
 }
 

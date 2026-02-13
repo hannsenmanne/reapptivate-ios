@@ -18,16 +18,13 @@ extension Date {
     }
 
     var iso8601String: String {
-        ISO8601DateFormatter().string(from: self)
+        DateFormatters.iso8601.string(from: self)
     }
 
     static func fromISO8601(_ string: String) -> Date? {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date = formatter.date(from: string) {
+        if let date = DateFormatters.iso8601.date(from: string) {
             return date
         }
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter.date(from: string)
+        return DateFormatters.iso8601NoFractional.date(from: string)
     }
 }

@@ -8,6 +8,7 @@ struct ScheduleEditorView: View {
     @State private var isLoading = true
     @State private var isSaving = false
     @State private var showSaved = false
+    @State private var showError = false
 
     private let dayNames = [
         (2, "Montag"), (3, "Dienstag"), (4, "Mittwoch"),
@@ -56,6 +57,9 @@ struct ScheduleEditorView: View {
                         } else if showSaved {
                             Label("Gespeichert", systemImage: "checkmark")
                                 .foregroundStyle(.painGreen)
+                        } else if showError {
+                            Label("Fehlgeschlagen", systemImage: "exclamationmark.triangle")
+                                .foregroundStyle(.painRed)
                         } else {
                             Text("Speichern")
                         }
@@ -138,7 +142,9 @@ struct ScheduleEditorView: View {
                 try? await Task.sleep(for: .seconds(2))
                 showSaved = false
             } catch {
-                // Silent fail
+                showError = true
+                try? await Task.sleep(for: .seconds(2))
+                showError = false
             }
         }
         isSaving = false

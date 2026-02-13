@@ -8,6 +8,7 @@ struct TrainingScheduleCard: View {
     @State private var isLoading = true
     @State private var isSaving = false
     @State private var showSaved = false
+    @State private var showError = false
     @State private var hasExistingSchedule = false
     @State private var saveTask: Task<Void, Never>?
 
@@ -88,6 +89,17 @@ struct TrainingScheduleCard: View {
                         Spacer()
                     }
                     .transition(.opacity)
+                } else if showError {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.painRed)
+                        Text("Speichern fehlgeschlagen")
+                            .font(.appCaption)
+                            .foregroundStyle(.painRed)
+                        Spacer()
+                    }
+                    .transition(.opacity)
                 }
             }
         }
@@ -105,15 +117,6 @@ struct TrainingScheduleCard: View {
         if selectedDays.contains(day) {
             selectedDays.remove(day)
         } else {
-            if selectedDays.count >= 3 {
-                // Remove the first selected day (in display order) to make room
-                let displayOrder = days.map(\.id)
-                if let oldest = selectedDays
-                    .sorted(by: { (displayOrder.firstIndex(of: $0) ?? 0) < (displayOrder.firstIndex(of: $1) ?? 0) })
-                    .first {
-                    selectedDays.remove(oldest)
-                }
-            }
             selectedDays.insert(day)
         }
         scheduleAutoSave()
@@ -193,7 +196,9 @@ struct TrainingScheduleCard: View {
             try? await Task.sleep(for: .seconds(2))
             showSaved = false
         } catch {
-            // Silent fail — user will see no confirmation
+            showError = true
+            try? await Task.sleep(for: .seconds(2))
+            showError = false
         }
         isSaving = false
     }
