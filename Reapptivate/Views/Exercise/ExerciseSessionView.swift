@@ -1,7 +1,9 @@
 import SwiftUI
+import Combine
 
 struct ExerciseSessionView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
     let exercise: ExerciseWithPhase
     let maxPainLevel: Int
     let showSymptomResponse: Bool
@@ -11,8 +13,11 @@ struct ExerciseSessionView: View {
     @State private var isResting = false
     @State private var isHolding = false
     @State private var timerSeconds = 0
-    @State private var timer: Timer?
+    @State private var timerActive = false
     @State private var showProgressLog = false
+    @State private var backgroundDate: Date?
+
+    private let timerPublisher = Timer.publish(every: 1, on: .main, in: .common)
 
     var totalSets: Int { exercise.exercise.sets }
     var holdTime: Int { exercise.exercise.holdTime ?? 0 }
@@ -147,6 +152,34 @@ struct ExerciseSessionView: View {
             .onDisappear {
                 stopTimer()
             }
+            .onReceive(timerPublisher.autoconnect()) { _ in
+                guard timerActive else { return }
+                tick()
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                switch newPhase {
+                case .background:
+                    if timerActive {
+                        backgroundDate = Date()
+                    }
+                case .active:
+                    if let bgDate = backgroundDate {
+                        let elapsed = Int(Date().timeIntervalSince(bgDate))
+                        backgroundDate = nil
+                        timerSeconds += elapsed
+                        // Check if timer target was reached while backgrounded
+                        if isHolding && timerSeconds >= holdTime {
+                            stopTimer()
+                            completeSet()
+                        } else if isResting && timerSeconds >= restTime {
+                            stopTimer()
+                            isResting = false
+                        }
+                    }
+                default:
+                    break
+                }
+            }
             .sheet(isPresented: $showProgressLog) {
                 ProgressLogSheet(
                     exercise: exercise,
@@ -166,34 +199,28 @@ struct ExerciseSessionView: View {
     private func startHold() {
         isHolding = true
         timerSeconds = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            Task { @MainActor in
-                timerSeconds += 1
-                if timerSeconds >= holdTime {
-                    stopTimer()
-                    completeSet()
-                }
-            }
-        }
+        timerActive = true
     }
 
     private func startRest() {
         isResting = true
         timerSeconds = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            Task { @MainActor in
-                timerSeconds += 1
-                if timerSeconds >= restTime {
-                    stopTimer()
-                    isResting = false
-                }
-            }
+        timerActive = true
+    }
+
+    private func tick() {
+        timerSeconds += 1
+        if isHolding && timerSeconds >= holdTime {
+            stopTimer()
+            completeSet()
+        } else if isResting && timerSeconds >= restTime {
+            stopTimer()
+            isResting = false
         }
     }
 
     private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
+        timerActive = false
         isHolding = false
     }
 

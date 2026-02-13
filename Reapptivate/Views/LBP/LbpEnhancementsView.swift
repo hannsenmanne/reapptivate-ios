@@ -22,9 +22,11 @@ struct LbpEnhancementsView: View {
             }
         }
         .task {
-            let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
-            viewModel = vm
-            await vm.loadData()
+            if viewModel == nil {
+                let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
+                viewModel = vm
+                await vm.loadData()
+            }
         }
     }
 

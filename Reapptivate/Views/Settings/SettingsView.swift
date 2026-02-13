@@ -111,9 +111,7 @@ struct SettingsView: View {
                 // Logout
                 Section {
                     Button(role: .destructive) {
-                        TokenManager.shared.clearAll()
-                        apiClient.resetLogoutGuard()
-                        appState.handleLogout()
+                        appState.performLogout(apiClient: apiClient)
                         dismiss()
                     } label: {
                         HStack {

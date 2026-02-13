@@ -37,4 +37,11 @@ final class AppState {
         isAuthenticated = false
         onLogout?()
     }
+
+    /// Single consolidated logout path — clears tokens, resets API guard, and updates state.
+    func performLogout(apiClient: APIClient) {
+        TokenManager.shared.clearAll()
+        apiClient.resetLogoutGuard()
+        handleLogout()
+    }
 }

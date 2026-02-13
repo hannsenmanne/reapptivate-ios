@@ -77,8 +77,7 @@ struct DashboardView: View {
                                 Divider()
                             }
                             Button("Abmelden", role: .destructive) {
-                                let vm = AuthViewModel(apiClient: apiClient)
-                                vm.logout(appState: appState)
+                                appState.performLogout(apiClient: apiClient)
                             }
                         } label: {
                             Image(systemName: "person.circle")

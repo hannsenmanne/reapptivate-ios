@@ -1,6 +1,7 @@
 import SwiftUI
 import AVFoundation
 import AudioToolbox
+import Combine
 
 struct PacingTimerView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
@@ -14,11 +15,12 @@ struct PacingTimerView: View {
     @State private var selectedActivityKey: String?
     @State private var elapsedSeconds: Int = 0
     @State private var breakSeconds: Int = 0
-    @State private var timer: Timer?
     @State private var soundPlayed80 = false
     @State private var soundPlayed100 = false
     @State private var audioPlayer: AVAudioPlayer?
     @State private var backgroundDate: Date?
+
+    private let timerPublisher = Timer.publish(every: 1, on: .main, in: .common)
 
     var selectedActivity: TargetActivity? {
         viewModel.pacingPlan?.targetActivities.first { $0.key == selectedActivityKey }
@@ -64,10 +66,17 @@ struct PacingTimerView: View {
         .onDisappear {
             resetTimer()
         }
+        .onReceive(timerPublisher.autoconnect()) { _ in
+            guard timerState == .active || timerState == .onBreak else { return }
+            if timerState == .active {
+                tick()
+            } else if timerState == .onBreak {
+                breakSeconds += 1
+            }
+        }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .background:
-                timer?.invalidate()
                 if timerState == .active || timerState == .onBreak {
                     backgroundDate = Date()
                 }
@@ -77,12 +86,17 @@ struct PacingTimerView: View {
                     backgroundDate = nil
                     if timerState == .active {
                         elapsedSeconds += elapsed
-                        resumeTimer()
+                        // Check if quota was reached while backgrounded
+                        if quotaSeconds > 0 && elapsedSeconds >= quotaSeconds {
+                            if !soundPlayed100 {
+                                soundPlayed100 = true
+                                playAlarmSound()
+                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                            }
+                            if isDer { startBreak() }
+                        }
                     } else if timerState == .onBreak {
                         breakSeconds += elapsed
-                        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                            Task { @MainActor in breakSeconds += 1 }
-                        }
                     }
                 }
             default:
@@ -336,11 +350,6 @@ struct PacingTimerView: View {
         soundPlayed80 = false
         soundPlayed100 = false
         setupAudioSession()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            Task { @MainActor in
-                tick()
-            }
-        }
     }
 
     private func tick() {
@@ -368,41 +377,26 @@ struct PacingTimerView: View {
 
     private func pauseTimer() {
         timerState = .paused
-        timer?.invalidate()
     }
 
     private func resumeTimer() {
         timerState = .active
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            Task { @MainActor in
-                tick()
-            }
-        }
     }
 
     private func completeTimer() {
-        timer?.invalidate()
         timerState = .completed
     }
 
     private func startBreak() {
-        timer?.invalidate()
         timerState = .onBreak
         breakSeconds = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            Task { @MainActor in
-                breakSeconds += 1
-            }
-        }
     }
 
     private func endBreak() {
-        timer?.invalidate()
         timerState = .completed
     }
 
     private func resetTimer() {
-        timer?.invalidate()
         timerState = .idle
         elapsedSeconds = 0
         breakSeconds = 0

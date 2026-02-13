@@ -109,8 +109,7 @@ final class AuthViewModel {
     // MARK: - Logout
 
     func logout(appState: AppState) {
-        tokenManager.clearAll()
-        appState.handleLogout()
+        appState.performLogout(apiClient: apiClient)
         // Reset form state
         email = ""
         password = ""

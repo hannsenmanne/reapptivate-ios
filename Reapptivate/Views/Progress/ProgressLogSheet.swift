@@ -155,6 +155,7 @@ struct ProgressLogSheet: View {
             )
 
             if let adaptation = response.adaptation, adaptation.phaseChanged {
+                onSuccess()
                 adaptationResult = adaptation
             } else {
                 showSuccess = true
