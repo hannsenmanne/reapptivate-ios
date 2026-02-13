@@ -11,6 +11,7 @@ final class CachedProgress {
     var repsCompleted: Int
     var painLevel: Int
     var notes: String?
+    var symptomResponse: String?
 
     init(
         entryId: String,
@@ -20,7 +21,8 @@ final class CachedProgress {
         setsCompleted: Int,
         repsCompleted: Int,
         painLevel: Int,
-        notes: String? = nil
+        notes: String? = nil,
+        symptomResponse: String? = nil
     ) {
         self.entryId = entryId
         self.userId = userId
@@ -30,18 +32,20 @@ final class CachedProgress {
         self.repsCompleted = repsCompleted
         self.painLevel = painLevel
         self.notes = notes
+        self.symptomResponse = symptomResponse
     }
 
     convenience init(from entry: ProgressEntry) {
         self.init(
             entryId: entry.id,
-            userId: entry.userId,
+            userId: entry.userId ?? "",
             exerciseId: entry.exerciseId,
             completedAt: entry.completedAt,
             setsCompleted: entry.setsCompleted,
             repsCompleted: entry.repsCompleted,
             painLevel: entry.painLevel,
-            notes: entry.notes
+            notes: entry.notes,
+            symptomResponse: entry.symptomResponse?.rawValue
         )
     }
 }

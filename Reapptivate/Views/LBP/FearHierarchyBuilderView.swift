@@ -26,22 +26,20 @@ struct FearHierarchyBuilderView: View {
                     // Instructions
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Erstellen Sie eine Liste von Aktivitaten, vor denen Sie Angst haben oder die Sie vermeiden.")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                         Text("Bewerten Sie jede Aktivitat mit einem Angst-Level von 0 (keine Angst) bis 10 (maximale Angst).")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
-                    .padding(16)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.farBlue.opacity(0.08))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .infoBoxStyle(color: .farBlue)
 
                     // Suggested activities
                     if showSuggestions && items.count < 3 {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Vorschlage")
-                                .font(.caption.weight(.medium))
+                                .font(.appCaptionMedium)
                                 .foregroundStyle(.textSecondary)
 
                             FlowLayoutSuggestions(items: unusedSuggestions) { suggestion in
@@ -69,14 +67,14 @@ struct FearHierarchyBuilderView: View {
                             Image(systemName: "plus")
                             Text("Aktivitat hinzufugen")
                         }
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.farBlue)
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                         .background(Color.farBlue.opacity(0.05))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                         .overlay {
-                            RoundedRectangle(cornerRadius: 10)
+                            RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous)
                                 .strokeBorder(Color.farBlue.opacity(0.3), style: StrokeStyle(lineWidth: 1, dash: [6]))
                         }
                     }
@@ -93,12 +91,12 @@ struct FearHierarchyBuilderView: View {
                                     Text("Hierarchie speichern")
                                 }
                             }
-                            .font(.body.weight(.semibold))
+                            .font(.appBodySemibold)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 48)
                             .background(canSave ? Color.farBlue : Color.textSecondary)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                         }
                         .disabled(!canSave || isSaving)
                     }
@@ -145,9 +143,11 @@ struct FearHierarchyBuilderView: View {
         isSaving = true
         let inputItems = items.enumerated().map { index, item in
             FearHierarchyItemInput(
-                activityName: item.name.trimmingCharacters(in: .whitespaces),
-                initialFearRating: item.fearRating,
-                rank: index + 1
+                label: item.name.trimmingCharacters(in: .whitespaces),
+                context: nil,
+                fearRating: item.fearRating,
+                sortOrder: index,
+                steps: nil
             )
         }
         if await viewModel.saveFearHierarchy(items: inputItems) {
@@ -181,13 +181,13 @@ struct BuilderItemCard: View {
                 VStack(spacing: 4) {
                     Button { onMoveUp?() } label: {
                         Image(systemName: "chevron.up")
-                            .font(.caption2)
+                            .font(.appCaption2)
                             .foregroundStyle(onMoveUp != nil ? .textSecondary : .clear)
                     }
                     .disabled(onMoveUp == nil)
 
                     Text("\(rank)")
-                        .font(.caption.weight(.bold))
+                        .font(.appCaptionBold)
                         .foregroundStyle(.white)
                         .frame(width: 22, height: 22)
                         .background(ratingColor)
@@ -195,7 +195,7 @@ struct BuilderItemCard: View {
 
                     Button { onMoveDown?() } label: {
                         Image(systemName: "chevron.down")
-                            .font(.caption2)
+                            .font(.appCaption2)
                             .foregroundStyle(onMoveDown != nil ? .textSecondary : .clear)
                     }
                     .disabled(onMoveDown == nil)
@@ -204,15 +204,15 @@ struct BuilderItemCard: View {
                 VStack(spacing: 8) {
                     // Activity name
                     TextField("Aktivitat", text: $item.name)
-                        .font(.subheadline)
+                        .font(.appSubheadline)
                         .padding(10)
                         .background(Color.appBg)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
 
                     // Fear rating slider
                     HStack(spacing: 8) {
                         Text("Angst:")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
 
                         Slider(value: Binding(
@@ -222,7 +222,7 @@ struct BuilderItemCard: View {
                         .tint(ratingColor)
 
                         Text("\(item.fearRating)")
-                            .font(.subheadline.weight(.bold).monospacedDigit())
+                            .font(.appSubheadlineSemibold.monospacedDigit())
                             .foregroundStyle(ratingColor)
                             .frame(width: 24)
                     }
@@ -231,7 +231,7 @@ struct BuilderItemCard: View {
                 // Delete button
                 Button(action: onDelete) {
                     Image(systemName: "trash")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.painRed)
                         .frame(width: 32, height: 32)
                 }
@@ -239,7 +239,8 @@ struct BuilderItemCard: View {
         }
         .padding(12)
         .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
     }
 
     var ratingColor: Color {
@@ -264,12 +265,12 @@ struct FlowLayoutSuggestions: View {
                     onTap(item)
                 } label: {
                     Text(item)
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.farBlue)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                         .background(Color.farBlue.opacity(0.08))
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                 }
             }
         }

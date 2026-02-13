@@ -64,7 +64,6 @@ final class SyncService {
                 context.delete(item)
             } catch {
                 item.retryCount += 1
-                item.lastAttempt = Date()
             }
         }
 
@@ -84,8 +83,19 @@ final class SyncService {
         if let cached = existing {
             cached.update(from: profile)
         } else {
-            let cached = CachedUser()
-            cached.update(from: profile)
+            let cached = CachedUser(
+                userId: profile.id,
+                email: profile.email,
+                name: profile.name,
+                tendinopathyType: profile.tendinopathyType.rawValue,
+                adaptivePhase: profile.currentPhase,
+                aemSubtype: profile.aemSubtype?.rawValue,
+                ndiSeverity: profile.ndiSeverity?.rawValue,
+                protocolId: profile.protocolId,
+                aemScreeningCompleted: profile.aemScreeningCompleted ?? false,
+                neckScreeningCompleted: profile.neckScreeningCompleted ?? false,
+                startDate: profile.startDate
+            )
             context.insert(cached)
         }
         try? context.save()
@@ -101,6 +111,23 @@ final class SyncService {
             context.insert(cached)
         }
         try? context.save()
+    }
+
+    // MARK: - Clear All Cached Data (Logout)
+
+    func clearAllData() {
+        guard let context = modelContext else { return }
+
+        do {
+            try context.delete(model: CachedUser.self)
+            try context.delete(model: CachedProgress.self)
+            try context.delete(model: PendingSync.self)
+            try context.save()
+            pendingCount = 0
+            Log.sync.info("All cached data cleared")
+        } catch {
+            Log.sync.error("Failed to clear cached data: \(error)")
+        }
     }
 
     // MARK: - Helpers

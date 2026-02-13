@@ -4,6 +4,7 @@ struct AemScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    var isEmbedded = false
 
     @State private var viewModel: AemScreeningViewModel?
     @State private var showResult = false
@@ -16,7 +17,12 @@ struct AemScreeningView: View {
                         LoadingView(message: "Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         AemResultView(result: result) {
-                            dismiss()
+                            if isEmbedded {
+                                // Launched as root view — refresh profile to proceed to dashboard
+                                Task { await refreshProfile() }
+                            } else {
+                                dismiss()
+                            }
                         }
                     } else if let item = vm.currentItem {
                         VStack(spacing: 0) {
@@ -27,7 +33,7 @@ struct AemScreeningView: View {
                                 .padding(.top, 8)
 
                             Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
-                                .font(.caption)
+                                .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                                 .padding(.top, 4)
 
@@ -64,12 +70,10 @@ struct AemScreeningView: View {
                                             Text("Auswertung anzeigen")
                                         }
                                     }
-                                    .font(.body.weight(.semibold))
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 48)
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.accent)
+                                .buttonStyle(.accentFilled)
                                 .padding(.horizontal, 24)
                                 .padding(.bottom, 24)
                             }
@@ -98,11 +102,32 @@ struct AemScreeningView: View {
                 }
             }
             .interactiveDismissDisabled()
+            .alert("Fehler", isPresented: Binding(
+                get: { refreshError != nil },
+                set: { if !$0 { refreshError = nil } }
+            )) {
+                Button("Erneut versuchen") {
+                    Task { await refreshProfile() }
+                }
+            } message: {
+                Text(refreshError ?? "")
+            }
         }
         .task {
             let vm = AemScreeningViewModel(apiClient: apiClient)
             viewModel = vm
             await vm.loadConfig()
+        }
+    }
+
+    @State private var refreshError: String?
+
+    private func refreshProfile() async {
+        do {
+            let response: UserResponse = try await apiClient.request(APIEndpoints.me())
+            appState.handleLogin(user: response.user)
+        } catch {
+            refreshError = "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
         }
     }
 }

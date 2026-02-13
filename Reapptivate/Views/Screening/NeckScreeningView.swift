@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct NeckScreeningView: View {
+    @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
 
     let isRescreening: Bool
+    var isEmbedded = false
     @State private var viewModel: NeckScreeningViewModel?
     @State private var showResult = false
 
@@ -16,7 +18,11 @@ struct NeckScreeningView: View {
                         LoadingView(message: "NDI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         NeckResultView(result: result) {
-                            dismiss()
+                            if isEmbedded {
+                                Task { await refreshProfile() }
+                            } else {
+                                dismiss()
+                            }
                         }
                     } else if vm.showPartTransition {
                         PartTransitionView {
@@ -32,11 +38,11 @@ struct NeckScreeningView: View {
 
                             HStack {
                                 Text("Teil \(vm.currentPart)")
-                                    .font(.caption.weight(.medium))
+                                    .font(.appCaptionMedium)
                                     .foregroundStyle(.accent)
                                 Spacer()
                                 Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
-                                    .font(.caption)
+                                    .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
                             .padding(.horizontal, 16)
@@ -75,12 +81,10 @@ struct NeckScreeningView: View {
                                             Text("Auswertung anzeigen")
                                         }
                                     }
-                                    .font(.body.weight(.semibold))
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 48)
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.accent)
+                                .buttonStyle(.accentFilled)
                                 .padding(.horizontal, 24)
                                 .padding(.bottom, 24)
                             }
@@ -99,7 +103,7 @@ struct NeckScreeningView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    if let vm = viewModel, (vm.currentItemIndex > 0 || vm.currentPart == "B") && !showResult {
+                    if let vm = viewModel, (vm.currentItemIndex > 0 || (vm.currentPart == "B" && !vm.isRescreening)) && !showResult {
                         Button {
                             vm.goBack()
                         } label: {
@@ -109,11 +113,32 @@ struct NeckScreeningView: View {
                 }
             }
             .interactiveDismissDisabled()
+            .alert("Fehler", isPresented: Binding(
+                get: { refreshError != nil },
+                set: { if !$0 { refreshError = nil } }
+            )) {
+                Button("Erneut versuchen") {
+                    Task { await refreshProfile() }
+                }
+            } message: {
+                Text(refreshError ?? "")
+            }
         }
         .task {
             let vm = NeckScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()
+        }
+    }
+
+    @State private var refreshError: String?
+
+    private func refreshProfile() async {
+        do {
+            let response: UserResponse = try await apiClient.request(APIEndpoints.me())
+            appState.handleLogin(user: response.user)
+        } catch {
+            refreshError = "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
         }
     }
 }
@@ -132,11 +157,11 @@ struct PartTransitionView: View {
                 .foregroundStyle(.painGreen)
 
             Text("Teil A abgeschlossen!")
-                .font(.title2.bold())
+                .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
             Text("Jetzt folgt Teil B: Der Neck Disability Index (NDI) bewertet die Auswirkung Ihrer Nackenschmerzen auf den Alltag.")
-                .font(.body)
+                .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
@@ -145,12 +170,10 @@ struct PartTransitionView: View {
                 onContinue()
             } label: {
                 Text("Weiter zu Teil B")
-                    .font(.body.weight(.semibold))
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.accent)
+            .buttonStyle(.accentFilled)
             .padding(.horizontal, 24)
 
             Spacer()

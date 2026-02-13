@@ -10,6 +10,9 @@ final class CachedUser {
     var adaptivePhase: Int
     var aemSubtype: String?
     var ndiSeverity: String?
+    var protocolId: String?
+    var aemScreeningCompleted: Bool
+    var neckScreeningCompleted: Bool
     var startDate: String
     var lastSyncedAt: Date
 
@@ -21,6 +24,9 @@ final class CachedUser {
         adaptivePhase: Int = 1,
         aemSubtype: String? = nil,
         ndiSeverity: String? = nil,
+        protocolId: String? = nil,
+        aemScreeningCompleted: Bool = false,
+        neckScreeningCompleted: Bool = false,
         startDate: String,
         lastSyncedAt: Date = .now
     ) {
@@ -31,6 +37,9 @@ final class CachedUser {
         self.adaptivePhase = adaptivePhase
         self.aemSubtype = aemSubtype
         self.ndiSeverity = ndiSeverity
+        self.protocolId = protocolId
+        self.aemScreeningCompleted = aemScreeningCompleted
+        self.neckScreeningCompleted = neckScreeningCompleted
         self.startDate = startDate
         self.lastSyncedAt = lastSyncedAt
     }
@@ -42,6 +51,9 @@ final class CachedUser {
         adaptivePhase = profile.currentPhase
         aemSubtype = profile.aemSubtype?.rawValue
         ndiSeverity = profile.ndiSeverity?.rawValue
+        protocolId = profile.protocolId
+        aemScreeningCompleted = profile.aemScreeningCompleted ?? false
+        neckScreeningCompleted = profile.neckScreeningCompleted ?? false
         startDate = profile.startDate
         lastSyncedAt = .now
     }

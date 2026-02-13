@@ -52,8 +52,9 @@ final class AuthViewModel {
             tokenManager.saveUserId(response.user.id)
 
             // Fetch full profile for complete data
-            let profile: UserProfile = try await apiClient.request(APIEndpoints.me())
-            appState.handleLogin(user: profile)
+            let userResponse: UserResponse = try await apiClient.request(APIEndpoints.me())
+            apiClient.resetLogoutGuard()
+            appState.handleLogin(user: userResponse.user)
 
             Log.auth.info("Login successful for \(response.user.name)")
         } catch let error as APIError {
@@ -75,15 +76,28 @@ final class AuthViewModel {
     // MARK: - Auto-login
 
     func checkExistingAuth(appState: AppState) async {
+        #if DEBUG
+        // Dev auto-login: launch with --dev-token <jwt> --dev-user-id <id>
+        let args = ProcessInfo.processInfo.arguments
+        if let tokenIdx = args.firstIndex(of: "--dev-token"), tokenIdx + 1 < args.count,
+           let userIdx = args.firstIndex(of: "--dev-user-id"), userIdx + 1 < args.count {
+            let token = args[tokenIdx + 1]
+            let userId = args[userIdx + 1]
+            tokenManager.saveToken(token)
+            tokenManager.saveUserId(userId)
+            Log.auth.info("Dev token injected via launch args")
+        }
+        #endif
+
         guard tokenManager.hasToken, !tokenManager.isTokenExpired() else {
             appState.isCheckingAuth = false
             return
         }
 
         do {
-            let profile: UserProfile = try await apiClient.request(APIEndpoints.me())
-            appState.handleLogin(user: profile)
-            Log.auth.info("Auto-login successful for \(profile.name)")
+            let userResponse: UserResponse = try await apiClient.request(APIEndpoints.me())
+            appState.handleLogin(user: userResponse.user)
+            Log.auth.info("Auto-login successful for \(userResponse.user.name)")
         } catch {
             Log.auth.warning("Auto-login failed, clearing token: \(error.localizedDescription)")
             tokenManager.clearAll()
@@ -179,8 +193,8 @@ final class AuthViewModel {
             tokenManager.saveToken(response.token)
             tokenManager.saveUserId(response.user.id)
 
-            let profile: UserProfile = try await apiClient.request(APIEndpoints.me())
-            appState.handleLogin(user: profile)
+            let userResponse: UserResponse = try await apiClient.request(APIEndpoints.me())
+            appState.handleLogin(user: userResponse.user)
 
             Log.auth.info("Onboarding completed for \(response.user.name)")
         } catch let error as APIError {

@@ -24,7 +24,7 @@ struct ExerciseSessionView: View {
                 // Progress
                 HStack(spacing: 4) {
                     ForEach(1...totalSets, id: \.self) { set in
-                        RoundedRectangle(cornerRadius: 2)
+                        Rectangle()
                             .fill(set < currentSet ? Color.painGreen : (set == currentSet ? Color.accent : Color.textSecondary.opacity(0.2)))
                             .frame(height: 4)
                     }
@@ -35,7 +35,7 @@ struct ExerciseSessionView: View {
                 // Timer Display
                 VStack(spacing: 16) {
                     Text(isResting ? "Pause" : "Satz \(currentSet)/\(totalSets)")
-                        .font(.title3.weight(.medium))
+                        .font(.appTitle3)
                         .foregroundStyle(.textSecondary)
 
                     if isHolding || isResting {
@@ -65,17 +65,17 @@ struct ExerciseSessionView: View {
                             .foregroundStyle(.accent)
 
                         Text("Wiederholungen")
-                            .font(.subheadline)
+                            .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
 
                         if let tempo = exercise.exercise.tempo {
                             Text("Tempo: \(tempo)")
-                                .font(.caption.weight(.medium))
+                                .font(.appCaptionMedium)
                                 .foregroundStyle(.textSecondary)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
                                 .background(Color.accent.opacity(0.1))
-                                .clipShape(Capsule())
+                                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                         }
                     }
                 }
@@ -92,7 +92,7 @@ struct ExerciseSessionView: View {
                                 completeSet()
                             } label: {
                                 Label("Satz beenden", systemImage: "stop.fill")
-                                    .font(.body.weight(.semibold))
+                                    .font(.appBodySemibold)
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 48)
                             }
@@ -103,12 +103,10 @@ struct ExerciseSessionView: View {
                                 startHold()
                             } label: {
                                 Label("Halten starten", systemImage: "play.fill")
-                                    .font(.body.weight(.semibold))
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 48)
                             }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.accent)
+                            .buttonStyle(.accentFilled)
                         }
                     } else if isResting {
                         Button {
@@ -116,11 +114,10 @@ struct ExerciseSessionView: View {
                             isResting = false
                         } label: {
                             Label("Pause uberspringen", systemImage: "forward.fill")
-                                .font(.body.weight(.medium))
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.secondary)
                     } else {
                         // Manual reps mode
                         Button {
@@ -128,12 +125,10 @@ struct ExerciseSessionView: View {
                         } label: {
                             Label(currentSet == totalSets ? "Letzter Satz fertig" : "Satz fertig",
                                   systemImage: "checkmark.circle.fill")
-                                .font(.body.weight(.semibold))
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 48)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.accent)
+                        .buttonStyle(.accentFilled)
                     }
                 }
             }
@@ -148,6 +143,9 @@ struct ExerciseSessionView: View {
                         dismiss()
                     }
                 }
+            }
+            .onDisappear {
+                stopTimer()
             }
             .sheet(isPresented: $showProgressLog) {
                 ProgressLogSheet(

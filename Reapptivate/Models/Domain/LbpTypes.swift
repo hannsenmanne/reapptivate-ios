@@ -2,82 +2,148 @@ import Foundation
 
 // MARK: - Fear Hierarchy
 
+// API response: { hierarchy: { id, createdAt, items: [...] } }
 struct FearHierarchy: Codable, Identifiable {
     let id: String
-    let userId: String
-    let items: [FearHierarchyItem]
     let createdAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case items
-        case createdAt = "created_at"
-    }
+    let items: [FearHierarchyItem]
 }
 
+// DB columns: id, hierarchy_id, label, context, fear_rating_0_to_10,
+//   difficulty_0_to_10, status, steps, sort_order, created_at, updated_at
 struct FearHierarchyItem: Codable, Identifiable {
     let id: String
     let hierarchyId: String
-    let activityName: String
-    let initialFearRating: Int
-    let rank: Int
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case hierarchyId = "hierarchy_id"
-        case activityName = "activity_name"
-        case initialFearRating = "initial_fear_rating"
-        case rank
-    }
+    let label: String
+    let context: String?
+    let fearRating0To10: Int
+    let difficulty0To10: Int?
+    let status: String?
+    let steps: [FearHierarchyItemStep]?
+    let sortOrder: Int
+    let createdAt: String?
+    let updatedAt: String?
 }
 
+struct FearHierarchyItemStep: Codable {
+    let stepNum: Int
+    let dose: String
+    let description: String
+}
+
+// Request sent to POST /api/lbp-enhancements/fear-hierarchy
+// Controller reads: items[].label, items[].context, items[].fearRating, items[].steps
 struct FearHierarchyCreateRequest: Codable {
     let items: [FearHierarchyItemInput]
 }
 
 struct FearHierarchyItemInput: Codable {
-    let activityName: String
-    let initialFearRating: Int
-    let rank: Int
+    let label: String
+    let context: String?
+    let fearRating: Int
+    let sortOrder: Int?
+    let steps: [FearHierarchyItemStep]?
 }
 
 // MARK: - Exposure Logs
 
+// DB columns: id, patient_id, hierarchy_item_id, plan_week, plan_session,
+//   predicted_harm_0_to_100, predicted_fear_0_to_10, pre_fear_0_to_10,
+//   pre_pain_0_to_10, performed_dose, post_fear_0_to_10, post_pain_0_to_10,
+//   outcome_notes, did_avoid, created_at
 struct ExposureLog: Codable, Identifiable {
     let id: String
-    let itemId: String
-    let fearBefore: Int
-    let fearAfter: Int
-    let notes: String?
-    let completedAt: String
+    let patientId: String?
+    let hierarchyItemId: String?
+    let planWeek: Int?
+    let planSession: Int?
+    let predictedHarm0To100: Int?
+    let predictedFear0To10: Int?
+    let preFear0To10: Int
+    let prePain0To10: Int
+    let performedDose: AnyCodable?
+    let postFear0To10: Int
+    let postPain0To10: Int
+    let outcomeNotes: String?
+    let didAvoid: Bool
+    let createdAt: String?
 
-    var completedAtDate: Date? {
-        Date.fromISO8601(completedAt)
+    var createdAtDate: Date? {
+        guard let createdAt else { return nil }
+        return Date.fromISO8601(createdAt)
     }
 
     var fearReduction: Int {
-        fearBefore - fearAfter
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case itemId = "item_id"
-        case fearBefore = "fear_before"
-        case fearAfter = "fear_after"
-        case notes
-        case completedAt = "completed_at"
+        preFear0To10 - postFear0To10
     }
 }
 
+// Controller reads: predictedHarm, predictedFear, preFear, prePain,
+//   performedDose, postFear, postPain, didAvoid, outcomeNotes
 struct ExposureLogRequest: Codable {
-    let fearBefore: Int
-    let fearAfter: Int
-    let notes: String?
+    let predictedHarm: Int?
+    let predictedFear: Int?
+    let preFear: Int
+    let prePain: Int
+    let performedDose: String?
+    let postFear: Int
+    let postPain: Int
+    let didAvoid: Bool
+    let outcomeNotes: String?
+}
+
+// MARK: - AnyCodable helper (for JSON objects like performed_dose)
+
+struct AnyCodable: Codable {
+    let value: Any
+
+    init(_ value: Any) {
+        self.value = value
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if container.decodeNil() {
+            value = NSNull()
+        } else if let string = try? container.decode(String.self) {
+            value = string
+        } else if let int = try? container.decode(Int.self) {
+            value = int
+        } else if let double = try? container.decode(Double.self) {
+            value = double
+        } else if let bool = try? container.decode(Bool.self) {
+            value = bool
+        } else if let dict = try? container.decode([String: AnyCodable].self) {
+            value = dict.mapValues { $0.value }
+        } else if let array = try? container.decode([AnyCodable].self) {
+            value = array.map { $0.value }
+        } else {
+            value = NSNull()
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch value {
+        case let string as String: try container.encode(string)
+        case let int as Int: try container.encode(int)
+        case let double as Double: try container.encode(double)
+        case let bool as Bool: try container.encode(bool)
+        case let dict as [String: Any]:
+            try container.encode(dict.mapValues { AnyCodable($0) })
+        case let array as [Any]:
+            try container.encode(array.map { AnyCodable($0) })
+        case is NSNull: try container.encodeNil()
+        default: try container.encodeNil()
+        }
+    }
 }
 
 // MARK: - Pacing Plan
 
+// DB columns: id, patient_id, target_activities (JSONB), rules (JSONB),
+//   baseline_mode, baseline_started_at, baseline_logs (JSONB),
+//   baseline_calculated, created_at, updated_at
 struct PacingPlan: Codable, Identifiable {
     let id: String
     let patientId: String
@@ -87,19 +153,7 @@ struct PacingPlan: Codable, Identifiable {
     let baselineStartedAt: String?
     let baselineLogs: [BaselineLog]?
     let baselineCalculated: Bool
-    let createdAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case patientId = "patient_id"
-        case targetActivities = "target_activities"
-        case rules
-        case baselineMode = "baseline_mode"
-        case baselineStartedAt = "baseline_started_at"
-        case baselineLogs = "baseline_logs"
-        case baselineCalculated = "baseline_calculated"
-        case createdAt = "created_at"
-    }
+    let createdAt: String?
 }
 
 struct TargetActivity: Codable, Identifiable {
@@ -119,6 +173,7 @@ struct PacingRules: Codable {
     let weeklySessionCap: Int?
 }
 
+// JSONB content within baseline_logs (uses camelCase)
 struct BaselineLog: Codable {
     let date: String
     let activityKey: String
@@ -128,47 +183,49 @@ struct BaselineLog: Codable {
 
 // MARK: - Pacing Template
 
+// API response: { template: { name, targetActivities, rules, ... } }
 struct PacingTemplate: Codable {
-    let subtype: String
-    let targetActivities: [TargetActivity]
-    let rules: PacingRules
+    let name: String?
+    let targetActivities: [PacingTemplateActivity]?
+    let rules: PacingRules?
     let description: String?
+}
+
+struct PacingTemplateActivity: Codable {
+    let key: String
+    let label: String
+    let defaultBaseline: Int?
+    let quotaFromBaseline: Double?
 }
 
 // MARK: - Pacing Logs
 
+// DB columns: id, patient_id, activity_key, log_date, planned_quota,
+//   done_quota, planned_pauses, done_pauses, notes, created_at
 struct PacingLog: Codable, Identifiable {
     let id: String
-    let planId: String
+    let patientId: String?
     let activityKey: String
-    let plannedQuota: Int
+    let logDate: String?
+    let plannedQuota: Int?
     let doneQuota: Int
     let plannedPauses: Int?
     let donePauses: Int?
     let notes: String?
-    let loggedAt: String
+    let createdAt: String?
 
     var isBreach: Bool {
-        guard plannedQuota > 0 else { return false }
+        guard let plannedQuota, plannedQuota > 0 else { return false }
         return Double(doneQuota) / Double(plannedQuota) > 1.1
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case planId = "plan_id"
-        case activityKey = "activity_key"
-        case plannedQuota = "planned_quota"
-        case doneQuota = "done_quota"
-        case plannedPauses = "planned_pauses"
-        case donePauses = "done_pauses"
-        case notes
-        case loggedAt = "logged_at"
     }
 }
 
+// Controller reads: activityKey, logDate, plannedQuota, doneQuota,
+//   plannedPauses, donePauses, notes
 struct PacingLogRequest: Codable {
     let activityKey: String
-    let plannedQuota: Int
+    let logDate: String?
+    let plannedQuota: Int?
     let doneQuota: Int
     let plannedPauses: Int?
     let donePauses: Int?
@@ -177,26 +234,16 @@ struct PacingLogRequest: Codable {
 
 // MARK: - Plan Adjustments
 
+// DB columns: id, patient_id, rule_id, action, payload (JSONB), applied, applied_at, created_at
 struct PlanAdjustment: Codable, Identifiable {
     let id: String
-    let planId: String
+    let patientId: String?
     let ruleId: String
-    let triggerReason: String
-    let oldValues: [String: String]?
-    let newValues: [String: String]?
+    let action: String?
+    let payload: AnyCodable?
     let applied: Bool
-    let createdAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case planId = "plan_id"
-        case ruleId = "rule_id"
-        case triggerReason = "trigger_reason"
-        case oldValues = "old_values"
-        case newValues = "new_values"
-        case applied
-        case createdAt = "created_at"
-    }
+    let appliedAt: String?
+    let createdAt: String?
 }
 
 // MARK: - Micro-Module
@@ -211,18 +258,12 @@ struct MicroModule: Codable, Identifiable {
     var id: String { key }
 }
 
+// DB columns: id, patient_id, module_key, started_at, completed_at
 struct MicroModuleCompletion: Codable, Identifiable {
     let id: String
     let moduleKey: String
-    let startedAt: String
+    let startedAt: String?
     let completedAt: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case moduleKey = "module_key"
-        case startedAt = "started_at"
-        case completedAt = "completed_at"
-    }
 }
 
 // MARK: - Analytics
@@ -240,11 +281,6 @@ struct PainDataPoint: Codable, Identifiable {
     let avgPain: Double
 
     var id: String { date }
-
-    enum CodingKeys: String, CodingKey {
-        case date
-        case avgPain = "avg_pain"
-    }
 }
 
 struct TriggerFireCount: Codable, Identifiable {
@@ -252,11 +288,6 @@ struct TriggerFireCount: Codable, Identifiable {
     let count: Int
 
     var id: String { ruleId }
-
-    enum CodingKeys: String, CodingKey {
-        case ruleId = "rule_id"
-        case count
-    }
 }
 
 struct FearReductionAnalytics: Codable {
@@ -284,8 +315,8 @@ struct WeeklyVolume: Codable, Identifiable {
 
 struct QuotaProgressionSuggestion: Codable {
     let ready: Bool
-    let currentQuotas: [String: Int]
-    let suggestedQuotas: [String: Int]
-    let incrementPercent: Int
-    let reason: String
+    let currentQuotas: [String: Int]?
+    let suggestedQuotas: [String: Int]?
+    let incrementPercent: Int?
+    let reason: String?
 }

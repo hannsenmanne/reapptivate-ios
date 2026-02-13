@@ -4,10 +4,11 @@ import Foundation
 /// Protocols are bundled locally so they work offline.
 /// The JSON files are generated from the web app's mockProtocols.ts
 /// using scripts/translate-protocols.js
-final class ProtocolLoader {
+final class ProtocolLoader: @unchecked Sendable {
     static let shared = ProtocolLoader()
 
     private var cache: [String: ExerciseProtocol] = [:]
+    private let lock = NSLock()
 
     private init() {}
 
@@ -21,16 +22,21 @@ final class ProtocolLoader {
     ) -> ExerciseProtocol? {
         let key = protocolKey(for: type, aemSubtype: aemSubtype)
 
+        lock.lock()
         if let cached = cache[key] {
+            lock.unlock()
             return cached
         }
+        lock.unlock()
 
         guard let proto = loadProtocol(filename: key) else {
             Log.general.error("Failed to load protocol: \(key)")
             return nil
         }
 
+        lock.lock()
         cache[key] = proto
+        lock.unlock()
         return proto
     }
 
@@ -40,24 +46,7 @@ final class ProtocolLoader {
         phase: Int,
         ndiSeverity: NdiSeverityGrade? = nil
     ) -> [ExerciseWithPhase] {
-        // Load the phase-organized exercises from the protocol bundle
-        let key = proto.id
-        guard let phaseExercises = loadPhaseExercises(filename: key) else {
-            // Fallback: wrap plain exercises with phase metadata
-            return proto.exercises.map { exercise in
-                ExerciseWithPhase(
-                    exercise: exercise,
-                    phase: phase,
-                    phaseTitle: phaseName(phase, for: proto.tendinopathyType),
-                    weeksRange: "",
-                    phaseGoal: "",
-                    ndiSeverity: ndiSeverity,
-                    dosageModifier: nil
-                )
-            }
-        }
-
-        return phaseExercises.filter { $0.phase == phase }
+        proto.exercises.filter { $0.phase == phase }
     }
 
     // MARK: - Phase Names
@@ -77,19 +66,19 @@ final class ProtocolLoader {
 
     private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?) -> String {
         switch type {
-        case .tennisElbow: return "tennis-elbow-protocol"
-        case .golfersElbow: return "golfers-elbow-protocol"
-        case .achilles: return "achilles-protocol"
-        case .patellar: return "patellar-protocol"
-        case .rotatorCuff: return "rotator-cuff-protocol"
-        case .gluteal: return "gluteal-protocol"
-        case .proximalHamstring: return "hamstring-protocol"
-        case .plantarFascia: return "plantar-protocol"
+        case .tennisElbow: return "tennis_elbow"
+        case .golfersElbow: return "golfers_elbow"
+        case .achilles: return "achilles"
+        case .patellar: return "patellar"
+        case .rotatorCuff: return "rotator_cuff"
+        case .gluteal: return "gluteal"
+        case .proximalHamstring: return "proximal_hamstring"
+        case .plantarFascia: return "plantar_fascia"
         case .lbpNonspecific:
-            guard let subtype = aemSubtype else { return "lbp-ar-protocol" }
-            return "lbp-\(subtype.rawValue.lowercased())-protocol"
+            guard let subtype = aemSubtype else { return "lbp_ar" }
+            return "lbp_\(subtype.rawValue.lowercased())"
         case .neckPain:
-            return "neck-nonspecific-protocol"
+            return "neck_pain"
         }
     }
 
@@ -105,26 +94,12 @@ final class ProtocolLoader {
         return decodeProtocol(from: url)
     }
 
-    private func loadPhaseExercises(filename: String) -> [ExerciseWithPhase]? {
-        let phasesFilename = "\(filename)-phases"
-        guard let url = Bundle.main.url(forResource: phasesFilename, withExtension: "json", subdirectory: "Protocols")
-            ?? Bundle.main.url(forResource: phasesFilename, withExtension: "json") else {
-            return nil
-        }
-
-        do {
-            let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode([ExerciseWithPhase].self, from: data)
-        } catch {
-            Log.general.error("Failed to decode phase exercises: \(error)")
-            return nil
-        }
-    }
-
     private func decodeProtocol(from url: URL) -> ExerciseProtocol? {
         do {
             let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode(ExerciseProtocol.self, from: data)
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode(ExerciseProtocol.self, from: data)
         } catch {
             Log.general.error("Failed to decode protocol: \(error)")
             return nil

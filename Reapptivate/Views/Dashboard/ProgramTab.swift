@@ -2,6 +2,12 @@ import SwiftUI
 
 struct ProgramTab: View {
     @Environment(AppState.self) private var appState
+    let exerciseVM: ExerciseViewModel?
+    var onExerciseLogged: (() -> Void)?
+
+    @State private var selectedExercise: ExerciseWithPhase?
+    @State private var showProgressLog = false
+    @State private var showDetail = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -15,22 +21,92 @@ struct ProgramTab: View {
                 NdiProfileQuickCard(severity: severity)
             }
 
-            // Exercise list by phase - M5 will populate
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Ubungsprogramm")
-                    .font(.headline)
-                    .foregroundStyle(.textPrimary)
+            // Exercise list by phase
+            if let exerciseVM, !exerciseVM.exercises.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Ubungsprogramm")
+                            .font(.appHeadline)
+                            .foregroundStyle(.textPrimary)
 
-                Text("Vollstandige Ubungsliste kommt in M5")
-                    .font(.subheadline)
-                    .foregroundStyle(.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(20)
-                    .background(Color.cardBg)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                        Spacer()
+
+                        Text("\(exerciseVM.completedCount)/\(exerciseVM.totalCount) erledigt")
+                            .font(.appCaption)
+                            .foregroundStyle(.textSecondary)
+                    }
+
+                    ForEach(Array(exerciseVM.exercises.enumerated()), id: \.element.id) { index, exercise in
+                        ExerciseCardView(
+                            exercise: exercise,
+                            index: index,
+                            isCompleted: exerciseVM.isCompleted(exercise.id),
+                            userSubtype: appState.currentUser?.aemSubtype,
+                            onLog: {
+                                selectedExercise = exercise
+                                showProgressLog = true
+                            }
+                        )
+                        .onTapGesture {
+                            selectedExercise = exercise
+                            showDetail = true
+                        }
+                    }
+                }
+            } else {
+                EmptyStateView(
+                    icon: "figure.strengthtraining.traditional",
+                    title: "Kein Programm",
+                    message: "Ihr Ubungsprogramm wird geladen..."
+                )
+            }
+
+            // LBP Enhancements (Fear Hierarchy, Pacing, Micro-Modules)
+            if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
+                LbpEnhancementsView(subtype: subtype)
             }
         }
         .padding(.bottom, 32)
+        .sheet(isPresented: $showProgressLog) {
+            if let exercise = selectedExercise {
+                ProgressLogSheet(
+                    exercise: exercise,
+                    maxPainLevel: maxPainLevel,
+                    showSymptomResponse: appState.isNeck,
+                    onSuccess: {
+                        exerciseVM?.markCompleted(exercise.id)
+                        onExerciseLogged?()
+                    }
+                )
+            }
+        }
+        .sheet(isPresented: $showDetail) {
+            if let exercise = selectedExercise {
+                NavigationStack {
+                    ExerciseDetailView(
+                        exercise: exercise,
+                        onLog: {
+                            showDetail = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                showProgressLog = true
+                            }
+                        },
+                        onStartSession: {
+                            showDetail = false
+                        }
+                    )
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Fertig") { showDetail = false }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var maxPainLevel: Int {
+        appState.currentUser?.aemSubtype?.maxPainLevel ?? 3
     }
 }
 
@@ -41,37 +117,35 @@ struct AemProfileQuickCard: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Circle()
+            RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous)
                 .fill(Color.subtypeColor(for: subtype))
                 .frame(width: 40, height: 40)
                 .overlay {
                     subtypeIcon
-                        .font(.body)
+                        .font(.appBody)
                         .foregroundStyle(.white)
                 }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("AEM-Profil")
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Text(subtype.displayName)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.appSubheadlineSemibold)
                     .foregroundStyle(.textPrimary)
             }
 
             Spacer()
 
             Text("Max. \(subtype.maxPainLevel)/10")
-                .font(.caption.weight(.medium))
+                .font(.appCaptionMedium)
                 .foregroundStyle(Color.subtypeColor(for: subtype))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(Color.subtypeColor(for: subtype).opacity(0.1))
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accentCardStyle(color: Color.subtypeColor(for: subtype))
     }
 
     @ViewBuilder
@@ -90,28 +164,26 @@ struct NdiProfileQuickCard: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Circle()
+            RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous)
                 .fill(Color.severityColor(for: severity))
                 .frame(width: 40, height: 40)
                 .overlay {
-                    Image(systemName: "neck")
-                        .font(.body)
+                    Image(systemName: "figure.walk")
+                        .font(.appBody)
                         .foregroundStyle(.white)
                 }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("NDI-Schweregrad")
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Text(severity.displayName)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.appSubheadlineSemibold)
                     .foregroundStyle(.textPrimary)
             }
 
             Spacer()
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accentCardStyle(color: Color.severityColor(for: severity))
     }
 }

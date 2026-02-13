@@ -103,13 +103,14 @@ final class NeckScreeningViewModel {
                 currentItemIndex -= 1
             }
         } else if currentPart == "B" && !isRescreening {
-            // Go back to Part A
+            // Go back to last Part A question
             withAnimation(.easeInOut(duration: 0.3)) {
                 currentPart = "A"
                 let partAItems = allItems.filter { $0.part == "A" }
                 currentItemIndex = max(0, partAItems.count - 1)
             }
         }
+        // In rescreening mode (Part B only), do nothing if at first question
     }
 
     // MARK: - Submission
@@ -125,7 +126,8 @@ final class NeckScreeningViewModel {
             : APIEndpoints.submitNeckScreening(body: submission)
 
         do {
-            result = try await apiClient.request(endpoint)
+            let response: NeckScreeningResponse = try await apiClient.request(endpoint)
+            result = response.screening
             isSubmitting = false
             return true
         } catch {

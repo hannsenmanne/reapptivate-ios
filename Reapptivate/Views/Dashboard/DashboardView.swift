@@ -4,7 +4,10 @@ struct DashboardView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @State private var viewModel: DashboardViewModel?
+    @State private var exerciseVM: ExerciseViewModel?
+    @State private var phaseVM: PhaseViewModel?
     @State private var selectedTab: DashboardTab = .overview
+    @State private var showSettings = false
 
     var body: some View {
         NavigationStack {
@@ -12,7 +15,7 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: appState.isLbp
+                    showInsights: appState.isLbp || appState.isNeck
                 )
 
                 // Tab Content
@@ -20,11 +23,19 @@ struct DashboardView: View {
                     Group {
                         switch selectedTab {
                         case .overview:
-                            OverviewTab(viewModel: viewModel)
+                            OverviewTab(
+                                viewModel: viewModel,
+                                exerciseVM: exerciseVM
+                            )
                         case .program:
-                            ProgramTab()
+                            ProgramTab(exerciseVM: exerciseVM, onExerciseLogged: {
+                                Task { await viewModel?.refresh() }
+                            })
                         case .progress:
-                            ProgressTab(viewModel: viewModel)
+                            ProgressTab(
+                                viewModel: viewModel,
+                                phaseVM: phaseVM
+                            )
                         case .insights:
                             InsightsTab()
                         }
@@ -33,50 +44,83 @@ struct DashboardView: View {
                     .padding(.top, 16)
                 }
                 .refreshable {
-                    await viewModel?.refresh()
+                    await loadAll()
                 }
             }
             .background(Color.appBg)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    HStack(spacing: 8) {
-                        Text("Reapptivate")
-                            .font(.headline.bold())
-
-                        if let user = appState.currentUser {
-                            Text("Tag \(user.daysSinceStart)")
-                                .font(.caption.weight(.medium))
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 2)
-                                .background(Color.accent.opacity(0.1))
-                                .clipShape(Capsule())
-                        }
-                    }
+                    Text(brandWordmark)
+                        .font(.outfit(.bold, size: 18))
+                        .fixedSize()
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        if let user = appState.currentUser {
-                            Text(user.name)
-                            Text(user.tendinopathyType.displayName)
-                            Divider()
+                    HStack(spacing: 12) {
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .font(.appBody)
                         }
-                        Button("Abmelden", role: .destructive) {
-                            let vm = AuthViewModel(apiClient: apiClient)
-                            vm.logout(appState: appState)
+
+                        Menu {
+                            if let user = appState.currentUser {
+                                Text(user.name)
+                                Text(user.tendinopathyType.displayName)
+                                Divider()
+                            }
+                            Button("Abmelden", role: .destructive) {
+                                let vm = AuthViewModel(apiClient: apiClient)
+                                vm.logout(appState: appState)
+                            }
+                        } label: {
+                            Image(systemName: "person.circle")
+                                .font(.title3)
                         }
-                    } label: {
-                        Image(systemName: "person.circle")
-                            .font(.title3)
                     }
                 }
             }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+            }
         }
         .task {
-            let vm = DashboardViewModel(apiClient: apiClient)
-            viewModel = vm
-            await vm.loadDashboard()
+            await loadAll()
         }
+    }
+
+    private var brandWordmark: AttributedString {
+        var re = AttributedString("re")
+        re.foregroundColor = UIColor(.textPrimary)
+        var app = AttributedString("app")
+        app.foregroundColor = UIColor(.accent)
+        var tivate = AttributedString("tivate")
+        tivate.foregroundColor = UIColor(.textPrimary)
+        return re + app + tivate
+    }
+
+    private func loadAll() async {
+        // Dashboard VM
+        if viewModel == nil {
+            viewModel = DashboardViewModel(apiClient: apiClient)
+        }
+        await viewModel?.loadDashboard()
+
+        // Exercise VM
+        if exerciseVM == nil {
+            exerciseVM = ExerciseViewModel()
+        }
+        if let user = appState.currentUser {
+            exerciseVM?.loadExercises(for: user)
+            exerciseVM?.updateCompletedToday(from: viewModel?.completedToday ?? [])
+        }
+
+        // Phase VM
+        if phaseVM == nil {
+            phaseVM = PhaseViewModel(apiClient: apiClient)
+        }
+        await phaseVM?.loadPhaseHistory()
     }
 }
 
@@ -104,13 +148,14 @@ struct DashboardTabBar: View {
                         }
                     } label: {
                         VStack(spacing: 8) {
-                            Text(tab.rawValue)
-                                .font(.subheadline.weight(selectedTab == tab ? .semibold : .regular))
+                            Text(tab.rawValue.uppercased())
+                                .font(.appCaptionMedium)
+                                .tracking(0.8)
                                 .foregroundStyle(selectedTab == tab ? .textPrimary : .textSecondary)
 
                             Rectangle()
                                 .frame(height: 2)
-                                .foregroundStyle(selectedTab == tab ? .accent : .clear)
+                                .foregroundStyle(selectedTab == tab ? .textPrimary : .clear)
                         }
                         .padding(.horizontal, 16)
                     }
@@ -121,7 +166,9 @@ struct DashboardTabBar: View {
         .padding(.top, 8)
         .background(Color.appBg)
         .overlay(alignment: .bottom) {
-            Divider()
+            Rectangle()
+                .fill(Color.gray200)
+                .frame(height: 1)
         }
     }
 }

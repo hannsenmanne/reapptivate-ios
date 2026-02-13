@@ -8,6 +8,7 @@ final class APIClient {
     private let decoder: JSONDecoder
 
     var onTokenExpired: (() -> Void)?
+    private var hasTriggeredLogout = false
 
     init(
         session: URLSession = .shared,
@@ -17,6 +18,7 @@ final class APIClient {
         self.tokenManager = tokenManager
 
         self.decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
             let dateString = try container.decode(String.self)
@@ -76,8 +78,28 @@ final class APIClient {
         var request = urlRequest
         injectAuth(&request)
 
-        let (data, response) = try await session.data(for: request)
-        try validateResponse(response, data: data)
+        do {
+            let (data, response) = try await session.data(for: request)
+            try validateResponse(response, data: data)
+        } catch let error as APIError {
+            throw error
+        } catch {
+            // Retry once on network failure
+            Log.api.warning("Network error (void), retrying: \(error.localizedDescription)")
+            try await Task.sleep(for: .seconds(2))
+
+            var retryRequest = urlRequest
+            injectAuth(&retryRequest)
+
+            do {
+                let (data, response) = try await session.data(for: retryRequest)
+                try validateResponse(response, data: data)
+            } catch let retryError as APIError {
+                throw retryError
+            } catch {
+                throw APIError.networkError(error)
+            }
+        }
     }
 
     // MARK: - Request returning raw Data
@@ -86,12 +108,38 @@ final class APIClient {
         var request = urlRequest
         injectAuth(&request)
 
-        let (data, response) = try await session.data(for: request)
-        try validateResponse(response, data: data)
-        return data
+        do {
+            let (data, response) = try await session.data(for: request)
+            try validateResponse(response, data: data)
+            return data
+        } catch let error as APIError {
+            throw error
+        } catch {
+            // Retry once on network failure
+            Log.api.warning("Network error (data), retrying: \(error.localizedDescription)")
+            try await Task.sleep(for: .seconds(2))
+
+            var retryRequest = urlRequest
+            injectAuth(&retryRequest)
+
+            do {
+                let (data, response) = try await session.data(for: retryRequest)
+                try validateResponse(response, data: data)
+                return data
+            } catch let retryError as APIError {
+                throw retryError
+            } catch {
+                throw APIError.networkError(error)
+            }
+        }
     }
 
     // MARK: - Private
+
+    /// Reset the logout guard when a new token is available (after fresh login)
+    func resetLogoutGuard() {
+        hasTriggeredLogout = false
+    }
 
     private func injectAuth(_ request: inout URLRequest) {
         if let token = tokenManager.getToken() {
@@ -115,7 +163,10 @@ final class APIClient {
 
         case 401:
             Log.api.warning("401 Unauthorized - token may be expired")
-            onTokenExpired?()
+            if !hasTriggeredLogout {
+                hasTriggeredLogout = true
+                onTokenExpired?()
+            }
             throw APIError.unauthorized
 
         case 403:

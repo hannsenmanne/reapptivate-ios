@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import AudioToolbox
 
 struct PacingTimerView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
@@ -17,6 +18,7 @@ struct PacingTimerView: View {
     @State private var soundPlayed80 = false
     @State private var soundPlayed100 = false
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var backgroundDate: Date?
 
     var selectedActivity: TargetActivity? {
         viewModel.pacingPlan?.targetActivities.first { $0.key == selectedActivityKey }
@@ -40,10 +42,10 @@ struct PacingTimerView: View {
             // Header
             HStack(spacing: 10) {
                 Image(systemName: "clock.fill")
-                    .font(.title3)
+                    .font(.appTitle3)
                     .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
                 Text("Aktivitats-Timer")
-                    .font(.headline)
+                    .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
@@ -60,8 +62,28 @@ struct PacingTimerView: View {
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .background {
+            switch newPhase {
+            case .background:
                 timer?.invalidate()
+                if timerState == .active || timerState == .onBreak {
+                    backgroundDate = Date()
+                }
+            case .active:
+                if let bgDate = backgroundDate {
+                    let elapsed = Int(Date().timeIntervalSince(bgDate))
+                    backgroundDate = nil
+                    if timerState == .active {
+                        elapsedSeconds += elapsed
+                        resumeTimer()
+                    } else if timerState == .onBreak {
+                        breakSeconds += elapsed
+                        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                            Task { @MainActor in breakSeconds += 1 }
+                        }
+                    }
+                }
+            default:
+                break
             }
         }
     }
@@ -73,7 +95,7 @@ struct PacingTimerView: View {
             if let activities = viewModel.pacingPlan?.targetActivities {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Aktivitat auswahlen")
-                        .font(.subheadline.weight(.medium))
+                        .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
                     ForEach(activities) { activity in
@@ -84,18 +106,18 @@ struct PacingTimerView: View {
                                 Image(systemName: selectedActivityKey == activity.key ? "checkmark.circle.fill" : "circle")
                                     .foregroundStyle(selectedActivityKey == activity.key ? .accent : .textSecondary)
                                 Text(activity.label)
-                                    .font(.subheadline)
+                                    .font(.appSubheadline)
                                     .foregroundStyle(.textPrimary)
                                 Spacer()
                                 if let quota = activity.quota {
                                     Text("Ziel: \(quota) Min")
-                                        .font(.caption)
+                                        .font(.appCaption)
                                         .foregroundStyle(.textSecondary)
                                 }
                             }
                             .padding(10)
                             .background(selectedActivityKey == activity.key ? Color.accent.opacity(0.06) : .clear)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                         }
                         .buttonStyle(.plain)
                     }
@@ -109,19 +131,17 @@ struct PacingTimerView: View {
                             Image(systemName: "play.fill")
                             Text("Timer starten")
                         }
-                        .font(.body.weight(.semibold))
+                        .font(.appBodySemibold)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                         .background(Color.subtypeColor(for: viewModel.subtype))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                     }
                 }
             }
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 
     // MARK: - Active View
@@ -137,11 +157,11 @@ struct PacingTimerView: View {
             VStack(spacing: 4) {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 6)
+                        Rectangle()
                             .fill(Color.textSecondary.opacity(0.15))
                             .frame(height: 12)
 
-                        RoundedRectangle(cornerRadius: 6)
+                        Rectangle()
                             .fill(progressColor)
                             .frame(width: geo.size.width * progress, height: 12)
                     }
@@ -150,12 +170,12 @@ struct PacingTimerView: View {
 
                 HStack {
                     Text(selectedActivity?.label ?? "")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Spacer()
                     if let quota = selectedActivity?.quota {
                         Text("Ziel: \(quota) Min")
-                            .font(.caption)
+                            .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
                 }
@@ -167,12 +187,10 @@ struct PacingTimerView: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.painAmber)
                     Text("Fast fertig! Bereiten Sie sich auf eine Pause vor.")
-                        .font(.caption)
+                        .font(.appCaption)
                         .foregroundStyle(.textPrimary)
                 }
-                .padding(12)
-                .background(Color.painAmber.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .infoBoxStyle(color: .painAmber)
             }
 
             // Controls
@@ -185,7 +203,7 @@ struct PacingTimerView: View {
                     }
                 } label: {
                     Image(systemName: timerState == .paused ? "play.fill" : "pause.fill")
-                        .font(.title2)
+                        .font(.appTitle2)
                         .foregroundStyle(.white)
                         .frame(width: 56, height: 56)
                         .background(Color.textSecondary)
@@ -196,32 +214,28 @@ struct PacingTimerView: View {
                     completeTimer()
                 } label: {
                     Text("Fertig")
-                        .font(.body.weight(.semibold))
+                        .font(.appBodySemibold)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 56)
                         .background(Color.painGreen)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
             }
 
             // Pacing tips
             VStack(alignment: .leading, spacing: 4) {
                 Text("Pacing-Tipps")
-                    .font(.caption.weight(.medium))
+                    .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
                 Text("Halten Sie sich an Ihre Quota. Es ist besser, etwas unter dem Ziel zu bleiben als daruber.")
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
-            .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.farBlue.opacity(0.06))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .infoBoxStyle(color: .farBlue)
         }
-        .padding(16)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .cardStyle()
     }
 
     // MARK: - Break View
@@ -233,7 +247,7 @@ struct PacingTimerView: View {
                 .foregroundStyle(.painAmber)
 
             Text("Pausenzeit!")
-                .font(.title2.bold())
+                .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
             Text(timeString(breakSeconds))
@@ -242,7 +256,7 @@ struct PacingTimerView: View {
 
             if let pauseMin = viewModel.pacingPlan?.rules.mandatoryPauseMinutes {
                 Text("Mindestens \(pauseMin) Minuten Pause einhalten")
-                    .font(.caption)
+                    .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
 
@@ -250,12 +264,12 @@ struct PacingTimerView: View {
                 endBreak()
             } label: {
                 Text("Pause beenden")
-                    .font(.body.weight(.semibold))
+                    .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Color.painAmber)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
             }
         }
         .padding(24)
@@ -266,7 +280,8 @@ struct PacingTimerView: View {
                 endPoint: .bottom
             )
         )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
     }
 
     // MARK: - Completed View
@@ -278,28 +293,30 @@ struct PacingTimerView: View {
                 .foregroundStyle(.painGreen)
 
             Text("Abgeschlossen!")
-                .font(.title2.bold())
+                .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
             Text("Gesamtzeit: \(timeString(elapsedSeconds))")
-                .font(.headline.monospacedDigit())
+                .font(.appHeadline.monospacedDigit())
                 .foregroundStyle(.textSecondary)
 
             Button {
                 resetTimer()
             } label: {
                 Text("Neuen Timer starten")
-                    .font(.subheadline.weight(.medium))
+                    .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
                     .frame(maxWidth: .infinity)
                     .frame(height: 42)
                     .background(Color.accent.opacity(0.08))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
             }
         }
         .padding(24)
         .background(Color.painGreen.opacity(0.06))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
     }
 
     // MARK: - Timer Logic
@@ -388,6 +405,7 @@ struct PacingTimerView: View {
         breakSeconds = 0
         soundPlayed80 = false
         soundPlayed100 = false
+        deactivateAudioSession()
     }
 
     // MARK: - Audio
@@ -395,6 +413,10 @@ struct PacingTimerView: View {
     private func setupAudioSession() {
         try? AVAudioSession.sharedInstance().setCategory(.ambient)
         try? AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    private func deactivateAudioSession() {
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
     private func playKnockSound() {
