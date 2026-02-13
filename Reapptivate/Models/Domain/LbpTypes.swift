@@ -256,6 +256,11 @@ struct MicroModule: Codable, Identifiable {
     let targetSubtypes: [String]?
 
     var id: String { key }
+
+    private enum CodingKeys: String, CodingKey {
+        case key, title, takeHome, targetSubtypes
+        case content = "bodyMarkdown"
+    }
 }
 
 // DB columns: id, patient_id, module_key, started_at, completed_at
