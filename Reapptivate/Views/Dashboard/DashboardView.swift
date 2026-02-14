@@ -9,6 +9,9 @@ struct DashboardView: View {
     @State private var selectedTab: DashboardTab = .overview
     @State private var showSettings = false
     @State private var showLogoutConfirmation = false
+    @State private var milestoneService = MilestoneService()
+    @State private var activeMilestone: Milestone?
+    @State private var ratingService = RatingService()
 
     var body: some View {
         NavigationStack {
@@ -89,6 +92,14 @@ struct DashboardView: View {
                     }
                 }
             }
+            .overlay {
+                if let milestone = activeMilestone {
+                    MilestoneAlert(milestone: milestone) {
+                        milestoneService.markShown(milestone)
+                        activeMilestone = nil
+                    }
+                }
+            }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
@@ -139,6 +150,25 @@ struct DashboardView: View {
         async let exerciseLoad: () = exerciseVM?.loadCustomExercises() ?? ()
         async let phaseLoad: () = phaseVM?.loadPhaseHistory() ?? ()
         _ = await (exerciseLoad, phaseLoad)
+
+        // Check milestones
+        checkMilestones()
+
+        // Check App Store rating prompt
+        ratingService.checkAndPrompt(
+            totalSessions: viewModel?.progressStats?.totalSessions ?? 0,
+            compliancePercent: viewModel?.progressStats?.compliancePercent ?? 0,
+            currentStreak: viewModel?.streakData?.currentStreak ?? 0
+        )
+    }
+
+    private func checkMilestones() {
+        guard activeMilestone == nil else { return }
+        activeMilestone = milestoneService.check(
+            totalSessions: viewModel?.progressStats?.totalSessions ?? 0,
+            currentStreak: viewModel?.streakData?.currentStreak ?? 0,
+            currentPhase: viewModel?.phaseStatus?.currentPhase ?? 1
+        )
     }
 }
 

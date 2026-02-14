@@ -13,6 +13,7 @@ enum DashboardTab: String, CaseIterable {
 final class DashboardViewModel {
     var phaseStatus: AdaptivePhaseStatus?
     var progressStats: ProgressStats?
+    var streakData: StreakData?
     var completedToday: [ProgressEntry] = []
     var isLoading = false
     var error: String?
@@ -43,7 +44,11 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getTodayProgress())
         }
 
-        let (phase, stats, today) = await (phaseResult, statsResult, todayResult)
+        async let streakResult: StreakData? = loadSafely { [apiClient] in
+            try await apiClient.request(APIEndpoints.getStreak())
+        }
+
+        let (phase, stats, today, streak) = await (phaseResult, statsResult, todayResult, streakResult)
 
         phaseStatus = phase?.phaseStatus
         if let phaseData = phase?.phaseStatus {
@@ -68,11 +73,31 @@ final class DashboardViewModel {
             )
         }
         completedToday = today?.completedExercises ?? []
+        streakData = streak
+
+        // Schedule streak-ending notification if active streak
+        if let streakInfo = streak, streakInfo.currentStreak > 0 {
+            if let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
+                await NotificationService.shared.scheduleStreakEndingAlert(
+                    streakCount: streakInfo.currentStreak,
+                    for: tomorrow
+                )
+            }
+        }
 
         isLoading = false
     }
 
     func refresh() async {
+        await loadDashboard()
+    }
+
+    // MARK: - Streak
+
+    func useFreezeToken() async {
+        _ = await loadSafely { [apiClient] in
+            try await apiClient.requestVoid(APIEndpoints.useFreezeToken())
+        }
         await loadDashboard()
     }
 

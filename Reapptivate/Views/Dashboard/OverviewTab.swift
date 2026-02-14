@@ -13,6 +13,13 @@ struct OverviewTab: View {
                 StatsRow(user: user, phaseStatus: viewModel?.phaseStatus, stats: viewModel?.progressStats)
             }
 
+            // Streak Card (only for returning patients)
+            if let streak = viewModel?.streakData, (viewModel?.progressStats?.totalSessions ?? 0) > 0 {
+                StreakCard(streak: streak) {
+                    Task { await viewModel?.useFreezeToken() }
+                }
+            }
+
             // Welcome Card (new patients)
             if viewModel?.progressStats?.totalSessions == 0 {
                 WelcomeCard()

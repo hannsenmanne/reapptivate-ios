@@ -1,0 +1,99 @@
+import XCTest
+@testable import Reapptivate
+
+@MainActor
+final class MilestoneServiceTests: XCTestCase {
+
+    private var service: MilestoneService!
+
+    override func setUp() async throws {
+        service = MilestoneService()
+        // Clear stored milestones
+        UserDefaults.standard.removeObject(forKey: "milestones_shown")
+    }
+
+    override func tearDown() async throws {
+        UserDefaults.standard.removeObject(forKey: "milestones_shown")
+        service = nil
+    }
+
+    // MARK: - First Training
+
+    func testFirstTrainingMilestone() {
+        let result = service.check(totalSessions: 1, currentStreak: 1, currentPhase: 1)
+        XCTAssertEqual(result, .firstTraining)
+    }
+
+    func testNoMilestoneForZeroSessions() {
+        let result = service.check(totalSessions: 0, currentStreak: 0, currentPhase: 1)
+        XCTAssertNil(result)
+    }
+
+    // MARK: - Streak Milestones
+
+    func testThreeDayStreakMilestone() {
+        // Mark firstTraining as shown so we get threeDayStreak
+        service.markShown(.firstTraining)
+        let result = service.check(totalSessions: 3, currentStreak: 3, currentPhase: 1)
+        XCTAssertEqual(result, .threeDayStreak)
+    }
+
+    func testSevenDayStreakMilestone() {
+        service.markShown(.firstTraining)
+        service.markShown(.threeDayStreak)
+        let result = service.check(totalSessions: 7, currentStreak: 7, currentPhase: 1)
+        XCTAssertEqual(result, .sevenDayStreak)
+    }
+
+    // MARK: - Ten Sessions
+
+    func testTenSessionsMilestone() {
+        service.markShown(.firstTraining)
+        service.markShown(.threeDayStreak)
+        service.markShown(.sevenDayStreak)
+        let result = service.check(totalSessions: 10, currentStreak: 7, currentPhase: 1)
+        XCTAssertEqual(result, .tenSessions)
+    }
+
+    // MARK: - Phase Up
+
+    func testPhaseUpMilestone() {
+        service.markShown(.firstTraining)
+        service.markShown(.threeDayStreak)
+        service.markShown(.sevenDayStreak)
+        service.markShown(.tenSessions)
+        let result = service.check(totalSessions: 15, currentStreak: 2, currentPhase: 2)
+        XCTAssertEqual(result, .phaseUp)
+    }
+
+    // MARK: - Mark Shown
+
+    func testMarkShownPreventsRepeat() {
+        let first = service.check(totalSessions: 1, currentStreak: 1, currentPhase: 1)
+        XCTAssertEqual(first, .firstTraining)
+
+        service.markShown(.firstTraining)
+        let second = service.check(totalSessions: 1, currentStreak: 1, currentPhase: 1)
+        // Should not return firstTraining again; threeDayStreak not yet qualified
+        XCTAssertNil(second)
+    }
+
+    func testAllMilestonesShownReturnsNil() {
+        for milestone in Milestone.allCases {
+            service.markShown(milestone)
+        }
+        let result = service.check(totalSessions: 100, currentStreak: 30, currentPhase: 3)
+        XCTAssertNil(result)
+    }
+
+    // MARK: - Returns First Unshown
+
+    func testReturnsFirstUnshownQualifying() {
+        // Both firstTraining and threeDayStreak qualify, but firstTraining comes first
+        let result = service.check(totalSessions: 5, currentStreak: 3, currentPhase: 1)
+        XCTAssertEqual(result, .firstTraining)
+    }
+}
+
+// Milestone needs Equatable for test assertions
+extension Milestone: Equatable {}

@@ -6,6 +6,16 @@ struct ProgressTab: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            // Streak highlight
+            if let streak = viewModel?.streakData, streak.currentStreak > 0 {
+                ProgressStatCard(
+                    label: "Trainingsserie",
+                    value: "\(streak.currentStreak) Tage",
+                    icon: "flame.fill",
+                    valueColor: .accent
+                )
+            }
+
             // Stats Section
             if let stats = viewModel?.progressStats, stats.totalSessions > 0 {
                 ProgressStatsGrid(stats: stats)
