@@ -38,7 +38,35 @@ xcrun simctl ui "iPhone 17 Pro" appearance dark   # or light
 
 Backend must be running at `localhost:3000` for DEBUG builds. Start it from the Physio-App repo: `cd ../Physio-App && npm run dev`
 
-**No test infrastructure exists.** `project.yml` has `testTargets: []` and there are no test files.
+## Testing
+
+```bash
+# Run all unit tests (generates project first)
+make test
+
+# Run a single test class
+xcodebuild test -project Reapptivate.xcodeproj -scheme Reapptivate \
+  -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -only-testing:ReapptivateTests/APIClientTests \
+  CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+# Run a single test method
+xcodebuild test ... -only-testing:ReapptivateTests/APIClientTests/testRequestDecodesSuccessResponse
+
+# Run UI tests
+make test-ui
+
+# View coverage report (after make test)
+make coverage
+```
+
+**93 unit tests** in `Reapptivate/Tests/ReapptivateTests/` covering Models, Services, ViewModels, and AppState. CI runs on GitHub Actions (`.github/workflows/test.yml`) on every push/PR to main.
+
+### Test Architecture
+- **`MockURLProtocol`** — URLProtocol subclass intercepting all requests via static `requestHandler`. Uses `nonisolated(unsafe)` for Swift 6.0.
+- **`TestHelpers`** — `makeTestSession()` (ephemeral URLSession with MockURLProtocol), `makeHTTPResponse()`, `makeJWT(exp:)` for TokenManager tests.
+- **`TestFixtures`** — Factory methods for domain models and JSON response data.
+- All ViewModel/Service tests use `@MainActor` with `override func setUp() async throws` (no `super.setUp()` call — required for Xcode 16.4 Sendable compatibility).
 
 ## XcodeGen (`project.yml`)
 
@@ -113,7 +141,9 @@ EdukationTab is always visible. InsightsTab only appears for LBP/Neck patients. 
 
 All requests: Bearer token injection, snake_case → camelCase **decoding only** (uploads use standard camelCase encoding — no `convertToSnakeCase`), ISO8601 date parsing (with/without fractional seconds), 401 → `onTokenExpired` callback, 1 retry with 2s delay **only on network errors** (not on 4xx/5xx).
 
-Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappers defined in `APIResponses.swift`.
+**Encoding gotcha**: Most backend controllers destructure camelCase from `req.body` (e.g., `exerciseId`, `painLevel`), but some use snake_case (e.g., `schedule.controller.ts` expects `available_days`). When a request fails silently (data not persisted), check the backend controller's destructuring. Fix with `CodingKeys` on the request struct.
+
+Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappers defined in `APIResponses.swift`. **Not all responses are wrapped** — some return data directly (e.g., schedule, analytics). Always verify the actual response shape from the backend controller's `res.json(...)` call.
 
 ### JWT Token Storage
 
@@ -141,6 +171,8 @@ Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `ac
 - **`UserProfile.id` is `String`**, not UUID.
 - **`@unchecked Sendable`** is used on `TokenManager`, `ProtocolLoader`, and `NetworkMonitor` for cross-actor access in Swift 6.0 strict concurrency mode.
 - **Dev token must come from local backend** — local and production JWT secrets differ, so a production token won't work with `localhost:3000` and vice versa.
+- **`Color.textPrimary` flips in dark mode** (light→1A1A1A, dark→F2F2F7). Don't use it as a background with hardcoded `.white` text — use `Color.appBg` for the text instead so both adapt together. Same applies to any adaptive color used as a bg.
+- **`AnalyticsSummary` has a custom decoder** — backend sends `adjustmentStats: {total, applied}` (nested) and `triggerFireCount: {ruleId: count}` (dict), but the model exposes flat `totalAdjustments`/`appliedAdjustments` and `triggerFires: [TriggerFireCount]` (array). Don't add simple `CodingKeys` — the custom `init(from:)` handles the shape transformation.
 
 ## Domain Models (Models/Domain/)
 
