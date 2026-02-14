@@ -82,7 +82,7 @@ final class DashboardViewModel {
         completedToday.contains { $0.exerciseId == exerciseId }
     }
 
-    private func loadSafely<T>(_ work: @Sendable () async throws -> T) async -> T? {
+    private func loadSafely<T: Sendable>(_ work: @Sendable () async throws -> T) async -> T? {
         do {
             return try await work()
         } catch {

@@ -45,5 +45,38 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
         INFOPLIST_FILE: Reapptivate/Info.plist
     scheme:
-      testTargets: []
-      gatherCoverageData: false
+      testTargets:
+        - ReapptivateTests
+        - ReapptivateUITests
+      gatherCoverageData: true
+
+  ReapptivateTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Reapptivate/Tests/ReapptivateTests
+    dependencies:
+      - target: Reapptivate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.reapptivate.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Reapptivate.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Reapptivate"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        GENERATE_INFOPLIST_FILE: "YES"
+        CODE_SIGN_STYLE: Automatic
+
+  ReapptivateUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Reapptivate/Tests/ReapptivateUITests
+    dependencies:
+      - target: Reapptivate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.reapptivate.uitests
+        TEST_TARGET_NAME: Reapptivate
+        GENERATE_INFOPLIST_FILE: "YES"
+        CODE_SIGN_STYLE: Automatic

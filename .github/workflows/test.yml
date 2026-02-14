@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Run Unit Tests
+        run: |
+          DEVICE=$(xcrun simctl list devices available | grep -m1 'iPhone' | sed 's/(.*//' | xargs)
+          echo "Using simulator: $DEVICE"
+          xcodegen generate
+          rm -rf build/test-results.xcresult
+          xcodebuild test \
+            -project Reapptivate.xcodeproj \
+            -scheme Reapptivate \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=$DEVICE" \
+            -resultBundlePath build/test-results.xcresult \
+            -only-testing:ReapptivateTests \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/test-results.xcresult
+          retention-days: 7
