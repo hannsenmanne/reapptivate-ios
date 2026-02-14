@@ -84,7 +84,7 @@ struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.appBodySemibold)
-            .foregroundStyle(.white)
+            .foregroundStyle(isEnabled ? Color.appBg : .white)
             .frame(maxWidth: .infinity)
             .frame(height: 50)
             .background(isEnabled ? Color.textPrimary : Color.gray400)

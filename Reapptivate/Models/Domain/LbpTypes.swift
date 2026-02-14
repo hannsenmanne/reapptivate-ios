@@ -279,6 +279,40 @@ struct AnalyticsSummary: Codable {
     let totalAdjustments: Int
     let appliedAdjustments: Int
     let triggerFires: [TriggerFireCount]
+
+    private enum CodingKeys: String, CodingKey {
+        case painTrend, complianceRate
+        case adjustmentStats
+        case triggerFireCount
+    }
+
+    private enum AdjustmentKeys: String, CodingKey {
+        case total, applied
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        painTrend = (try? container.decode([PainDataPoint].self, forKey: .painTrend)) ?? []
+        complianceRate = (try? container.decode(Double.self, forKey: .complianceRate)) ?? 0
+
+        let stats = try? container.nestedContainer(keyedBy: AdjustmentKeys.self, forKey: .adjustmentStats)
+        totalAdjustments = (try? stats?.decode(Int.self, forKey: .total)) ?? 0
+        appliedAdjustments = (try? stats?.decode(Int.self, forKey: .applied)) ?? 0
+
+        let triggerDict = (try? container.decode([String: Int].self, forKey: .triggerFireCount)) ?? [:]
+        triggerFires = triggerDict.map { TriggerFireCount(ruleId: $0.key, count: $0.value) }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(painTrend, forKey: .painTrend)
+        try container.encode(complianceRate, forKey: .complianceRate)
+        let triggerDict = Dictionary(uniqueKeysWithValues: triggerFires.map { ($0.ruleId, $0.count) })
+        try container.encode(triggerDict, forKey: .triggerFireCount)
+        var stats = container.nestedContainer(keyedBy: AdjustmentKeys.self, forKey: .adjustmentStats)
+        try stats.encode(totalAdjustments, forKey: .total)
+        try stats.encode(appliedAdjustments, forKey: .applied)
+    }
 }
 
 struct PainDataPoint: Codable, Identifiable {
@@ -307,6 +341,11 @@ struct PacingComplianceAnalytics: Codable {
     let breachRate: Double
     let pauseAdherence: Double
     let weeklySessionVolume: [WeeklyVolume]
+
+    enum CodingKeys: String, CodingKey {
+        case breachRate, pauseAdherence
+        case weeklySessionVolume = "weeklySessionTrend"
+    }
 }
 
 struct WeeklyVolume: Codable, Identifiable {
@@ -314,6 +353,11 @@ struct WeeklyVolume: Codable, Identifiable {
     let sessions: Int
 
     var id: String { week }
+
+    enum CodingKeys: String, CodingKey {
+        case week
+        case sessions = "sessionCount"
+    }
 }
 
 // MARK: - Quota Progression
