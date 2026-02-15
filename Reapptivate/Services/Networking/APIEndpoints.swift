@@ -147,6 +147,48 @@ enum APIEndpoints {
         get("neck-shoulder/result")
     }
 
+    // MARK: - Neck-Shoulder Program
+
+    static func neckShoulderProgram() -> URLRequest {
+        get("neck-shoulder/program")
+    }
+
+    static func neckShoulderExercises() -> URLRequest {
+        get("neck-shoulder/exercises")
+    }
+
+    static func neckShoulderWeeklyPlan(week: Int) -> URLRequest {
+        get("neck-shoulder/program/week/\(week)")
+    }
+
+    static func evaluateNstProgression() -> URLRequest {
+        post("neck-shoulder/program/evaluate-progression")
+    }
+
+    static func generateNstProgram() -> URLRequest {
+        post("neck-shoulder/program/generate")
+    }
+
+    // MARK: - Neck-Shoulder Micro-Modules
+
+    static func nstMicroModules(severity: String? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let severity { query["severity"] = severity }
+        return get("neck-shoulder/micro-modules", query: query)
+    }
+
+    static func nstCompletedModules() -> URLRequest {
+        get("neck-shoulder/micro-modules/completed")
+    }
+
+    static func startNstModule(key: String) -> URLRequest {
+        post("neck-shoulder/micro-modules/\(key)/start")
+    }
+
+    static func completeNstModule(completionId: String) -> URLRequest {
+        post("neck-shoulder/micro-modules/\(completionId)/complete")
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {

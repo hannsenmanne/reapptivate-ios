@@ -132,6 +132,24 @@ struct NeckShoulderScreeningResponse: Codable {
     let screening: NeckShoulderScreeningResult
 }
 
+// MARK: - Neck-Shoulder Program Wrappers
+
+struct NeckShoulderProgramResponse: Codable {
+    let program: NeckShoulderProgram
+    let weeklySchedule: NeckShoulderWeeklyPlan?
+}
+
+struct NeckShoulderExercisesResponse: Codable {
+    let programA: NeckShoulderExerciseConfig.ProgramSection
+    let programB: NeckShoulderExerciseConfig.ProgramSection
+    let dailyMobility: NeckShoulderExerciseConfig.MobilitySection
+    let microPauses: NeckShoulderExerciseConfig.MicroPauseSection
+}
+
+struct NeckShoulderProgressionResponse: Codable {
+    let progression: NeckShoulderProgressionResult
+}
+
 // MARK: - Custom Exercise Wrappers
 
 struct CustomExercisesResponse: Codable {

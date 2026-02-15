@@ -74,3 +74,99 @@ struct NeckShoulderScreeningResult: Codable {
 struct NeckShoulderScreeningSubmission: Codable {
     let responses: [String: AnyCodable]
 }
+
+// MARK: - Program
+
+struct NeckShoulderProgram: Codable {
+    let id: String
+    let severity: NeckShoulderSeverity
+    let durationWeeks: Int
+    let currentWeek: Int
+    let strengthFrequency: Int
+    let mobilityFrequency: Int
+    let microPauseIntervalMinutes: Int
+    let progressionHistory: [ProgressionEntry]?
+    let createdAt: String?
+
+    struct ProgressionEntry: Codable {
+        let week: Int
+        let action: String
+        let details: String
+        let date: String
+    }
+}
+
+struct NeckShoulderExercise: Codable, Identifiable {
+    let id: String
+    let name: String
+    let targetMuscle: String?
+    let sets: Int
+    let reps: String
+    let equipment: String?
+    let instructions: String
+    let progressionNotes: String?
+    let holdSeconds: Int?
+}
+
+struct NeckShoulderExerciseConfig: Codable {
+    let programA: ProgramSection
+    let programB: ProgramSection
+    let dailyMobility: MobilitySection
+    let microPauses: MicroPauseSection
+
+    struct ProgramSection: Codable {
+        let name: String
+        let durationMinutes: String?
+        let exercises: [NeckShoulderExercise]
+    }
+
+    struct MobilitySection: Codable {
+        let name: String
+        let frequencyPerDay: String
+        let durationMinutes: String
+        let exercises: [NeckShoulderExercise]
+    }
+
+    struct MicroPauseSection: Codable {
+        let intervalMinutes: String
+        let durationMinutes: String
+        let exercises: [NeckShoulderExercise]
+    }
+}
+
+struct NeckShoulderWeeklyPlan: Codable {
+    let weekNumber: Int
+    let totalWeeks: Int
+    let strengthSessions: [StrengthSession]
+    let mobilityPerDay: MobilityPerDay
+    let microPauses: MicroPausePlan
+
+    struct StrengthSession: Codable {
+        let dayLabel: String
+        let program: String
+        let exercises: [NeckShoulderExercise]
+    }
+
+    struct MobilityPerDay: Codable {
+        let frequencyPerDay: String
+        let durationMinutes: String
+        let exercises: [NeckShoulderExercise]
+    }
+
+    struct MicroPausePlan: Codable {
+        let intervalMinutes: Int
+        let exercises: [NeckShoulderExercise]
+    }
+}
+
+// MARK: - Progression Result
+
+struct NeckShoulderProgressionResult: Codable {
+    let canProgress: Bool
+    let currentWeek: Int
+    let totalWeeks: Int
+    let avgPain: Double
+    let compliance: Double
+    let recommendation: String
+    let suggestions: [String]
+}
