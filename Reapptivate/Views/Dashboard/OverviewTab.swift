@@ -40,7 +40,8 @@ struct OverviewTab: View {
             if let user = appState.currentUser {
                 WissenCardView(
                     phase: user.currentPhase,
-                    isLbp: appState.isLbp
+                    isLbp: appState.isLbp,
+                    isNeck: appState.isNeck
                 )
             }
 

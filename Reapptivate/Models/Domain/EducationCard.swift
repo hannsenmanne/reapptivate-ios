@@ -7,7 +7,7 @@ struct EducationCard: Codable, Identifiable {
     let body: String
     let icon: String
     let source: String?
-    let condition: String? // nil = generic tendinopathy, "LBP_NONSPECIFIC" = LBP-specific
+    let condition: String? // nil = generic tendinopathy, "LBP_NONSPECIFIC" = LBP, "NECK_PAIN" = Neck
 }
 
 final class EducationCardLoader: @unchecked Sendable {
@@ -36,14 +36,18 @@ final class EducationCardLoader: @unchecked Sendable {
         return cards
     }
 
-    func cardsForPhase(_ phase: Int, isLbp: Bool) -> [EducationCard] {
+    func cardsForPhase(_ phase: Int, isLbp: Bool, isNeck: Bool = false) -> [EducationCard] {
         allCards().filter { card in
-            card.phase == phase && (isLbp ? card.condition == "LBP_NONSPECIFIC" : card.condition == nil)
+            card.phase == phase && {
+                if isLbp { return card.condition == "LBP_NONSPECIFIC" }
+                if isNeck { return card.condition == "NECK_PAIN" }
+                return card.condition == nil
+            }()
         }
     }
 
-    func todaysCard(phase: Int, isLbp: Bool) -> EducationCard? {
-        let phaseCards = cardsForPhase(phase, isLbp: isLbp)
+    func todaysCard(phase: Int, isLbp: Bool, isNeck: Bool = false) -> EducationCard? {
+        let phaseCards = cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck)
         guard !phaseCards.isEmpty else { return nil }
 
         let startOfYear = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: .now)) ?? .now

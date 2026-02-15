@@ -8,6 +8,10 @@ struct EdukationTab: View {
         VStack(spacing: 20) {
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 LbpMicroModulesSection(subtype: subtype)
+
+                if let user = appState.currentUser {
+                    WissenAllCardsView(phase: user.currentPhase, isLbp: true, isNeck: false)
+                }
             } else if appState.isNeck {
                 if let severity = appState.currentUser?.ndiSeverity {
                     NeckMicroModulesView(severity: severity)
@@ -16,8 +20,12 @@ struct EdukationTab: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
+
+                if let user = appState.currentUser {
+                    WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: true)
+                }
             } else if let user = appState.currentUser {
-                WissenAllCardsView(phase: user.currentPhase)
+                WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false)
             }
         }
         .padding(.bottom, 32)
@@ -52,13 +60,31 @@ struct LbpMicroModulesSection: View {
     }
 }
 
-// MARK: - All Wissen Cards (Tendinopathy)
+// MARK: - All Wissen Cards
 
 struct WissenAllCardsView: View {
     let phase: Int
+    let isLbp: Bool
+    let isNeck: Bool
+
+    @AppStorage("readEducationCardIds") private var readCardIdsData: Data = Data()
 
     private var cards: [EducationCard] {
-        EducationCardLoader.shared.cardsForPhase(phase, isLbp: false)
+        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck)
+    }
+
+    private var readCardIds: Set<String> {
+        (try? JSONDecoder().decode(Set<String>.self, from: readCardIdsData)) ?? []
+    }
+
+    private var readCount: Int {
+        cards.filter { readCardIds.contains($0.id) }.count
+    }
+
+    private func markRead(_ cardId: String) {
+        var ids = readCardIds
+        ids.insert(cardId)
+        readCardIdsData = (try? JSONEncoder().encode(ids)) ?? Data()
     }
 
     var body: some View {
@@ -72,9 +98,24 @@ struct WissenAllCardsView: View {
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
-                Text("\(cards.count) Artikel")
+                Text("\(readCount)/\(cards.count) gelesen")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
+            }
+
+            // Progress bar
+            if !cards.isEmpty {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color.textSecondary.opacity(0.15))
+                            .frame(height: 4)
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color.accent)
+                            .frame(width: cards.isEmpty ? 0 : geo.size.width * CGFloat(readCount) / CGFloat(cards.count), height: 4)
+                    }
+                }
+                .frame(height: 4)
             }
 
             if cards.isEmpty {
@@ -84,7 +125,11 @@ struct WissenAllCardsView: View {
                     .padding(.vertical, 16)
             } else {
                 ForEach(cards) { card in
-                    WissenExpandableCard(card: card)
+                    WissenExpandableCard(
+                        card: card,
+                        isRead: readCardIds.contains(card.id),
+                        onMarkRead: { markRead(card.id) }
+                    )
                 }
             }
         }
@@ -93,7 +138,11 @@ struct WissenAllCardsView: View {
 
 struct WissenExpandableCard: View {
     let card: EducationCard
+    let isRead: Bool
+    let onMarkRead: () -> Void
+
     @State private var isExpanded = false
+    @State private var hapticTrigger = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -116,6 +165,12 @@ struct WissenExpandableCard: View {
                         .multilineTextAlignment(.leading)
 
                     Spacer()
+
+                    if isRead {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.appSubheadline)
+                            .foregroundStyle(.painGreen)
+                    }
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .font(.appCaption)
@@ -140,6 +195,17 @@ struct WissenExpandableCard: View {
                             .font(.appCaption2)
                             .foregroundStyle(.textSecondary.opacity(0.7))
                     }
+
+                    if !isRead {
+                        Button {
+                            onMarkRead()
+                            hapticTrigger.toggle()
+                        } label: {
+                            Text("Gelesen")
+                                .font(.appCaptionMedium)
+                        }
+                        .buttonStyle(.secondary)
+                    }
                 }
                 .padding(14)
             }
@@ -147,6 +213,7 @@ struct WissenExpandableCard: View {
         .background(Color.cardBg)
         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
+        .sensoryFeedback(.success, trigger: hapticTrigger)
     }
 
     private func iconName(for icon: String) -> String {

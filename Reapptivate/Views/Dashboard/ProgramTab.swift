@@ -34,6 +34,15 @@ struct ProgramTab: View {
                 NdiProfileQuickCard(severity: severity)
             }
 
+            // Tendinopathy Profile
+            if !appState.isLbp && !appState.isNeck, let user = appState.currentUser {
+                TendinopathyProfileQuickCard(
+                    tendinopathyType: user.tendinopathyType,
+                    currentPhase: user.currentPhase,
+                    maxPhase: user.maxPhase
+                )
+            }
+
             // Exercise list by phase
             if let exerciseVM, !exerciseVM.exercises.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
@@ -233,5 +242,55 @@ struct NdiProfileQuickCard: View {
             Spacer()
         }
         .accentCardStyle(color: Color.severityColor(for: severity))
+    }
+}
+
+struct TendinopathyProfileQuickCard: View {
+    let tendinopathyType: TendinopathyType
+    let currentPhase: Int
+    let maxPhase: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous)
+                .fill(Color.accent)
+                .frame(width: 40, height: 40)
+                .overlay {
+                    Image(systemName: tendinopathyIcon)
+                        .font(.appBody)
+                        .foregroundStyle(.white)
+                }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Diagnose")
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+                Text(tendinopathyType.displayName)
+                    .font(.appSubheadlineSemibold)
+                    .foregroundStyle(.textPrimary)
+            }
+
+            Spacer()
+
+            Text("Phase \(currentPhase)/\(maxPhase)")
+                .font(.appCaptionMedium)
+                .foregroundStyle(.accent)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.accent.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
+        }
+        .accentCardStyle(color: .accent)
+    }
+
+    private var tendinopathyIcon: String {
+        switch tendinopathyType {
+        case .achilles, .patellar, .gluteal, .proximalHamstring, .plantarFascia:
+            "figure.walk"
+        case .tennisElbow, .golfersElbow, .rotatorCuff:
+            "hand.raised"
+        default:
+            "figure.strengthtraining.traditional"
+        }
     }
 }

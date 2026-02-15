@@ -19,7 +19,7 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: appState.isLbp || appState.isNeck
+                    showInsights: true
                 )
 
                 // Tab Content
@@ -47,7 +47,7 @@ struct DashboardView: View {
                                 phaseVM: phaseVM
                             )
                         case .insights:
-                            InsightsTab()
+                            InsightsTab(viewModel: viewModel, phaseVM: phaseVM)
                         }
                     }
                     .padding(.horizontal, 16)

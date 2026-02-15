@@ -2,20 +2,19 @@ import SwiftUI
 
 struct InsightsTab: View {
     @Environment(AppState.self) private var appState
+    let viewModel: DashboardViewModel?
+    let phaseVM: PhaseViewModel?
 
     var body: some View {
         if let subtype = appState.currentUser?.aemSubtype {
             // LBP patients: AEM analytics dashboard
             AnalyticsDashboardView(subtype: subtype)
         } else if appState.isNeck {
-            // Neck patients: NDI progress, focus areas, micro-modules
+            // Neck patients: NDI progress + focus areas
             NeckInsightsSection()
         } else {
-            EmptyStateView(
-                icon: "chart.bar.xaxis",
-                title: "Keine Analyse verfügbar",
-                message: "Insights werden nach dem Screening freigeschaltet."
-            )
+            // Tendinopathy patients: training overview + phase readiness
+            TendinopathyInsightsView(viewModel: viewModel, phaseVM: phaseVM)
         }
     }
 }
@@ -23,21 +22,168 @@ struct InsightsTab: View {
 // MARK: - Neck Insights
 
 struct NeckInsightsSection: View {
-    @Environment(AppState.self) private var appState
-
     var body: some View {
         VStack(spacing: 20) {
-            // NDI Progress / History
             NdiProgressView()
-
-            // Focus Areas
             NeckFocusAreasView()
-
-            // Neck Micro-Modules
-            if let severity = appState.currentUser?.ndiSeverity {
-                NeckMicroModulesView(severity: severity)
-            }
         }
         .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Tendinopathy Insights
+
+struct TendinopathyInsightsView: View {
+    let viewModel: DashboardViewModel?
+    let phaseVM: PhaseViewModel?
+
+    var body: some View {
+        if let viewModel, viewModel.isLoading {
+            ProgressView("Daten laden...")
+                .padding(.vertical, 40)
+        } else if let stats = viewModel?.progressStats {
+            VStack(spacing: 20) {
+                trainingOverviewSection(stats)
+                if let phaseStatus = viewModel?.phaseStatus {
+                    phaseReadinessSection(phaseStatus)
+                    phaseInfoSection(phaseStatus.currentPhase)
+                }
+            }
+            .padding(.bottom, 32)
+        } else {
+            EmptyStateView(
+                icon: "chart.bar.xaxis",
+                title: "Noch keine Daten",
+                message: "Analyse wird nach einigen Trainingseinheiten verfügbar."
+            )
+        }
+    }
+
+    // MARK: - Training Overview
+
+    private func trainingOverviewSection(_ stats: ProgressStats) -> some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: "chart.bar.fill")
+                    .foregroundStyle(.accent)
+                Text("Trainings-Übersicht")
+                    .font(.appHeadline)
+                    .foregroundStyle(.textPrimary)
+                Spacer()
+            }
+
+            LazyVGrid(columns: [
+                GridItem(.flexible()),
+                GridItem(.flexible())
+            ], spacing: 12) {
+                MetricCard(
+                    title: "Compliance",
+                    value: "\(Int(stats.compliancePercent))%",
+                    color: stats.compliancePercent >= 66 ? .painGreen : .painAmber
+                )
+
+                MetricCard(
+                    title: "Trainings",
+                    value: "\(stats.totalSessions)",
+                    color: .accent
+                )
+
+                MetricCard(
+                    title: "Schmerz Ø",
+                    value: String(format: "%.1f", stats.averagePain),
+                    color: stats.averagePain <= 3 ? .painGreen : stats.averagePain <= 5 ? .painAmber : .painRed
+                )
+
+                MetricCard(
+                    title: "Letzte 7 Tage",
+                    value: "\(stats.lastSevenDays)",
+                    color: .accent
+                )
+            }
+        }
+    }
+
+    // MARK: - Phase Readiness
+
+    private func phaseReadinessSection(_ status: AdaptivePhaseStatus) -> some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: "arrow.triangle.branch")
+                    .foregroundStyle(.accent)
+                Text("Phasen-Bereitschaft")
+                    .font(.appHeadline)
+                    .foregroundStyle(.textPrimary)
+                Spacer()
+            }
+
+            HStack {
+                Text(status.phaseName)
+                    .font(.appSubheadlineMedium)
+                    .foregroundStyle(.textPrimary)
+                Spacer()
+                Text("Tag \(status.daysInPhase)")
+                    .font(.appCaptionMedium)
+                    .badgeStyle(color: .accent)
+            }
+
+            VStack(spacing: 8) {
+                criteriaRow("Mindestdauer erreicht", met: status.progressionReadiness.minDaysMet)
+                criteriaRow("Trainingseinheiten erfüllt", met: status.progressionReadiness.minSessionsMet)
+                criteriaRow("Schmerz im Zielbereich", met: status.progressionReadiness.painCriteriaMet)
+                criteriaRow("Compliance ausreichend", met: status.progressionReadiness.complianceCriteriaMet)
+            }
+
+            Text(status.nextEvaluationHint)
+                .font(.appCaption)
+                .foregroundStyle(.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .cardStyle()
+    }
+
+    private func criteriaRow(_ label: String, met: Bool) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: met ? "checkmark.circle.fill" : "xmark.circle")
+                .foregroundStyle(met ? .painGreen : .textSecondary)
+                .font(.appBody)
+            Text(label)
+                .font(.appSubheadline)
+                .foregroundStyle(.textPrimary)
+            Spacer()
+        }
+    }
+
+    // MARK: - Phase Info
+
+    private func phaseInfoSection(_ phase: Int) -> some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.accent)
+                Text("Aktuelle Phase")
+                    .font(.appHeadline)
+                    .foregroundStyle(.textPrimary)
+                Spacer()
+            }
+
+            Text(phaseDescription(for: phase))
+                .font(.appSubheadline)
+                .foregroundStyle(.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .infoBoxStyle(color: .accent)
+    }
+
+    private func phaseDescription(for phase: Int) -> String {
+        switch phase {
+        case 1:
+            return "Isometrische Übungen helfen, Schmerzen zu reduzieren und die Sehne schonend zu belasten. Ziel ist eine stabile Basis für die nächsten Phasen."
+        case 2:
+            return "Heavy Slow Resistance fördert die Sehnenanpassung durch langsame, kontrollierte Belastung. Die Sehne wird schrittweise widerstandsfähiger."
+        case 3:
+            return "Exzentrische Übungen bereiten auf die Rückkehr zur vollen Aktivität vor. Fokus liegt auf funktioneller Belastung und Belastbarkeit."
+        default:
+            return "Folgen Sie Ihrem Trainingsplan und achten Sie auf die Schmerzentwicklung."
+        }
     }
 }

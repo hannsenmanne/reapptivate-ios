@@ -3,13 +3,20 @@ import SwiftUI
 struct WissenCardView: View {
     let phase: Int
     let isLbp: Bool
+    let isNeck: Bool
+
+    init(phase: Int, isLbp: Bool, isNeck: Bool = false) {
+        self.phase = phase
+        self.isLbp = isLbp
+        self.isNeck = isNeck
+    }
 
     private var phaseCards: [EducationCard] {
-        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp)
+        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck)
     }
 
     private var todaysCard: EducationCard? {
-        EducationCardLoader.shared.todaysCard(phase: phase, isLbp: isLbp)
+        EducationCardLoader.shared.todaysCard(phase: phase, isLbp: isLbp, isNeck: isNeck)
     }
 
     private var activeIndex: Int {

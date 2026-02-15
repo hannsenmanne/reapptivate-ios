@@ -144,5 +144,82 @@
     "icon": "progress",
     "source": "O'Sullivan et al. 2018, CFT Approach",
     "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "neck-p1-understanding-neck-pain",
+    "phase": 1,
+    "title": "Nackenschmerzen verstehen",
+    "body": "Nackenschmerzen sind sehr verbreitet und in den meisten Fällen harmlos. Ihre Halswirbelsäule ist robust und für Bewegung gebaut. Schmerzen bedeuten nicht, dass etwas beschädigt ist — sie sind oft ein Zeichen, dass Ihr Nervensystem empfindlicher reagiert als nötig.",
+    "icon": "biology",
+    "source": "Blanpied et al. 2017, JOSPT Clinical Practice Guidelines",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p1-pain-neuroscience",
+    "phase": 1,
+    "title": "Schmerz und Nervensystem",
+    "body": "Bei anhaltenden Nackenschmerzen wird das Schmerzsystem empfindlicher — es warnt Sie, obwohl keine Gefahr besteht. Sanfte Bewegung und gezieltes Training helfen, dieses überaktive System zu beruhigen und Ihrem Gehirn zu signalisieren, dass Bewegung sicher ist.",
+    "icon": "pain",
+    "source": "Nijs et al. 2021, Central Sensitization in Neck Pain",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p1-gentle-mobilization",
+    "phase": 1,
+    "title": "Warum sanfte Mobilisation?",
+    "body": "In dieser Phase geht es darum, Ihren Nacken behutsam wieder an Bewegung zu gewöhnen. Sanfte Übungen verbessern die Durchblutung, lösen muskuläre Verspannungen und senden positive Signale an Ihr Nervensystem — der erste Schritt zur Schmerzlinderung.",
+    "icon": "loading",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p2-cervical-adaptation",
+    "phase": 2,
+    "title": "Wie sich die Halswirbelsäule anpasst",
+    "body": "Ihre Nackenmuskulatur und die umgebenden Strukturen passen sich an Belastung an. Durch gezielte Mobilisationsübungen verbessern Sie die Beweglichkeit und trainieren die tiefen Nackenmuskeln, die für Stabilität und Haltungskontrolle entscheidend sind.",
+    "icon": "biology",
+    "source": "Falla et al. 2012, Deep Cervical Flexor Training",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p2-ergonomics",
+    "phase": 2,
+    "title": "Ergonomie im Alltag",
+    "body": "Die beste Haltung ist die nächste Haltung — regelmäßiger Positionswechsel ist wichtiger als die perfekte Sitzposition. Achten Sie darauf, Ihren Bildschirm auf Augenhöhe zu platzieren und alle 30 Minuten kurz Ihren Nacken zu bewegen.",
+    "icon": "recovery",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p3-building-stability",
+    "phase": 3,
+    "title": "Stabilität aufbauen",
+    "body": "Jetzt stärken wir gezielt die Muskeln, die Ihren Nacken stabilisieren. Die tiefen Halsbeuger und die Schulterblattmuskulatur arbeiten zusammen, um Ihre Halswirbelsäule zu schützen — besonders bei Alltagsbelastungen und längerer Arbeit am Schreibtisch.",
+    "icon": "loading",
+    "source": "Jull et al. 2008, Whiplash and Neck Pain",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p3-posture-strength",
+    "phase": 3,
+    "title": "Haltung und Kraft",
+    "body": "Eine gute Haltung kommt nicht vom starren Geradehalten, sondern von kräftigen Muskeln, die Ihren Nacken mühelos tragen. Die Übungen in dieser Phase stärken Ihre gesamte Nacken- und Schulterregion für eine natürliche, aufrechte Haltung.",
+    "icon": "biology",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p4-return-to-activities",
+    "phase": 4,
+    "title": "Zurück zu Ihren Aktivitäten",
+    "body": "Ihr Nacken ist jetzt deutlich belastbarer. In dieser Phase integrieren Sie anspruchsvollere Bewegungen, die Sie auf Sport und Alltag vorbereiten. Vertrauen Sie auf Ihre Fortschritte — Sie haben die Grundlage für langfristige Beschwerdefreiheit gelegt.",
+    "icon": "progress",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p4-long-term-health",
+    "phase": 4,
+    "title": "Langfristige Nackengesundheit",
+    "body": "Regelmäßige Bewegung ist der beste Schutz vor erneuten Nackenschmerzen. Planen Sie 2-3 kurze Trainingseinheiten pro Woche ein und achten Sie auf regelmäßige Pausen bei sitzender Arbeit. Ihr Nacken wird es Ihnen danken!",
+    "icon": "recovery",
+    "source": "Gross et al. 2015, Cochrane Review Exercises for Neck Pain",
+    "condition": "NECK_PAIN"
   }
 ]
