@@ -148,11 +148,11 @@ struct NstSessionPlayerView: View {
 
                 // Set counter
                 VStack(spacing: 8) {
-                    Text("Satz \(currentSet) von \(exercise.sets)")
+                    Text("Satz \(currentSet) von \(exercise.sets ?? 1)")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
-                    Text("\(exercise.reps)")
+                    Text(exercise.reps ?? "")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
 
@@ -251,7 +251,7 @@ struct NstSessionPlayerView: View {
     // MARK: - Actions
 
     private func completeSet(exercise: NeckShoulderExercise) {
-        if currentSet >= exercise.sets {
+        if currentSet >= (exercise.sets ?? 1) {
             completedExercises.insert(exercise.id)
             nextExercise()
         } else {

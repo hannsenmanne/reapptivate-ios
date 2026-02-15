@@ -82,7 +82,7 @@ private struct NstMobilityExerciseRow: View {
                     .lineLimit(1)
 
                 HStack(spacing: 8) {
-                    Text("\(exercise.sets) x \(exercise.reps)")
+                    Text(exercise.detail)
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
 

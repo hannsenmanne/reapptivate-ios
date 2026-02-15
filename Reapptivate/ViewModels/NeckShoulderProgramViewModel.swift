@@ -40,6 +40,9 @@ final class NeckShoulderProgramViewModel {
         do {
             let response: NeckShoulderProgramResponse = try await apiClient.request(APIEndpoints.neckShoulderProgram())
             program = response.program
+        } catch APIError.notFound {
+            // 404 means no program yet — not an error
+            program = nil
         } catch {
             errorMessage = "Programm konnte nicht geladen werden."
         }

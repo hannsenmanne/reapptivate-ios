@@ -284,7 +284,7 @@ private struct ExerciseCheckRow: View {
                         .font(.appSubheadline)
                         .foregroundStyle(isCompleted ? .textPrimary : .textSecondary)
                         .lineLimit(1)
-                    Text("\(exercise.sets) x \(exercise.reps)")
+                    Text(exercise.detail)
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }

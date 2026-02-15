@@ -391,7 +391,7 @@ struct NstExerciseCard: View {
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
-                    Text("\(exercise.sets) x \(exercise.reps)")
+                    Text(exercise.detail)
                         .font(.appCaptionMedium)
                         .foregroundStyle(accentColor)
                 }

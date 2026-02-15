@@ -26,8 +26,12 @@ struct NstExerciseDetailView: View {
 
                 // Parameters Card
                 VStack(spacing: 12) {
-                    NstParameterRow(label: "Sätze", value: "\(exercise.sets)")
-                    NstParameterRow(label: "Wiederholungen", value: exercise.reps)
+                    if let sets = exercise.sets {
+                        NstParameterRow(label: "Sätze", value: "\(sets)")
+                    }
+                    if let reps = exercise.reps {
+                        NstParameterRow(label: "Wiederholungen", value: reps)
+                    }
 
                     if let holdSeconds = exercise.holdSeconds {
                         NstParameterRow(label: "Haltezeit", value: "\(holdSeconds) Sek.")
@@ -40,21 +44,23 @@ struct NstExerciseDetailView: View {
                 .cardStyle()
 
                 // Instructions
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "list.bullet")
-                            .foregroundStyle(accentColor)
-                        Text("Anleitung")
-                            .font(.appHeadline)
-                            .foregroundStyle(.textPrimary)
-                    }
+                if let instructions = exercise.instructions {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "list.bullet")
+                                .foregroundStyle(accentColor)
+                            Text("Anleitung")
+                                .font(.appHeadline)
+                                .foregroundStyle(.textPrimary)
+                        }
 
-                    Text(exercise.instructions)
-                        .font(.appBody)
-                        .foregroundStyle(.textSecondary)
-                        .lineSpacing(4)
+                        Text(instructions)
+                            .font(.appBody)
+                            .foregroundStyle(.textSecondary)
+                            .lineSpacing(4)
+                    }
+                    .cardStyle()
                 }
-                .cardStyle()
 
                 // Progression Notes
                 if let notes = exercise.progressionNotes, !notes.isEmpty {

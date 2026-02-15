@@ -100,12 +100,44 @@ struct NeckShoulderExercise: Codable, Identifiable {
     let id: String
     let name: String
     let targetMuscle: String?
-    let sets: Int
-    let reps: String
+    let sets: Int?
+    let reps: String?
     let equipment: String?
-    let instructions: String
+    let instructions: String?
     let progressionNotes: String?
     let holdSeconds: Int?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        targetMuscle = try container.decodeIfPresent(String.self, forKey: .targetMuscle)
+        sets = try container.decodeIfPresent(Int.self, forKey: .sets)
+        equipment = try container.decodeIfPresent(String.self, forKey: .equipment)
+        instructions = try container.decodeIfPresent(String.self, forKey: .instructions)
+        progressionNotes = try container.decodeIfPresent(String.self, forKey: .progressionNotes)
+        holdSeconds = try container.decodeIfPresent(Int.self, forKey: .holdSeconds)
+        // reps can be String ("12-15") or Int (3) depending on exercise type
+        if let stringVal = try? container.decode(String.self, forKey: .reps) {
+            reps = stringVal
+        } else if let intVal = try? container.decode(Int.self, forKey: .reps) {
+            reps = "\(intVal)"
+        } else {
+            reps = nil
+        }
+    }
+
+    /// Formatted detail string e.g. "3 x 12-15" or "30s halten"
+    var detail: String {
+        if let sets, let reps {
+            return "\(sets) x \(reps)"
+        } else if let holdSeconds {
+            return "\(holdSeconds)s halten"
+        } else if let reps {
+            return reps
+        }
+        return name
+    }
 }
 
 struct NeckShoulderExerciseConfig: Codable {
