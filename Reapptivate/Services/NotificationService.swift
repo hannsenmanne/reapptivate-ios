@@ -63,32 +63,6 @@ final class NotificationService {
         }
     }
 
-    // MARK: - Streak-Ending Alert
-
-    func scheduleStreakEndingAlert(streakCount: Int, for date: Date) async {
-        guard isAuthorized else { return }
-
-        let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: ["streak-ending"])
-
-        let content = UNMutableNotificationContent()
-        content.title = "Serie endet heute!"
-        content.body = "Trainieren Sie heute, um Ihre \(streakCount)-Tage-Serie zu erhalten."
-        content.sound = .default
-
-        var components = Calendar.current.dateComponents([.year, .month, .day], from: date)
-        components.hour = 18
-        components.minute = 0
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-        try? await center.add(
-            UNNotificationRequest(identifier: "streak-ending", content: content, trigger: trigger)
-        )
-    }
-
-    func cancelStreakEndingAlert() {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["streak-ending"])
-    }
-
     // MARK: - Cancel All
 
     func cancelAll() {

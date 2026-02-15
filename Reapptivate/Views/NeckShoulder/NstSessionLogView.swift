@@ -168,6 +168,7 @@ struct NstSessionLogView: View {
         .alert("Hinweis", isPresented: $showTriggerAlert) {
             Button("Verstanden") {
                 showTriggerAlert = false
+                onSuccess()
                 dismiss()
             }
         } message: {

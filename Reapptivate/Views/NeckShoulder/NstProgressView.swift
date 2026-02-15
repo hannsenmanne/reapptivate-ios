@@ -19,16 +19,6 @@ struct NstProgressView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // Streak highlight
-            if let streak = dashboardVM?.streakData, streak.currentStreak > 0 {
-                ProgressStatCard(
-                    label: "Trainingsserie",
-                    value: "\(streak.currentStreak) Tage",
-                    icon: "flame.fill",
-                    valueColor: .accent
-                )
-            }
-
             // General stats
             if let stats = dashboardVM?.progressStats, stats.totalSessions > 0 {
                 ProgressStatsGrid(stats: stats)

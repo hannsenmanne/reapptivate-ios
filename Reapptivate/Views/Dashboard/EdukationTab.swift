@@ -8,7 +8,6 @@ struct EdukationTab: View {
         VStack(spacing: 20) {
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 LbpMicroModulesSection(subtype: subtype)
-                    .coachMark(key: "edukation_modules", message: "Lesen Sie Wissensmodule für Ihr Training", edge: .bottom)
 
                 if let user = appState.currentUser {
                     WissenAllCardsView(phase: user.currentPhase, isLbp: true, isNeck: false)

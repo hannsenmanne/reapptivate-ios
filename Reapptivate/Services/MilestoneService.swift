@@ -44,7 +44,7 @@ final class MilestoneService {
     }
 
     /// Returns the first unshown milestone that qualifies, or nil.
-    func check(totalSessions: Int, currentStreak: Int, currentPhase: Int, maxPhase: Int = 3) -> Milestone? {
+    func check(totalSessions: Int, currentPhase: Int, maxPhase: Int = 3) -> Milestone? {
         let shown = shownSet
 
         for milestone in Milestone.allCases {
@@ -54,18 +54,10 @@ final class MilestoneService {
             switch milestone {
             case .firstTraining:
                 qualifies = totalSessions >= 1
-            case .threeDayStreak:
-                qualifies = currentStreak >= 3
-            case .sevenDayStreak:
-                qualifies = currentStreak >= 7
             case .tenSessions:
                 qualifies = totalSessions >= 10
             case .phaseUp:
                 qualifies = currentPhase >= 2
-            case .fourteenDayStreak:
-                qualifies = currentStreak >= 14
-            case .thirtyDayStreak:
-                qualifies = currentStreak >= 30
             case .twentyFiveSessions:
                 qualifies = totalSessions >= 25
             case .fiftySessions:

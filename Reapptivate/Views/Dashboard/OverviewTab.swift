@@ -24,14 +24,6 @@ struct OverviewTab: View {
                     .cardEntryAnimation(index: 1)
             }
 
-            // Streak Card (only for returning patients)
-            if let streak = viewModel?.streakData, (viewModel?.progressStats?.totalSessions ?? 0) > 0 {
-                StreakCard(streak: streak, isFreezing: viewModel?.isFreezing ?? false) {
-                    Task { await viewModel?.useFreezeToken() }
-                }
-                .cardEntryAnimation(index: 2)
-            }
-
             // Welcome Card (new patients)
             if viewModel?.progressStats?.totalSessions == 0 {
                 WelcomeCard()
@@ -62,7 +54,6 @@ struct OverviewTab: View {
 
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
-                .coachMark(key: "overview_exercises", message: "Hier finden Sie Ihr Übungsprogramm", edge: .top)
                 .cardEntryAnimation(index: 5)
 
             // Training Schedule

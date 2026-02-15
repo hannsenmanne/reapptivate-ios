@@ -60,7 +60,6 @@ struct ProgramTab: View {
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
-                    .coachMark(key: "program_exercises", message: "Tippen Sie auf eine Übung, um Details zu sehen", edge: .bottom)
 
                     ForEach(Array(exerciseVM.exercises.enumerated()), id: \.element.id) { index, exercise in
                         ExerciseCardView(

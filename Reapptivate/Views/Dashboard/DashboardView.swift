@@ -218,8 +218,7 @@ struct DashboardView: View {
         // Check App Store rating prompt
         ratingService.checkAndPrompt(
             totalSessions: viewModel?.progressStats?.totalSessions ?? 0,
-            compliancePercent: viewModel?.progressStats?.compliancePercent ?? 0,
-            currentStreak: viewModel?.streakData?.currentStreak ?? 0
+            compliancePercent: viewModel?.progressStats?.compliancePercent ?? 0
         )
     }
 
@@ -227,7 +226,6 @@ struct DashboardView: View {
         guard activeMilestone == nil else { return }
         activeMilestone = milestoneService.check(
             totalSessions: viewModel?.progressStats?.totalSessions ?? 0,
-            currentStreak: viewModel?.streakData?.currentStreak ?? 0,
             currentPhase: viewModel?.phaseStatus?.currentPhase ?? 1,
             maxPhase: appState.currentUser?.maxPhase ?? 3
         )

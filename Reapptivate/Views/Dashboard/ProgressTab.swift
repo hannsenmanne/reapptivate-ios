@@ -7,21 +7,9 @@ struct ProgressTab: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // Streak highlight
-            if let streak = viewModel?.streakData, streak.currentStreak > 0 {
-                ProgressStatCard(
-                    label: "Trainingsserie",
-                    value: "\(streak.currentStreak) Tage",
-                    icon: "flame.fill",
-                    valueColor: .accent
-                )
-                .cardEntryAnimation(index: 0)
-            }
-
             // Stats Section
             if let stats = viewModel?.progressStats, stats.totalSessions > 0 {
                 ProgressStatsGrid(stats: stats)
-                    .coachMark(key: "progress_stats", message: "Ihre Trainingsstatistiken auf einen Blick", edge: .bottom)
                     .cardEntryAnimation(index: 1)
             } else {
                 EmptyStateView(

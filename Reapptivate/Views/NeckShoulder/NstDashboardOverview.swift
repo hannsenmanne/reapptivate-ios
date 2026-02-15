@@ -27,13 +27,6 @@ struct NstDashboardOverview: View {
                 NstStatsRow(user: user, severity: severity, program: programVM?.program)
             }
 
-            // Streak
-            if let streak = dashboardVM?.streakData, (dashboardVM?.progressStats?.totalSessions ?? 0) > 0 {
-                StreakCard(streak: streak, isFreezing: dashboardVM?.isFreezing ?? false) {
-                    Task { await dashboardVM?.useFreezeToken() }
-                }
-            }
-
             // Welcome card (no sessions yet)
             if dashboardVM?.progressStats?.totalSessions == 0 {
                 WelcomeCard()

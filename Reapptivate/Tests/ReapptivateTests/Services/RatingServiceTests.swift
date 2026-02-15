@@ -24,7 +24,7 @@ final class RatingServiceTests: XCTestCase {
         let service = RatingService()
         // This should not crash or throw — it just silently returns
         // We can't easily test SKStoreReviewController, but we verify no crash
-        service.checkAndPrompt(totalSessions: 30, compliancePercent: 80, currentStreak: 10)
+        service.checkAndPrompt(totalSessions: 30, compliancePercent: 80)
         // Count should stay at 1 (cooldown not expired)
         XCTAssertEqual(UserDefaults.standard.integer(forKey: "rating_prompt_count"), 1)
     }
@@ -33,14 +33,14 @@ final class RatingServiceTests: XCTestCase {
         UserDefaults.standard.set(3, forKey: "rating_prompt_count")
 
         let service = RatingService()
-        service.checkAndPrompt(totalSessions: 100, compliancePercent: 100, currentStreak: 30)
+        service.checkAndPrompt(totalSessions: 100, compliancePercent: 100)
         // Count should stay at 3
         XCTAssertEqual(UserDefaults.standard.integer(forKey: "rating_prompt_count"), 3)
     }
 
     func testNoPromptForLowSessions() {
         let service = RatingService()
-        service.checkAndPrompt(totalSessions: 3, compliancePercent: 50, currentStreak: 2)
+        service.checkAndPrompt(totalSessions: 3, compliancePercent: 50)
         // Count should stay at 0
         XCTAssertEqual(UserDefaults.standard.integer(forKey: "rating_prompt_count"), 0)
     }

@@ -36,8 +36,6 @@ final class DashboardViewModelTests: XCTestCase {
                 return (response, TestFixtures.statsResponseJSON())
             } else if url.contains("progress/today") {
                 return (response, TestFixtures.todayProgressResponseJSON())
-            } else if url.contains("streak") {
-                return (response, TestFixtures.streakResponseJSON())
             }
             return (response, Data())
         }
@@ -49,8 +47,6 @@ final class DashboardViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.progressStats)
         XCTAssertEqual(viewModel.progressStats?.totalSessions, 25)
         XCTAssertFalse(viewModel.completedToday.isEmpty)
-        XCTAssertNotNil(viewModel.streakData)
-        XCTAssertEqual(viewModel.streakData?.currentStreak, 5)
     }
 
     // MARK: - Partial Failure
@@ -65,8 +61,6 @@ final class DashboardViewModelTests: XCTestCase {
                 return (TestHelpers.makeHTTPResponse(statusCode: 200), TestFixtures.statsResponseJSON())
             } else if url.contains("progress/today") {
                 return (TestHelpers.makeHTTPResponse(statusCode: 200), TestFixtures.todayProgressResponseJSON())
-            } else if url.contains("streak") {
-                return (TestHelpers.makeHTTPResponse(statusCode: 200), TestFixtures.streakResponseJSON())
             }
             return (TestHelpers.makeHTTPResponse(statusCode: 200), Data())
         }
@@ -87,8 +81,6 @@ final class DashboardViewModelTests: XCTestCase {
 
             if url.contains("progress/today") {
                 return (response, TestFixtures.todayProgressResponseJSON())
-            } else if url.contains("streak") {
-                return (response, TestFixtures.streakResponseJSON())
             }
             return (response, Data("{}".utf8))
         }
@@ -114,8 +106,6 @@ final class DashboardViewModelTests: XCTestCase {
                 return (response, TestFixtures.statsResponseJSON())
             } else if url.contains("progress/today") {
                 return (response, TestFixtures.todayProgressResponseJSON())
-            } else if url.contains("streak") {
-                return (response, TestFixtures.streakResponseJSON())
             }
             return (response, Data())
         }

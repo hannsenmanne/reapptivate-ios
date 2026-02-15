@@ -338,16 +338,6 @@ enum APIEndpoints {
         get("patient/custom-exercises")
     }
 
-    // MARK: - Streak
-
-    static func getStreak() -> URLRequest {
-        get("patient/streak")
-    }
-
-    static func useFreezeToken() -> URLRequest {
-        post("patient/streak/freeze")
-    }
-
     // MARK: - Config
 
     static func features() -> URLRequest {

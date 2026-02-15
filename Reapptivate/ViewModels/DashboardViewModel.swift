@@ -13,12 +13,10 @@ enum DashboardTab: String, CaseIterable {
 final class DashboardViewModel {
     var phaseStatus: AdaptivePhaseStatus?
     var progressStats: ProgressStats?
-    var streakData: StreakData?
     var completedToday: [ProgressEntry] = []
     var recentEntries: [ProgressEntry] = []
     var userSchedule: UserSchedule?
     var isLoading = false
-    var isFreezing = false
     var error: String?
 
     private let apiClient: APIClient
@@ -47,10 +45,6 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getTodayProgress())
         }
 
-        async let streakResult: StreakData? = loadSafely { [apiClient] in
-            try await apiClient.request(APIEndpoints.getStreak())
-        }
-
         async let scheduleResult: UserSchedule? = loadSafely { [apiClient] in
             try await apiClient.request(APIEndpoints.getSchedule())
         }
@@ -59,7 +53,7 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getProgress(limit: 100))
         }
 
-        let (phase, stats, today, streak, schedule, entries) = await (phaseResult, statsResult, todayResult, streakResult, scheduleResult, entriesResult)
+        let (phase, stats, today, schedule, entries) = await (phaseResult, statsResult, todayResult, scheduleResult, entriesResult)
 
         phaseStatus = phase?.phaseStatus
         if let phaseData = phase?.phaseStatus {
@@ -96,39 +90,13 @@ final class DashboardViewModel {
         }
         completedToday = today?.completedExercises ?? []
         recentEntries = entries?.entries ?? []
-        streakData = streak
         userSchedule = schedule
-
-        // Schedule streak-ending notification if active streak
-        if let streakInfo = streak, streakInfo.currentStreak > 0 {
-            if let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
-                await NotificationService.shared.scheduleStreakEndingAlert(
-                    streakCount: streakInfo.currentStreak,
-                    for: tomorrow
-                )
-            }
-        }
 
         isLoading = false
     }
 
     func refresh() async {
         await loadDashboard()
-    }
-
-    // MARK: - Streak
-
-    func useFreezeToken() async {
-        guard !isFreezing else { return }
-        isFreezing = true
-        do {
-            try await apiClient.requestVoid(APIEndpoints.useFreezeToken())
-        } catch {
-            self.error = "Frost-Token konnte nicht verwendet werden."
-            Log.api.error("Freeze token error: \(error.localizedDescription)")
-        }
-        await loadDashboard()
-        isFreezing = false
     }
 
     // MARK: - Helpers

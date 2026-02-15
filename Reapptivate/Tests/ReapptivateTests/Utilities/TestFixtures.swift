@@ -221,39 +221,6 @@ enum TestFixtures {
         return try! JSONSerialization.data(withJSONObject: json)
     }
 
-    // MARK: - StreakData
-
-    static func streakData(
-        currentStreak: Int = 5,
-        longestStreak: Int = 12,
-        freezeTokens: Int = 1,
-        lastTrainingDate: String? = nil
-    ) -> StreakData {
-        StreakData(
-            currentStreak: currentStreak,
-            longestStreak: longestStreak,
-            freezeTokens: freezeTokens,
-            lastTrainingDate: lastTrainingDate
-        )
-    }
-
-    static func streakResponseJSON(
-        currentStreak: Int = 5,
-        longestStreak: Int = 12,
-        freezeTokens: Int = 1,
-        lastTrainingDate: String? = nil
-    ) -> Data {
-        var json: [String: Any] = [
-            "currentStreak": currentStreak,
-            "longestStreak": longestStreak,
-            "freezeTokens": freezeTokens,
-        ]
-        if let date = lastTrainingDate {
-            json["lastTrainingDate"] = date
-        }
-        return try! JSONSerialization.data(withJSONObject: json)
-    }
-
     static func errorResponseJSON(message: String = "Something went wrong") -> Data {
         let json: [String: Any] = ["error": "Error", "message": message]
         return try! JSONSerialization.data(withJSONObject: json)

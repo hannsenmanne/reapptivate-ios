@@ -14,13 +14,12 @@ final class RatingService {
     private let cooldownDays = 30
 
     /// Checks conditions and triggers App Store rating prompt if appropriate.
-    func checkAndPrompt(totalSessions: Int, compliancePercent: Double, currentStreak: Int) {
+    func checkAndPrompt(totalSessions: Int, compliancePercent: Double) {
         guard promptCount < maxPrompts else { return }
         guard isCooldownExpired() else { return }
 
         let qualifies =
             (totalSessions >= 10 && compliancePercent >= 70) ||
-            currentStreak >= 7 ||
             totalSessions >= 25
 
         guard qualifies else { return }
