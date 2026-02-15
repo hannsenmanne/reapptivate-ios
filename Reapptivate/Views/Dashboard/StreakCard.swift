@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StreakCard: View {
     let streak: StreakData
+    let isFreezing: Bool
     let onUseFreezeToken: () -> Void
 
     @State private var hapticTrigger = false
@@ -38,6 +39,8 @@ struct StreakCard: View {
                             .foregroundStyle(.textSecondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Trainingsserie: \(streak.currentStreak) \(streak.currentStreak == 1 ? "Tag" : "Tage")")
 
                 Spacer()
 
@@ -54,6 +57,7 @@ struct StreakCard: View {
                     .padding(.vertical, 6)
                     .background(Color.farBlue.opacity(0.1))
                     .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
+                    .accessibilityElement(children: .combine)
                     .accessibilityLabel("\(streak.freezeTokens) Frost-Token")
                 }
             }
@@ -71,14 +75,19 @@ struct StreakCard: View {
                 }
             }
 
-            // "Save streak" button when at risk
+            // "Save streak" button when at risk (B8: disabled during freeze request)
             if isStreakAtRisk && streak.freezeTokens > 0 {
                 Button {
                     hapticTrigger.toggle()
                     onUseFreezeToken()
                 } label: {
                     HStack(spacing: 6) {
-                        Image(systemName: "snowflake")
+                        if isFreezing {
+                            ProgressView()
+                                .tint(.white)
+                        } else {
+                            Image(systemName: "snowflake")
+                        }
                         Text("Serie retten")
                     }
                     .font(.appSubheadlineSemibold)
@@ -88,12 +97,13 @@ struct StreakCard: View {
                     .background(Color.farBlue)
                     .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
+                .disabled(isFreezing)
+                .opacity(isFreezing ? 0.6 : 1)
                 .sensoryFeedback(.success, trigger: hapticTrigger)
+                .accessibilityLabel("Serie retten, 1 Frost-Token verwenden")
             }
         }
         .cardStyle()
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Trainingsserie: \(streak.currentStreak) Tage")
     }
 }
 

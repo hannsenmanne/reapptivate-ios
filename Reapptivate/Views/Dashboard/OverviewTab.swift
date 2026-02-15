@@ -15,7 +15,7 @@ struct OverviewTab: View {
 
             // Streak Card (only for returning patients)
             if let streak = viewModel?.streakData, (viewModel?.progressStats?.totalSessions ?? 0) > 0 {
-                StreakCard(streak: streak) {
+                StreakCard(streak: streak, isFreezing: viewModel?.isFreezing ?? false) {
                     Task { await viewModel?.useFreezeToken() }
                 }
             }

@@ -56,10 +56,10 @@ struct MilestoneAlert: View {
                 } label: {
                     Text("Weiter")
                         .font(.appSubheadlineSemibold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(milestone.color)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .background(milestone.color)
+                        .background(milestone.color.opacity(0.15))
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
             }

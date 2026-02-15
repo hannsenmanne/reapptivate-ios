@@ -16,6 +16,7 @@ final class DashboardViewModel {
     var streakData: StreakData?
     var completedToday: [ProgressEntry] = []
     var isLoading = false
+    var isFreezing = false
     var error: String?
 
     private let apiClient: APIClient
@@ -95,10 +96,16 @@ final class DashboardViewModel {
     // MARK: - Streak
 
     func useFreezeToken() async {
-        _ = await loadSafely { [apiClient] in
+        guard !isFreezing else { return }
+        isFreezing = true
+        do {
             try await apiClient.requestVoid(APIEndpoints.useFreezeToken())
+        } catch {
+            self.error = "Frost-Token konnte nicht verwendet werden."
+            Log.api.error("Freeze token error: \(error.localizedDescription)")
         }
         await loadDashboard()
+        isFreezing = false
     }
 
     // MARK: - Helpers
