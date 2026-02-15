@@ -170,3 +170,45 @@ struct NeckShoulderProgressionResult: Codable {
     let recommendation: String
     let suggestions: [String]
 }
+
+// MARK: - Session Log
+
+struct NeckShoulderSessionLog: Codable, Identifiable {
+    let id: String
+    let sessionType: String
+    let weekNumber: Int
+    let painBefore: Double?
+    let painAfter: Double?
+    let exercisesCompleted: [String]?
+    let durationSeconds: Int?
+    let notes: String?
+    let completedAt: String
+}
+
+struct NeckShoulderSessionLogRequest: Codable {
+    let sessionType: String
+    let painBefore: Double?
+    let painAfter: Double?
+    let exercisesCompleted: [String]
+    let durationSeconds: Int?
+    let notes: String?
+}
+
+// MARK: - Compliance Stats
+
+struct NeckShoulderComplianceStats: Codable {
+    let weekNumber: Int
+    let strengthSessionsCompleted: Int
+    let strengthSessionsTarget: Int
+    let mobilitySessionsCompleted: Int
+    let mobilitySessionsTarget: Int
+    let microPausesCompleted: Int
+    let overallPercent: Double
+}
+
+// MARK: - Micro-Pause Stats
+
+struct NstMicroPauseStats: Codable {
+    let completed: Int
+    let target: Int
+}

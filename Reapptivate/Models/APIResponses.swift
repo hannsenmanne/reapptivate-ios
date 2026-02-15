@@ -150,6 +150,46 @@ struct NeckShoulderProgressionResponse: Codable {
     let progression: NeckShoulderProgressionResult
 }
 
+// MARK: - Neck-Shoulder Tracking Wrappers
+
+struct NstSessionLogResponse: Codable {
+    let session: NeckShoulderSessionLog
+    let triggerEvaluation: NstTriggerEvaluation?
+}
+
+struct NstTriggerEvaluation: Codable {
+    let matchedRules: [NstMatchedRule]?
+    let adjustmentsCreated: Int?
+    let modulesRecommended: [String]?
+
+    struct NstMatchedRule: Codable {
+        let ruleId: String
+        let ruleName: String
+        let reason: String
+    }
+}
+
+struct NstSessionsResponse: Codable {
+    let sessions: [NeckShoulderSessionLog]
+}
+
+struct NstComplianceResponse: Codable {
+    let compliance: NeckShoulderComplianceStats
+}
+
+struct NstMicroPauseLogResponse: Codable {
+    let microPause: NstMicroPauseEntry
+
+    struct NstMicroPauseEntry: Codable {
+        let id: String
+        let completedAt: String
+    }
+}
+
+struct NstMicroPauseStatsResponse: Codable {
+    let microPauseStats: NstMicroPauseStats
+}
+
 // MARK: - Custom Exercise Wrappers
 
 struct CustomExercisesResponse: Codable {

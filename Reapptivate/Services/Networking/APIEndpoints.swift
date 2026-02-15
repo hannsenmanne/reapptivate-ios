@@ -189,6 +189,35 @@ enum APIEndpoints {
         post("neck-shoulder/micro-modules/\(completionId)/complete")
     }
 
+    // MARK: - Neck-Shoulder Tracking
+
+    static func logNstSession(body: NeckShoulderSessionLogRequest) -> URLRequest {
+        post("neck-shoulder/session", encodable: body)
+    }
+
+    static func nstSessions(week: Int? = nil, type: String? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let week { query["week"] = "\(week)" }
+        if let type { query["type"] = type }
+        return get("neck-shoulder/sessions", query: query)
+    }
+
+    static func nstCompliance(week: Int? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let week { query["week"] = "\(week)" }
+        return get("neck-shoulder/compliance", query: query)
+    }
+
+    static func logNstMicroPause() -> URLRequest {
+        post("neck-shoulder/micro-pause")
+    }
+
+    static func nstMicroPauseStats(date: String? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let date { query["date"] = date }
+        return get("neck-shoulder/micro-pause/stats", query: query)
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {
