@@ -4,7 +4,11 @@ struct OverviewTab: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     let viewModel: DashboardViewModel?
+    var completedTodayCount: Int = 0
+    var totalExerciseCount: Int = 0
     var onNavigateToProgram: (() -> Void)?
+
+    @State private var todaysQuote: MotivationalQuote?
 
     var body: some View {
         VStack(spacing: 20) {
@@ -14,39 +18,62 @@ struct OverviewTab: View {
                     .cardEntryAnimation(index: 0)
             }
 
+            // Motivational Quote
+            if let quote = todaysQuote {
+                MotivationalQuoteCard(quote: quote)
+                    .cardEntryAnimation(index: 1)
+            }
+
             // Streak Card (only for returning patients)
             if let streak = viewModel?.streakData, (viewModel?.progressStats?.totalSessions ?? 0) > 0 {
                 StreakCard(streak: streak, isFreezing: viewModel?.isFreezing ?? false) {
                     Task { await viewModel?.useFreezeToken() }
                 }
-                .cardEntryAnimation(index: 1)
+                .cardEntryAnimation(index: 2)
             }
 
             // Welcome Card (new patients)
             if viewModel?.progressStats?.totalSessions == 0 {
                 WelcomeCard()
-                    .cardEntryAnimation(index: 1)
+                    .cardEntryAnimation(index: 2)
+            }
+
+            // Today's Plan
+            if viewModel?.isRestDay != true && totalExerciseCount > 0 {
+                TodaysPlanCard(
+                    completedCount: completedTodayCount,
+                    totalCount: totalExerciseCount,
+                    onTap: { onNavigateToProgram?() }
+                )
+                .cardEntryAnimation(index: 3)
             }
 
             // Rest Day Card
             if viewModel?.isRestDay == true {
                 RestDayCard()
-                    .cardEntryAnimation(index: 2)
+                    .cardEntryAnimation(index: 3)
             }
 
             // Phase Status
             if let phaseStatus = viewModel?.phaseStatus {
                 PhaseStatusQuickCard(status: phaseStatus)
-                    .cardEntryAnimation(index: 2)
+                    .cardEntryAnimation(index: 4)
             }
 
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
-                .cardEntryAnimation(index: 3)
+                .coachMark(key: "overview_exercises", message: "Hier finden Sie Ihr Übungsprogramm", edge: .top)
+                .cardEntryAnimation(index: 5)
 
             // Training Schedule
             TrainingScheduleCard()
-                .cardEntryAnimation(index: 4)
+                .cardEntryAnimation(index: 6)
+
+            // Compliance Calendar
+            if let entries = viewModel?.recentEntries, !entries.isEmpty {
+                ComplianceCalendarCard(entries: entries)
+                    .cardEntryAnimation(index: 7)
+            }
 
             // Wissen
             if let user = appState.currentUser {
@@ -55,11 +82,14 @@ struct OverviewTab: View {
                     isLbp: appState.isLbp,
                     isNeck: appState.isNeck
                 )
-                .cardEntryAnimation(index: 5)
+                .cardEntryAnimation(index: 8)
             }
 
         }
         .padding(.bottom, 32)
+        .task {
+            todaysQuote = QuoteLoader.shared.todaysQuote()
+        }
     }
 }
 

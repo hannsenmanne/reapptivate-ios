@@ -15,6 +15,7 @@ final class DashboardViewModel {
     var progressStats: ProgressStats?
     var streakData: StreakData?
     var completedToday: [ProgressEntry] = []
+    var recentEntries: [ProgressEntry] = []
     var userSchedule: UserSchedule?
     var isLoading = false
     var isFreezing = false
@@ -54,7 +55,11 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getSchedule())
         }
 
-        let (phase, stats, today, streak, schedule) = await (phaseResult, statsResult, todayResult, streakResult, scheduleResult)
+        async let entriesResult: EntriesResponse? = loadSafely { [apiClient] in
+            try await apiClient.request(APIEndpoints.getProgress(limit: 100))
+        }
+
+        let (phase, stats, today, streak, schedule, entries) = await (phaseResult, statsResult, todayResult, streakResult, scheduleResult, entriesResult)
 
         phaseStatus = phase?.phaseStatus
         if let phaseData = phase?.phaseStatus {
@@ -85,10 +90,12 @@ final class DashboardViewModel {
                 totalSessions: s.totalSessions,
                 lastSevenDays: s.lastSevenDays,
                 averagePain: s.averagePainLevel,
-                compliancePercent: s.currentWeekCompliance
+                compliancePercent: s.currentWeekCompliance,
+                recentPainLevels: s.recentPainLevels
             )
         }
         completedToday = today?.completedExercises ?? []
+        recentEntries = entries?.entries ?? []
         streakData = streak
         userSchedule = schedule
 

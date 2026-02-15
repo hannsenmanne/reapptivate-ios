@@ -115,11 +115,11 @@ private struct ComplianceRow: View {
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius, style: .continuous)
                         .fill(Color.gray200)
                         .frame(height: 8)
 
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius, style: .continuous)
                         .fill(accentColor)
                         .frame(width: geo.size.width * fraction, height: 8)
                 }

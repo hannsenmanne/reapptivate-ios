@@ -8,6 +8,7 @@ struct SettingsView: View {
     @State private var notificationService = NotificationService.shared
     @State private var showLogoutConfirmation = false
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
+    @AppStorage("hapticsEnabled") private var hapticsEnabled = true
 
     var body: some View {
         NavigationStack {
@@ -112,16 +113,52 @@ struct SettingsView: View {
                             Text("Erscheinungsbild")
                         }
                     }
+
+                    Toggle(isOn: $hapticsEnabled) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "hand.tap.fill")
+                                .foregroundStyle(.accent)
+                            Text("Haptisches Feedback")
+                        }
+                    }
+                }
+
+                // Achievements
+                Section("Erfolge") {
+                    NavigationLink {
+                        AchievementsView()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "trophy.fill")
+                                .foregroundStyle(.accent)
+                            Text("Meine Erfolge")
+                        }
+                    }
+                }
+
+                // Data Privacy
+                Section("Datenschutz") {
+                    NavigationLink {
+                        DataPrivacyView()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "hand.raised.fill")
+                                .foregroundStyle(.accent)
+                            Text("Daten & Datenschutz")
+                        }
+                    }
                 }
 
                 // App Info
                 Section("App") {
-                    HStack {
-                        Text("Version")
-                            .foregroundStyle(.textSecondary)
-                        Spacer()
-                        Text("1.0.0")
-                            .foregroundStyle(.textPrimary)
+                    NavigationLink {
+                        AboutView()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "info.circle")
+                                .foregroundStyle(.accent)
+                            Text("Über die App")
+                        }
                     }
                 }
 

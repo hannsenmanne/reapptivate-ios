@@ -32,6 +32,10 @@ struct PacingActivityLogSheet: View {
         return "Über der Quote"
     }
 
+    private var hasUnsavedChanges: Bool {
+        selectedActivityKey != nil || !notes.isEmpty
+    }
+
     var body: some View {
         NavigationStack {
             if showSuccess {
@@ -40,6 +44,7 @@ struct PacingActivityLogSheet: View {
                 formView
             }
         }
+        .interactiveDismissDisabled(hasUnsavedChanges)
     }
 
     // MARK: - Form View

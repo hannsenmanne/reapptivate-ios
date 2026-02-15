@@ -19,6 +19,9 @@ struct ExerciseSessionView: View {
     @State private var setCompletedTrigger = false
     @State private var allSetsDoneTrigger = false
     @State private var restSkippedTrigger = false
+    @State private var showCelebration = false
+    @AppStorage("hasCompletedFirstExercise") private var hasCompletedFirstExercise = false
+    @State private var showFirstGuide = false
 
     private let timerPublisher = Timer.publish(every: 1, on: .main, in: .common)
 
@@ -187,9 +190,29 @@ struct ExerciseSessionView: View {
                     break
                 }
             }
-            .sensoryFeedback(.impact(weight: .light), trigger: setCompletedTrigger)
-            .sensoryFeedback(.success, trigger: allSetsDoneTrigger)
-            .sensoryFeedback(.impact(weight: .medium), trigger: restSkippedTrigger)
+            .conditionalHaptic(.impact(weight: .light), trigger: setCompletedTrigger)
+            .conditionalHaptic(.success, trigger: allSetsDoneTrigger)
+            .conditionalHaptic(.impact(weight: .medium), trigger: restSkippedTrigger)
+            .overlay {
+                if showFirstGuide {
+                    FirstExerciseGuide {
+                        showFirstGuide = false
+                    }
+                }
+            }
+            .overlay {
+                if showCelebration {
+                    ExerciseCompletionCelebration {
+                        showCelebration = false
+                        showProgressLog = true
+                    }
+                }
+            }
+            .task {
+                if !hasCompletedFirstExercise {
+                    showFirstGuide = true
+                }
+            }
             .sheet(isPresented: $showProgressLog) {
                 ProgressLogSheet(
                     exercise: exercise,
@@ -236,9 +259,9 @@ struct ExerciseSessionView: View {
 
     private func completeSet() {
         if currentSet >= totalSets {
-            // All sets done — open progress log
+            // All sets done — show celebration, then progress log
             allSetsDoneTrigger.toggle()
-            showProgressLog = true
+            showCelebration = true
         } else {
             setCompletedTrigger.toggle()
             currentSet += 1

@@ -79,7 +79,7 @@ struct NstSessionPlayerView: View {
                 }
             }
         }
-        .sensoryFeedback(.impact, trigger: restTrigger)
+        .conditionalHaptic(.impact, trigger: restTrigger)
     }
 
     private var progress: Double {

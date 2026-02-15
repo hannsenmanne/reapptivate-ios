@@ -46,7 +46,7 @@ struct SymptomResponsePicker: View {
                 }
             }
         }
-        .sensoryFeedback(.selection, trigger: selectionTrigger)
+        .conditionalHaptic(.selection, trigger: selectionTrigger)
     }
 }
 

@@ -106,11 +106,11 @@ struct FocusAreaRow: View {
             // Progress bar
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 3)
+                    RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius)
                         .fill(Color.textSecondary.opacity(0.12))
                         .frame(height: 6)
 
-                    RoundedRectangle(cornerRadius: 3)
+                    RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius)
                         .fill(scoreColor)
                         .frame(width: geo.size.width * CGFloat(area.percentage) / 100, height: 6)
                 }

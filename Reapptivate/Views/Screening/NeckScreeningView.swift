@@ -9,6 +9,7 @@ struct NeckScreeningView: View {
     var isEmbedded = false
     @State private var viewModel: NeckScreeningViewModel?
     @State private var showResult = false
+    @State private var selectionTrigger = false
 
     var body: some View {
         NavigationStack {
@@ -54,7 +55,7 @@ struct NeckScreeningView: View {
                                 selectedValue: vm.responses[item.id],
                                 onSelect: { value in
                                     vm.selectResponse(itemId: item.id, value: value)
-                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    selectionTrigger.toggle()
                                 }
                             )
                             .id(item.id)
@@ -113,6 +114,7 @@ struct NeckScreeningView: View {
                 }
             }
             .interactiveDismissDisabled()
+            .conditionalHaptic(.selection, trigger: selectionTrigger)
             .alert("Fehler", isPresented: Binding(
                 get: { refreshError != nil },
                 set: { if !$0 { refreshError = nil } }

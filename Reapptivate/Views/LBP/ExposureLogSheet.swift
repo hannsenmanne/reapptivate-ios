@@ -18,6 +18,10 @@ struct ExposureLogSheet: View {
     @State private var fearReduction: Int = 0
     @State private var stepAdvanceTrigger = false
 
+    private var hasUnsavedChanges: Bool {
+        step != .prepare || Int(preFear) != 5 || !notes.isEmpty
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -72,8 +76,9 @@ struct ExposureLogSheet: View {
                     Button("Schliessen") { dismiss() }
                 }
             }
-            .sensoryFeedback(.impact(weight: .light), trigger: stepAdvanceTrigger)
+            .conditionalHaptic(.impact(weight: .light), trigger: stepAdvanceTrigger)
         }
+        .interactiveDismissDisabled(hasUnsavedChanges)
     }
 
     // MARK: - Prepare Step

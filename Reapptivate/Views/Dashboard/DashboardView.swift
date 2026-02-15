@@ -119,6 +119,8 @@ struct DashboardView: View {
             } else {
                 OverviewTab(
                     viewModel: viewModel,
+                    completedTodayCount: viewModel?.completedToday.count ?? 0,
+                    totalExerciseCount: exerciseVM?.exercises.count ?? 0,
                     onNavigateToProgram: {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             selectedTab = .program
@@ -226,7 +228,8 @@ struct DashboardView: View {
         activeMilestone = milestoneService.check(
             totalSessions: viewModel?.progressStats?.totalSessions ?? 0,
             currentStreak: viewModel?.streakData?.currentStreak ?? 0,
-            currentPhase: viewModel?.phaseStatus?.currentPhase ?? 1
+            currentPhase: viewModel?.phaseStatus?.currentPhase ?? 1,
+            maxPhase: appState.currentUser?.maxPhase ?? 3
         )
     }
 }
@@ -280,6 +283,6 @@ struct DashboardTabBar: View {
                 .fill(Color.gray200)
                 .frame(height: 1)
         }
-        .sensoryFeedback(.selection, trigger: selectedTab)
+        .conditionalHaptic(.selection, trigger: selectedTab)
     }
 }

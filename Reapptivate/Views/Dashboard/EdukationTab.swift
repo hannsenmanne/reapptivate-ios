@@ -8,6 +8,7 @@ struct EdukationTab: View {
         VStack(spacing: 20) {
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 LbpMicroModulesSection(subtype: subtype)
+                    .coachMark(key: "edukation_modules", message: "Lesen Sie Wissensmodule für Ihr Training", edge: .bottom)
 
                 if let user = appState.currentUser {
                     WissenAllCardsView(phase: user.currentPhase, isLbp: true, isNeck: false)
@@ -116,10 +117,10 @@ struct WissenAllCardsView: View {
             if !cards.isEmpty {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 2)
+                        RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius)
                             .fill(Color.textSecondary.opacity(0.15))
                             .frame(height: 4)
-                        RoundedRectangle(cornerRadius: 2)
+                        RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius)
                             .fill(Color.accent)
                             .frame(width: cards.isEmpty ? 0 : geo.size.width * CGFloat(readCount) / CGFloat(cards.count), height: 4)
                     }
@@ -222,7 +223,7 @@ struct WissenExpandableCard: View {
         .background(Color.cardBg)
         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
-        .sensoryFeedback(.success, trigger: hapticTrigger)
+        .conditionalHaptic(.success, trigger: hapticTrigger)
     }
 
     private func iconName(for icon: String) -> String {

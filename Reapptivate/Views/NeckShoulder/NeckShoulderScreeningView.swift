@@ -9,6 +9,7 @@ struct NeckShoulderScreeningView: View {
     @State private var viewModel: NeckShoulderScreeningViewModel?
     @State private var showResult = false
     @State private var refreshError: String?
+    @State private var selectionTrigger = false
 
     var body: some View {
         NavigationStack {
@@ -57,15 +58,15 @@ struct NeckShoulderScreeningView: View {
                                 response: vm.responses[item.id],
                                 onYesNo: { value in
                                     vm.selectYesNo(itemId: item.id, value: value)
-                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    selectionTrigger.toggle()
                                 },
                                 onScale: { value in
                                     vm.selectScale(itemId: item.id, value: value)
-                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    selectionTrigger.toggle()
                                 },
                                 onChoice: { value in
                                     vm.selectChoice(itemId: item.id, value: value)
-                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    selectionTrigger.toggle()
                                 }
                             )
                             .id(item.id)
@@ -124,6 +125,7 @@ struct NeckShoulderScreeningView: View {
                 }
             }
             .interactiveDismissDisabled()
+            .conditionalHaptic(.selection, trigger: selectionTrigger)
             .alert("Fehler", isPresented: Binding(
                 get: { refreshError != nil },
                 set: { if !$0 { refreshError = nil } }

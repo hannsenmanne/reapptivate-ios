@@ -80,7 +80,7 @@ struct NstDashboardOverview: View {
             async let progLoad: () = programVM?.loadProgram() ?? ()
             _ = await (trackLoad, progLoad)
         }
-        .sensoryFeedback(.success, trigger: microPauseSuccessTrigger)
+        .conditionalHaptic(.success, trigger: microPauseSuccessTrigger)
     }
 }
 

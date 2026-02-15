@@ -6,12 +6,29 @@ struct PhaseChangeAlert: View {
     let onDismiss: () -> Void
 
     @State private var isVisible = false
+    @State private var confettiTrigger = false
+    @State private var hapticTrigger = false
 
     var isProgress: Bool { result.decision == .progress }
 
     var body: some View {
-        if isVisible {
-            VStack {
+        VStack {
+            ZStack {
+                // Confetti ring for progress
+                if isProgress {
+                    ForEach(0..<12, id: \.self) { i in
+                        Circle()
+                            .fill(confettiColor(for: i))
+                            .frame(width: 6, height: 6)
+                            .offset(confettiOffset(for: i))
+                            .opacity(confettiTrigger ? 0 : 1)
+                            .animation(
+                                .easeOut(duration: 1.0).delay(Double(i) * 0.04),
+                                value: confettiTrigger
+                            )
+                    }
+                }
+
                 HStack(spacing: 12) {
                     Image(systemName: isProgress ? "arrow.up.circle.fill" : "exclamationmark.triangle.fill")
                         .font(.appTitle2)
@@ -29,8 +46,10 @@ struct PhaseChangeAlert: View {
                     Spacer()
 
                     Button {
-                        withAnimation {
+                        withAnimation(.easeIn(duration: 0.2)) {
                             isVisible = false
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             onDismiss()
                         }
                     } label: {
@@ -42,10 +61,34 @@ struct PhaseChangeAlert: View {
                 .background(isProgress ? Color.textPrimary : Color.painAmber)
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
                 .padding(.horizontal, 16)
-
-                Spacer()
             }
-            .transition(.move(edge: .top).combined(with: .opacity))
+
+            Spacer()
         }
+        .scaleEffect(isVisible ? 1 : 0.5)
+        .opacity(isVisible ? 1 : 0)
+        .conditionalHaptic(isProgress ? .success : .warning, trigger: hapticTrigger)
+        .onAppear {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) {
+                isVisible = true
+            }
+            hapticTrigger.toggle()
+            if isProgress {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    confettiTrigger = true
+                }
+            }
+        }
+    }
+
+    private func confettiColor(for index: Int) -> Color {
+        let colors: [Color] = [.accent, .painAmber, .farBlue, .painGreen]
+        return colors[index % colors.count]
+    }
+
+    private func confettiOffset(for index: Int) -> CGSize {
+        let angle = Double(index) * (360.0 / 12.0) * .pi / 180.0
+        let radius: Double = confettiTrigger ? 60 : 20
+        return CGSize(width: cos(angle) * radius, height: sin(angle) * radius)
     }
 }

@@ -118,7 +118,7 @@ private struct NstPainTrendCard: View {
                 HStack(alignment: .bottom, spacing: 4) {
                     ForEach(Array(painPoints.enumerated()), id: \.offset) { _, point in
                         VStack(spacing: 4) {
-                            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                            RoundedRectangle(cornerRadius: DesignTokens.progressBarRadius, style: .continuous)
                                 .fill(painBarColor(point.value))
                                 .frame(height: max(4, CGFloat(point.value) / 10.0 * 60))
 

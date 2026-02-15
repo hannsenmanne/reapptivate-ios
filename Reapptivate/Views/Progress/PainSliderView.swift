@@ -4,6 +4,10 @@ struct PainSliderView: View {
     @Binding var painLevel: Int
     let maxPainLevel: Int
 
+    @State private var thumbScale: CGFloat = 1.0
+    @State private var numberScale: CGFloat = 1.0
+    @State private var dragHapticTrigger = false
+
     var body: some View {
         VStack(spacing: 16) {
             // Threshold indicator
@@ -19,6 +23,7 @@ struct PainSliderView: View {
                     .foregroundStyle(painColor)
                     .contentTransition(.numericText())
                     .animation(.spring(duration: 0.2), value: painLevel)
+                    .scaleEffect(numberScale)
 
                 Text("/10")
                     .font(.appTitle3)
@@ -56,6 +61,7 @@ struct PainSliderView: View {
                                 .fill(painColor)
                                 .frame(width: 12, height: 12)
                         }
+                        .scaleEffect(thumbScale)
                         .offset(x: thumbX - 14)
                 }
                 .gesture(
@@ -65,7 +71,29 @@ struct PainSliderView: View {
                             let newLevel = Int(round(fraction * 10))
                             if newLevel != painLevel {
                                 painLevel = newLevel
-                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                dragHapticTrigger.toggle()
+
+                                // Thumb bounce
+                                // asyncAfter is used here because .task is not available inside gesture handlers.
+                                // Accumulation during rapid dragging is harmless — each pair resolves within 150ms.
+                                withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
+                                    thumbScale = 1.2
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                                        thumbScale = 1.0
+                                    }
+                                }
+
+                                // Number bounce
+                                withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
+                                    numberScale = 1.1
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                                        numberScale = 1.0
+                                    }
+                                }
                             }
                         }
                 )
@@ -90,6 +118,7 @@ struct PainSliderView: View {
                 .foregroundStyle(painColor)
                 .frame(maxWidth: .infinity, alignment: .center)
         }
+        .conditionalHaptic(.impact(weight: .light), trigger: dragHapticTrigger)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Schmerzskala")
         .accessibilityValue("\(painLevel) von 10")

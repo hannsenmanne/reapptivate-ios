@@ -82,7 +82,7 @@ struct NstMicroModulesView: View {
                 }
             }
         }
-        .sensoryFeedback(.success, trigger: markReadTrigger)
+        .conditionalHaptic(.success, trigger: markReadTrigger)
         .task {
             await loadModules()
         }

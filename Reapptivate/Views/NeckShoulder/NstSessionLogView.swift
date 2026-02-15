@@ -30,6 +30,10 @@ struct NstSessionLogView: View {
         }
     }
 
+    private var hasUnsavedChanges: Bool {
+        painBefore != 0 || painAfter != 0 || !notes.isEmpty
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -174,7 +178,8 @@ struct NstSessionLogView: View {
                 Text("Ihr Programm wurde angepasst.")
             }
         }
-        .sensoryFeedback(.success, trigger: submitSuccessTrigger)
+        .conditionalHaptic(.success, trigger: submitSuccessTrigger)
+        .interactiveDismissDisabled(hasUnsavedChanges)
     }
 
     private var sessionTypeIcon: String {

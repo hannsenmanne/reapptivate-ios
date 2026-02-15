@@ -71,7 +71,7 @@ struct MilestoneAlert: View {
             .scaleEffect(isVisible ? 1 : 0.8)
             .opacity(isVisible ? 1 : 0)
         }
-        .sensoryFeedback(.success, trigger: confettiTrigger)
+        .conditionalHaptic(.success, trigger: confettiTrigger)
         .onAppear {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
                 isVisible = true

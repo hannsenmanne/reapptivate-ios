@@ -83,7 +83,7 @@ struct MicroModulesList: View {
                 }
             }
         }
-        .sensoryFeedback(.success, trigger: markReadTrigger)
+        .conditionalHaptic(.success, trigger: markReadTrigger)
     }
 
     private func markRead(key: String) async {

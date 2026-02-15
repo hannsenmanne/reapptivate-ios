@@ -11,6 +11,7 @@ struct TrainingScheduleCard: View {
     @State private var showError = false
     @State private var hasExistingSchedule = false
     @State private var saveTask: Task<Void, Never>?
+    @State private var dayToggleTrigger = false
 
     // Mo=2, Di=3, Mi=4, Do=5, Fr=6, Sa=7, So=1
     private let days: [(id: Int, label: String)] = [
@@ -104,6 +105,7 @@ struct TrainingScheduleCard: View {
             }
         }
         .cardStyle()
+        .conditionalHaptic(.selection, trigger: dayToggleTrigger)
         .animation(.easeInOut(duration: 0.2), value: showSaved)
         .animation(.easeInOut(duration: 0.2), value: isSaving)
         .task {
@@ -119,6 +121,7 @@ struct TrainingScheduleCard: View {
         } else {
             selectedDays.insert(day)
         }
+        dayToggleTrigger.toggle()
         scheduleAutoSave()
     }
 

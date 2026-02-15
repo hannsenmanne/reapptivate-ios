@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 struct ProgressTab: View {
     let viewModel: DashboardViewModel?
@@ -20,6 +21,7 @@ struct ProgressTab: View {
             // Stats Section
             if let stats = viewModel?.progressStats, stats.totalSessions > 0 {
                 ProgressStatsGrid(stats: stats)
+                    .coachMark(key: "progress_stats", message: "Ihre Trainingsstatistiken auf einen Blick", edge: .bottom)
                     .cardEntryAnimation(index: 1)
             } else {
                 EmptyStateView(
@@ -29,13 +31,19 @@ struct ProgressTab: View {
                 )
             }
 
+            // Pain Trend Chart
+            if let painLevels = viewModel?.progressStats?.recentPainLevels, !painLevels.isEmpty {
+                PainTrendChart(painLevels: painLevels)
+                    .cardEntryAnimation(index: 2)
+            }
+
             // Phase Timeline
             if let phaseVM {
                 if phaseVM.isLoading {
                     SkeletonView(variant: .card(height: 140))
                 } else {
                     PhaseTimelineView(records: phaseVM.phaseHistory)
-                        .cardEntryAnimation(index: 2)
+                        .cardEntryAnimation(index: 3)
                 }
             }
         }

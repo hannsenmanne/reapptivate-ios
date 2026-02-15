@@ -9,6 +9,7 @@ enum DesignTokens {
     static let badgeRadius: CGFloat = 8
     static let smallRadius: CGFloat = 8
     static let iconRadius: CGFloat = 10
+    static let progressBarRadius: CGFloat = 4
 
     static let cardShadowColor = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark

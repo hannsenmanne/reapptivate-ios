@@ -99,7 +99,7 @@ struct StreakCard: View {
                 }
                 .disabled(isFreezing)
                 .opacity(isFreezing ? 0.6 : 1)
-                .sensoryFeedback(.success, trigger: hapticTrigger)
+                .conditionalHaptic(.success, trigger: hapticTrigger)
                 .accessibilityLabel("Serie retten, 1 Frost-Token verwenden")
             }
         }

@@ -30,6 +30,10 @@ struct ProgressLogSheet: View {
         _repsCompleted = State(initialValue: exercise.exercise.reps)
     }
 
+    private var hasUnsavedChanges: Bool {
+        painLevel != 0 || !notes.isEmpty || setsCompleted != exercise.exercise.sets || repsCompleted != exercise.exercise.reps
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -135,7 +139,8 @@ struct ProgressLogSheet: View {
                 }
             }
         }
-        .sensoryFeedback(.success, trigger: submitSuccessTrigger)
+        .conditionalHaptic(.success, trigger: submitSuccessTrigger)
+        .interactiveDismissDisabled(hasUnsavedChanges)
     }
 
     private func submit() async {

@@ -64,7 +64,7 @@ struct PacingTimerView: View {
                 completedView
             }
         }
-        .sensoryFeedback(.selection, trigger: activitySelectionTrigger)
+        .conditionalHaptic(.selection, trigger: activitySelectionTrigger)
         .onDisappear {
             resetTimer()
         }

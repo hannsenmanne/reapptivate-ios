@@ -112,7 +112,7 @@ struct FearHierarchyBuilderView: View {
                     Button("Abbrechen") { dismiss() }
                 }
             }
-            .sensoryFeedback(.success, trigger: saveTrigger)
+            .conditionalHaptic(.success, trigger: saveTrigger)
         }
     }
 

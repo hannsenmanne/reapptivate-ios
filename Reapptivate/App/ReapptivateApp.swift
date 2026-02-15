@@ -7,6 +7,7 @@ struct ReapptivateApp: App {
     @State private var apiClient = APIClient()
     @State private var networkMonitor = NetworkMonitor()
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
+    @AppStorage("hapticsEnabled") private var hapticsEnabled = true
 
     var body: some Scene {
         WindowGroup {
@@ -14,6 +15,7 @@ struct ReapptivateApp: App {
                 .environment(appState)
                 .environment(apiClient)
                 .environment(networkMonitor)
+                .environment(\.hapticsEnabled, hapticsEnabled)
                 .preferredColorScheme(appearanceMode.colorScheme)
                 .onAppear {
                     apiClient.onTokenExpired = {
@@ -38,6 +40,7 @@ struct RootView: View {
     @State private var authViewModel: AuthViewModel?
     @State private var syncService: SyncService?
     @AppStorage("hasSeenWelcome") private var hasSeenWelcome = false
+    @AppStorage("hasSeenWalkthrough") private var hasSeenWalkthrough = false
 
     var body: some View {
         Group {
@@ -52,6 +55,8 @@ struct RootView: View {
                     NeckShoulderScreeningView(isEmbedded: true)
                 } else if !hasSeenWelcome {
                     ScreeningCompleteView()
+                } else if !hasSeenWalkthrough {
+                    FeatureWalkthroughView()
                 } else {
                     DashboardView()
                 }
@@ -68,6 +73,18 @@ struct RootView: View {
                 appState.onLogout = { [self] in
                     service.clearAllData()
                     hasSeenWelcome = false
+                    hasSeenWalkthrough = false
+
+                    // Clear all user-specific AppStorage keys
+                    let defaults = UserDefaults.standard
+                    defaults.removeObject(forKey: "hasCompletedFirstExercise")
+                    defaults.removeObject(forKey: "milestones_shown")
+                    defaults.removeObject(forKey: "milestones_dates")
+
+                    // Clear all coachmark keys (dynamically keyed)
+                    for key in defaults.dictionaryRepresentation().keys where key.hasPrefix("coachmark_") {
+                        defaults.removeObject(forKey: key)
+                    }
                 }
             }
 

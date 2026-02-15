@@ -8,6 +8,7 @@ struct AemScreeningView: View {
 
     @State private var viewModel: AemScreeningViewModel?
     @State private var showResult = false
+    @State private var selectionTrigger = false
 
     var body: some View {
         NavigationStack {
@@ -43,7 +44,7 @@ struct AemScreeningView: View {
                                 selectedValue: vm.responses[item.id],
                                 onSelect: { value in
                                     vm.selectResponse(itemId: item.id, value: value)
-                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    selectionTrigger.toggle()
                                 }
                             )
                             .id(item.id) // Force re-render on question change
@@ -102,6 +103,7 @@ struct AemScreeningView: View {
                 }
             }
             .interactiveDismissDisabled()
+            .conditionalHaptic(.selection, trigger: selectionTrigger)
             .alert("Fehler", isPresented: Binding(
                 get: { refreshError != nil },
                 set: { if !$0 { refreshError = nil } }

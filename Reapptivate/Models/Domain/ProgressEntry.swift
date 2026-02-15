@@ -36,4 +36,5 @@ struct ProgressStats {
     let lastSevenDays: Int
     let averagePain: Double
     let compliancePercent: Double
+    let recentPainLevels: [StatsResponse.RecentPain]?
 }
