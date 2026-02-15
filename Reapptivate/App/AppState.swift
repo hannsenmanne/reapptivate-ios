@@ -27,6 +27,14 @@ final class AppState {
         isNeck && currentUser?.neckScreeningCompleted != true
     }
 
+    var isNeckShoulderTension: Bool {
+        currentUser?.tendinopathyType == .neckShoulderTension
+    }
+
+    var needsNeckShoulderScreening: Bool {
+        isNeckShoulderTension && currentUser?.neckShoulderScreeningCompleted != true
+    }
+
     func handleLogin(user: UserProfile) {
         currentUser = user
         isAuthenticated = true

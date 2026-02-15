@@ -126,6 +126,12 @@ struct NeckFocusAreasResponse: Codable {
     let focusAreas: [NdiFocusArea]
 }
 
+// MARK: - Neck-Shoulder Screening Wrappers
+
+struct NeckShoulderScreeningResponse: Codable {
+    let screening: NeckShoulderScreeningResult
+}
+
 // MARK: - Custom Exercise Wrappers
 
 struct CustomExercisesResponse: Codable {

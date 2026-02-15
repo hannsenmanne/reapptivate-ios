@@ -133,6 +133,20 @@ enum APIEndpoints {
         post("neck/micro-modules/\(completionId)/complete")
     }
 
+    // MARK: - Neck-Shoulder Screening
+
+    static func neckShoulderConfig() -> URLRequest {
+        get("neck-shoulder/config")
+    }
+
+    static func submitNeckShoulderScreening(body: NeckShoulderScreeningSubmission) -> URLRequest {
+        post("neck-shoulder/screening", encodable: body)
+    }
+
+    static func neckShoulderResult() -> URLRequest {
+        get("neck-shoulder/result")
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {

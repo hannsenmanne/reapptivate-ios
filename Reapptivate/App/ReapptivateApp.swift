@@ -47,6 +47,8 @@ struct RootView: View {
                     AemScreeningView(isEmbedded: true)
                 } else if appState.needsNeckScreening {
                     NeckScreeningView(isRescreening: false, isEmbedded: true)
+                } else if appState.needsNeckShoulderScreening {
+                    NeckShoulderScreeningView(isEmbedded: true)
                 } else {
                     DashboardView()
                 }

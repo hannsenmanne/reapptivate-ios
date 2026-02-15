@@ -17,6 +17,10 @@ struct UserProfile: Codable, Identifiable {
     var neckScreeningCompleted: Bool?
     let neckSubtype: String?
 
+    // Neck-Shoulder Tension
+    var neckShoulderScreeningCompleted: Bool?
+    var neckShoulderSeverity: NeckShoulderSeverity?
+
     // Populated from phase-status endpoint, not from /me
     var adaptivePhase: Int?
     var ndiSeverity: NdiSeverityGrade?
