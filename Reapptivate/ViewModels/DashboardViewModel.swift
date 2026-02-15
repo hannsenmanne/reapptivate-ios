@@ -65,6 +65,16 @@ final class DashboardViewModel {
                 appState?.currentUser?.ndiSeverity = NdiSeverityGrade.from(ndiScore: result.ndiScore)
             }
         }
+
+        // Populate neckShoulderSeverity from screening result
+        if appState?.isNeckShoulderTension == true, appState?.currentUser?.neckShoulderSeverity == nil {
+            let nstResult: NeckShoulderScreeningResponse? = await loadSafely { [apiClient] in
+                try await apiClient.request(APIEndpoints.neckShoulderResult())
+            }
+            if let result = nstResult?.screening {
+                appState?.currentUser?.neckShoulderSeverity = result.severity
+            }
+        }
         if let s = stats?.stats {
             progressStats = ProgressStats(
                 totalSessions: s.totalSessions,

@@ -190,6 +190,12 @@ struct NstMicroPauseStatsResponse: Codable {
     let microPauseStats: NstMicroPauseStats
 }
 
+// MARK: - Neck-Shoulder Adjustment Wrappers
+
+struct NstAdjustmentsResponse: Codable {
+    let adjustments: [NstPlanAdjustment]
+}
+
 // MARK: - Custom Exercise Wrappers
 
 struct CustomExercisesResponse: Codable {

@@ -218,6 +218,12 @@ enum APIEndpoints {
         return get("neck-shoulder/micro-pause/stats", query: query)
     }
 
+    // MARK: - Neck-Shoulder Adjustments
+
+    static func nstAdjustments(limit: Int = 50) -> URLRequest {
+        get("neck-shoulder/adjustments", query: ["limit": "\(limit)"])
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {

@@ -212,3 +212,15 @@ struct NstMicroPauseStats: Codable {
     let completed: Int
     let target: Int
 }
+
+// MARK: - Plan Adjustments
+
+struct NstPlanAdjustment: Codable, Identifiable {
+    let id: String
+    let ruleId: String
+    let action: String
+    let payload: [String: AnyCodable]?
+    let applied: Bool
+    let appliedAt: String?
+    let createdAt: String
+}
