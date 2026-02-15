@@ -207,3 +207,31 @@ extension View {
         modifier(InfoBoxStyle(color: color))
     }
 }
+
+// MARK: - Card Entry Animation (Staggered fade-in)
+
+struct CardEntryAnimation: ViewModifier {
+    let index: Int
+
+    @State private var isVisible = false
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(isVisible ? 1 : 0)
+            .offset(y: isVisible ? 0 : 12)
+            .onAppear {
+                withAnimation(
+                    .easeOut(duration: 0.35)
+                    .delay(Double(index) * 0.06)
+                ) {
+                    isVisible = true
+                }
+            }
+    }
+}
+
+extension View {
+    func cardEntryAnimation(index: Int) -> some View {
+        modifier(CardEntryAnimation(index: index))
+    }
+}

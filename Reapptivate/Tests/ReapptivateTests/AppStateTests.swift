@@ -109,4 +109,32 @@ final class AppStateTests: XCTestCase {
         state.handleLogin(user: TestFixtures.neckUser(screened: true))
         XCTAssertFalse(state.needsNeckScreening)
     }
+
+    // MARK: - isNeckShoulderTension
+
+    func testIsNeckShoulderTensionTrue() {
+        let state = AppState()
+        state.handleLogin(user: TestFixtures.nstUser())
+        XCTAssertTrue(state.isNeckShoulderTension)
+    }
+
+    func testIsNeckShoulderTensionFalse() {
+        let state = AppState()
+        state.handleLogin(user: TestFixtures.userProfile(tendinopathyType: .achilles))
+        XCTAssertFalse(state.isNeckShoulderTension)
+    }
+
+    // MARK: - needsNeckShoulderScreening
+
+    func testNeedsNeckShoulderScreeningTrue() {
+        let state = AppState()
+        state.handleLogin(user: TestFixtures.nstUser(screened: false))
+        XCTAssertTrue(state.needsNeckShoulderScreening)
+    }
+
+    func testNeedsNeckShoulderScreeningFalse() {
+        let state = AppState()
+        state.handleLogin(user: TestFixtures.nstUser(screened: true))
+        XCTAssertFalse(state.needsNeckShoulderScreening)
+    }
 }

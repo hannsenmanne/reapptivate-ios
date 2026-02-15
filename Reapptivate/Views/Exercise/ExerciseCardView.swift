@@ -40,7 +40,7 @@ struct ExerciseCardView: View {
                     if isCompleted {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.painGreen)
-                            .font(.title3)
+                            .font(.appTitle3)
                             .accessibilityLabel("Abgeschlossen")
                     } else {
                         Image(systemName: "chevron.right")

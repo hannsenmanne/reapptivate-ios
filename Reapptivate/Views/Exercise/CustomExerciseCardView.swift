@@ -33,7 +33,7 @@ struct CustomExerciseCardView: View {
                 if isCompleted {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.painGreen)
-                        .font(.title3)
+                        .font(.appTitle3)
                 }
             }
 

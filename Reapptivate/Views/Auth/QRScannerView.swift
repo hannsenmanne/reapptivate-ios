@@ -48,7 +48,7 @@ struct QRScannerView: View {
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 32)
 
-                        Button("Einstellungen offnen") {
+                        Button("Einstellungen öffnen") {
                             if let url = URL(string: UIApplication.openSettingsURLString) {
                                 UIApplication.shared.open(url)
                             }

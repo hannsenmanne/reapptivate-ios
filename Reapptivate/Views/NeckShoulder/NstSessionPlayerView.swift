@@ -36,7 +36,7 @@ struct NstSessionPlayerView: View {
         switch sessionType {
         case "strength_a": "Kraft A"
         case "strength_b": "Kraft B"
-        case "mobility": "Mobilitat"
+        case "mobility": "Mobilität"
         default: sessionType
         }
     }
@@ -130,7 +130,7 @@ struct NstSessionPlayerView: View {
         if let exercise = currentExercise {
             VStack(spacing: 20) {
                 // Exercise counter
-                Text("Ubung \(currentIndex + 1) von \(exercises.count)")
+                Text("Übung \(currentIndex + 1) von \(exercises.count)")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
 
@@ -174,7 +174,7 @@ struct NstSessionPlayerView: View {
                             .font(.system(size: 48, weight: .bold, design: .rounded))
                             .foregroundStyle(accentColor)
                             .contentTransition(.numericText())
-                        Button("Uberspringen") {
+                        Button("Überspringen") {
                             stopRest()
                             advanceSet()
                         }
@@ -198,7 +198,7 @@ struct NstSessionPlayerView: View {
                 Button {
                     nextExercise()
                 } label: {
-                    Text("Ubung uberspringen")
+                    Text("Übung überspringen")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -323,7 +323,7 @@ private struct SimplePainDisplay: View {
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                 Spacer()
-                Text("Starkster Schmerz")
+                Text("Stärkster Schmerz")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
             }

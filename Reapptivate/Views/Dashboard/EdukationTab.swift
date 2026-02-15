@@ -43,9 +43,18 @@ struct LbpMicroModulesSection: View {
     var body: some View {
         Group {
             if let vm = viewModel {
-                MicroModulesList(viewModel: vm)
+                if let error = vm.errorMessage, vm.microModules.isEmpty {
+                    InlineErrorView(message: error) {
+                        Task {
+                            vm.errorMessage = nil
+                            await vm.loadMicroModules()
+                        }
+                    }
+                } else {
+                    MicroModulesList(viewModel: vm)
+                }
             } else {
-                ProgressView()
+                ProgressView("Module laden...")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
             }

@@ -45,7 +45,7 @@ struct NotificationPrefsView: View {
                     Button {
                         notificationService.openSettings()
                     } label: {
-                        Text("In Einstellungen offnen")
+                        Text("In Einstellungen öffnen")
                     }
                 }
             }

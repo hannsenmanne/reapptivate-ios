@@ -39,8 +39,8 @@ struct TendinopathyInsightsView: View {
 
     var body: some View {
         if let viewModel, viewModel.isLoading {
-            ProgressView("Daten laden...")
-                .padding(.vertical, 40)
+            ProgressSkeletonView()
+                .padding(.vertical, 8)
         } else if let stats = viewModel?.progressStats {
             VStack(spacing: 20) {
                 trainingOverviewSection(stats)

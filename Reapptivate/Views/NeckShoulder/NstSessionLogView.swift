@@ -25,7 +25,7 @@ struct NstSessionLogView: View {
         switch sessionType {
         case "strength_a": "Kraft A"
         case "strength_b": "Kraft B"
-        case "mobility": "Mobilitat"
+        case "mobility": "Mobilität"
         default: sessionType
         }
     }
@@ -57,7 +57,7 @@ struct NstSessionLogView: View {
                     if !exercises.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
-                                Text("Ubungen")
+                                Text("Übungen")
                                     .font(.appSubheadlineMedium)
                                     .foregroundStyle(.textPrimary)
                                 Spacer()
@@ -88,7 +88,7 @@ struct NstSessionLogView: View {
                                     completedExercises = Set(exercises.map(\.id))
                                 }
                             } label: {
-                                Text(completedExercises.count == exercises.count ? "Alle abwahlen" : "Alle auswahlen")
+                                Text(completedExercises.count == exercises.count ? "Alle abwählen" : "Alle auswählen")
                                     .font(.appCaption)
                                     .foregroundStyle(accentColor)
                             }
@@ -110,7 +110,7 @@ struct NstSessionLogView: View {
                         Text("Notizen (optional)")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
-                        TextField("Wie haben Sie sich gefuhlt?", text: $notes, axis: .vertical)
+                        TextField("Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
                             .font(.appBody)
                             .lineLimit(3...5)
                             .inputFieldStyle()
@@ -250,7 +250,7 @@ private struct SimplePainSlider: View {
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                 Spacer()
-                Text("Starkster Schmerz")
+                Text("Stärkster Schmerz")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
             }
@@ -277,7 +277,7 @@ private struct ExerciseCheckRow: View {
             HStack(spacing: 12) {
                 Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.appTitle3)
-                    .foregroundStyle(isCompleted ? accentColor : .gray300)
+                    .foregroundStyle(isCompleted ? accentColor : Color.gray300)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.name)

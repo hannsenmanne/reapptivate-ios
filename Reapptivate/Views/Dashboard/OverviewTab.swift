@@ -11,6 +11,7 @@ struct OverviewTab: View {
             // Stats Row
             if let user = appState.currentUser {
                 StatsRow(user: user, phaseStatus: viewModel?.phaseStatus, stats: viewModel?.progressStats)
+                    .cardEntryAnimation(index: 0)
             }
 
             // Streak Card (only for returning patients)
@@ -18,23 +19,34 @@ struct OverviewTab: View {
                 StreakCard(streak: streak, isFreezing: viewModel?.isFreezing ?? false) {
                     Task { await viewModel?.useFreezeToken() }
                 }
+                .cardEntryAnimation(index: 1)
             }
 
             // Welcome Card (new patients)
             if viewModel?.progressStats?.totalSessions == 0 {
                 WelcomeCard()
+                    .cardEntryAnimation(index: 1)
+            }
+
+            // Rest Day Card
+            if viewModel?.isRestDay == true {
+                RestDayCard()
+                    .cardEntryAnimation(index: 2)
             }
 
             // Phase Status
             if let phaseStatus = viewModel?.phaseStatus {
                 PhaseStatusQuickCard(status: phaseStatus)
+                    .cardEntryAnimation(index: 2)
             }
 
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
+                .cardEntryAnimation(index: 3)
 
             // Training Schedule
             TrainingScheduleCard()
+                .cardEntryAnimation(index: 4)
 
             // Wissen
             if let user = appState.currentUser {
@@ -43,6 +55,7 @@ struct OverviewTab: View {
                     isLbp: appState.isLbp,
                     isNeck: appState.isNeck
                 )
+                .cardEntryAnimation(index: 5)
             }
 
         }

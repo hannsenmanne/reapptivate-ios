@@ -23,7 +23,7 @@ struct NstMobilityView: View {
                     Image(systemName: "repeat")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
-                    Text("\(section.frequencyPerDay)x taglich")
+                    Text("\(section.frequencyPerDay)x täglich")
                         .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
                 }

@@ -24,15 +24,25 @@ struct DashboardView: View {
 
                 // Tab Content
                 ScrollView {
-                    Group {
-                        if appState.isNeckShoulderTension {
-                            nstTabContent
-                        } else {
-                            defaultTabContent
+                    VStack(spacing: 0) {
+                        if let error = viewModel?.error {
+                            InlineErrorView(message: error) {
+                                Task { await loadAll() }
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.top, 12)
                         }
+
+                        Group {
+                            if appState.isNeckShoulderTension {
+                                nstTabContent
+                            } else {
+                                defaultTabContent
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
                 }
                 .refreshable {
                     await loadAll()
@@ -67,7 +77,7 @@ struct DashboardView: View {
                             }
                         } label: {
                             Image(systemName: "person.circle")
-                                .font(.title3)
+                                .font(.appTitle3)
                         }
                         .accessibilityLabel("Profil und Abmelden")
                     }
@@ -104,14 +114,18 @@ struct DashboardView: View {
     private var defaultTabContent: some View {
         switch selectedTab {
         case .overview:
-            OverviewTab(
-                viewModel: viewModel,
-                onNavigateToProgram: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        selectedTab = .program
+            if viewModel == nil || (viewModel?.isLoading == true && viewModel?.progressStats == nil) {
+                OverviewSkeletonView()
+            } else {
+                OverviewTab(
+                    viewModel: viewModel,
+                    onNavigateToProgram: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = .program
+                        }
                     }
-                }
-            )
+                )
+            }
         case .program:
             ProgramTab(exerciseVM: exerciseVM, onExerciseLogged: {
                 Task { await viewModel?.refresh() }

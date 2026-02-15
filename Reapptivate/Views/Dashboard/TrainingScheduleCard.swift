@@ -35,7 +35,7 @@ struct TrainingScheduleCard: View {
             if isLoading {
                 HStack {
                     Spacer()
-                    ProgressView()
+                    ProgressView("Zeitplan laden...")
                     Spacer()
                 }
                 .frame(height: 44)

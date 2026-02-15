@@ -52,6 +52,7 @@ extension Color {
     static let accent = adaptive(light: "10B981", dark: "34D399")
     static let textPrimary = adaptive(light: "1A1A1A", dark: "F2F2F7")
     static let textSecondary = adaptive(light: "6B7280", dark: "8E8E93")
+    static let textTertiary = adaptive(light: "9CA3AF", dark: "636366")
 
     // MARK: - Pain Level Helpers
 
@@ -111,8 +112,10 @@ extension ShapeStyle where Self == Color {
     static var accent: Color { Color.accent }
     static var textPrimary: Color { Color.textPrimary }
     static var textSecondary: Color { Color.textSecondary }
+    static var textTertiary: Color { Color.textTertiary }
 
     static var gray200: Color { Color.gray200 }
+    static var gray300: Color { Color.gray300 }
     static var gray400: Color { Color.gray400 }
 }
 

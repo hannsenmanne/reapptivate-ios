@@ -39,7 +39,7 @@ struct PhaseChangeAlert: View {
                     }
                 }
                 .padding(16)
-                .background(isProgress ? Color(hex: "1F2937") : Color.painAmber)
+                .background(isProgress ? Color.textPrimary : Color.painAmber)
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
                 .padding(.horizontal, 16)
 

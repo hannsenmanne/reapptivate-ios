@@ -73,7 +73,7 @@ struct NstProgramTab: View {
                     }
 
                     SessionStartButton(
-                        label: "Mobilitat",
+                        label: "Mobilität",
                         icon: "figure.flexibility",
                         accentColor: accentColor
                     ) {

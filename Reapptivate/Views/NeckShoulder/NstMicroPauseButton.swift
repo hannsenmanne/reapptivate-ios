@@ -49,7 +49,7 @@ struct NstMicroPauseButton: View {
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.painGreen)
                     } else {
-                        Text("Noch \(target - completed) Pausen ubrig")
+                        Text("Noch \(target - completed) Pausen übrig")
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.textSecondary)
                     }

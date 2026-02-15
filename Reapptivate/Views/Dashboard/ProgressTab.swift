@@ -14,11 +14,13 @@ struct ProgressTab: View {
                     icon: "flame.fill",
                     valueColor: .accent
                 )
+                .cardEntryAnimation(index: 0)
             }
 
             // Stats Section
             if let stats = viewModel?.progressStats, stats.totalSessions > 0 {
                 ProgressStatsGrid(stats: stats)
+                    .cardEntryAnimation(index: 1)
             } else {
                 EmptyStateView(
                     icon: "chart.line.uptrend.xyaxis",
@@ -30,11 +32,10 @@ struct ProgressTab: View {
             // Phase Timeline
             if let phaseVM {
                 if phaseVM.isLoading {
-                    ProgressView("Fortschritt laden...")
-                        .frame(maxWidth: .infinity)
-                        .padding(20)
+                    SkeletonView(variant: .card(height: 140))
                 } else {
                     PhaseTimelineView(records: phaseVM.phaseHistory)
+                        .cardEntryAnimation(index: 2)
                 }
             }
         }
@@ -96,7 +97,7 @@ struct ProgressStatCard: View {
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
-                .font(.title3)
+                .font(.appTitle3)
                 .foregroundStyle(.textSecondary)
 
             Text(value)

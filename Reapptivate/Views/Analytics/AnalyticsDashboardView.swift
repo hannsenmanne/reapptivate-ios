@@ -8,13 +8,14 @@ struct AnalyticsDashboardView: View {
     @State private var fearAnalytics: FearReductionAnalytics?
     @State private var pacingAnalytics: PacingComplianceAnalytics?
     @State private var isLoading = true
+    @State private var errorMessage: String?
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 if isLoading {
-                    ProgressView("Daten laden...")
-                        .padding(.vertical, 40)
+                    ProgressSkeletonView()
+                        .padding(.vertical, 8)
                 } else if let summary {
                     // Overview metrics
                     overviewSection(summary)
@@ -37,6 +38,11 @@ struct AnalyticsDashboardView: View {
                     if !summary.triggerFires.isEmpty {
                         triggerSection(summary.triggerFires)
                     }
+                } else if let error = errorMessage {
+                    InlineErrorView(message: error) {
+                        Task { await loadAnalytics() }
+                    }
+                    .padding(.vertical, 20)
                 } else {
                     EmptyStateView(
                         icon: "chart.bar.xaxis",
@@ -131,7 +137,7 @@ struct AnalyticsDashboardView: View {
             // Fear trend
             HStack(spacing: 16) {
                 VStack(spacing: 4) {
-                    Text("Fruhe Exp.")
+                    Text("Frühe Exp.")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Text(String(format: "%.1f", analytics.earlyAvgFear))
@@ -143,7 +149,7 @@ struct AnalyticsDashboardView: View {
                     .foregroundStyle(.painGreen)
 
                 VStack(spacing: 4) {
-                    Text("Spate Exp.")
+                    Text("Späte Exp.")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Text(String(format: "%.1f", analytics.lateAvgFear))
@@ -236,7 +242,7 @@ struct AnalyticsDashboardView: View {
 
     private func triggerSection(_ fires: [TriggerFireCount]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Ausgeloste Regeln")
+            Text("Ausgelöste Regeln")
                 .font(.appSubheadlineMedium)
                 .foregroundStyle(.textPrimary)
 
@@ -259,6 +265,7 @@ struct AnalyticsDashboardView: View {
 
     private func loadAnalytics() async {
         isLoading = true
+        errorMessage = nil
         do {
             summary = try await apiClient.request(APIEndpoints.analyticsSummary())
 
@@ -272,6 +279,7 @@ struct AnalyticsDashboardView: View {
             }
         } catch {
             summary = nil
+            errorMessage = "Analytics konnten nicht geladen werden."
         }
         isLoading = false
     }

@@ -41,7 +41,7 @@ struct ExerciseDetailView: View {
 
                 // Parameters Card
                 VStack(spacing: 12) {
-                    ParameterRow(label: "Satze", value: "\(exercise.exercise.sets)")
+                    ParameterRow(label: "Sätze", value: "\(exercise.exercise.sets)")
                     ParameterRow(label: "Wiederholungen", value: "\(exercise.exercise.reps)")
 
                     if let holdTime = exercise.exercise.holdTime {
@@ -53,7 +53,7 @@ struct ExerciseDetailView: View {
                     }
 
                     ParameterRow(label: "Intensitat", value: exercise.exercise.intensity)
-                    ParameterRow(label: "Pause zwischen Satzen", value: "\(exercise.exercise.restBetweenSets) Sek.")
+                    ParameterRow(label: "Pause zwischen Sätzen", value: "\(exercise.exercise.restBetweenSets) Sek.")
                 }
                 .cardStyle()
 

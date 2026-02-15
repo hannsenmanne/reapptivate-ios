@@ -127,16 +127,16 @@ private struct NstProgramLinkCard: View {
                     }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Ubungsprogramm")
+                    Text("Übungsprogramm")
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
 
                     if let program {
-                        Text("Kraft \(program.strengthFrequency)x/Wo · Mobilitat \(program.mobilityFrequency)x/Tag")
+                        Text("Kraft \(program.strengthFrequency)x/Wo · Mobilität \(program.mobilityFrequency)x/Tag")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     } else {
-                        Text("Programm erstellen und Ubungen anzeigen")
+                        Text("Programm erstellen und Übungen anzeigen")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }

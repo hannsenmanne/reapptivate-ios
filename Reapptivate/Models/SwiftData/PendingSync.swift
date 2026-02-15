@@ -3,7 +3,7 @@ import SwiftData
 
 @Model
 final class PendingSync {
-    var syncId: String
+    @Attribute(.unique) var syncId: String
     var endpoint: String
     var method: String
     var body: Data?

@@ -49,7 +49,7 @@ struct NstComplianceView: View {
 
                     ComplianceRow(
                         icon: "figure.flexibility",
-                        label: "Mobilitat",
+                        label: "Mobilität",
                         completed: compliance.mobilitySessionsCompleted,
                         target: compliance.mobilitySessionsTarget,
                         accentColor: accentColor
@@ -68,7 +68,7 @@ struct NstComplianceView: View {
                 VStack(spacing: 8) {
                     Image(systemName: "chart.bar.xaxis")
                         .font(.system(size: 32))
-                        .foregroundStyle(.gray300)
+                        .foregroundStyle(Color.gray300)
                     Text("Noch keine Sitzungen diese Woche")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)

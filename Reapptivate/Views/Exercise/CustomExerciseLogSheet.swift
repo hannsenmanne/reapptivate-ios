@@ -43,7 +43,7 @@ struct CustomExerciseLogSheet: View {
                     // Sets & Reps
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Satze")
+                            Text("Sätze")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $setsCompleted, in: 0...20) {
@@ -70,7 +70,7 @@ struct CustomExerciseLogSheet: View {
                         Text("Notizen (optional)")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
-                        TextField("Wie haben Sie sich gefuhlt?", text: $notes, axis: .vertical)
+                        TextField("Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(3...5)
                     }

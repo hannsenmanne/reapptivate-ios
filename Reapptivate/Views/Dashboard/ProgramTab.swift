@@ -27,11 +27,13 @@ struct ProgramTab: View {
             // AEM Profile (LBP)
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
                 AemProfileQuickCard(subtype: subtype)
+                    .cardEntryAnimation(index: 0)
             }
 
             // NDI Profile (Neck)
             if appState.isNeck, let severity = appState.currentUser?.ndiSeverity {
                 NdiProfileQuickCard(severity: severity)
+                    .cardEntryAnimation(index: 0)
             }
 
             // Tendinopathy Profile
@@ -41,6 +43,7 @@ struct ProgramTab: View {
                     currentPhase: user.currentPhase,
                     maxPhase: user.maxPhase
                 )
+                .cardEntryAnimation(index: 0)
             }
 
             // Exercise list by phase
@@ -71,6 +74,7 @@ struct ProgramTab: View {
                                 activeSheet = .detail(exercise)
                             }
                         )
+                        .cardEntryAnimation(index: index + 1)
                     }
                 }
             } else {

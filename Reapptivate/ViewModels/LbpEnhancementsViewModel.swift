@@ -240,7 +240,7 @@ final class LbpEnhancementsViewModel {
             microModules = loadedModules.modules
             completedModuleKeys = Set(loadedCompleted.completedModules)
         } catch {
-            // Silent fail for modules
+            errorMessage = "Module konnten nicht geladen werden."
         }
     }
 

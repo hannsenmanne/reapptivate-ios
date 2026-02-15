@@ -37,6 +37,7 @@ struct RootView: View {
 
     @State private var authViewModel: AuthViewModel?
     @State private var syncService: SyncService?
+    @AppStorage("hasSeenWelcome") private var hasSeenWelcome = false
 
     var body: some View {
         Group {
@@ -49,6 +50,8 @@ struct RootView: View {
                     NeckScreeningView(isRescreening: false, isEmbedded: true)
                 } else if appState.needsNeckShoulderScreening {
                     NeckShoulderScreeningView(isEmbedded: true)
+                } else if !hasSeenWelcome {
+                    ScreeningCompleteView()
                 } else {
                     DashboardView()
                 }
@@ -62,8 +65,9 @@ struct RootView: View {
                 let service = SyncService(apiClient: apiClient, networkMonitor: networkMonitor)
                 service.setModelContext(modelContext)
                 syncService = service
-                appState.onLogout = {
+                appState.onLogout = { [self] in
                     service.clearAllData()
+                    hasSeenWelcome = false
                 }
             }
 

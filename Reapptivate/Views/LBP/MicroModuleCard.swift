@@ -97,7 +97,7 @@ struct MicroModuleCard: View {
                         } label: {
                             HStack(spacing: 6) {
                                 if isMarking {
-                                    ProgressView()
+                                    ProgressView("Modul laden...")
                                         .controlSize(.small)
                                         .tint(.white)
                                 } else {

@@ -26,7 +26,7 @@ struct NstExerciseDetailView: View {
 
                 // Parameters Card
                 VStack(spacing: 12) {
-                    NstParameterRow(label: "Satze", value: "\(exercise.sets)")
+                    NstParameterRow(label: "Sätze", value: "\(exercise.sets)")
                     NstParameterRow(label: "Wiederholungen", value: exercise.reps)
 
                     if let holdSeconds = exercise.holdSeconds {

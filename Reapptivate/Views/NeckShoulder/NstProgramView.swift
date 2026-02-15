@@ -10,7 +10,7 @@ struct NstProgramView: View {
     enum ProgramTab: String, CaseIterable {
         case strengthA = "Kraft A"
         case strengthB = "Kraft B"
-        case mobility = "Mobilitat"
+        case mobility = "Mobilität"
         case microPauses = "Mikro-Pausen"
     }
 
@@ -177,7 +177,7 @@ struct NstProgramView: View {
                 HStack(spacing: 0) {
                     statItem(value: "\(program.strengthFrequency)x", label: "Kraft/Woche")
                     Divider().frame(height: 32)
-                    statItem(value: "\(program.mobilityFrequency)x", label: "Mobilitat/Tag")
+                    statItem(value: "\(program.mobilityFrequency)x", label: "Mobilität/Tag")
                     Divider().frame(height: 32)
                     statItem(value: "\(program.microPauseIntervalMinutes)'", label: "Mikro-Pausen")
                 }
@@ -261,7 +261,7 @@ struct NstProgramView: View {
             }
         } else {
             VStack(spacing: 12) {
-                ProgressView()
+                ProgressView("Programm laden...")
                 Text("Übungen laden...")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)

@@ -15,6 +15,7 @@ final class DashboardViewModel {
     var progressStats: ProgressStats?
     var streakData: StreakData?
     var completedToday: [ProgressEntry] = []
+    var userSchedule: UserSchedule?
     var isLoading = false
     var isFreezing = false
     var error: String?
@@ -49,7 +50,11 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getStreak())
         }
 
-        let (phase, stats, today, streak) = await (phaseResult, statsResult, todayResult, streakResult)
+        async let scheduleResult: UserSchedule? = loadSafely { [apiClient] in
+            try await apiClient.request(APIEndpoints.getSchedule())
+        }
+
+        let (phase, stats, today, streak, schedule) = await (phaseResult, statsResult, todayResult, streakResult, scheduleResult)
 
         phaseStatus = phase?.phaseStatus
         if let phaseData = phase?.phaseStatus {
@@ -85,6 +90,7 @@ final class DashboardViewModel {
         }
         completedToday = today?.completedExercises ?? []
         streakData = streak
+        userSchedule = schedule
 
         // Schedule streak-ending notification if active streak
         if let streakInfo = streak, streakInfo.currentStreak > 0 {
@@ -119,6 +125,12 @@ final class DashboardViewModel {
     }
 
     // MARK: - Helpers
+
+    var isRestDay: Bool {
+        guard let schedule = userSchedule else { return false }
+        let todayWeekday = Calendar.current.component(.weekday, from: Date())
+        return !schedule.availableDays.contains(todayWeekday)
+    }
 
     func isExerciseCompletedToday(_ exerciseId: String) -> Bool {
         completedToday.contains { $0.exerciseId == exerciseId }

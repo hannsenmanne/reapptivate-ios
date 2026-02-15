@@ -53,7 +53,7 @@ struct ScheduleEditorView: View {
                     HStack {
                         Spacer()
                         if isSaving {
-                            ProgressView()
+                            ProgressView("Zeitplan laden...")
                         } else if showSaved {
                             Label("Gespeichert", systemImage: "checkmark")
                                 .foregroundStyle(.painGreen)

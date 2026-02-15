@@ -109,7 +109,7 @@ private struct NstPainTrendCard: View {
             }
 
             if painPoints.isEmpty {
-                Text("Noch keine Schmerzdaten verfugbar")
+                Text("Noch keine Schmerzdaten verfügbar")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 8)
@@ -209,7 +209,7 @@ private struct NstSessionHistoryCard: View {
         switch type {
         case "strength_a": "Kraft A"
         case "strength_b": "Kraft B"
-        case "mobility": "Mobilitat"
+        case "mobility": "Mobilität"
         case "micro_pause": "Mikro-Pause"
         default: type
         }

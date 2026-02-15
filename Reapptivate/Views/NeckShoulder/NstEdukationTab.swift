@@ -13,7 +13,7 @@ struct NstEdukationTab: View {
 
             // General Wissen cards
             if let user = appState.currentUser {
-                WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false)
+                WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: true)
             }
         }
         .padding(.bottom, 32)

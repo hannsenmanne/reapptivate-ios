@@ -5,6 +5,7 @@ struct NstAdjustmentHistoryView: View {
 
     @State private var adjustments: [NstPlanAdjustment] = []
     @State private var isLoading = true
+    @State private var errorMessage: String?
 
     let accentColor: Color
 
@@ -21,9 +22,13 @@ struct NstAdjustmentHistoryView: View {
             }
 
             if isLoading {
-                ProgressView()
+                ProgressView("Verlauf laden...")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
+            } else if let error = errorMessage {
+                InlineErrorView(message: error) {
+                    Task { await loadAdjustments() }
+                }
             } else if adjustments.isEmpty {
                 VStack(spacing: 8) {
                     Text("Keine Anpassungen")
@@ -47,11 +52,13 @@ struct NstAdjustmentHistoryView: View {
     }
 
     private func loadAdjustments() async {
+        isLoading = true
+        errorMessage = nil
         do {
             let response: NstAdjustmentsResponse = try await apiClient.request(APIEndpoints.nstAdjustments())
             adjustments = response.adjustments
         } catch {
-            // Non-critical
+            errorMessage = "Anpassungen konnten nicht geladen werden."
         }
         isLoading = false
     }

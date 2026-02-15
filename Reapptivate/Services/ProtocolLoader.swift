@@ -77,6 +77,8 @@ final class ProtocolLoader: @unchecked Sendable {
             return "lbp_\(subtype.rawValue.lowercased())"
         case .neckPain:
             return "neck_pain"
+        case .neckShoulderTension:
+            return "neck_shoulder_tension"
         }
     }
 
