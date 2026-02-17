@@ -18,12 +18,11 @@ struct AemScreeningView: View {
                         LoadingView(message: "Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         AemResultView(result: result) {
-                            if isEmbedded {
-                                // Launched as root view — refresh profile to proceed to dashboard
-                                Task { await refreshProfile() }
-                            } else {
-                                dismiss()
-                            }
+                            // Update AppState immediately - screening was successfully submitted
+                            appState.currentUser?.aemScreeningCompleted = true
+                            appState.currentUser?.aemSubtype = result.subtype
+                            // No need to refresh profile - it will sync naturally on next app launch
+                            dismiss()
                         }
                     } else if let item = vm.currentItem {
                         VStack(spacing: 0) {

@@ -19,11 +19,10 @@ struct TsiScreeningView: View {
                         LoadingView(message: "TSI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         TsiResultView(result: result) {
-                            if isEmbedded {
-                                Task { await refreshProfile() }
-                            } else {
-                                dismiss()
-                            }
+                            // Update AppState immediately - screening was successfully submitted
+                            appState.currentUser?.tsiScreeningCompleted = true
+                            // No need to refresh profile - it will sync naturally on next app launch
+                            dismiss()
                         }
                     } else if let item = vm.currentItem {
                         VStack(spacing: 0) {

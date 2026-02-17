@@ -19,11 +19,10 @@ struct NeckScreeningView: View {
                         LoadingView(message: "NDI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         NeckResultView(result: result) {
-                            if isEmbedded {
-                                Task { await refreshProfile() }
-                            } else {
-                                dismiss()
-                            }
+                            // Update AppState immediately - screening was successfully submitted
+                            appState.currentUser?.neckScreeningCompleted = true
+                            // No need to refresh profile - it will sync naturally on next app launch
+                            dismiss()
                         }
                     } else if vm.showPartTransition {
                         PartTransitionView {
