@@ -12,6 +12,9 @@ struct InsightsTab: View {
         } else if appState.isNeck {
             // Neck patients: NDI progress + focus areas
             NeckInsightsSection()
+        } else if appState.isTension {
+            // Tension patients: TSI progress + focus areas
+            TensionInsightsSection()
         } else {
             // Tendinopathy patients: training overview + phase readiness
             TendinopathyInsightsView(viewModel: viewModel, phaseVM: phaseVM)
@@ -26,6 +29,18 @@ struct NeckInsightsSection: View {
         VStack(spacing: 20) {
             NdiProgressView()
             NeckFocusAreasView()
+        }
+        .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Tension Insights
+
+struct TensionInsightsSection: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            TsiProgressView()
+            TensionFocusAreasView()
         }
         .padding(.bottom, 32)
     }

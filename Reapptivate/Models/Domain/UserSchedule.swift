@@ -1,20 +1,24 @@
 import Foundation
 
-struct UserSchedule: Codable {
-    let userId: String?
-    let availableDays: [Int]
-    let preferredTimes: [String]
-    let notificationsEnabled: Bool
+/// Response from GET/PUT /patient/schedule
+/// Backend uses JS getDay() convention: 0=Sun, 1=Mon, ..., 6=Sat
+struct ScheduleResponse: Codable, Sendable {
+    let trainingDays: [Int]
+    let isTrainingDay: Bool
+
+    /// Training days converted to iOS Calendar.component(.weekday) convention (1=Sun, 2=Mon, ..., 7=Sat)
+    var iosWeekdays: [Int] {
+        trainingDays.map { $0 + 1 }
+    }
 }
 
-struct ScheduleRequest: Codable {
-    let availableDays: [Int]
-    let preferredTimes: [String]
-    let notificationsEnabled: Bool
+/// Request body for PUT /patient/schedule (upsert)
+/// Backend expects JS getDay() convention: 0=Sun, 1=Mon, ..., 6=Sat
+struct ScheduleUpdateRequest: Codable, Sendable {
+    let trainingDays: [Int]
 
-    enum CodingKeys: String, CodingKey {
-        case availableDays = "available_days"
-        case preferredTimes = "preferred_times"
-        case notificationsEnabled = "notifications_enabled"
+    /// Create from iOS weekday convention (1-7) — converts to JS convention (0-6) for encoding
+    static func fromIOSWeekdays(_ days: [Int]) -> ScheduleUpdateRequest {
+        ScheduleUpdateRequest(trainingDays: days.map { $0 - 1 }.sorted())
     }
 }

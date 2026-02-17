@@ -17,9 +17,9 @@ struct UserProfile: Codable, Identifiable {
     var neckScreeningCompleted: Bool?
     let neckSubtype: String?
 
-    // Neck-Shoulder Tension
-    var neckShoulderScreeningCompleted: Bool?
-    var neckShoulderSeverity: NeckShoulderSeverity?
+    // Tension (Neck-Shoulder)
+    var tsiScreeningCompleted: Bool?
+    var tsiSeverity: TsiSeverityGrade?
 
     // Populated from phase-status endpoint, not from /me
     var adaptivePhase: Int?
@@ -38,6 +38,7 @@ struct UserProfile: Codable, Identifiable {
     }
 
     var maxPhase: Int {
-        tendinopathyType.isNeck ? 4 : 3
+        if tendinopathyType.isNeck || tendinopathyType.isTension { return 4 }
+        return 3
     }
 }

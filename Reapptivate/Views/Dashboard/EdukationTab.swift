@@ -24,6 +24,18 @@ struct EdukationTab: View {
                 if let user = appState.currentUser {
                     WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: true)
                 }
+            } else if appState.isTension {
+                if let severity = appState.currentUser?.tsiSeverity {
+                    TensionMicroModulesView(severity: severity)
+                } else {
+                    ProgressView("Verspannungs-Module laden...")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 32)
+                }
+
+                if let user = appState.currentUser {
+                    WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false, isTension: true)
+                }
             } else if let user = appState.currentUser {
                 WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false)
             }
@@ -75,11 +87,12 @@ struct WissenAllCardsView: View {
     let phase: Int
     let isLbp: Bool
     let isNeck: Bool
+    var isTension: Bool = false
 
     @AppStorage("readEducationCardIds") private var readCardIdsData: Data = Data()
 
     private var cards: [EducationCard] {
-        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck)
+        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension)
     }
 
     private var readCardIds: Set<String> {

@@ -31,14 +31,14 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .plantarFascia: "Plantarfaszie"
         case .lbpNonspecific: "Unspez. Rückenschmerz"
         case .neckPain: "Nackenschmerz"
-        case .neckShoulderTension: "Nacken-/Schulterverspannungen"
+        case .neckShoulderTension: "Nacken-Schulter-Verspannung"
         }
     }
 
     var isLbp: Bool { self == .lbpNonspecific }
     var isNeck: Bool { self == .neckPain }
-    var isNeckShoulderTension: Bool { self == .neckShoulderTension }
-    var isTendinopathy: Bool { !isLbp && !isNeck && !isNeckShoulderTension }
+    var isTension: Bool { self == .neckShoulderTension }
+    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension }
 }
 
 // MARK: - Exercise Type
@@ -141,6 +141,28 @@ enum NdiSeverityGrade: String, Codable {
     static func from(ndiScore: Int) -> NdiSeverityGrade {
         if ndiScore <= 14 { return .LEICHT }
         if ndiScore <= 28 { return .MITTEL }
+        return .SCHWER
+    }
+}
+
+// MARK: - TSI Severity Grade
+
+enum TsiSeverityGrade: String, Codable {
+    case LEICHT
+    case MITTEL
+    case SCHWER
+
+    var displayName: String {
+        switch self {
+        case .LEICHT: "Leicht"
+        case .MITTEL: "Mittel"
+        case .SCHWER: "Schwer"
+        }
+    }
+
+    static func from(tsiScore: Int) -> TsiSeverityGrade {
+        if tsiScore <= 16 { return .LEICHT }
+        if tsiScore <= 33 { return .MITTEL }
         return .SCHWER
     }
 }

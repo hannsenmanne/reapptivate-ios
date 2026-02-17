@@ -111,6 +111,9 @@ struct AemScreeningView: View {
                 Button("Erneut versuchen") {
                     Task { await refreshProfile() }
                 }
+                Button("Abbrechen", role: .cancel) {
+                    refreshError = nil
+                }
             } message: {
                 Text(refreshError ?? "")
             }

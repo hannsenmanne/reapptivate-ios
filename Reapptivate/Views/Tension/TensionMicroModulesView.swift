@@ -1,26 +1,19 @@
 import SwiftUI
 
-struct NstMicroModulesView: View {
+struct TensionMicroModulesView: View {
     @Environment(APIClient.self) private var apiClient
-    let severity: NeckShoulderSeverity
+    let severity: TsiSeverityGrade
 
     @State private var modules: [MicroModule] = []
     @State private var completedKeys: Set<String> = []
     @State private var markingKey: String?
     @State private var isLoading = true
     @State private var errorMessage: String?
+    @State private var markReadError: String?
     @State private var markReadTrigger = false
 
     var completedCount: Int {
         modules.filter { completedKeys.contains($0.key) }.count
-    }
-
-    private var accentColor: Color {
-        switch severity {
-        case .mild: .painGreen
-        case .moderate: .painAmber
-        case .high: .painRed
-        }
     }
 
     var body: some View {
@@ -29,9 +22,9 @@ struct NstMicroModulesView: View {
             HStack(spacing: 10) {
                 Image(systemName: "book.fill")
                     .font(.appTitle3)
-                    .foregroundStyle(accentColor)
+                    .foregroundStyle(Color.severityColor(for: severity))
                     .accessibilityHidden(true)
-                Text("Nacken-Schulter-Wissen")
+                Text("Verspannungs-Wissen")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -47,20 +40,26 @@ struct NstMicroModulesView: View {
                         Spacer()
                         Text("\(completedCount) / \(modules.count)")
                             .font(.appCaptionBold)
-                            .foregroundStyle(accentColor)
+                            .foregroundStyle(Color.severityColor(for: severity))
                     }
                     ProgressView(value: Double(completedCount), total: max(1, Double(modules.count)))
-                        .tint(accentColor)
+                        .tint(Color.severityColor(for: severity))
                         .accessibilityLabel("Modulfortschritt")
                         .accessibilityValue("\(completedCount) von \(modules.count) abgeschlossen")
                 }
                 .padding(12)
-                .background(accentColor.opacity(0.06))
+                .background(Color.severityColor(for: severity).opacity(0.06))
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
             }
 
+            if let markError = markReadError {
+                InlineErrorView(message: markError) {
+                    markReadError = nil
+                }
+            }
+
             if isLoading {
-                ProgressView("Module laden...")
+                ProgressView("Verspannungs-Module laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(message: error) {
@@ -73,7 +72,7 @@ struct NstMicroModulesView: View {
                     .padding(.vertical, 16)
             } else {
                 ForEach(modules) { module in
-                    NstModuleCard(
+                    TensionModuleCard(
                         module: module,
                         isCompleted: completedKeys.contains(module.key),
                         isMarking: markingKey == module.key,
@@ -92,8 +91,8 @@ struct NstMicroModulesView: View {
         isLoading = true
         errorMessage = nil
         do {
-            async let modsResp: MicroModulesResponse = apiClient.request(APIEndpoints.nstMicroModules(severity: severity.rawValue))
-            async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.nstCompletedModules())
+            async let modsResp: MicroModulesResponse = apiClient.request(APIEndpoints.tensionMicroModules(severity: severity.rawValue))
+            async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.tensionCompletedModules())
 
             let (loadedModules, loadedCompleted) = try await (modsResp, completedResp)
             modules = loadedModules.modules
@@ -106,21 +105,22 @@ struct NstMicroModulesView: View {
 
     private func markRead(key: String) async {
         markingKey = key
+        markReadError = nil
         do {
-            let start: ModuleCompletionResponse = try await apiClient.request(APIEndpoints.startNstModule(key: key))
-            let _: [String: Bool] = try await apiClient.request(APIEndpoints.completeNstModule(completionId: start.completion.id))
+            let start: ModuleCompletionResponse = try await apiClient.request(APIEndpoints.startTensionModule(key: key))
+            let _: [String: Bool] = try await apiClient.request(APIEndpoints.completeTensionModule(completionId: start.completion.id))
             completedKeys.insert(key)
             markReadTrigger.toggle()
         } catch {
-            // Silent fail
+            markReadError = "Fehler beim Speichern. Bitte erneut versuchen."
         }
         markingKey = nil
     }
 }
 
-// MARK: - NST Module Card
+// MARK: - Tension Module Card
 
-struct NstModuleCard: View {
+struct TensionModuleCard: View {
     let module: MicroModule
     let isCompleted: Bool
     let isMarking: Bool

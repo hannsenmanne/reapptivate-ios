@@ -134,7 +134,7 @@ struct ScreeningCompleteView: View {
         switch user.tendinopathyType {
         case .lbpNonspecific: return "figure.walk"
         case .neckPain: return "figure.mind.and.body"
-        case .neckShoulderTension: return "figure.roll"
+        case .neckShoulderTension: return "figure.mind.and.body"
         case .tennisElbow, .golfersElbow: return "hand.raised"
         case .achilles, .plantarFascia: return "figure.run"
         case .patellar: return "figure.strengthtraining.functional"
@@ -152,7 +152,7 @@ struct ScreeningCompleteView: View {
         case .neckPain:
             return "Ihr NDI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nackenbeschwerden adressiert."
         case .neckShoulderTension:
-            return "Ihr Screening wurde ausgewertet. Sie erhalten ein gezieltes Programm gegen Nacken- und Schulterverspannungen mit Uebungen fuer Kraft, Mobilitaet und Arbeitsplatz-Pausen."
+            return "Ihr TSI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nacken-Schulter-Verspannungen adressiert."
         default:
             return "Ihr Programm wurde basierend auf Ihrer Diagnose erstellt. Es besteht aus drei Phasen, die sich an Ihren Schmerzlevel und Fortschritt anpassen."
         }
@@ -178,10 +178,10 @@ struct ScreeningCompleteView: View {
             ]
         case .neckShoulderTension:
             return [
-                "Kraft- und Mobilitaetsuebungen",
-                "Mikro-Pausen fuer den Arbeitsplatz",
-                "Progressive Belastungssteigerung",
-                "Tipps zur Bildschirmarbeit"
+                "Auf Ihren Schweregrad abgestimmte Uebungen",
+                "4 progressive Trainingsphasen",
+                "Mikro-Module fuer Verspannungen",
+                "Regelmaessige TSI-Verlaufskontrolle"
             ]
         default:
             return [

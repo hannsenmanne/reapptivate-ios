@@ -60,7 +60,7 @@ make test-ui
 make coverage
 ```
 
-**93 unit tests** in `Reapptivate/Tests/ReapptivateTests/` covering Models, Services, ViewModels, and AppState. CI runs on GitHub Actions (`.github/workflows/test.yml`) on every push/PR to main.
+**~148 unit tests** in `Reapptivate/Tests/ReapptivateTests/` covering Models, Services, ViewModels, and AppState. CI runs on GitHub Actions (`.github/workflows/test.yml`) on every push/PR to main.
 
 ### Test Architecture
 - **`MockURLProtocol`** — URLProtocol subclass intercepting all requests via static `requestHandler`. Uses `nonisolated(unsafe)` for Swift 6.0.
@@ -104,7 +104,7 @@ The ViewModel is always `Optional` and created once inside `.task`. **Exception:
 ### Environment Injection
 
 Three shared `@Observable` objects injected via SwiftUI environment from `ReapptivateApp`:
-- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `needsAemScreening`, `needsNeckScreening`
+- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `isTension`, `needsAemScreening`, `needsNeckScreening`, `needsTsiScreening`
 - `APIClient` — networking with auto JWT injection, 401 detection + logout callback, 1 retry on network failure
 - `NetworkMonitor` — NWPathMonitor wrapper for connectivity
 
@@ -118,7 +118,10 @@ RootView
 ├── LoginView (not authenticated)
 ├── AemScreeningView (LBP + screening needed)
 ├── NeckScreeningView (Neck + screening needed)
-└── DashboardView (authenticated + screened)
+├── TsiScreeningView (Tension + screening needed)
+├── ScreeningCompleteView (first login, after screening)
+├── FeatureWalkthroughView (first login, after welcome)
+└── DashboardView (authenticated + screened + onboarded)
     ├── OverviewTab — Phase status, Wissen daily card, condition info
     ├── ProgramTab — Exercise list + LBP enhancements
     ├── EdukationTab — Micro-modules (LBP/Neck) or Wissen cards (tendinopathy)
@@ -141,7 +144,9 @@ EdukationTab is always visible. InsightsTab only appears for LBP/Neck patients. 
 
 All requests: Bearer token injection, snake_case → camelCase **decoding only** (uploads use standard camelCase encoding — no `convertToSnakeCase`), ISO8601 date parsing (with/without fractional seconds), 401 → `onTokenExpired` callback, 1 retry with 2s delay **only on network errors** (not on 4xx/5xx).
 
-**Encoding gotcha**: Most backend controllers destructure camelCase from `req.body` (e.g., `exerciseId`, `painLevel`), but some use snake_case (e.g., `schedule.controller.ts` expects `available_days`). When a request fails silently (data not persisted), check the backend controller's destructuring. Fix with `CodingKeys` on the request struct.
+**Encoding gotcha**: Most backend controllers destructure camelCase from `req.body` (e.g., `exerciseId`, `painLevel`). When a request fails silently (data not persisted), check the backend controller's destructuring. Fix with `CodingKeys` on the request struct.
+
+**Schedule weekday convention**: Backend uses JS `getDay()` (0=Sun, 1=Mon, ..., 6=Sat). iOS uses `Calendar.component(.weekday)` (1=Sun, 2=Mon, ..., 7=Sat). `ScheduleResponse.iosWeekdays` converts JS→iOS (+1), `ScheduleUpdateRequest.fromIOSWeekdays()` converts iOS→JS (-1).
 
 Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappers defined in `APIResponses.swift`. **Not all responses are wrapped** — some return data directly (e.g., schedule, analytics). Always verify the actual response shape from the backend controller's `res.json(...)` call.
 
@@ -161,7 +166,7 @@ Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappe
 
 `ProtocolLoader.shared` (`@unchecked Sendable` singleton with in-memory cache) loads bundled JSON from `Resources/Protocols/`. Falls back to bundle root if subdirectory not found (XcodeGen bundles files flat). Uses `convertFromSnakeCase` key decoding. Cache is never invalidated (protocol changes require app restart).
 
-Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`).
+Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`, `.neckShoulderTension` + `.LEICHT` → `neck_shoulder_tension_leicht.json`).
 
 ## Key Gotchas
 
@@ -173,18 +178,20 @@ Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `ac
 - **Dev token must come from local backend** — local and production JWT secrets differ, so a production token won't work with `localhost:3000` and vice versa.
 - **`Color.textPrimary` flips in dark mode** (light→1A1A1A, dark→F2F2F7). Don't use it as a background with hardcoded `.white` text — use `Color.appBg` for the text instead so both adapt together. Same applies to any adaptive color used as a bg.
 - **`AnalyticsSummary` has a custom decoder** — backend sends `adjustmentStats: {total, applied}` (nested) and `triggerFireCount: {ruleId: count}` (dict), but the model exposes flat `totalAdjustments`/`appliedAdjustments` and `triggerFires: [TriggerFireCount]` (array). Don't add simple `CodingKeys` — the custom `init(from:)` handles the shape transformation.
+- **Onboarding `@AppStorage` flags** (`hasSeenWelcome`, `hasSeenWalkthrough`) must NOT be cleared on logout — they persist so returning users skip the walkthrough. Only SwiftData caches are cleared via `SyncService.clearAllData()`.
 
 ## Domain Models (Models/Domain/)
 
 - `SharedTypes.swift` — All shared enums: `TendinopathyType` (10 cases), `ExerciseType`, `AdaptationDecision`, `AemSubtype`, `NdiSeverityGrade`, `SymptomResponse`
 - `LbpTypes.swift` — Largest model file: fear hierarchies, exposure logs, pacing plans/templates/logs, plan adjustments, micro-modules, analytics types, `AnyCodable`
 - `NeckTypes.swift` — NDI screening config/results, focus areas, NDI history
+- `TensionTypes.swift` — TSI screening config/results/submission, focus areas, history, micro-modules
 - `AemTypes.swift` — AEM screening config/results/submission
 - `AuthTypes.swift` — Login/onboarding request/response types
 - `APIResponses.swift` — All backend response wrappers (`{user:}`, `{plan:}`, `{hierarchy:}`, etc.)
 - `EducationCard.swift` — Education card model + `EducationCardLoader` singleton (loads bundled `education-cards.json`, filters by phase/condition, daily rotation via day-of-year modulo)
 - `CustomExercise.swift` — Custom exercises added by users (displayed in ProgramTab alongside protocol exercises)
-- `UserSchedule.swift` — Training schedule data
+- `UserSchedule.swift` — `ScheduleResponse` (GET response with `trainingDays` + `isTrainingDay`, JS weekday convention) and `ScheduleUpdateRequest` (PUT body, with `fromIOSWeekdays()` converter)
 
 ## Design System
 
@@ -253,7 +260,7 @@ Views that load data from API use a consistent pattern:
 - **Tendinopathies** (8 types): 3-phase progression (Isometric → HSR → Eccentric)
 - **LBP**: AEM subtyping → FAR (fear hierarchy + exposure), DER/EER (pacing plans + timer), AR (standard)
 - **Neck Pain**: NDI severity (LEICHT/MITTEL/SCHWER), 4-phase progression
-
+- **Tension**: TSI severity grading (LEICHT/MITTEL/SCHWER), 4-phase progression, micro-modules
 ### Pain-Adaptive Phase Progression
 After every progress log, backend returns `AdaptationResult` with potential phase change (PROGRESS/HOLD/REGRESS). Frontend shows `PhaseChangeAlert` overlay.
 
@@ -262,6 +269,7 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 - DER/EER: Pacing plans + baseline tracking + pacing timer with audio cues
 - All LBP: Micro-modules (psychoeducation) — shown in EdukationTab via `LbpMicroModulesSection`
 - Neck: Focus areas + NDI rescreening + neck micro-modules — shown in EdukationTab via `NeckMicroModulesView`
+- Tension: Focus areas + TSI rescreening + tension micro-modules — shown in EdukationTab via `TensionMicroModulesView`
 - Tendinopathy (no micro-modules): EdukationTab shows all `EducationCard`s for current phase via `WissenAllCardsView`
 
 ## Backend API (~50 endpoints)
@@ -272,6 +280,7 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 | Patient | `/patient/*` | Profile, progress, phase status, education, schedule |
 | AEM | `/aem/*` | AEM screening (LBP subtyping) |
 | Neck | `/neck/*` | NDI screening, focus areas, micro-modules |
+| Tension | `/tension/*` | TSI screening, focus areas, micro-modules |
 | LBP | `/lbp-enhancements/*` | Fear hierarchy, pacing, micro-modules, analytics |
 | Config | `/config/*` | Feature flags, health check |
 
@@ -279,7 +288,12 @@ All endpoint definitions are in `Services/Networking/APIEndpoints.swift`.
 
 ## Test Accounts
 
-Same as web app: `FARtest@test.com` / `DERtest@test.com` / `EERtest@test.com` / `ARtest@test.com` — Password: `Test1234!`
+All passwords: `Test1234!`
+
+- **LBP subtypes**: `FARtest@test.com`, `DERtest@test.com`, `EERtest@test.com`, `ARtest@test.com`
+- **Neck**: `NECKtest@test.com`
+- **Tension**: `TENSIONtest@test.com` (generic), or `TSIleichtTest@test.com`, `TSImittelTest@test.com`, `TSIschwerTest@test.com` (severity-specific)
+- **Tendinopathies**: `ACHtest@test.com` (Achilles), `PATtest@test.com` (Patellar), `TEtest@test.com` (Tennis Elbow), `GEtest@test.com` (Golfer's Elbow), `RCtest@test.com` (Rotator Cuff), `GLUtest@test.com` (Gluteal), `PHtest@test.com` (Plantar/Heel), `PFtest@test.com` (Plantar Fasciitis)
 
 ## Companion Web App
 

@@ -14,8 +14,8 @@ enum TestFixtures {
         aemScreeningCompleted: Bool? = nil,
         aemSubtype: AemSubtype? = nil,
         neckScreeningCompleted: Bool? = nil,
-        neckShoulderScreeningCompleted: Bool? = nil,
-        neckShoulderSeverity: NeckShoulderSeverity? = nil,
+        tsiScreeningCompleted: Bool? = nil,
+        tsiSeverity: TsiSeverityGrade? = nil,
         adaptivePhase: Int? = nil,
         ndiSeverity: NdiSeverityGrade? = nil
     ) -> UserProfile {
@@ -31,8 +31,8 @@ enum TestFixtures {
             aemSubtype: aemSubtype,
             neckScreeningCompleted: neckScreeningCompleted,
             neckSubtype: nil,
-            neckShoulderScreeningCompleted: neckShoulderScreeningCompleted,
-            neckShoulderSeverity: neckShoulderSeverity,
+            tsiScreeningCompleted: tsiScreeningCompleted,
+            tsiSeverity: tsiSeverity,
             adaptivePhase: adaptivePhase,
             ndiSeverity: ndiSeverity
         )
@@ -54,12 +54,130 @@ enum TestFixtures {
         )
     }
 
-    static func nstUser(screened: Bool = true) -> UserProfile {
+    static func tensionUser(screened: Bool = true, severity: TsiSeverityGrade = .LEICHT) -> UserProfile {
         userProfile(
             tendinopathyType: .neckShoulderTension,
-            neckShoulderScreeningCompleted: screened,
-            neckShoulderSeverity: .moderate
+            tsiScreeningCompleted: screened,
+            tsiSeverity: severity
         )
+    }
+
+    // MARK: - TSI Screening Fixtures
+
+    static func makeTsiScreeningConfig() -> TsiScreeningConfig {
+        TsiScreeningConfig(
+            version: "1.0",
+            items: (1...10).map { i in
+                TsiScreeningItem(
+                    id: "tsi-\(i)",
+                    textDe: "Frage \(i): Wie stark ist Ihre Verspannung?",
+                    options: [
+                        TsiScreeningOption(value: 0, labelDe: "Gar nicht"),
+                        TsiScreeningOption(value: 1, labelDe: "Etwas"),
+                        TsiScreeningOption(value: 2, labelDe: "Mäßig"),
+                        TsiScreeningOption(value: 3, labelDe: "Ziemlich"),
+                        TsiScreeningOption(value: 4, labelDe: "Sehr stark"),
+                        TsiScreeningOption(value: 5, labelDe: "Extrem"),
+                    ]
+                )
+            }
+        )
+    }
+
+    static func makeTsiScreeningResult(score: Int = 12) -> TsiScreeningResult {
+        let category = TsiSeverityGrade.from(tsiScore: score)
+        return TsiScreeningResult(
+            id: "tsi-result-1",
+            tsiScore: score,
+            tsiCategory: category.rawValue,
+            createdAt: "2025-06-01T10:00:00.000Z"
+        )
+    }
+
+    static func makeTsiFocusArea() -> TsiFocusArea {
+        TsiFocusArea(
+            domainId: "shoulder_tension",
+            domainLabel: "Schulterverspannung",
+            score: 3,
+            maxScore: 5,
+            dailyTips: ["Schultern regelmäßig kreisen", "Pausen einlegen"]
+        )
+    }
+
+    static func makeTsiHistoryEntry() -> TsiHistoryEntry {
+        TsiHistoryEntry(
+            id: "tsi-hist-1",
+            tsiScore: 18,
+            tsiCategory: "MITTEL",
+            severityGrade: .MITTEL,
+            createdAt: "2025-06-01T10:00:00.000Z"
+        )
+    }
+
+    // MARK: - TSI JSON Response Helpers
+
+    static func tsiScreeningConfigResponseData() -> Data {
+        let json: [String: Any] = [
+            "version": "1.0",
+            "items": (1...10).map { i in
+                [
+                    "id": "tsi-\(i)",
+                    "textDe": "Frage \(i): Wie stark ist Ihre Verspannung?",
+                    "options": [
+                        ["value": 0, "labelDe": "Gar nicht"],
+                        ["value": 1, "labelDe": "Etwas"],
+                        ["value": 2, "labelDe": "Mäßig"],
+                        ["value": 3, "labelDe": "Ziemlich"],
+                        ["value": 4, "labelDe": "Sehr stark"],
+                        ["value": 5, "labelDe": "Extrem"],
+                    ]
+                ] as [String: Any]
+            },
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func tsiScreeningResultResponseData(score: Int = 12) -> Data {
+        let category = TsiSeverityGrade.from(tsiScore: score).rawValue
+        let json: [String: Any] = [
+            "screening": [
+                "id": "tsi-result-1",
+                "tsiScore": score,
+                "tsiCategory": category,
+                "createdAt": "2025-06-01T10:00:00.000Z",
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func tsiFocusAreasResponseData() -> Data {
+        let json: [String: Any] = [
+            "focusAreas": [
+                [
+                    "domainId": "shoulder_tension",
+                    "domainLabel": "Schulterverspannung",
+                    "score": 3,
+                    "maxScore": 5,
+                    "dailyTips": ["Schultern regelmäßig kreisen", "Pausen einlegen"],
+                ]
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func tsiHistoryResponseData() -> Data {
+        let json: [String: Any] = [
+            "history": [
+                [
+                    "id": "tsi-hist-1",
+                    "tsiScore": 18,
+                    "tsiCategory": "MITTEL",
+                    "severityGrade": "MITTEL",
+                    "createdAt": "2025-06-01T10:00:00.000Z",
+                ]
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
     }
 
     // MARK: - ProgressEntry

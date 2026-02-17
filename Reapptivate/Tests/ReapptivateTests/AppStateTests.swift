@@ -110,31 +110,48 @@ final class AppStateTests: XCTestCase {
         XCTAssertFalse(state.needsNeckScreening)
     }
 
-    // MARK: - isNeckShoulderTension
+    // MARK: - isTension
 
-    func testIsNeckShoulderTensionTrue() {
+    func testIsTensionTrueForNeckShoulderTension() {
         let state = AppState()
-        state.handleLogin(user: TestFixtures.nstUser())
-        XCTAssertTrue(state.isNeckShoulderTension)
+        state.handleLogin(user: TestFixtures.tensionUser())
+        XCTAssertTrue(state.isTension)
     }
 
-    func testIsNeckShoulderTensionFalse() {
+    func testIsTensionFalseForOtherConditions() {
+        let state = AppState()
+
+        state.handleLogin(user: TestFixtures.userProfile(tendinopathyType: .achilles))
+        XCTAssertFalse(state.isTension)
+
+        state.handleLogin(user: TestFixtures.userProfile(tendinopathyType: .lbpNonspecific))
+        XCTAssertFalse(state.isTension)
+
+        state.handleLogin(user: TestFixtures.neckUser())
+        XCTAssertFalse(state.isTension)
+    }
+
+    // MARK: - needsTsiScreening
+
+    func testNeedsTsiScreeningTrueForTensionNotScreened() {
+        let state = AppState()
+        state.handleLogin(user: TestFixtures.tensionUser(screened: false))
+        XCTAssertTrue(state.needsTsiScreening)
+    }
+
+    func testNeedsTsiScreeningFalseWhenScreened() {
+        let state = AppState()
+        state.handleLogin(user: TestFixtures.tensionUser(screened: true))
+        XCTAssertFalse(state.needsTsiScreening)
+    }
+
+    func testNeedsTsiScreeningFalseForNonTension() {
         let state = AppState()
         state.handleLogin(user: TestFixtures.userProfile(tendinopathyType: .achilles))
-        XCTAssertFalse(state.isNeckShoulderTension)
+        XCTAssertFalse(state.needsTsiScreening)
+
+        state.handleLogin(user: TestFixtures.neckUser())
+        XCTAssertFalse(state.needsTsiScreening)
     }
 
-    // MARK: - needsNeckShoulderScreening
-
-    func testNeedsNeckShoulderScreeningTrue() {
-        let state = AppState()
-        state.handleLogin(user: TestFixtures.nstUser(screened: false))
-        XCTAssertTrue(state.needsNeckShoulderScreening)
-    }
-
-    func testNeedsNeckShoulderScreeningFalse() {
-        let state = AppState()
-        state.handleLogin(user: TestFixtures.nstUser(screened: true))
-        XCTAssertFalse(state.needsNeckShoulderScreening)
-    }
 }

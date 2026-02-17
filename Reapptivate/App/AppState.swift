@@ -19,6 +19,10 @@ final class AppState {
         currentUser?.tendinopathyType == .neckPain
     }
 
+    var isTension: Bool {
+        currentUser?.tendinopathyType == .neckShoulderTension
+    }
+
     var needsAemScreening: Bool {
         isLbp && currentUser?.aemScreeningCompleted != true
     }
@@ -27,12 +31,8 @@ final class AppState {
         isNeck && currentUser?.neckScreeningCompleted != true
     }
 
-    var isNeckShoulderTension: Bool {
-        currentUser?.tendinopathyType == .neckShoulderTension
-    }
-
-    var needsNeckShoulderScreening: Bool {
-        isNeckShoulderTension && currentUser?.neckShoulderScreeningCompleted != true
+    var needsTsiScreening: Bool {
+        isTension && currentUser?.tsiScreeningCompleted != true
     }
 
     func handleLogin(user: UserProfile) {

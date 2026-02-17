@@ -71,7 +71,8 @@ struct OverviewTab: View {
                 WissenCardView(
                     phase: user.currentPhase,
                     isLbp: appState.isLbp,
-                    isNeck: appState.isNeck
+                    isNeck: appState.isNeck,
+                    isTension: appState.isTension
                 )
                 .cardEntryAnimation(index: 8)
             }

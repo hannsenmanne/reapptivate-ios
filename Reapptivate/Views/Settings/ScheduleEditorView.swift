@@ -79,31 +79,12 @@ struct ScheduleEditorView: View {
     private func loadSchedule() async {
         isLoading = true
         do {
-            let schedule: UserSchedule = try await apiClient.request(APIEndpoints.getSchedule())
-            selectedDays = Set(schedule.availableDays)
-            // Parse time from preferredTimes
-            if let time = schedule.preferredTimes.first {
-                let parts = time.split(separator: ":")
-                if parts.count >= 2,
-                   let hour = Int(parts[0]),
-                   let minute = Int(parts[1]) {
-                    var dateComponents = DateComponents()
-                    dateComponents.hour = hour
-                    dateComponents.minute = minute
-                    if let date = Calendar.current.date(from: dateComponents) {
-                        reminderTime = date
-                    }
-                }
-            }
+            let schedule: ScheduleResponse = try await apiClient.request(APIEndpoints.getSchedule())
+            // Convert JS weekday (0-6) to iOS weekday (1-7) for display
+            selectedDays = Set(schedule.iosWeekdays)
         } catch {
-            // Default: Mon/Wed/Fri at 9:00
+            // Default: Mon/Wed/Fri (iOS convention)
             selectedDays = [2, 4, 6]
-            var components = DateComponents()
-            components.hour = 9
-            components.minute = 0
-            if let date = Calendar.current.date(from: components) {
-                reminderTime = date
-            }
         }
         isLoading = false
     }
@@ -113,16 +94,12 @@ struct ScheduleEditorView: View {
         let calendar = Calendar.current
         let hour = calendar.component(.hour, from: reminderTime)
         let minute = calendar.component(.minute, from: reminderTime)
-        let timeString = String(format: "%02d:%02d", hour, minute)
 
-        let request = ScheduleRequest(
-            availableDays: Array(selectedDays).sorted(),
-            preferredTimes: [timeString],
-            notificationsEnabled: true
-        )
+        // Convert iOS weekdays (1-7) to JS convention (0-6) for backend
+        let body = ScheduleUpdateRequest.fromIOSWeekdays(Array(selectedDays))
 
         do {
-            let _: UserSchedule = try await apiClient.request(APIEndpoints.updateSchedule(body: request))
+            let _: ScheduleResponse = try await apiClient.request(APIEndpoints.updateSchedule(body: body))
 
             // Update notifications
             await NotificationService.shared.scheduleReminders(
@@ -135,17 +112,9 @@ struct ScheduleEditorView: View {
             try? await Task.sleep(for: .seconds(2))
             showSaved = false
         } catch {
-            // Try create instead of update
-            do {
-                let _: UserSchedule = try await apiClient.request(APIEndpoints.createSchedule(body: request))
-                showSaved = true
-                try? await Task.sleep(for: .seconds(2))
-                showSaved = false
-            } catch {
-                showError = true
-                try? await Task.sleep(for: .seconds(2))
-                showError = false
-            }
+            showError = true
+            try? await Task.sleep(for: .seconds(2))
+            showError = false
         }
         isSaving = false
     }

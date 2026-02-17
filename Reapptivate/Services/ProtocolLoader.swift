@@ -18,9 +18,10 @@ final class ProtocolLoader: @unchecked Sendable {
     func protocolFor(
         type: TendinopathyType,
         aemSubtype: AemSubtype? = nil,
-        ndiSeverity: NdiSeverityGrade? = nil
+        ndiSeverity: NdiSeverityGrade? = nil,
+        tsiSeverity: TsiSeverityGrade? = nil
     ) -> ExerciseProtocol? {
-        let key = protocolKey(for: type, aemSubtype: aemSubtype)
+        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity)
 
         lock.lock()
         defer { lock.unlock() }
@@ -55,6 +56,8 @@ final class ProtocolLoader: @unchecked Sendable {
             return lbpPhaseName(phase)
         case .neckPain:
             return neckPhaseName(phase)
+        case .neckShoulderTension:
+            return tensionPhaseName(phase)
         default:
             return tendinopathyPhaseName(phase)
         }
@@ -62,7 +65,7 @@ final class ProtocolLoader: @unchecked Sendable {
 
     // MARK: - Private
 
-    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?) -> String {
+    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil) -> String {
         switch type {
         case .tennisElbow: return "tennis_elbow"
         case .golfersElbow: return "golfers_elbow"
@@ -78,7 +81,8 @@ final class ProtocolLoader: @unchecked Sendable {
         case .neckPain:
             return "neck_pain"
         case .neckShoulderTension:
-            return "neck_shoulder_tension"
+            let grade = tsiSeverity ?? .LEICHT
+            return "neck_shoulder_tension_\(grade.rawValue.lowercased())"
         }
     }
 
@@ -120,6 +124,16 @@ final class ProtocolLoader: @unchecked Sendable {
         case 1: "Phase 1: Stabilisation"
         case 2: "Phase 2: Belastungsaufbau"
         case 3: "Phase 3: Funktionstraining"
+        default: "Phase \(phase)"
+        }
+    }
+
+    private func tensionPhaseName(_ phase: Int) -> String {
+        switch phase {
+        case 1: "Phase 1: Entspannung"
+        case 2: "Phase 2: Mobilisation"
+        case 3: "Phase 3: Kräftigung"
+        case 4: "Phase 4: Funktionstraining"
         default: "Phase \(phase)"
         }
     }

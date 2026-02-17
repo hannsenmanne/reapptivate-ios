@@ -33,11 +33,7 @@ enum APIEndpoints {
         get("patient/schedule")
     }
 
-    static func createSchedule(body: ScheduleRequest) -> URLRequest {
-        post("patient/schedule", encodable: body)
-    }
-
-    static func updateSchedule(body: ScheduleRequest) -> URLRequest {
+    static func updateSchedule(body: ScheduleUpdateRequest) -> URLRequest {
         put("patient/schedule", encodable: body)
     }
 
@@ -133,95 +129,48 @@ enum APIEndpoints {
         post("neck/micro-modules/\(completionId)/complete")
     }
 
-    // MARK: - Neck-Shoulder Screening
+    // MARK: - Tension Screening
 
-    static func neckShoulderConfig() -> URLRequest {
-        get("neck-shoulder/config")
+    static func tensionConfig() -> URLRequest {
+        get("tension/config")
     }
 
-    static func submitNeckShoulderScreening(body: NeckShoulderScreeningSubmission) -> URLRequest {
-        post("neck-shoulder/screening", encodable: body)
+    static func submitTsiScreening(body: TsiScreeningSubmission) -> URLRequest {
+        post("tension/screening", encodable: body)
     }
 
-    static func neckShoulderResult() -> URLRequest {
-        get("neck-shoulder/result")
+    static func tensionResult() -> URLRequest {
+        get("tension/result")
     }
 
-    // MARK: - Neck-Shoulder Program
-
-    static func neckShoulderProgram() -> URLRequest {
-        get("neck-shoulder/program")
+    static func tensionHistory() -> URLRequest {
+        get("tension/history")
     }
 
-    static func neckShoulderExercises() -> URLRequest {
-        get("neck-shoulder/exercises")
+    static func tensionFocusAreas() -> URLRequest {
+        get("tension/focus-areas")
     }
 
-    static func neckShoulderWeeklyPlan(week: Int) -> URLRequest {
-        get("neck-shoulder/program/week/\(week)")
+    static func submitTsiRescreening(body: TsiScreeningSubmission) -> URLRequest {
+        post("tension/rescreening", encodable: body)
     }
 
-    static func evaluateNstProgression() -> URLRequest {
-        post("neck-shoulder/program/evaluate-progression")
-    }
-
-    static func generateNstProgram() -> URLRequest {
-        post("neck-shoulder/program/generate")
-    }
-
-    // MARK: - Neck-Shoulder Micro-Modules
-
-    static func nstMicroModules(severity: String? = nil) -> URLRequest {
+    static func tensionMicroModules(severity: String? = nil) -> URLRequest {
         var query: [String: String] = [:]
         if let severity { query["severity"] = severity }
-        return get("neck-shoulder/micro-modules", query: query)
+        return get("tension/micro-modules", query: query)
     }
 
-    static func nstCompletedModules() -> URLRequest {
-        get("neck-shoulder/micro-modules/completed")
+    static func tensionCompletedModules() -> URLRequest {
+        get("tension/micro-modules/completed")
     }
 
-    static func startNstModule(key: String) -> URLRequest {
-        post("neck-shoulder/micro-modules/\(key)/start")
+    static func startTensionModule(key: String) -> URLRequest {
+        post("tension/micro-modules/\(key)/start")
     }
 
-    static func completeNstModule(completionId: String) -> URLRequest {
-        post("neck-shoulder/micro-modules/\(completionId)/complete")
-    }
-
-    // MARK: - Neck-Shoulder Tracking
-
-    static func logNstSession(body: NeckShoulderSessionLogRequest) -> URLRequest {
-        post("neck-shoulder/session", encodable: body)
-    }
-
-    static func nstSessions(week: Int? = nil, type: String? = nil) -> URLRequest {
-        var query: [String: String] = [:]
-        if let week { query["week"] = "\(week)" }
-        if let type { query["type"] = type }
-        return get("neck-shoulder/sessions", query: query)
-    }
-
-    static func nstCompliance(week: Int? = nil) -> URLRequest {
-        var query: [String: String] = [:]
-        if let week { query["week"] = "\(week)" }
-        return get("neck-shoulder/compliance", query: query)
-    }
-
-    static func logNstMicroPause() -> URLRequest {
-        post("neck-shoulder/micro-pause")
-    }
-
-    static func nstMicroPauseStats(date: String? = nil) -> URLRequest {
-        var query: [String: String] = [:]
-        if let date { query["date"] = date }
-        return get("neck-shoulder/micro-pause/stats", query: query)
-    }
-
-    // MARK: - Neck-Shoulder Adjustments
-
-    static func nstAdjustments(limit: Int = 50) -> URLRequest {
-        get("neck-shoulder/adjustments", query: ["limit": "\(limit)"])
+    static func completeTensionModule(completionId: String) -> URLRequest {
+        post("tension/micro-modules/\(completionId)/complete")
     }
 
     // MARK: - LBP Fear Hierarchy

@@ -15,7 +15,7 @@ final class DashboardViewModel {
     var progressStats: ProgressStats?
     var completedToday: [ProgressEntry] = []
     var recentEntries: [ProgressEntry] = []
-    var userSchedule: UserSchedule?
+    var scheduleResponse: ScheduleResponse?
     var isLoading = false
     var error: String?
 
@@ -45,7 +45,7 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getTodayProgress())
         }
 
-        async let scheduleResult: UserSchedule? = loadSafely { [apiClient] in
+        async let scheduleResult: ScheduleResponse? = loadSafely { [apiClient] in
             try await apiClient.request(APIEndpoints.getSchedule())
         }
 
@@ -70,15 +70,16 @@ final class DashboardViewModel {
             }
         }
 
-        // Populate neckShoulderSeverity from screening result
-        if appState?.isNeckShoulderTension == true, appState?.currentUser?.neckShoulderSeverity == nil {
-            let nstResult: NeckShoulderScreeningResponse? = await loadSafely { [apiClient] in
-                try await apiClient.request(APIEndpoints.neckShoulderResult())
+        // Populate tsiSeverity for tension patients from screening result
+        if appState?.isTension == true, appState?.currentUser?.tsiSeverity == nil {
+            let tsiResult: TsiScreeningResponse? = await loadSafely { [apiClient] in
+                try await apiClient.request(APIEndpoints.tensionResult())
             }
-            if let result = nstResult?.screening {
-                appState?.currentUser?.neckShoulderSeverity = result.severity
+            if let result = tsiResult?.screening {
+                appState?.currentUser?.tsiSeverity = TsiSeverityGrade.from(tsiScore: result.tsiScore)
             }
         }
+
         if let s = stats?.stats {
             progressStats = ProgressStats(
                 totalSessions: s.totalSessions,
@@ -90,7 +91,7 @@ final class DashboardViewModel {
         }
         completedToday = today?.completedExercises ?? []
         recentEntries = entries?.entries ?? []
-        userSchedule = schedule
+        scheduleResponse = schedule
 
         isLoading = false
     }
@@ -102,9 +103,8 @@ final class DashboardViewModel {
     // MARK: - Helpers
 
     var isRestDay: Bool {
-        guard let schedule = userSchedule else { return false }
-        let todayWeekday = Calendar.current.component(.weekday, from: Date())
-        return !schedule.availableDays.contains(todayWeekday)
+        guard let schedule = scheduleResponse else { return false }
+        return !schedule.isTrainingDay
     }
 
     func isExerciseCompletedToday(_ exerciseId: String) -> Bool {

@@ -141,21 +141,12 @@ struct TrainingScheduleCard: View {
     private func loadSchedule() async {
         isLoading = true
         do {
-            let schedule: UserSchedule = try await apiClient.request(APIEndpoints.getSchedule())
-            selectedDays = Set(schedule.availableDays)
+            let schedule: ScheduleResponse = try await apiClient.request(APIEndpoints.getSchedule())
+            // Convert JS weekday (0-6) to iOS weekday (1-7) for display
+            selectedDays = Set(schedule.iosWeekdays)
             hasExistingSchedule = true
-
-            if let time = schedule.preferredTimes.first {
-                let parts = time.split(separator: ":")
-                if parts.count >= 2,
-                   let hour = Int(parts[0]),
-                   let minute = Int(parts[1]),
-                   let date = Calendar.current.date(from: DateComponents(hour: hour, minute: minute)) {
-                    reminderTime = date
-                }
-            }
         } catch {
-            // Defaults: Mon/Wed/Fri at 9:00
+            // Defaults: Mon/Wed/Fri (iOS convention)
             selectedDays = [2, 4, 6]
             hasExistingSchedule = false
         }
@@ -171,21 +162,13 @@ struct TrainingScheduleCard: View {
         let calendar = Calendar.current
         let hour = calendar.component(.hour, from: reminderTime)
         let minute = calendar.component(.minute, from: reminderTime)
-        let timeString = String(format: "%02d:%02d", hour, minute)
 
-        let body = ScheduleRequest(
-            availableDays: Array(selectedDays).sorted(),
-            preferredTimes: [timeString],
-            notificationsEnabled: true
-        )
+        // Convert iOS weekdays (1-7) to JS convention (0-6) for backend
+        let body = ScheduleUpdateRequest.fromIOSWeekdays(Array(selectedDays))
 
         do {
-            if hasExistingSchedule {
-                let _: UserSchedule = try await apiClient.request(APIEndpoints.updateSchedule(body: body))
-            } else {
-                let _: UserSchedule = try await apiClient.request(APIEndpoints.createSchedule(body: body))
-                hasExistingSchedule = true
-            }
+            let _: ScheduleResponse = try await apiClient.request(APIEndpoints.updateSchedule(body: body))
+            hasExistingSchedule = true
 
             // Request notification permission if needed, then schedule
             let notifService = NotificationService.shared

@@ -9,6 +9,7 @@ struct NeckMicroModulesView: View {
     @State private var markingKey: String?
     @State private var isLoading = true
     @State private var errorMessage: String?
+    @State private var markReadError: String?
     @State private var markReadTrigger = false
 
     var completedCount: Int {
@@ -49,6 +50,12 @@ struct NeckMicroModulesView: View {
                 .padding(12)
                 .background(Color.severityColor(for: severity).opacity(0.06))
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
+            }
+
+            if let markError = markReadError {
+                InlineErrorView(message: markError) {
+                    markReadError = nil
+                }
             }
 
             if isLoading {
@@ -98,13 +105,14 @@ struct NeckMicroModulesView: View {
 
     private func markRead(key: String) async {
         markingKey = key
+        markReadError = nil
         do {
             let start: ModuleCompletionResponse = try await apiClient.request(APIEndpoints.startNeckModule(key: key))
             let _: [String: Bool] = try await apiClient.request(APIEndpoints.completeNeckModule(completionId: start.completion.id))
             completedKeys.insert(key)
             markReadTrigger.toggle()
         } catch {
-            // Silent fail
+            markReadError = "Fehler beim Speichern. Bitte erneut versuchen."
         }
         markingKey = nil
     }

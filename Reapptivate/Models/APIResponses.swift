@@ -126,74 +126,18 @@ struct NeckFocusAreasResponse: Codable {
     let focusAreas: [NdiFocusArea]
 }
 
-// MARK: - Neck-Shoulder Screening Wrappers
+// MARK: - Tension Screening Wrappers
 
-struct NeckShoulderScreeningResponse: Codable {
-    let screening: NeckShoulderScreeningResult
+struct TsiScreeningResponse: Codable {
+    let screening: TsiScreeningResult
 }
 
-// MARK: - Neck-Shoulder Program Wrappers
-
-struct NeckShoulderProgramResponse: Codable {
-    let program: NeckShoulderProgram
-    let weeklySchedule: NeckShoulderWeeklyPlan?
+struct TsiHistoryResponse: Codable {
+    let history: [TsiHistoryEntry]
 }
 
-struct NeckShoulderExercisesResponse: Codable {
-    let programA: NeckShoulderExerciseConfig.ProgramSection
-    let programB: NeckShoulderExerciseConfig.ProgramSection
-    let dailyMobility: NeckShoulderExerciseConfig.MobilitySection
-    let microPauses: NeckShoulderExerciseConfig.MicroPauseSection
-}
-
-struct NeckShoulderProgressionResponse: Codable {
-    let progression: NeckShoulderProgressionResult
-}
-
-// MARK: - Neck-Shoulder Tracking Wrappers
-
-struct NstSessionLogResponse: Codable {
-    let session: NeckShoulderSessionLog
-    let triggerEvaluation: NstTriggerEvaluation?
-}
-
-struct NstTriggerEvaluation: Codable {
-    let matchedRules: [NstMatchedRule]?
-    let adjustmentsCreated: Int?
-    let modulesRecommended: [String]?
-
-    struct NstMatchedRule: Codable {
-        let ruleId: String
-        let ruleName: String
-        let reason: String
-    }
-}
-
-struct NstSessionsResponse: Codable {
-    let sessions: [NeckShoulderSessionLog]
-}
-
-struct NstComplianceResponse: Codable {
-    let compliance: NeckShoulderComplianceStats
-}
-
-struct NstMicroPauseLogResponse: Codable {
-    let microPause: NstMicroPauseEntry
-
-    struct NstMicroPauseEntry: Codable {
-        let id: String
-        let completedAt: String
-    }
-}
-
-struct NstMicroPauseStatsResponse: Codable {
-    let microPauseStats: NstMicroPauseStats
-}
-
-// MARK: - Neck-Shoulder Adjustment Wrappers
-
-struct NstAdjustmentsResponse: Codable {
-    let adjustments: [NstPlanAdjustment]
+struct TsiFocusAreasResponse: Codable {
+    let focusAreas: [TsiFocusArea]
 }
 
 // MARK: - Custom Exercise Wrappers

@@ -51,8 +51,8 @@ struct RootView: View {
                     AemScreeningView(isEmbedded: true)
                 } else if appState.needsNeckScreening {
                     NeckScreeningView(isRescreening: false, isEmbedded: true)
-                } else if appState.needsNeckShoulderScreening {
-                    NeckShoulderScreeningView(isEmbedded: true)
+                } else if appState.needsTsiScreening {
+                    TsiScreeningView(isRescreening: false, isEmbedded: true)
                 } else if !hasSeenWelcome {
                     ScreeningCompleteView()
                 } else if !hasSeenWalkthrough {
@@ -70,21 +70,8 @@ struct RootView: View {
                 let service = SyncService(apiClient: apiClient, networkMonitor: networkMonitor)
                 service.setModelContext(modelContext)
                 syncService = service
-                appState.onLogout = { [self] in
+                appState.onLogout = {
                     service.clearAllData()
-                    hasSeenWelcome = false
-                    hasSeenWalkthrough = false
-
-                    // Clear all user-specific AppStorage keys
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "hasCompletedFirstExercise")
-                    defaults.removeObject(forKey: "milestones_shown")
-                    defaults.removeObject(forKey: "milestones_dates")
-
-                    // Clear all coachmark keys (dynamically keyed)
-                    for key in defaults.dictionaryRepresentation().keys where key.hasPrefix("coachmark_") {
-                        defaults.removeObject(forKey: key)
-                    }
                 }
             }
 

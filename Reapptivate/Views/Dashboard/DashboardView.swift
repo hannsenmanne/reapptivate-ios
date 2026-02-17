@@ -19,7 +19,7 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: !appState.isNeckShoulderTension
+                    showInsights: true
                 )
 
                 // Tab Content
@@ -34,11 +34,7 @@ struct DashboardView: View {
                         }
 
                         Group {
-                            if appState.isNeckShoulderTension {
-                                nstTabContent
-                            } else {
-                                defaultTabContent
-                            }
+                            defaultTabContent
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 16)
@@ -141,40 +137,6 @@ struct DashboardView: View {
             )
         case .insights:
             InsightsTab(viewModel: viewModel, phaseVM: phaseVM)
-        }
-    }
-
-    // MARK: - NST Tab Content
-
-    @ViewBuilder
-    private var nstTabContent: some View {
-        let severity = appState.currentUser?.neckShoulderSeverity ?? .moderate
-        switch selectedTab {
-        case .overview:
-            NstDashboardOverview(
-                dashboardVM: viewModel,
-                severity: severity,
-                onNavigateToProgram: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        selectedTab = .program
-                    }
-                }
-            )
-        case .program:
-            NstProgramTab(severity: severity, onSessionLogged: {
-                Task { await viewModel?.refresh() }
-            })
-        case .edukation:
-            NstEdukationTab(severity: severity)
-        case .progress:
-            NstProgressView(
-                severity: severity,
-                dashboardVM: viewModel,
-                phaseVM: phaseVM
-            )
-        case .insights:
-            // NST doesn't have a separate insights tab
-            EmptyView()
         }
     }
 

@@ -1,13 +1,13 @@
 import SwiftUI
 
-struct NeckScreeningView: View {
+struct TsiScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
 
     let isRescreening: Bool
     var isEmbedded = false
-    @State private var viewModel: NeckScreeningViewModel?
+    @State private var viewModel: TsiScreeningViewModel?
     @State private var showResult = false
     @State private var selectionTrigger = false
 
@@ -16,18 +16,14 @@ struct NeckScreeningView: View {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "NDI-Fragebogen laden...")
+                        LoadingView(message: "TSI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
-                        NeckResultView(result: result) {
+                        TsiResultView(result: result) {
                             if isEmbedded {
                                 Task { await refreshProfile() }
                             } else {
                                 dismiss()
                             }
-                        }
-                    } else if vm.showPartTransition {
-                        PartTransitionView {
-                            vm.continueToPartB()
                         }
                     } else if let item = vm.currentItem {
                         VStack(spacing: 0) {
@@ -38,9 +34,6 @@ struct NeckScreeningView: View {
                                 .padding(.top, 8)
 
                             HStack {
-                                Text("Teil \(vm.currentPart)")
-                                    .font(.appCaptionMedium)
-                                    .foregroundStyle(.accent)
                                 Spacer()
                                 Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
                                     .font(.appCaption)
@@ -50,7 +43,7 @@ struct NeckScreeningView: View {
                             .padding(.top, 4)
 
                             // Question
-                            NeckQuestionView(
+                            TsiQuestionView(
                                 item: item,
                                 selectedValue: vm.responses[item.id],
                                 onSelect: { value in
@@ -100,11 +93,11 @@ struct NeckScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "NDI-Rescreening" : "NDI-Screening")
+            .navigationTitle(isRescreening ? "TSI-Rescreening" : "TSI-Screening")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    if let vm = viewModel, (vm.currentItemIndex > 0 || (vm.currentPart == "B" && !vm.isRescreening)) && !showResult {
+                    if let vm = viewModel, vm.currentItemIndex > 0 && !showResult {
                         Button {
                             vm.goBack()
                         } label: {
@@ -130,7 +123,7 @@ struct NeckScreeningView: View {
             }
         }
         .task {
-            let vm = NeckScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
+            let vm = TsiScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()
         }
@@ -144,44 +137,6 @@ struct NeckScreeningView: View {
             appState.handleLogin(user: response.user)
         } catch {
             refreshError = "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
-        }
-    }
-}
-
-// MARK: - Part Transition
-
-struct PartTransitionView: View {
-    let onContinue: () -> Void
-
-    var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.painGreen)
-
-            Text("Teil A abgeschlossen!")
-                .font(.appTitle2)
-                .foregroundStyle(.textPrimary)
-
-            Text("Jetzt folgt Teil B: Der Neck Disability Index (NDI) bewertet die Auswirkung Ihrer Nackenschmerzen auf den Alltag.")
-                .font(.appBody)
-                .foregroundStyle(.textSecondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-
-            Button {
-                onContinue()
-            } label: {
-                Text("Weiter zu Teil B")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-            }
-            .buttonStyle(.accentFilled)
-            .padding(.horizontal, 24)
-
-            Spacer()
         }
     }
 }

@@ -29,12 +29,20 @@ final class SharedTypesTests: XCTestCase {
         XCTAssertFalse(TendinopathyType.patellar.isNeck)
     }
 
-    func testIsTendinopathyExcludesLbpAndNeck() {
+    func testIsTendinopathyExcludesLbpNeckAndTension() {
         XCTAssertFalse(TendinopathyType.lbpNonspecific.isTendinopathy)
         XCTAssertFalse(TendinopathyType.neckPain.isTendinopathy)
+        XCTAssertFalse(TendinopathyType.neckShoulderTension.isTendinopathy)
         XCTAssertTrue(TendinopathyType.achilles.isTendinopathy)
         XCTAssertTrue(TendinopathyType.tennisElbow.isTendinopathy)
         XCTAssertTrue(TendinopathyType.rotatorCuff.isTendinopathy)
+    }
+
+    func testIsTensionOnlyForNeckShoulderTension() {
+        XCTAssertTrue(TendinopathyType.neckShoulderTension.isTension)
+        XCTAssertFalse(TendinopathyType.neckPain.isTension)
+        XCTAssertFalse(TendinopathyType.lbpNonspecific.isTension)
+        XCTAssertFalse(TendinopathyType.achilles.isTension)
     }
 
     func testTendinopathyTypeDisplayNames() {
@@ -58,6 +66,52 @@ final class SharedTypesTests: XCTestCase {
     func testNdiSeverityFromScoreBoundary29Plus() {
         XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 29), .SCHWER)
         XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 50), .SCHWER)
+    }
+
+    // MARK: - TsiSeverityGrade
+
+    func testTsiSeverityFromScore_Leicht() {
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 0), .LEICHT)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 10), .LEICHT)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 16), .LEICHT)
+    }
+
+    func testTsiSeverityFromScore_Mittel() {
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 17), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 25), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 33), .MITTEL)
+    }
+
+    func testTsiSeverityFromScore_Schwer() {
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 34), .SCHWER)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 42), .SCHWER)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 50), .SCHWER)
+    }
+
+    func testTsiSeverityFromScore_EdgeCases() {
+        // Boundary at 16/17
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 16), .LEICHT)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 17), .MITTEL)
+        // Boundary at 33/34
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 33), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 34), .SCHWER)
+    }
+
+    func testTsiSeverityDisplayNames() {
+        XCTAssertEqual(TsiSeverityGrade.LEICHT.displayName, "Leicht")
+        XCTAssertEqual(TsiSeverityGrade.MITTEL.displayName, "Mittel")
+        XCTAssertEqual(TsiSeverityGrade.SCHWER.displayName, "Schwer")
+    }
+
+    func testTsiSeverityGradeCodable() throws {
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+
+        for grade in [TsiSeverityGrade.LEICHT, .MITTEL, .SCHWER] {
+            let data = try encoder.encode(grade)
+            let decoded = try decoder.decode(TsiSeverityGrade.self, from: data)
+            XCTAssertEqual(decoded, grade)
+        }
     }
 
     // MARK: - AemSubtype

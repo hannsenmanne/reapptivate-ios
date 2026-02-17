@@ -82,6 +82,14 @@ extension Color {
         case .SCHWER: return .severitySchwer
         }
     }
+
+    static func severityColor(for severity: TsiSeverityGrade) -> Color {
+        switch severity {
+        case .LEICHT: return .severityLeicht
+        case .MITTEL: return .severityMittel
+        case .SCHWER: return .severitySchwer
+        }
+    }
 }
 
 // MARK: - ShapeStyle convenience (enables .foregroundStyle(.textPrimary) syntax)
