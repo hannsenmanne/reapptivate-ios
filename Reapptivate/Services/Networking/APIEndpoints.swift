@@ -334,7 +334,9 @@ private extension APIEndpoints {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 30
         do {
-            request.httpBody = try JSONEncoder().encode(encodable)
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            request.httpBody = try encoder.encode(encodable)
         } catch {
             Log.api.error("Failed to encode POST body for \(path): \(error)")
         }
@@ -360,7 +362,9 @@ private extension APIEndpoints {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 30
         do {
-            request.httpBody = try JSONEncoder().encode(encodable)
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            request.httpBody = try encoder.encode(encodable)
         } catch {
             Log.api.error("Failed to encode PUT body for \(path): \(error)")
         }
