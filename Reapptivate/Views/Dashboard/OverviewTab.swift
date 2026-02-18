@@ -59,18 +59,22 @@ struct OverviewTab: View {
                     .cardEntryAnimation(index: 4)
             }
 
+            // Work Timer (LBP / Neck / Tension only)
+            WorkTimerCard()
+                .cardEntryAnimation(index: 5)
+
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
-                .cardEntryAnimation(index: 5)
+                .cardEntryAnimation(index: 6)
 
             // Training Schedule
             TrainingScheduleCard()
-                .cardEntryAnimation(index: 6)
+                .cardEntryAnimation(index: 7)
 
             // Compliance Calendar
             if let entries = viewModel?.recentEntries, !entries.isEmpty {
                 ComplianceCalendarCard(entries: entries)
-                    .cardEntryAnimation(index: 7)
+                    .cardEntryAnimation(index: 8)
             }
 
             // Wissen
@@ -81,7 +85,7 @@ struct OverviewTab: View {
                     isNeck: appState.isNeck,
                     isTension: appState.isTension
                 )
-                .cardEntryAnimation(index: 8)
+                .cardEntryAnimation(index: 9)
             }
 
         }

@@ -140,6 +140,24 @@ struct TsiFocusAreasResponse: Codable {
     let focusAreas: [TsiFocusArea]
 }
 
+// MARK: - Work Timer Wrappers
+
+struct WorkTimerSettingsResponse: Codable {
+    let settings: WorkTimerSettings
+}
+
+struct WorkTimerExercisesResponse: Codable {
+    let exercises: [WorkTimerBreakExercise]
+}
+
+struct WorkTimerSummaryResponse: Codable {
+    let summary: WorkTimerDaySummary
+}
+
+struct WorkTimerHistoryResponse: Codable {
+    let history: [WorkTimerDaySummary]
+}
+
 // MARK: - Custom Exercise Wrappers
 
 struct CustomExercisesResponse: Codable {

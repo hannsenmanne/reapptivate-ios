@@ -281,6 +281,32 @@ enum APIEndpoints {
         get("lbp-enhancements/analytics/pacing-compliance")
     }
 
+    // MARK: - Work Timer
+
+    static func getWorkTimerSettings() -> URLRequest {
+        get("work-timer/settings")
+    }
+
+    static func updateWorkTimerSettings(body: WorkTimerSettings) -> URLRequest {
+        put("work-timer/settings", encodable: body)
+    }
+
+    static func getWorkTimerExercises() -> URLRequest {
+        get("work-timer/exercises")
+    }
+
+    static func logWorkTimerBreak(body: WorkTimerBreakLog) -> URLRequest {
+        post("work-timer/break-log", encodable: body)
+    }
+
+    static func getWorkTimerTodaySummary() -> URLRequest {
+        get("work-timer/summary/today")
+    }
+
+    static func getWorkTimerHistory() -> URLRequest {
+        get("work-timer/summary/history")
+    }
+
     // MARK: - Custom Exercises
 
     static func customExercises() -> URLRequest {

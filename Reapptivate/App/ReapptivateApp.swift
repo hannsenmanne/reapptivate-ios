@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 @main
 struct ReapptivateApp: App {
@@ -8,6 +9,10 @@ struct ReapptivateApp: App {
     @State private var networkMonitor = NetworkMonitor()
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
+
+    init() {
+        registerNotificationCategories()
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -89,6 +94,29 @@ struct RootView: View {
                 Task { await syncService?.drainQueue() }
             }
         }
+    }
+}
+
+// MARK: - Notification Categories
+
+private extension ReapptivateApp {
+    func registerNotificationCategories() {
+        let startBreakAction = UNNotificationAction(
+            identifier: "START_BREAK",
+            title: "Pause starten",
+            options: .foreground
+        )
+        let skipBreakAction = UNNotificationAction(
+            identifier: "SKIP_BREAK",
+            title: "Überspringen",
+            options: []
+        )
+        let breakCategory = UNNotificationCategory(
+            identifier: "WORK_TIMER_BREAK",
+            actions: [startBreakAction, skipBreakAction],
+            intentIdentifiers: []
+        )
+        UNUserNotificationCenter.current().setNotificationCategories([breakCategory])
     }
 }
 

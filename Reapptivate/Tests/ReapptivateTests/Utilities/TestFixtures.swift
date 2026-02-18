@@ -277,6 +277,103 @@ enum TestFixtures {
         )
     }
 
+    // MARK: - Work Timer Fixtures
+
+    static func makeWorkTimerSettings() -> WorkTimerSettings {
+        WorkTimerSettings(
+            startTime: "08:00",
+            endTime: "17:00",
+            breakIntervalMinutes: 60,
+            breakDurationMinutes: 3,
+            isEnabled: true
+        )
+    }
+
+    static func makeWorkTimerExercise(
+        id: String = "wt_test_1",
+        name: String = "Test-Übung",
+        category: String = "mobility"
+    ) -> WorkTimerBreakExercise {
+        WorkTimerBreakExercise(
+            id: id,
+            name: name,
+            description: "Stehen Sie auf und machen Sie die Übung.",
+            durationSeconds: 45,
+            targetConditions: ["LBP_NONSPECIFIC"],
+            minPhase: 1,
+            category: category
+        )
+    }
+
+    static func makeWorkTimerSummary(
+        breaksCompleted: Int = 6,
+        breaksSkipped: Int = 2
+    ) -> WorkTimerDaySummary {
+        let offered = breaksCompleted + breaksSkipped
+        let adherence = offered > 0 ? Double(breaksCompleted) / Double(offered) * 100 : 0
+        return WorkTimerDaySummary(
+            date: "2026-02-18",
+            totalWorkMinutes: 480,
+            breaksOffered: offered,
+            breaksCompleted: breaksCompleted,
+            breaksSkipped: breaksSkipped,
+            adherencePercent: adherence
+        )
+    }
+
+    static func workTimerSettingsResponseData() -> Data {
+        let json: [String: Any] = [
+            "settings": [
+                "startTime": "08:00",
+                "endTime": "17:00",
+                "breakIntervalMinutes": 60,
+                "breakDurationMinutes": 3,
+                "isEnabled": true,
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func workTimerExercisesResponseData() -> Data {
+        let json: [String: Any] = [
+            "exercises": [
+                [
+                    "id": "wt_lbp_pelvic_tilt",
+                    "name": "Beckenkippung im Stehen",
+                    "description": "Stehen Sie auf.",
+                    "durationSeconds": 45,
+                    "targetConditions": ["LBP_NONSPECIFIC"],
+                    "minPhase": 1,
+                    "category": "mobility",
+                ],
+                [
+                    "id": "wt_neck_chin_tuck",
+                    "name": "Chin Tucks",
+                    "description": "Ziehen Sie Ihr Kinn nach hinten.",
+                    "durationSeconds": 40,
+                    "targetConditions": ["NECK_NONSPECIFIC", "NECK_SHOULDER_TENSION"],
+                    "minPhase": 1,
+                    "category": "mobility",
+                ],
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func workTimerSummaryResponseData() -> Data {
+        let json: [String: Any] = [
+            "summary": [
+                "date": "2026-02-18",
+                "totalWorkMinutes": 480,
+                "breaksOffered": 8,
+                "breaksCompleted": 6,
+                "breaksSkipped": 2,
+                "adherencePercent": 75.0,
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
     // MARK: - JSON Response Helpers
 
     static func userResponseJSON(_ user: UserProfile? = nil) -> Data {

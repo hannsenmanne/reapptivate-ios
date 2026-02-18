@@ -1,0 +1,541 @@
+import SwiftUI
+import UserNotifications
+
+@Observable
+@MainActor
+final class WorkTimerViewModel {
+    // MARK: - Settings
+
+    var settings: WorkTimerSettings?
+    var startTime: Date = Calendar.current.date(from: DateComponents(hour: 8, minute: 0)) ?? Date()
+    var endTime: Date = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
+    var breakIntervalMinutes: Int = 60
+    var breakDurationMinutes: Int = 3
+
+    // MARK: - Timer State
+
+    var isRunning = false
+    var timerStartedAt: Date?
+    var nextBreakAt: Date?
+    var secondsUntilBreak: Int = 0
+    var breaksTakenToday: Int = 0
+    var breaksSkippedToday: Int = 0
+    var totalBreaksExpected: Int = 0
+
+    // MARK: - Break State
+
+    var isOnBreak = false
+    var breakExercises: [WorkTimerBreakExercise] = []
+    var allExercises: [WorkTimerBreakExercise] = []
+    var breakSecondsRemaining: Int = 0
+    var currentBreakNumber: Int = 0
+
+    // MARK: - Summary
+
+    var todaySummary: WorkTimerDaySummary?
+    var showingSummary = false
+
+    // MARK: - UI
+
+    var isLoading = false
+    var showingSettings = false
+    var showingBreak = false
+    var errorMessage: String?
+
+    // MARK: - Private
+
+    private let apiClient: APIClient
+    private var workTimer: Timer?
+    private var breakTimer: Timer?
+
+    private static let udKeyIsRunning = "workTimer_isRunning"
+    private static let udKeyStartedAt = "workTimer_startedAt"
+    private static let udKeyNextBreakAt = "workTimer_nextBreakAt"
+    private static let udKeyBreaksTaken = "workTimer_breaksTaken"
+    private static let udKeyBreaksSkipped = "workTimer_breaksSkipped"
+    private static let udKeyCurrentBreakNumber = "workTimer_currentBreakNumber"
+    private static let udKeyDate = "workTimer_date"
+
+    // MARK: - Init
+
+    init(apiClient: APIClient) {
+        self.apiClient = apiClient
+    }
+
+    // MARK: - Computed Properties
+
+    var progress: Double {
+        guard secondsUntilBreak >= 0 else { return 1.0 }
+        let totalInterval = Double(breakIntervalMinutes * 60)
+        guard totalInterval > 0 else { return 0 }
+        let elapsed = totalInterval - Double(secondsUntilBreak)
+        return min(1.0, max(0, elapsed / totalInterval))
+    }
+
+    var formattedTimeUntilBreak: String {
+        let minutes = max(0, secondsUntilBreak) / 60
+        let seconds = max(0, secondsUntilBreak) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+
+    var formattedWorkTime: String {
+        guard let startedAt = timerStartedAt else { return "0 Min." }
+        let elapsed = Int(Date().timeIntervalSince(startedAt))
+        let hours = elapsed / 3600
+        let minutes = (elapsed % 3600) / 60
+        if hours > 0 {
+            return "\(hours) Std. \(minutes) Min."
+        }
+        return "\(minutes) Min."
+    }
+
+    var adherencePercent: Double {
+        let offered = breaksTakenToday + breaksSkippedToday
+        guard offered > 0 else { return 0 }
+        return Double(breaksTakenToday) / Double(offered) * 100
+    }
+
+    var isWithinWorkHours: Bool {
+        let calendar = Calendar.current
+        let now = Date()
+        let startComponents = calendar.dateComponents([.hour, .minute], from: startTime)
+        let endComponents = calendar.dateComponents([.hour, .minute], from: endTime)
+
+        guard let startHour = startComponents.hour, let startMin = startComponents.minute,
+              let endHour = endComponents.hour, let endMin = endComponents.minute else {
+            return false
+        }
+
+        let nowComponents = calendar.dateComponents([.hour, .minute], from: now)
+        guard let nowHour = nowComponents.hour, let nowMin = nowComponents.minute else {
+            return false
+        }
+
+        let nowTotal = nowHour * 60 + nowMin
+        let startTotal = startHour * 60 + startMin
+        let endTotal = endHour * 60 + endMin
+
+        return nowTotal >= startTotal && nowTotal < endTotal
+    }
+
+    var formattedBreakTimeRemaining: String {
+        let minutes = max(0, breakSecondsRemaining) / 60
+        let seconds = max(0, breakSecondsRemaining) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+
+    var breakProgress: Double {
+        let total = Double(breakDurationMinutes * 60)
+        guard total > 0 else { return 0 }
+        let elapsed = total - Double(breakSecondsRemaining)
+        return min(1.0, max(0, elapsed / total))
+    }
+
+    // MARK: - API: Settings
+
+    func loadSettings() async {
+        isLoading = true
+        do {
+            let response: WorkTimerSettingsResponse = try await apiClient.request(
+                APIEndpoints.getWorkTimerSettings()
+            )
+            settings = response.settings
+            applySettings(response.settings)
+        } catch {
+            // Use defaults if no settings found
+            Log.general.info("No work timer settings found, using defaults")
+        }
+        isLoading = false
+    }
+
+    func saveSettings() async {
+        let settingsToSave = WorkTimerSettings(
+            startTime: formatTime(startTime),
+            endTime: formatTime(endTime),
+            breakIntervalMinutes: breakIntervalMinutes,
+            breakDurationMinutes: breakDurationMinutes,
+            isEnabled: true
+        )
+
+        do {
+            let response: WorkTimerSettingsResponse = try await apiClient.request(
+                APIEndpoints.updateWorkTimerSettings(body: settingsToSave)
+            )
+            settings = response.settings
+            applySettings(response.settings)
+        } catch {
+            errorMessage = "Einstellungen konnten nicht gespeichert werden."
+            Log.api.error("Failed to save work timer settings: \(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - API: Exercises
+
+    func loadExercises() async {
+        do {
+            let response: WorkTimerExercisesResponse = try await apiClient.request(
+                APIEndpoints.getWorkTimerExercises()
+            )
+            allExercises = response.exercises
+        } catch {
+            Log.api.error("Failed to load work timer exercises: \(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - Workday Control
+
+    func startWorkday() {
+        let now = Date()
+        timerStartedAt = now
+        isRunning = true
+        breaksTakenToday = 0
+        breaksSkippedToday = 0
+        currentBreakNumber = 0
+
+        calculateNextBreak(from: now)
+        startWorkTimer()
+        saveTimerState()
+        scheduleBreakNotification()
+
+        AudioService.shared.activateSession()
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    }
+
+    func stopWorkday() async {
+        isRunning = false
+        stopWorkTimer()
+        stopBreakTimer()
+        cancelPendingNotifications()
+        AudioService.shared.deactivateSession()
+
+        // Load summary from backend
+        do {
+            let response: WorkTimerSummaryResponse = try await apiClient.request(
+                APIEndpoints.getWorkTimerTodaySummary()
+            )
+            todaySummary = response.summary
+        } catch {
+            // Build local summary
+            let totalMinutes: Int
+            if let started = timerStartedAt {
+                totalMinutes = Int(Date().timeIntervalSince(started)) / 60
+            } else {
+                totalMinutes = 0
+            }
+            todaySummary = WorkTimerDaySummary(
+                date: todayDateString(),
+                totalWorkMinutes: totalMinutes,
+                breaksOffered: breaksTakenToday + breaksSkippedToday,
+                breaksCompleted: breaksTakenToday,
+                breaksSkipped: breaksSkippedToday,
+                adherencePercent: adherencePercent
+            )
+        }
+
+        showingSummary = true
+        clearTimerState()
+    }
+
+    // MARK: - Break Management
+
+    func triggerBreak() {
+        currentBreakNumber += 1
+        selectBreakExercises()
+        breakSecondsRemaining = breakDurationMinutes * 60
+        isOnBreak = true
+        showingBreak = true
+        startBreakTimer()
+
+        AudioService.shared.playAlarm()
+        UINotificationFeedbackGenerator().notificationOccurred(.warning)
+    }
+
+    func completeBreak() async {
+        isOnBreak = false
+        showingBreak = false
+        breaksTakenToday += 1
+        stopBreakTimer()
+
+        let log = WorkTimerBreakLog(
+            breakNumber: currentBreakNumber,
+            completed: true,
+            skipped: false,
+            exercisesShown: breakExercises.map(\.id)
+        )
+
+        do {
+            try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
+        } catch {
+            Log.api.error("Failed to log completed break: \(error.localizedDescription)")
+        }
+
+        calculateNextBreak(from: Date())
+        saveTimerState()
+        scheduleBreakNotification()
+
+        AudioService.shared.playComplete()
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+    }
+
+    func skipBreak() async {
+        isOnBreak = false
+        showingBreak = false
+        breaksSkippedToday += 1
+        stopBreakTimer()
+
+        let log = WorkTimerBreakLog(
+            breakNumber: currentBreakNumber,
+            completed: false,
+            skipped: true,
+            exercisesShown: breakExercises.map(\.id)
+        )
+
+        do {
+            try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
+        } catch {
+            Log.api.error("Failed to log skipped break: \(error.localizedDescription)")
+        }
+
+        calculateNextBreak(from: Date())
+        saveTimerState()
+        scheduleBreakNotification()
+    }
+
+    // MARK: - Timer Persistence
+
+    func saveTimerState() {
+        let defaults = UserDefaults.standard
+        defaults.set(isRunning, forKey: Self.udKeyIsRunning)
+        defaults.set(timerStartedAt?.timeIntervalSince1970, forKey: Self.udKeyStartedAt)
+        defaults.set(nextBreakAt?.timeIntervalSince1970, forKey: Self.udKeyNextBreakAt)
+        defaults.set(breaksTakenToday, forKey: Self.udKeyBreaksTaken)
+        defaults.set(breaksSkippedToday, forKey: Self.udKeyBreaksSkipped)
+        defaults.set(currentBreakNumber, forKey: Self.udKeyCurrentBreakNumber)
+        defaults.set(todayDateString(), forKey: Self.udKeyDate)
+    }
+
+    func restoreTimerState() {
+        let defaults = UserDefaults.standard
+
+        guard defaults.bool(forKey: Self.udKeyIsRunning) else { return }
+
+        let savedDate = defaults.string(forKey: Self.udKeyDate) ?? ""
+        guard savedDate == todayDateString() else {
+            // Different day — clear stale state
+            clearTimerState()
+            return
+        }
+
+        let startedAtInterval = defaults.double(forKey: Self.udKeyStartedAt)
+        guard startedAtInterval > 0 else {
+            clearTimerState()
+            return
+        }
+
+        timerStartedAt = Date(timeIntervalSince1970: startedAtInterval)
+        breaksTakenToday = defaults.integer(forKey: Self.udKeyBreaksTaken)
+        breaksSkippedToday = defaults.integer(forKey: Self.udKeyBreaksSkipped)
+        currentBreakNumber = defaults.integer(forKey: Self.udKeyCurrentBreakNumber)
+        isRunning = true
+
+        let nextBreakInterval = defaults.double(forKey: Self.udKeyNextBreakAt)
+        if nextBreakInterval > 0 {
+            let nextBreak = Date(timeIntervalSince1970: nextBreakInterval)
+            if nextBreak > Date() {
+                nextBreakAt = nextBreak
+            } else {
+                // Missed break(s) — log and advance
+                let missedCount = missedBreakCount(since: nextBreak)
+                breaksSkippedToday += missedCount
+                currentBreakNumber += missedCount
+                calculateNextBreak(from: Date())
+            }
+        } else {
+            calculateNextBreak(from: Date())
+        }
+
+        startWorkTimer()
+        scheduleBreakNotification()
+        AudioService.shared.activateSession()
+    }
+
+    // MARK: - Local Notifications
+
+    func scheduleBreakNotification() {
+        guard let nextBreak = nextBreakAt else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Zeit für eine Pause!"
+        content.body = "Machen Sie eine kurze Bewegungspause für Ihren Rücken und Nacken."
+        content.sound = .default
+        content.categoryIdentifier = "WORK_TIMER_BREAK"
+
+        let interval = nextBreak.timeIntervalSinceNow
+        guard interval > 0 else { return }
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+        let request = UNNotificationRequest(
+            identifier: "work_timer_break_\(currentBreakNumber + 1)",
+            content: content,
+            trigger: trigger
+        )
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error {
+                Log.notification.error("Failed to schedule break notification: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error {
+                Log.notification.error("Notification permission error: \(error.localizedDescription)")
+            }
+            Log.notification.info("Notification permission granted: \(granted)")
+        }
+    }
+
+    // MARK: - Private: Timer Management
+
+    private func startWorkTimer() {
+        stopWorkTimer()
+        workTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.workTimerTick()
+            }
+        }
+    }
+
+    private func stopWorkTimer() {
+        workTimer?.invalidate()
+        workTimer = nil
+    }
+
+    private func startBreakTimer() {
+        stopBreakTimer()
+        breakTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.breakTimerTick()
+            }
+        }
+    }
+
+    private func stopBreakTimer() {
+        breakTimer?.invalidate()
+        breakTimer = nil
+    }
+
+    private func workTimerTick() {
+        guard isRunning, !isOnBreak else { return }
+
+        if let nextBreak = nextBreakAt {
+            secondsUntilBreak = max(0, Int(nextBreak.timeIntervalSinceNow))
+
+            if secondsUntilBreak <= 0 {
+                triggerBreak()
+            }
+        }
+    }
+
+    private func breakTimerTick() {
+        guard isOnBreak else { return }
+        breakSecondsRemaining -= 1
+
+        if breakSecondsRemaining <= 0 {
+            breakSecondsRemaining = 0
+        }
+    }
+
+    // MARK: - Private: Break Calculation
+
+    private func calculateNextBreak(from date: Date) {
+        let next = date.addingTimeInterval(Double(breakIntervalMinutes * 60))
+        nextBreakAt = next
+        secondsUntilBreak = Int(next.timeIntervalSinceNow)
+    }
+
+    private func selectBreakExercises() {
+        guard !allExercises.isEmpty else {
+            breakExercises = []
+            return
+        }
+
+        // Seed based on date + break number for consistent rotation
+        let dayString = todayDateString()
+        var seed = dayString.hashValue &+ currentBreakNumber
+        seed = seed ^ (seed >> 16)
+
+        var rng = SeededRandomNumberGenerator(seed: UInt64(bitPattern: Int64(seed)))
+        let shuffled = allExercises.shuffled(using: &rng)
+        breakExercises = Array(shuffled.prefix(3))
+    }
+
+    private func missedBreakCount(since date: Date) -> Int {
+        let elapsed = Date().timeIntervalSince(date)
+        let intervalSeconds = Double(breakIntervalMinutes * 60)
+        guard intervalSeconds > 0 else { return 0 }
+        return max(0, Int(elapsed / intervalSeconds))
+    }
+
+    // MARK: - Private: Helpers
+
+    private func applySettings(_ s: WorkTimerSettings) {
+        breakIntervalMinutes = s.breakIntervalMinutes
+        breakDurationMinutes = s.breakDurationMinutes
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        if let start = formatter.date(from: s.startTime) {
+            startTime = start
+        }
+        if let end = formatter.date(from: s.endTime) {
+            endTime = end
+        }
+    }
+
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
+    }
+
+    private func todayDateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }
+
+    private func clearTimerState() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: Self.udKeyIsRunning)
+        defaults.removeObject(forKey: Self.udKeyStartedAt)
+        defaults.removeObject(forKey: Self.udKeyNextBreakAt)
+        defaults.removeObject(forKey: Self.udKeyBreaksTaken)
+        defaults.removeObject(forKey: Self.udKeyBreaksSkipped)
+        defaults.removeObject(forKey: Self.udKeyCurrentBreakNumber)
+        defaults.removeObject(forKey: Self.udKeyDate)
+    }
+
+    private func cancelPendingNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+}
+
+// MARK: - Seeded Random Number Generator
+
+private struct SeededRandomNumberGenerator: RandomNumberGenerator {
+    private var state: UInt64
+
+    init(seed: UInt64) {
+        state = seed
+    }
+
+    mutating func next() -> UInt64 {
+        // xorshift64
+        state ^= state << 13
+        state ^= state >> 7
+        state ^= state << 17
+        return state
+    }
+}
