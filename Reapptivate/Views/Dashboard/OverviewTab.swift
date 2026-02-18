@@ -15,8 +15,6 @@ struct OverviewTab: View {
         exerciseVM?.exercises.count ?? 0
     }
 
-    @State private var todaysQuote: MotivationalQuote?
-
     var body: some View {
         VStack(spacing: 20) {
             // Stats Row
@@ -25,16 +23,10 @@ struct OverviewTab: View {
                     .cardEntryAnimation(index: 0)
             }
 
-            // Motivational Quote
-            if let quote = todaysQuote {
-                MotivationalQuoteCard(quote: quote)
-                    .cardEntryAnimation(index: 1)
-            }
-
             // Welcome Card (new patients)
             if viewModel?.progressStats?.totalSessions == 0 {
                 WelcomeCard()
-                    .cardEntryAnimation(index: 2)
+                    .cardEntryAnimation(index: 1)
             }
 
             // Today's Plan
@@ -44,37 +36,37 @@ struct OverviewTab: View {
                     totalCount: totalExerciseCount,
                     onTap: { onNavigateToProgram?() }
                 )
-                .cardEntryAnimation(index: 3)
+                .cardEntryAnimation(index: 2)
             }
 
             // Rest Day Card
             if viewModel?.isRestDay == true {
                 RestDayCard()
-                    .cardEntryAnimation(index: 3)
+                    .cardEntryAnimation(index: 2)
             }
 
             // Phase Status
             if let phaseStatus = viewModel?.phaseStatus {
                 PhaseStatusQuickCard(status: phaseStatus)
-                    .cardEntryAnimation(index: 4)
+                    .cardEntryAnimation(index: 3)
             }
 
             // Work Timer (LBP / Neck / Tension only)
             WorkTimerCard()
-                .cardEntryAnimation(index: 5)
+                .cardEntryAnimation(index: 4)
 
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
-                .cardEntryAnimation(index: 6)
+                .cardEntryAnimation(index: 5)
 
             // Training Schedule
             TrainingScheduleCard()
-                .cardEntryAnimation(index: 7)
+                .cardEntryAnimation(index: 6)
 
             // Compliance Calendar
             if let entries = viewModel?.recentEntries, !entries.isEmpty {
                 ComplianceCalendarCard(entries: entries)
-                    .cardEntryAnimation(index: 8)
+                    .cardEntryAnimation(index: 7)
             }
 
             // Wissen
@@ -85,14 +77,11 @@ struct OverviewTab: View {
                     isNeck: appState.isNeck,
                     isTension: appState.isTension
                 )
-                .cardEntryAnimation(index: 9)
+                .cardEntryAnimation(index: 8)
             }
 
         }
         .padding(.bottom, 32)
-        .task {
-            todaysQuote = QuoteLoader.shared.todaysQuote()
-        }
     }
 }
 
