@@ -30,13 +30,13 @@ final class RatingService {
             .first {
             SKStoreReviewController.requestReview(in: scene)
             promptCount += 1
-            lastPromptDate = ISO8601DateFormatter().string(from: Date())
+            lastPromptDate = Date().iso8601String
         }
     }
 
     private func isCooldownExpired() -> Bool {
         guard !lastPromptDate.isEmpty else { return true }
-        guard let lastDate = ISO8601DateFormatter().date(from: lastPromptDate) else { return true }
+        guard let lastDate = Date.fromISO8601(lastPromptDate) else { return true }
         let daysSince = Calendar.current.dateComponents([.day], from: lastDate, to: Date()).day ?? 0
         return daysSince >= cooldownDays
     }

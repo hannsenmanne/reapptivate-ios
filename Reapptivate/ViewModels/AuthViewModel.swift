@@ -173,15 +173,12 @@ final class AuthViewModel {
         isOnboarding = true
         errorMessage = nil
 
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFullDate]
-
         let body: [String: Any] = [
             "email": onboardingEmail,
             "password": onboardingPassword,
             "phone": onboardingPhone,
             "timezone": "Europe/Berlin",
-            "startDate": formatter.string(from: onboardingStartDate),
+            "startDate": onboardingStartDate.dateOnlyString, // UTC "yyyy-MM-dd"
         ]
 
         do {

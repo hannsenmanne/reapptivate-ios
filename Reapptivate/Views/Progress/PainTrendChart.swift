@@ -6,7 +6,8 @@ struct PainTrendChart: View {
 
     private var chartData: [PainTrendDataPoint] {
         painLevels.compactMap { entry in
-            guard let date = parseDate(entry.date) else { return nil }
+            // Parse date-only string in UTC timezone to prevent shifts
+            guard let date = Date.fromDateOnly(entry.date) else { return nil }
             return PainTrendDataPoint(date: date, pain: entry.avgPain)
         }
         .sorted { $0.date < $1.date }
@@ -87,15 +88,6 @@ struct PainTrendChart: View {
         .cardStyle()
     }
 
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
-
-    private func parseDate(_ dateString: String) -> Date? {
-        Self.dateFormatter.date(from: dateString)
-    }
 }
 
 private struct PainTrendDataPoint: Identifiable {

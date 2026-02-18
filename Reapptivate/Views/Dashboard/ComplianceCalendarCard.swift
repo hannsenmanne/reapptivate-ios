@@ -6,12 +6,6 @@ struct ComplianceCalendarCard: View {
     private let dayLabels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
 
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
-
     private var calendarDays: [CalendarDay] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -24,11 +18,11 @@ struct ComplianceCalendarCard: View {
             return []
         }
 
-        // Count entries per day
+        // Count entries per day using UTC date-only string to prevent timezone shifts
         var countByDate: [String: Int] = [:]
         for entry in entries {
             if let date = entry.completedAtDate {
-                let key = Self.dateFormatter.string(from: date)
+                let key = date.dateOnlyString // Uses UTC timezone
                 countByDate[key, default: 0] += 1
             }
         }
@@ -37,7 +31,7 @@ struct ComplianceCalendarCard: View {
         var days: [CalendarDay] = []
         for i in 0..<28 {
             guard let date = calendar.date(byAdding: .day, value: i, to: startDate) else { continue }
-            let key = Self.dateFormatter.string(from: date)
+            let key = date.dateOnlyString // Uses UTC timezone
             let count = countByDate[key] ?? 0
             let isFuture = date > today
             days.append(CalendarDay(date: date, count: count, isFuture: isFuture))

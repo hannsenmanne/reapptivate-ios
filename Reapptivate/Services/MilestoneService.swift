@@ -82,7 +82,7 @@ final class MilestoneService {
         // Store earned date
         var dates = datesDict
         if dates[milestone.rawValue] == nil {
-            dates[milestone.rawValue] = ISO8601DateFormatter().string(from: Date())
+            dates[milestone.rawValue] = Date().iso8601String
             saveDatesDict(dates)
         }
     }
@@ -93,7 +93,6 @@ final class MilestoneService {
 
     func earnedDate(for milestone: Milestone) -> Date? {
         guard let dateString = datesDict[milestone.rawValue] else { return nil }
-        let formatter = ISO8601DateFormatter()
-        return formatter.date(from: dateString)
+        return Date.fromISO8601(dateString)
     }
 }
