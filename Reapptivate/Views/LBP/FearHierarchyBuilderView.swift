@@ -50,14 +50,16 @@ struct FearHierarchyBuilderView: View {
                     }
 
                     // Items
-                    ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                        BuilderItemCard(
-                            item: $items[index],
-                            rank: index + 1,
-                            onMoveUp: index > 0 ? { moveItem(from: index, to: index - 1) } : nil,
-                            onMoveDown: index < items.count - 1 ? { moveItem(from: index, to: index + 1) } : nil,
-                            onDelete: { items.remove(at: index) }
-                        )
+                    ForEach(items.indices, id: \.self) { index in
+                        if items.indices.contains(index) {
+                            BuilderItemCard(
+                                item: $items[index],
+                                rank: index + 1,
+                                onMoveUp: index > 0 ? { moveItem(from: index, to: index - 1) } : nil,
+                                onMoveDown: index < items.count - 1 ? { moveItem(from: index, to: index + 1) } : nil,
+                                onDelete: { items.remove(at: index) }
+                            )
+                        }
                     }
 
                     // Add button
