@@ -6,7 +6,7 @@ struct InsightsTab: View {
     let phaseVM: PhaseViewModel?
 
     var body: some View {
-        if let subtype = appState.currentUser?.aemSubtype {
+        if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
             // LBP patients: AEM analytics dashboard
             AnalyticsDashboardView(subtype: subtype)
         } else if appState.isNeck {

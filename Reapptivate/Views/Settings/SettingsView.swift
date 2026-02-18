@@ -59,6 +59,16 @@ struct SettingsView: View {
                                     .foregroundStyle(Color.severityColor(for: severity))
                             }
                         }
+
+                        if let severity = user.tsiSeverity {
+                            HStack {
+                                Text("TSI-Stufe")
+                                    .foregroundStyle(.textSecondary)
+                                Spacer()
+                                Text(severity.displayName)
+                                    .foregroundStyle(Color.severityColor(for: severity))
+                            }
+                        }
                     }
                 }
 
