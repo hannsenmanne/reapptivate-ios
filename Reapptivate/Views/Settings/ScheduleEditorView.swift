@@ -45,6 +45,19 @@ struct ScheduleEditorView: View {
                 DatePicker("Uhrzeit", selection: $reminderTime, displayedComponents: .hourAndMinute)
             }
 
+            // Validation message
+            if selectedDays.isEmpty {
+                Section {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .foregroundStyle(.textSecondary)
+                        Text("Wählen Sie mindestens einen Trainingstag aus.")
+                            .font(.appCaption)
+                            .foregroundStyle(.textSecondary)
+                    }
+                }
+            }
+
             // Save
             Section {
                 Button {

@@ -8,6 +8,7 @@ struct FearHierarchyBuilderView: View {
     @State private var isSaving = false
     @State private var showSuggestions = true
     @State private var saveTrigger = false
+    @State private var validationError: String?
 
     private let suggestions = [
         "Schweres Heben",
@@ -82,6 +83,14 @@ struct FearHierarchyBuilderView: View {
                         }
                     }
 
+                    // Validation error
+                    if let error = validationError {
+                        Text(error)
+                            .font(.appCaption)
+                            .foregroundStyle(.painRed)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
                     // Save button
                     if !items.isEmpty {
                         Button {
@@ -121,8 +130,29 @@ struct FearHierarchyBuilderView: View {
     // MARK: - Helpers
 
     private var canSave: Bool {
-        items.allSatisfy { !$0.name.trimmingCharacters(in: .whitespaces).isEmpty }
-            && !items.isEmpty
+        validate() == nil
+    }
+
+    private func validate() -> String? {
+        guard !items.isEmpty else {
+            return "Fügen Sie mindestens eine Aktivität hinzu."
+        }
+
+        guard items.count >= 3 else {
+            return "Eine Hierarchie benötigt mindestens 3 Aktivitäten."
+        }
+
+        for (index, item) in items.enumerated() {
+            let trimmed = item.name.trimmingCharacters(in: .whitespaces)
+            if trimmed.isEmpty {
+                return "Aktivität \(index + 1) benötigt einen Namen."
+            }
+            if trimmed.count > 50 {
+                return "Aktivität \(index + 1) ist zu lang (max. 50 Zeichen)."
+            }
+        }
+
+        return nil
     }
 
     private var unusedSuggestions: [String] {
@@ -144,6 +174,13 @@ struct FearHierarchyBuilderView: View {
     }
 
     private func save() async {
+        // Validate before saving
+        if let error = validate() {
+            validationError = error
+            return
+        }
+        validationError = nil
+
         isSaving = true
         let inputItems = items.enumerated().map { index, item in
             FearHierarchyItemInput(
