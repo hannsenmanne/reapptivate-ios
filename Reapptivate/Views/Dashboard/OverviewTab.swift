@@ -138,6 +138,13 @@ struct StatsRow: View {
     let phaseStatus: AdaptivePhaseStatus?
     let stats: ProgressStats?
 
+    private var diagnosisDisplay: (String, String?) {
+        if user.tendinopathyType == .neckShoulderTension {
+            return ("Nacken & Schulter", "Verspannung")
+        }
+        return (user.tendinopathyType.displayName, nil)
+    }
+
     var body: some View {
         LazyVGrid(columns: [
             GridItem(.flexible()),
@@ -146,7 +153,8 @@ struct StatsRow: View {
         ], spacing: 12) {
             StatCard(
                 label: "Diagnose",
-                value: user.tendinopathyType.displayName,
+                value: diagnosisDisplay.0,
+                secondLine: diagnosisDisplay.1,
                 isCompact: true
             )
 
@@ -166,6 +174,7 @@ struct StatsRow: View {
 struct StatCard: View {
     let label: String
     let value: String
+    var secondLine: String? = nil
     var isCompact: Bool = false
 
     var body: some View {
@@ -173,11 +182,25 @@ struct StatCard: View {
             Text(label)
                 .font(.appCaption2)
                 .foregroundStyle(.textSecondary)
-            Text(value)
-                .font(isCompact ? .appCaptionBold : .appSubheadlineSemibold)
-                .foregroundStyle(.textPrimary)
+
+            if let secondLine = secondLine {
+                VStack(spacing: 0) {
+                    Text(value)
+                        .font(isCompact ? .appCaptionBold : .appSubheadlineSemibold)
+                        .foregroundStyle(.textPrimary)
+                    Text(secondLine)
+                        .font(isCompact ? .appCaptionBold : .appSubheadlineSemibold)
+                        .foregroundStyle(.textPrimary)
+                }
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+            } else {
+                Text(value)
+                    .font(isCompact ? .appCaptionBold : .appSubheadlineSemibold)
+                    .foregroundStyle(.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
