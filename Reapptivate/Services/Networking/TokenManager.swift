@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 final class TokenManager: Sendable {
     static let shared = TokenManager()
 
