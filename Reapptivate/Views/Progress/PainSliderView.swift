@@ -7,6 +7,8 @@ struct PainSliderView: View {
     @State private var thumbScale: CGFloat = 1.0
     @State private var numberScale: CGFloat = 1.0
     @State private var dragHapticTrigger = false
+    @State private var thumbAnimationTask: Task<Void, Never>?
+    @State private var numberAnimationTask: Task<Void, Never>?
 
     var body: some View {
         VStack(spacing: 16) {
@@ -73,23 +75,27 @@ struct PainSliderView: View {
                                 painLevel = newLevel
                                 dragHapticTrigger.toggle()
 
-                                // Thumb bounce
-                                // asyncAfter is used here because .task is not available inside gesture handlers.
-                                // Accumulation during rapid dragging is harmless — each pair resolves within 150ms.
+                                // Thumb bounce - cancel previous animation task to prevent race
+                                thumbAnimationTask?.cancel()
                                 withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
                                     thumbScale = 1.2
                                 }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                thumbAnimationTask = Task { @MainActor in
+                                    try? await Task.sleep(for: .milliseconds(150))
+                                    guard !Task.isCancelled else { return }
                                     withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
                                         thumbScale = 1.0
                                     }
                                 }
 
-                                // Number bounce
+                                // Number bounce - cancel previous animation task to prevent race
+                                numberAnimationTask?.cancel()
                                 withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
                                     numberScale = 1.1
                                 }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                numberAnimationTask = Task { @MainActor in
+                                    try? await Task.sleep(for: .milliseconds(150))
+                                    guard !Task.isCancelled else { return }
                                     withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
                                         numberScale = 1.0
                                     }
