@@ -40,6 +40,7 @@ struct WissenCardView: View {
                             .frame(width: 28, height: 28)
                             .background(Color.accent.opacity(0.1))
                             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
+                            .accessibilityHidden(true)
 
                         Text("WISSEN")
                             .font(.appCaption2)
@@ -57,6 +58,7 @@ struct WissenCardView: View {
                                 .frame(width: i == activeIndex ? 14 : 5, height: 3)
                         }
                     }
+                    .accessibilityLabel("Karte \(activeIndex + 1) von \(phaseCards.count)")
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)

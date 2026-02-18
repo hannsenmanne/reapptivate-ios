@@ -13,6 +13,7 @@ struct RestDayCard: View {
                         .font(.appBody)
                         .foregroundStyle(.painGreen)
                 }
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Ruhetag")
@@ -26,5 +27,7 @@ struct RestDayCard: View {
             }
         }
         .cardStyle()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Ruhetag: Heute ist Ihr Ruhetag. Erholung ist ein wichtiger Teil Ihrer Rehabilitation.")
     }
 }

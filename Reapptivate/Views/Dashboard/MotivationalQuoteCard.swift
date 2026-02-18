@@ -8,6 +8,7 @@ struct MotivationalQuoteCard: View {
             Image(systemName: "quote.opening")
                 .font(.appTitle3)
                 .foregroundStyle(.accent.opacity(0.6))
+                .accessibilityHidden(true)
 
             Text(quote.text)
                 .font(.appSubheadline)
@@ -16,5 +17,7 @@ struct MotivationalQuoteCard: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .cardStyle()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Motivationszitat: \(quote.text)")
     }
 }

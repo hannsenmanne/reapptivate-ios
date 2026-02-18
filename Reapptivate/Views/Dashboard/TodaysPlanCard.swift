@@ -28,6 +28,7 @@ struct TodaysPlanCard: View {
                         .foregroundStyle(.accent)
                 }
                 .frame(width: 52, height: 52)
+                .accessibilityHidden(true)
 
                 // Text
                 VStack(alignment: .leading, spacing: 4) {
@@ -51,9 +52,14 @@ struct TodaysPlanCard: View {
                 Image(systemName: "chevron.right")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
+                    .accessibilityHidden(true)
             }
             .cardStyle()
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Heutiger Plan")
+        .accessibilityValue("\(completedCount) von \(totalCount) Übungen abgeschlossen")
+        .accessibilityHint("Antippen, um zum Trainingsprogramm zu gelangen")
     }
 }

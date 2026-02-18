@@ -51,6 +51,9 @@ struct PhaseStatusCard: View {
                         .frame(height: 4)
                 }
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Fortschritt")
+            .accessibilityValue("\(status.progressionReadiness.criteriaMetCount) von 4 Kriterien erfüllt")
 
             // Hint
             Text(status.nextEvaluationHint)
@@ -76,6 +79,8 @@ struct MiniStat: View {
                 .foregroundStyle(.textSecondary)
         }
         .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
     }
 }
 
@@ -88,10 +93,14 @@ struct ReadinessRow: View {
             Image(systemName: met ? "checkmark.circle.fill" : "circle")
                 .foregroundStyle(met ? .painGreen : .textSecondary.opacity(0.4))
                 .font(.appBody)
+                .accessibilityHidden(true)
             Text(label)
                 .font(.appSubheadline)
                 .foregroundStyle(met ? .textPrimary : .textSecondary)
             Spacer()
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(label)
+        .accessibilityValue(met ? "Erfüllt" : "Noch nicht erfüllt")
     }
 }

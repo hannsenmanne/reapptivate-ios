@@ -26,6 +26,7 @@ struct TrainingScheduleCard: View {
                 Image(systemName: "calendar")
                     .font(.appSubheadlineSemibold)
                     .foregroundStyle(.accent)
+                    .accessibilityHidden(true)
                 Text("Trainingstage")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
@@ -56,12 +57,14 @@ struct TrainingScheduleCard: View {
                     Image(systemName: "bell.fill")
                         .font(.appCaption)
                         .foregroundStyle(.accent)
+                        .accessibilityHidden(true)
                     Text("Erinnerung")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                     Spacer()
-                    DatePicker("", selection: $reminderTime, displayedComponents: .hourAndMinute)
+                    DatePicker("Erinnerungszeit", selection: $reminderTime, displayedComponents: .hourAndMinute)
                         .labelsHidden()
+                        .accessibilityLabel("Erinnerungszeit")
                         .onChange(of: reminderTime) {
                             scheduleAutoSave()
                         }
