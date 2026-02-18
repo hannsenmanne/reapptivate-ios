@@ -14,7 +14,7 @@ enum TestFixtures {
         aemScreeningCompleted: Bool? = nil,
         aemSubtype: AemSubtype? = nil,
         neckScreeningCompleted: Bool? = nil,
-        tsiScreeningCompleted: Bool? = nil,
+        tensionScreeningCompleted: Bool? = nil,
         tsiSeverity: TsiSeverityGrade? = nil,
         adaptivePhase: Int? = nil,
         ndiSeverity: NdiSeverityGrade? = nil
@@ -31,7 +31,7 @@ enum TestFixtures {
             aemSubtype: aemSubtype,
             neckScreeningCompleted: neckScreeningCompleted,
             neckSubtype: nil,
-            tsiScreeningCompleted: tsiScreeningCompleted,
+            tensionScreeningCompleted: tensionScreeningCompleted,
             tsiSeverity: tsiSeverity,
             adaptivePhase: adaptivePhase,
             ndiSeverity: ndiSeverity
@@ -57,7 +57,7 @@ enum TestFixtures {
     static func tensionUser(screened: Bool = true, severity: TsiSeverityGrade = .LEICHT) -> UserProfile {
         userProfile(
             tendinopathyType: .neckShoulderTension,
-            tsiScreeningCompleted: screened,
+            tensionScreeningCompleted: screened,
             tsiSeverity: severity
         )
     }

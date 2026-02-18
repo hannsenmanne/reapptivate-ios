@@ -14,7 +14,7 @@ final class CachedUser {
     var protocolId: String?
     var aemScreeningCompleted: Bool
     var neckScreeningCompleted: Bool
-    var tsiScreeningCompleted: Bool
+    var tensionScreeningCompleted: Bool
     var startDate: String
     var lastSyncedAt: Date
 
@@ -30,7 +30,7 @@ final class CachedUser {
         protocolId: String? = nil,
         aemScreeningCompleted: Bool = false,
         neckScreeningCompleted: Bool = false,
-        tsiScreeningCompleted: Bool = false,
+        tensionScreeningCompleted: Bool = false,
         startDate: String,
         lastSyncedAt: Date = .now
     ) {
@@ -45,7 +45,7 @@ final class CachedUser {
         self.protocolId = protocolId
         self.aemScreeningCompleted = aemScreeningCompleted
         self.neckScreeningCompleted = neckScreeningCompleted
-        self.tsiScreeningCompleted = tsiScreeningCompleted
+        self.tensionScreeningCompleted = tensionScreeningCompleted
         self.startDate = startDate
         self.lastSyncedAt = lastSyncedAt
     }
@@ -61,7 +61,7 @@ final class CachedUser {
         protocolId = profile.protocolId
         aemScreeningCompleted = profile.aemScreeningCompleted ?? false
         neckScreeningCompleted = profile.neckScreeningCompleted ?? false
-        tsiScreeningCompleted = profile.tsiScreeningCompleted ?? false
+        tensionScreeningCompleted = profile.tensionScreeningCompleted ?? false
         startDate = profile.startDate
         lastSyncedAt = .now
     }

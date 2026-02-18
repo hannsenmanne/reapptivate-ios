@@ -32,7 +32,7 @@ final class AppState {
     }
 
     var needsTsiScreening: Bool {
-        isTension && currentUser?.tsiScreeningCompleted != true
+        isTension && currentUser?.tensionScreeningCompleted != true
     }
 
     func handleLogin(user: UserProfile) {

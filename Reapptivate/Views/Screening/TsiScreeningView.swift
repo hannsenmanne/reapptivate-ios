@@ -20,7 +20,7 @@ struct TsiScreeningView: View {
                     } else if showResult, let result = vm.result {
                         TsiResultView(result: result) {
                             // Update AppState immediately - screening was successfully submitted
-                            appState.currentUser?.tsiScreeningCompleted = true
+                            appState.currentUser?.tensionScreeningCompleted = true
                             // No need to refresh profile - it will sync naturally on next app launch
                             dismiss()
                         }
