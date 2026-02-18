@@ -4,9 +4,16 @@ struct OverviewTab: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     let viewModel: DashboardViewModel?
-    var completedTodayCount: Int = 0
-    var totalExerciseCount: Int = 0
+    let exerciseVM: ExerciseViewModel?
     var onNavigateToProgram: (() -> Void)?
+
+    private var completedTodayCount: Int {
+        viewModel?.completedToday.count ?? 0
+    }
+
+    private var totalExerciseCount: Int {
+        exerciseVM?.exercises.count ?? 0
+    }
 
     @State private var todaysQuote: MotivationalQuote?
 

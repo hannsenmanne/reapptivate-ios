@@ -115,8 +115,7 @@ struct DashboardView: View {
             } else {
                 OverviewTab(
                     viewModel: viewModel,
-                    completedTodayCount: viewModel?.completedToday.count ?? 0,
-                    totalExerciseCount: exerciseVM?.exercises.count ?? 0,
+                    exerciseVM: exerciseVM,
                     onNavigateToProgram: {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             selectedTab = .program
