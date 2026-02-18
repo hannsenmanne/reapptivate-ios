@@ -67,8 +67,11 @@ struct RootView: View {
         .task {
             // Initialize SyncService with ModelContext from environment
             if syncService == nil {
-                let service = SyncService(apiClient: apiClient, networkMonitor: networkMonitor)
-                service.setModelContext(modelContext)
+                let service = SyncService(
+                    apiClient: apiClient,
+                    networkMonitor: networkMonitor,
+                    modelContext: modelContext
+                )
                 syncService = service
                 appState.onLogout = {
                     service.clearAllData()
