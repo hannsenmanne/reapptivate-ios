@@ -8,7 +8,7 @@ struct ProgramTab: View {
     @State private var activeSheet: ExerciseSheet?
     @State private var pendingSheet: ExerciseSheet?
 
-    enum ExerciseSheet: Identifiable {
+    enum ExerciseSheet: Identifiable, Equatable {
         case progressLog(ExerciseWithPhase)
         case detail(ExerciseWithPhase)
         case customProgressLog(CustomExercise)
@@ -19,6 +19,10 @@ struct ProgramTab: View {
             case .detail(let e): "detail-\(e.id)"
             case .customProgressLog(let e): "custom-log-\(e.id)"
             }
+        }
+
+        static func == (lhs: ExerciseSheet, rhs: ExerciseSheet) -> Bool {
+            lhs.id == rhs.id
         }
     }
 
@@ -119,12 +123,7 @@ struct ProgramTab: View {
             }
         }
         .padding(.bottom, 32)
-        .sheet(item: $activeSheet, onDismiss: {
-            if let pending = pendingSheet {
-                pendingSheet = nil
-                activeSheet = pending
-            }
-        }) { sheet in
+        .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .progressLog(let exercise):
                 ProgressLogSheet(
@@ -141,8 +140,8 @@ struct ProgramTab: View {
                     ExerciseDetailView(
                         exercise: exercise,
                         onLog: {
-                            pendingSheet = .progressLog(exercise)
                             activeSheet = nil
+                            pendingSheet = .progressLog(exercise)
                         },
                         onStartSession: {
                             activeSheet = nil
@@ -162,6 +161,16 @@ struct ProgramTab: View {
                         onExerciseLogged?()
                     }
                 )
+            }
+        }
+        .onChange(of: activeSheet) { _, newValue in
+            // Handle pending sheet transition after current sheet dismisses
+            if newValue == nil, let pending = pendingSheet {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(300))
+                    pendingSheet = nil
+                    activeSheet = pending
+                }
             }
         }
     }
