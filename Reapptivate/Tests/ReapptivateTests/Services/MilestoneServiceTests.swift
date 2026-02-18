@@ -8,17 +8,24 @@ final class MilestoneServiceTests: XCTestCase {
     private let testUserId = "test-milestone-user"
 
     override func setUp() async throws {
+        cleanUpDefaults()
         service = MilestoneService()
         service.configure(userId: testUserId)
-        // Clear stored milestones for this test user
-        UserDefaults.standard.removeObject(forKey: "milestones_shown_\(testUserId)")
-        UserDefaults.standard.removeObject(forKey: "milestones_dates_\(testUserId)")
     }
 
     override func tearDown() async throws {
-        UserDefaults.standard.removeObject(forKey: "milestones_shown_\(testUserId)")
-        UserDefaults.standard.removeObject(forKey: "milestones_dates_\(testUserId)")
+        cleanUpDefaults()
         service = nil
+    }
+
+    private func cleanUpDefaults() {
+        for key in [
+            "milestones_shown_\(testUserId)",
+            "milestones_dates_\(testUserId)",
+            "milestones_initialized_\(testUserId)",
+        ] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
     }
 
     // MARK: - First Training
@@ -76,6 +83,28 @@ final class MilestoneServiceTests: XCTestCase {
         // Both firstTraining and tenSessions qualify, but firstTraining comes first
         let result = service.check(totalSessions: 10, currentPhase: 1)
         XCTAssertEqual(result, .firstTraining)
+    }
+
+    // MARK: - Seed Existing
+
+    func testSeedExistingMarksQualifyingMilestonesAsShown() {
+        service.seedExistingIfNeeded(totalSessions: 15, currentPhase: 2)
+        // firstTraining, tenSessions, phaseUp should all be seeded
+        XCTAssertTrue(service.isEarned(.firstTraining))
+        XCTAssertTrue(service.isEarned(.tenSessions))
+        XCTAssertTrue(service.isEarned(.phaseUp))
+        // twentyFiveSessions should NOT be seeded
+        XCTAssertFalse(service.isEarned(.twentyFiveSessions))
+        // check() should return nil since all qualifying are seeded
+        XCTAssertNil(service.check(totalSessions: 15, currentPhase: 2))
+    }
+
+    func testSeedExistingRunsOnlyOnce() {
+        service.seedExistingIfNeeded(totalSessions: 5, currentPhase: 1)
+        XCTAssertTrue(service.isEarned(.firstTraining))
+        // Second call with more sessions should NOT seed new milestones
+        service.seedExistingIfNeeded(totalSessions: 50, currentPhase: 3)
+        XCTAssertFalse(service.isEarned(.tenSessions))
     }
 }
 

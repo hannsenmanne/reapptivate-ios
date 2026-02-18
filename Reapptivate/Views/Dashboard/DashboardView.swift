@@ -183,6 +183,11 @@ struct DashboardView: View {
         // Configure milestone service with current user ID
         if let user = appState.currentUser {
             milestoneService.configure(userId: user.id)
+            milestoneService.seedExistingIfNeeded(
+                totalSessions: viewModel?.progressStats?.totalSessions ?? 0,
+                currentPhase: viewModel?.phaseStatus?.currentPhase ?? 1,
+                maxPhase: user.maxPhase
+            )
         }
 
         // Check milestones
