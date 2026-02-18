@@ -1,6 +1,7 @@
 import XCTest
 @testable import Reapptivate
 
+@MainActor
 final class TokenManagerTests: XCTestCase {
     private let tokenManager = TokenManager.shared
 
