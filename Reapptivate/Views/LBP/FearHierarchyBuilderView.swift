@@ -217,6 +217,7 @@ struct BuilderItemCard: View {
                         .padding(10)
                         .background(Color.appBg)
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
+                        .submitLabel(.done)
 
                     // Fear rating slider
                     HStack(spacing: 8) {

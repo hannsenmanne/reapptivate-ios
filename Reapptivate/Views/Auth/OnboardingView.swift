@@ -82,6 +82,16 @@ struct OnboardingView: View {
                             .textContentType(.telephoneNumber)
                             .keyboardType(.phonePad)
                             .focused($focusedField, equals: .phone)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Fertig") {
+                                        focusedField = nil
+                                    }
+                                    .font(.appSubheadlineMedium)
+                                    .foregroundStyle(.accent)
+                                }
+                            }
                     }
 
                     // Start Date
