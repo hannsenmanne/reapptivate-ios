@@ -9,6 +9,7 @@ final class AudioService {
 
     private var audioPlayer: AVAudioPlayer?
     private var isSessionActive = false
+    private var soundTask: Task<Void, Never>?
 
     private init() {}
 
@@ -54,8 +55,11 @@ final class AudioService {
     // MARK: - Double Knock (80% cue)
 
     func playDoubleKnock() {
-        AudioServicesPlaySystemSound(1057)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+        soundTask?.cancel()
+        soundTask = Task { @MainActor in
+            AudioServicesPlaySystemSound(1057)
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled else { return }
             AudioServicesPlaySystemSound(1057)
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -64,12 +68,15 @@ final class AudioService {
     // MARK: - Triple Beep (100% cue)
 
     func playTripleBeep() {
-        AudioServicesPlaySystemSound(1005)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        soundTask?.cancel()
+        soundTask = Task { @MainActor in
             AudioServicesPlaySystemSound(1005)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                AudioServicesPlaySystemSound(1005)
-            }
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            AudioServicesPlaySystemSound(1005)
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            AudioServicesPlaySystemSound(1005)
         }
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
