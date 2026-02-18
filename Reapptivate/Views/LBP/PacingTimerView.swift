@@ -17,6 +17,7 @@ struct PacingTimerView: View {
     @State private var soundPlayed100 = false
     @State private var backgroundDate: Date?
     @State private var activitySelectionTrigger = false
+    @State private var timerCancellable: Cancellable?
 
     @ScaledMetric(relativeTo: .title2) private var playPauseSize: CGFloat = 56
 
@@ -65,16 +66,22 @@ struct PacingTimerView: View {
             }
         }
         .conditionalHaptic(.selection, trigger: activitySelectionTrigger)
-        .onDisappear {
-            resetTimer()
+        .onAppear {
+            timerCancellable = timerPublisher
+                .autoconnect()
+                .sink { _ in
+                    guard timerState == .active || timerState == .onBreak else { return }
+                    if timerState == .active {
+                        tick()
+                    } else if timerState == .onBreak {
+                        breakSeconds += 1
+                    }
+                }
         }
-        .onReceive(timerPublisher.autoconnect()) { _ in
-            guard timerState == .active || timerState == .onBreak else { return }
-            if timerState == .active {
-                tick()
-            } else if timerState == .onBreak {
-                breakSeconds += 1
-            }
+        .onDisappear {
+            timerCancellable?.cancel()
+            timerCancellable = nil
+            resetTimer()
         }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {

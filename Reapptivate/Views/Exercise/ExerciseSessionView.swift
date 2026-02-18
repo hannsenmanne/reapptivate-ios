@@ -22,6 +22,7 @@ struct ExerciseSessionView: View {
     @State private var showCelebration = false
     @AppStorage("hasCompletedFirstExercise") private var hasCompletedFirstExercise = false
     @State private var showFirstGuide = false
+    @State private var timerCancellable: Cancellable?
 
     private let timerPublisher = Timer.publish(every: 1, on: .main, in: .common)
 
@@ -159,12 +160,18 @@ struct ExerciseSessionView: View {
                     }
                 }
             }
-            .onDisappear {
-                stopTimer()
+            .onAppear {
+                timerCancellable = timerPublisher
+                    .autoconnect()
+                    .sink { _ in
+                        guard timerActive else { return }
+                        tick()
+                    }
             }
-            .onReceive(timerPublisher.autoconnect()) { _ in
-                guard timerActive else { return }
-                tick()
+            .onDisappear {
+                timerCancellable?.cancel()
+                timerCancellable = nil
+                stopTimer()
             }
             .onChange(of: scenePhase) { _, newPhase in
                 switch newPhase {
