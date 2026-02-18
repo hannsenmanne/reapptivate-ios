@@ -11,7 +11,7 @@ final class NetworkMonitor: @unchecked Sendable {
 
     init() {
         monitor.pathUpdateHandler = { [weak self] path in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self?.isConnected = path.status == .satisfied
                 self?.connectionType = path.availableInterfaces.first?.type
             }

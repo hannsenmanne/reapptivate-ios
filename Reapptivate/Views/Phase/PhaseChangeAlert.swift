@@ -49,7 +49,8 @@ struct PhaseChangeAlert: View {
                         withAnimation(.easeIn(duration: 0.2)) {
                             isVisible = false
                         }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        Task { @MainActor in
+                            try? await Task.sleep(for: .milliseconds(200))
                             onDismiss()
                         }
                     } label: {
@@ -74,7 +75,8 @@ struct PhaseChangeAlert: View {
             }
             hapticTrigger.toggle()
             if isProgress {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(300))
                     confettiTrigger = true
                 }
             }

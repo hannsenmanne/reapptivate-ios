@@ -48,7 +48,8 @@ struct LbpEnhancementsView: View {
                 VStack {
                     ToastBanner(message: msg, style: .success)
                         .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            Task { @MainActor in
+                                try? await Task.sleep(for: .seconds(2))
                                 vm.clearMessages()
                             }
                         }

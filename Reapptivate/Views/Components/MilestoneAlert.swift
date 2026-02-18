@@ -77,7 +77,8 @@ struct MilestoneAlert: View {
                 isVisible = true
             }
             // Trigger confetti fade-out
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(300))
                 confettiTrigger = true
             }
         }
@@ -87,7 +88,8 @@ struct MilestoneAlert: View {
         withAnimation(.easeIn(duration: 0.2)) {
             isVisible = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(200))
             onDismiss()
         }
     }
