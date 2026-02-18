@@ -62,6 +62,13 @@ make coverage
 
 **~148 unit tests** in `Reapptivate/Tests/ReapptivateTests/` covering Models, Services, ViewModels, and AppState. CI runs on GitHub Actions (`.github/workflows/test.yml`) on every push/PR to main.
 
+**Makefile shortcuts:**
+- `make generate` — Generate Xcode project from project.yml
+- `make test` — Run all unit tests (generates project first)
+- `make test-ui` — Run UI tests
+- `make coverage` — View coverage report (run after make test)
+- `make clean` — Clean build artifacts
+
 ### Test Architecture
 - **`MockURLProtocol`** — URLProtocol subclass intercepting all requests via static `requestHandler`. Uses `nonisolated(unsafe)` for Swift 6.0.
 - **`TestHelpers`** — `makeTestSession()` (ephemeral URLSession with MockURLProtocol), `makeHTTPResponse()`, `makeJWT(exp:)` for TokenManager tests.
@@ -168,6 +175,22 @@ Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappe
 
 Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`, `.neckShoulderTension` + `.LEICHT` → `neck_shoulder_tension_leicht.json`).
 
+### Content Filtering Pattern (Condition-Specific Content)
+
+To prevent cross-contamination of condition-specific educational content:
+
+**Client-side defensive filtering:**
+- ViewModels filter loaded content by `targetCondition` field
+- Example: `LbpEnhancementsViewModel` excludes modules with `targetCondition === "NECK_PAIN"` or `"NECK_SHOULDER_TENSION"`
+- Only shows modules where `targetCondition` is `nil` (generic) or matches the patient's condition
+
+**Backend filtering:**
+- Endpoints filter by `targetCondition` before returning data
+- Example: `/lbp-enhancements/micro-modules` excludes non-LBP modules server-side
+- Defense-in-depth approach: both client and server enforce filtering
+
+**Pattern:** Always implement both client-side defensive filtering (catch backend mistakes) and server-side authoritative filtering (prevent wrong data from being sent).
+
 ## Key Gotchas
 
 - **`adaptivePhase` in `UserProfile`** is optional and NOT populated from `/patient/me`. It comes from the separate `/patient/phase-status` endpoint. `currentPhase` computed property defaults to `1`.
@@ -179,6 +202,7 @@ Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `ac
 - **`Color.textPrimary` flips in dark mode** (light→1A1A1A, dark→F2F2F7). Don't use it as a background with hardcoded `.white` text — use `Color.appBg` for the text instead so both adapt together. Same applies to any adaptive color used as a bg.
 - **`AnalyticsSummary` has a custom decoder** — backend sends `adjustmentStats: {total, applied}` (nested) and `triggerFireCount: {ruleId: count}` (dict), but the model exposes flat `totalAdjustments`/`appliedAdjustments` and `triggerFires: [TriggerFireCount]` (array). Don't add simple `CodingKeys` — the custom `init(from:)` handles the shape transformation.
 - **Onboarding `@AppStorage` flags** (`hasSeenWelcome`, `hasSeenWalkthrough`) must NOT be cleared on logout — they persist so returning users skip the walkthrough. Only SwiftData caches are cleared via `SyncService.clearAllData()`.
+- **All DateFormatters use explicit UTC timezone** — Date-only strings ("yyyy-MM-dd") must use `DateFormatters.dateOnly` formatter, never `Date()` string interpolation. ISO8601 formatters explicitly set `timeZone = TimeZone(secondsFromGMT: 0)`. This prevents date shifts when parsing/formatting across timezones (e.g., "2024-01-15" parsed in PST becoming Jan 14).
 
 ## Domain Models (Models/Domain/)
 
