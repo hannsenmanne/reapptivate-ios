@@ -180,6 +180,11 @@ struct DashboardView: View {
         async let phaseLoad: () = phaseVM?.loadPhaseHistory() ?? ()
         _ = await (exerciseLoad, phaseLoad)
 
+        // Configure milestone service with current user ID
+        if let user = appState.currentUser {
+            milestoneService.configure(userId: user.id)
+        }
+
         // Check milestones
         checkMilestones()
 

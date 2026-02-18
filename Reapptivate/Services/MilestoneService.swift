@@ -3,37 +3,31 @@ import SwiftUI
 @Observable
 @MainActor
 final class MilestoneService {
-    @ObservationIgnored
-    @AppStorage("milestones_shown") private var shownRaw: String = ""
+    private var userId: String?
 
-    @ObservationIgnored
-    @AppStorage("milestones_dates") private var datesRaw: String = ""
+    private var shownKey: String { "milestones_shown_\(userId ?? "unknown")" }
+    private var datesKey: String { "milestones_dates_\(userId ?? "unknown")" }
 
-    // Cached parsed values — invalidated when the underlying raw strings change
-    @ObservationIgnored private var cachedShownRaw: String?
-    @ObservationIgnored private var cachedShownSet: Set<String> = []
-    @ObservationIgnored private var cachedDatesRaw: String?
-    @ObservationIgnored private var cachedDatesDict: [String: String] = [:]
+    private var shownRaw: String {
+        get { UserDefaults.standard.string(forKey: shownKey) ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: shownKey) }
+    }
+
+    private var datesRaw: String {
+        get { UserDefaults.standard.string(forKey: datesKey) ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: datesKey) }
+    }
 
     private var shownSet: Set<String> {
-        if cachedShownRaw != shownRaw {
-            cachedShownRaw = shownRaw
-            cachedShownSet = Set(shownRaw.split(separator: ",").map(String.init))
-        }
-        return cachedShownSet
+        Set(shownRaw.split(separator: ",").map(String.init))
     }
 
     private var datesDict: [String: String] {
-        if cachedDatesRaw != datesRaw {
-            cachedDatesRaw = datesRaw
-            if let data = datesRaw.data(using: .utf8),
-               let dict = try? JSONDecoder().decode([String: String].self, from: data) {
-                cachedDatesDict = dict
-            } else {
-                cachedDatesDict = [:]
-            }
+        guard let data = datesRaw.data(using: .utf8),
+              let dict = try? JSONDecoder().decode([String: String].self, from: data) else {
+            return [:]
         }
-        return cachedDatesDict
+        return dict
     }
 
     private func saveDatesDict(_ dict: [String: String]) {
@@ -43,8 +37,14 @@ final class MilestoneService {
         }
     }
 
+    /// Set the current user ID so milestones are stored per-user.
+    func configure(userId: String) {
+        self.userId = userId
+    }
+
     /// Returns the first unshown milestone that qualifies, or nil.
     func check(totalSessions: Int, currentPhase: Int, maxPhase: Int = 3) -> Milestone? {
+        guard userId != nil else { return nil }
         let shown = shownSet
 
         for milestone in Milestone.allCases {

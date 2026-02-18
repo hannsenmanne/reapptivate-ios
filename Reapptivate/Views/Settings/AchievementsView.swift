@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct AchievementsView: View {
-    // Separate instance is intentional — this view is presented as a sheet that
-    // reconstructs on each presentation, so a shared instance is unnecessary.
+    @Environment(AppState.self) private var appState
     @State private var milestoneService = MilestoneService()
 
     private let columns = [
@@ -26,6 +25,11 @@ struct AchievementsView: View {
         .background(Color.appBg)
         .navigationTitle("Erfolge")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            if let user = appState.currentUser {
+                milestoneService.configure(userId: user.id)
+            }
+        }
     }
 }
 

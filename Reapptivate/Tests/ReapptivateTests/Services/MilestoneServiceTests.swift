@@ -5,15 +5,19 @@ import XCTest
 final class MilestoneServiceTests: XCTestCase {
 
     private var service: MilestoneService!
+    private let testUserId = "test-milestone-user"
 
     override func setUp() async throws {
         service = MilestoneService()
-        // Clear stored milestones
-        UserDefaults.standard.removeObject(forKey: "milestones_shown")
+        service.configure(userId: testUserId)
+        // Clear stored milestones for this test user
+        UserDefaults.standard.removeObject(forKey: "milestones_shown_\(testUserId)")
+        UserDefaults.standard.removeObject(forKey: "milestones_dates_\(testUserId)")
     }
 
     override func tearDown() async throws {
-        UserDefaults.standard.removeObject(forKey: "milestones_shown")
+        UserDefaults.standard.removeObject(forKey: "milestones_shown_\(testUserId)")
+        UserDefaults.standard.removeObject(forKey: "milestones_dates_\(testUserId)")
         service = nil
     }
 
