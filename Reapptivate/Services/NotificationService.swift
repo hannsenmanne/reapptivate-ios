@@ -26,6 +26,7 @@ final class NotificationService {
             authorizationStatus = granted ? .authorized : .denied
             return granted
         } catch {
+            Log.general.error("Failed to request notification permission: \(error.localizedDescription)")
             return false
         }
     }
@@ -59,7 +60,11 @@ final class NotificationService {
                 trigger: trigger
             )
 
-            try? await center.add(request)
+            do {
+                try await center.add(request)
+            } catch {
+                Log.general.error("Failed to schedule reminder for day \(day): \(error.localizedDescription)")
+            }
         }
     }
 
@@ -81,7 +86,11 @@ final class NotificationService {
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
         let request = UNNotificationRequest(identifier: "test", content: content, trigger: trigger)
-        try? await UNUserNotificationCenter.current().add(request)
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+        } catch {
+            Log.general.error("Failed to send test notification: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Open Settings

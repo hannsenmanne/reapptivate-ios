@@ -99,7 +99,7 @@ final class LbpEnhancementsViewModel {
             let response: ExposureLogsResponse = try await apiClient.request(APIEndpoints.getExposures(itemId: itemId))
             exposureLogs[itemId] = response.logs
         } catch {
-            // Silent fail
+            Log.api.error("Failed to load exposures for item \(itemId): \(error.localizedDescription)")
         }
     }
 
@@ -111,6 +111,7 @@ final class LbpEnhancementsViewModel {
             pacingPlan = response.plan
         } catch {
             pacingPlan = nil
+            Log.api.error("Failed to load pacing plan: \(error.localizedDescription)")
         }
     }
 
@@ -194,6 +195,7 @@ final class LbpEnhancementsViewModel {
             pacingLogs = response.logs
         } catch {
             pacingLogs = []
+            Log.api.error("Failed to load pacing logs: \(error.localizedDescription)")
         }
     }
 
@@ -202,6 +204,7 @@ final class LbpEnhancementsViewModel {
             quotaSuggestion = try await apiClient.request(APIEndpoints.suggestProgression())
         } catch {
             quotaSuggestion = nil
+            Log.api.error("Failed to load quota suggestion: \(error.localizedDescription)")
         }
     }
 
@@ -226,6 +229,7 @@ final class LbpEnhancementsViewModel {
             planAdjustments = response.adjustments
         } catch {
             planAdjustments = []
+            Log.api.error("Failed to load plan adjustments: \(error.localizedDescription)")
         }
     }
 

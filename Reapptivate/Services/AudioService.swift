@@ -22,13 +22,18 @@ final class AudioService {
             try AVAudioSession.sharedInstance().setActive(true)
             isSessionActive = true
         } catch {
-            // Silent fail
+            Log.general.error("Failed to activate audio session: \(error.localizedDescription)")
         }
     }
 
     func deactivateSession() {
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        isSessionActive = false
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            isSessionActive = false
+        } catch {
+            Log.general.error("Failed to deactivate audio session: \(error.localizedDescription)")
+            isSessionActive = false
+        }
     }
 
     // MARK: - System Sounds

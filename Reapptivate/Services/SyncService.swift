@@ -60,6 +60,7 @@ final class SyncService {
                 modelContext.delete(item)
             } catch {
                 item.retryCount += 1
+                Log.sync.warning("Failed to sync request to \(item.endpoint) (retry \(item.retryCount)/5): \(error.localizedDescription)")
             }
         }
 
