@@ -241,10 +241,17 @@ final class LbpEnhancementsViewModel {
             async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.lbpCompletedModules())
 
             let (loadedModules, loadedCompleted) = try await (modulesResp, completedResp)
-            microModules = loadedModules.modules
+
+            // Client-side defensive filtering: Only show LBP modules (no targetCondition)
+            // Excludes Neck (NECK_PAIN) and Tension (NECK_SHOULDER_TENSION) modules
+            microModules = loadedModules.modules.filter { module in
+                module.targetCondition == nil || module.targetCondition == "LBP_NONSPECIFIC"
+            }
+
             completedModuleKeys = Set(loadedCompleted.completedModules)
         } catch {
             errorMessage = "Module konnten nicht geladen werden."
+            Log.api.error("Failed to load micro-modules: \(error.localizedDescription)")
         }
     }
 

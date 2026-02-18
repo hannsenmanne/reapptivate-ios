@@ -254,11 +254,12 @@ struct MicroModule: Codable, Identifiable {
     let content: String
     let takeHome: String?
     let targetSubtypes: [String]?
+    let targetCondition: String? // e.g., "NECK_PAIN", "NECK_SHOULDER_TENSION"
 
     var id: String { key }
 
     private enum CodingKeys: String, CodingKey {
-        case key, title, takeHome, targetSubtypes
+        case key, title, takeHome, targetSubtypes, targetCondition
         case content = "bodyMarkdown"
     }
 }
