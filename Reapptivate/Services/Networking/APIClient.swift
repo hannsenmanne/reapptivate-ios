@@ -184,7 +184,8 @@ final class APIClient {
             throw APIError.conflict(errorResponse?.displayMessage ?? "Konflikt")
 
         case 429:
-            throw APIError.rateLimited
+            let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After").flatMap(Int.init)
+            throw APIError.rateLimited(retryAfter: retryAfter)
 
         default:
             throw APIError.serverError(statusCode)

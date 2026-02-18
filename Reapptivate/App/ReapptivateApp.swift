@@ -23,8 +23,8 @@ struct ReapptivateApp: App {
                 .environment(\.hapticsEnabled, hapticsEnabled)
                 .preferredColorScheme(appearanceMode.colorScheme)
                 .onAppear {
-                    apiClient.onTokenExpired = {
-                        appState.handleLogout()
+                    apiClient.onTokenExpired = { [apiClient] in
+                        appState.performLogout(apiClient: apiClient)
                     }
                 }
         }
@@ -88,11 +88,6 @@ struct RootView: View {
             }
             apiClient.resetLogoutGuard()
             await authViewModel?.checkExistingAuth(appState: appState)
-        }
-        .onChange(of: networkMonitor.isConnected) { _, isConnected in
-            if isConnected {
-                Task { await syncService?.drainQueue() }
-            }
         }
     }
 }

@@ -27,6 +27,15 @@ struct ProgressLogRequest: Codable {
     let repsCompleted: Int
     let notes: String?
     let symptomResponse: SymptomResponse?
+
+    init(exerciseId: String, painLevel: Int, setsCompleted: Int, repsCompleted: Int, notes: String?, symptomResponse: SymptomResponse?) {
+        self.exerciseId = exerciseId
+        self.painLevel = min(max(painLevel, 0), 10)
+        self.setsCompleted = setsCompleted
+        self.repsCompleted = repsCompleted
+        self.notes = notes
+        self.symptomResponse = symptomResponse
+    }
 }
 
 // MARK: - Progress Stats (convenience, populated from StatsResponse)

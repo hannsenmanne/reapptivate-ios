@@ -507,14 +507,20 @@ final class WorkTimerViewModel {
     }
 
     private func clearTimerState() {
+        Self.clearPersistedState()
+    }
+
+    /// Clear all persisted work timer state from UserDefaults.
+    /// Called on logout to prevent state bleeding between users.
+    static func clearPersistedState() {
         let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: Self.udKeyIsRunning)
-        defaults.removeObject(forKey: Self.udKeyStartedAt)
-        defaults.removeObject(forKey: Self.udKeyNextBreakAt)
-        defaults.removeObject(forKey: Self.udKeyBreaksTaken)
-        defaults.removeObject(forKey: Self.udKeyBreaksSkipped)
-        defaults.removeObject(forKey: Self.udKeyCurrentBreakNumber)
-        defaults.removeObject(forKey: Self.udKeyDate)
+        defaults.removeObject(forKey: udKeyIsRunning)
+        defaults.removeObject(forKey: udKeyStartedAt)
+        defaults.removeObject(forKey: udKeyNextBreakAt)
+        defaults.removeObject(forKey: udKeyBreaksTaken)
+        defaults.removeObject(forKey: udKeyBreaksSkipped)
+        defaults.removeObject(forKey: udKeyCurrentBreakNumber)
+        defaults.removeObject(forKey: udKeyDate)
     }
 
     private func cancelPendingNotifications() {

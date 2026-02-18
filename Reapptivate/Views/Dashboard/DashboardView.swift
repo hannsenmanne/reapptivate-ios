@@ -19,7 +19,7 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: appState.isLbp || appState.isNeck
+                    showInsights: appState.isLbp || appState.isNeck || appState.isTension
                 )
 
                 // Tab Content

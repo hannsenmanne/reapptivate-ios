@@ -101,12 +101,13 @@ struct BaselineTrackerView: View {
                             .frame(width: 50)
 
                         Button {
-                            duration += 5
+                            duration = min(duration + 5, 480)
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.appTitle2)
                                 .foregroundStyle(.textSecondary)
                         }
+                        .disabled(duration >= 480)
                     }
                     .frame(maxWidth: .infinity)
                 }

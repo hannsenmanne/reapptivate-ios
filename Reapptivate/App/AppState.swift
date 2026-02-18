@@ -43,7 +43,18 @@ final class AppState {
     func handleLogout() {
         currentUser = nil
         isAuthenticated = false
+        WorkTimerViewModel.clearPersistedState()
+        clearUserScopedDefaults()
         onLogout?()
+    }
+
+    /// Clears @AppStorage keys that are not scoped per user to prevent state bleeding between accounts.
+    private func clearUserScopedDefaults() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "readEducationCardIds")
+        defaults.removeObject(forKey: "rating_prompt_count")
+        defaults.removeObject(forKey: "rating_last_prompt_date")
+        defaults.removeObject(forKey: "hasCompletedFirstExercise")
     }
 
     /// Single consolidated logout path — clears tokens, resets API guard, and updates state.

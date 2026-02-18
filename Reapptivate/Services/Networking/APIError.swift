@@ -6,7 +6,7 @@ enum APIError: LocalizedError {
     case notFound
     case badRequest(String)
     case conflict(String)
-    case rateLimited
+    case rateLimited(retryAfter: Int?)
     case serverError(Int)
     case networkError(Error)
     case decodingError(Error)
@@ -26,8 +26,12 @@ enum APIError: LocalizedError {
             message
         case .conflict(let message):
             message
-        case .rateLimited:
-            "Zu viele Anfragen. Bitte warten Sie einen Moment."
+        case .rateLimited(let retryAfter):
+            if let seconds = retryAfter {
+                "Zu viele Anfragen. Bitte warten Sie \(seconds) Sekunden."
+            } else {
+                "Zu viele Anfragen. Bitte warten Sie einen Moment."
+            }
         case .serverError(let code):
             "Serverfehler (\(code)). Bitte versuchen Sie es später erneut."
         case .networkError:

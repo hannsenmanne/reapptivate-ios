@@ -21,7 +21,7 @@ struct NeckScreeningView: View {
                         NeckResultView(result: result) {
                             // Update AppState immediately - screening was successfully submitted
                             appState.currentUser?.neckScreeningCompleted = true
-                            // No need to refresh profile - it will sync naturally on next app launch
+                            appState.currentUser?.ndiSeverity = NdiSeverityGrade.from(ndiScore: result.ndiScore)
                             dismiss()
                         }
                     } else if vm.showPartTransition {

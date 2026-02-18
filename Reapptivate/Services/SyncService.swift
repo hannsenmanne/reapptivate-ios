@@ -7,66 +7,10 @@ final class SyncService {
     private let apiClient: APIClient
     private let networkMonitor: NetworkMonitor
     private let modelContext: ModelContext
-    private var isSyncing = false
-
-    var pendingCount: Int = 0
-
     init(apiClient: APIClient, networkMonitor: NetworkMonitor, modelContext: ModelContext) {
         self.apiClient = apiClient
         self.networkMonitor = networkMonitor
         self.modelContext = modelContext
-        updateCount()
-    }
-
-    // MARK: - Queue Offline Request
-
-    func queueRequest(endpoint: String, method: String, body: Data?) {
-        let pending = PendingSync(endpoint: endpoint, method: method, body: body)
-        modelContext.insert(pending)
-        try? modelContext.save()
-        updateCount()
-    }
-
-    // MARK: - Drain Queue
-
-    func drainQueue() async {
-        guard networkMonitor.isConnected, !isSyncing else { return }
-
-        isSyncing = true
-
-        let descriptor = FetchDescriptor<PendingSync>(
-            sortBy: [SortDescriptor(\.createdAt)]
-        )
-
-        guard let pending = try? modelContext.fetch(descriptor), !pending.isEmpty else {
-            isSyncing = false
-            return
-        }
-
-        for item in pending {
-            guard item.retryCount < 5 else {
-                modelContext.delete(item)
-                continue
-            }
-
-            do {
-                var request = URLRequest(url: APIEndpoints.baseURL.appendingPathComponent(item.endpoint))
-                request.httpMethod = item.method
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.setValue("application/json", forHTTPHeaderField: "Accept")
-                request.httpBody = item.body
-
-                let _: Data = try await apiClient.requestData(request)
-                modelContext.delete(item)
-            } catch {
-                item.retryCount += 1
-                Log.sync.warning("Failed to sync request to \(item.endpoint) (retry \(item.retryCount)/5): \(error.localizedDescription)")
-            }
-        }
-
-        try? modelContext.save()
-        updateCount()
-        isSyncing = false
     }
 
     // MARK: - Cache User Profile
@@ -86,9 +30,11 @@ final class SyncService {
                 adaptivePhase: profile.currentPhase,
                 aemSubtype: profile.aemSubtype?.rawValue,
                 ndiSeverity: profile.ndiSeverity?.rawValue,
+                tsiSeverity: profile.tsiSeverity?.rawValue,
                 protocolId: profile.protocolId,
                 aemScreeningCompleted: profile.aemScreeningCompleted ?? false,
                 neckScreeningCompleted: profile.neckScreeningCompleted ?? false,
+                tensionScreeningCompleted: profile.tensionScreeningCompleted ?? false,
                 startDate: profile.startDate
             )
             modelContext.insert(cached)
@@ -114,17 +60,9 @@ final class SyncService {
             try modelContext.delete(model: CachedProgress.self)
             try modelContext.delete(model: PendingSync.self)
             try modelContext.save()
-            pendingCount = 0
             Log.sync.info("All cached data cleared")
         } catch {
             Log.sync.error("Failed to clear cached data: \(error)")
         }
-    }
-
-    // MARK: - Helpers
-
-    private func updateCount() {
-        let descriptor = FetchDescriptor<PendingSync>()
-        pendingCount = (try? modelContext.fetchCount(descriptor)) ?? 0
     }
 }
