@@ -53,18 +53,26 @@ struct NeckMicroModulesView: View {
             }
 
             if let markError = markReadError {
-                InlineErrorView(message: markError) {
-                    markReadError = nil
-                }
+                InlineErrorView(
+                    message: markError,
+                    errorType: .server,
+                    onDismiss: {
+                        markReadError = nil
+                    }
+                )
             }
 
             if isLoading {
                 ProgressView("Nacken-Module laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
-                InlineErrorView(message: error) {
-                    Task { await loadModules() }
-                }
+                InlineErrorView(
+                    message: error,
+                    errorType: .network,
+                    onRetry: {
+                        Task { await loadModules() }
+                    }
+                )
             } else if modules.isEmpty {
                 Text("Keine Module verfügbar")
                     .font(.appSubheadline)

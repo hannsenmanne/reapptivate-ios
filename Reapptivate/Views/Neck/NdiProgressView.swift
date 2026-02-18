@@ -28,9 +28,13 @@ struct NdiProgressView: View {
                 ProgressView("NDI-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
-                InlineErrorView(message: error) {
-                    Task { await loadHistory() }
-                }
+                InlineErrorView(
+                    message: error,
+                    errorType: .network,
+                    onRetry: {
+                        Task { await loadHistory() }
+                    }
+                )
             } else if history.isEmpty {
                 Text("Noch keine Screening-Daten")
                     .font(.appSubheadline)

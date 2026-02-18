@@ -23,9 +23,13 @@ struct TensionFocusAreasView: View {
                 ProgressView("Schwerpunkte laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
-                InlineErrorView(message: error) {
-                    Task { await loadFocusAreas() }
-                }
+                InlineErrorView(
+                    message: error,
+                    errorType: .network,
+                    onRetry: {
+                        Task { await loadFocusAreas() }
+                    }
+                )
             } else if focusAreas.isEmpty {
                 Text("Keine Schwerpunktbereiche verfügbar")
                     .font(.appSubheadline)

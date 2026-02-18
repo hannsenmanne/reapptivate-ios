@@ -39,9 +39,13 @@ struct AnalyticsDashboardView: View {
                         triggerSection(summary.triggerFires)
                     }
                 } else if let error = errorMessage {
-                    InlineErrorView(message: error) {
-                        Task { await loadAnalytics() }
-                    }
+                    InlineErrorView(
+                        message: error,
+                        errorType: .network,
+                        onRetry: {
+                            Task { await loadAnalytics() }
+                        }
+                    )
                     .padding(.vertical, 20)
                 } else {
                     EmptyStateView(

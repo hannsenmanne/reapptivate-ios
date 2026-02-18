@@ -56,12 +56,16 @@ struct LbpMicroModulesSection: View {
         Group {
             if let vm = viewModel {
                 if let error = vm.errorMessage, vm.microModules.isEmpty {
-                    InlineErrorView(message: error) {
-                        Task {
-                            vm.errorMessage = nil
-                            await vm.loadMicroModules()
+                    InlineErrorView(
+                        message: error,
+                        errorType: .network,
+                        onRetry: {
+                            Task {
+                                vm.errorMessage = nil
+                                await vm.loadMicroModules()
+                            }
                         }
-                    }
+                    )
                 } else {
                     MicroModulesList(viewModel: vm)
                 }

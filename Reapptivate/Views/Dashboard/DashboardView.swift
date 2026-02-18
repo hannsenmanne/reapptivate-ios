@@ -26,9 +26,16 @@ struct DashboardView: View {
                 ScrollView {
                     VStack(spacing: 0) {
                         if let error = viewModel?.error {
-                            InlineErrorView(message: error) {
-                                Task { await loadAll() }
-                            }
+                            InlineErrorView(
+                                message: error,
+                                errorType: .network,
+                                onRetry: {
+                                    Task { await loadAll() }
+                                },
+                                onDismiss: {
+                                    viewModel?.error = nil
+                                }
+                            )
                             .padding(.horizontal, 16)
                             .padding(.top, 12)
                         }
