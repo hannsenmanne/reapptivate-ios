@@ -58,13 +58,13 @@ final class SharedTypesTests: XCTestCase {
         XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 14), .LEICHT)
     }
 
-    func testNdiSeverityFromScoreBoundary15To28() {
+    func testNdiSeverityFromScoreBoundary15To24() {
         XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 15), .MITTEL)
-        XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 28), .MITTEL)
+        XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 24), .MITTEL)
     }
 
-    func testNdiSeverityFromScoreBoundary29Plus() {
-        XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 29), .SCHWER)
+    func testNdiSeverityFromScoreBoundary25Plus() {
+        XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 25), .SCHWER)
         XCTAssertEqual(NdiSeverityGrade.from(ndiScore: 50), .SCHWER)
     }
 
@@ -73,28 +73,28 @@ final class SharedTypesTests: XCTestCase {
     func testTsiSeverityFromScore_Leicht() {
         XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 0), .LEICHT)
         XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 10), .LEICHT)
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 16), .LEICHT)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 15), .LEICHT)
     }
 
     func testTsiSeverityFromScore_Mittel() {
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 17), .MITTEL)
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 25), .MITTEL)
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 33), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 16), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 22), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 27), .MITTEL)
     }
 
     func testTsiSeverityFromScore_Schwer() {
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 34), .SCHWER)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 28), .SCHWER)
         XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 42), .SCHWER)
         XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 50), .SCHWER)
     }
 
     func testTsiSeverityFromScore_EdgeCases() {
-        // Boundary at 16/17
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 16), .LEICHT)
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 17), .MITTEL)
-        // Boundary at 33/34
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 33), .MITTEL)
-        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 34), .SCHWER)
+        // Boundary at 15/16
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 15), .LEICHT)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 16), .MITTEL)
+        // Boundary at 27/28
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 27), .MITTEL)
+        XCTAssertEqual(TsiSeverityGrade.from(tsiScore: 28), .SCHWER)
     }
 
     func testTsiSeverityDisplayNames() {
