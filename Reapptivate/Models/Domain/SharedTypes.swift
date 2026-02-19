@@ -139,8 +139,9 @@ enum NdiSeverityGrade: String, Codable {
     }
 
     static func from(ndiScore: Int) -> NdiSeverityGrade {
+        // NDI max = 50. LEICHT: 0-28% (≤14 raw), MITTEL: 29-48% (≤24 raw), SCHWER: 49%+
         if ndiScore <= 14 { return .LEICHT }
-        if ndiScore <= 28 { return .MITTEL }
+        if ndiScore <= 24 { return .MITTEL }
         return .SCHWER
     }
 }
@@ -161,8 +162,11 @@ enum TsiSeverityGrade: String, Codable {
     }
 
     static func from(tsiScore: Int) -> TsiSeverityGrade {
-        if tsiScore <= 16 { return .LEICHT }
-        if tsiScore <= 33 { return .MITTEL }
+        // Thresholds aligned with backend percentage-based scoring:
+        // TSI max = 50, percentage = score/50*100
+        // LEICHT: ≤30% = ≤15 raw, MITTEL: ≤55% = ≤27 raw
+        if tsiScore <= 15 { return .LEICHT }
+        if tsiScore <= 27 { return .MITTEL }
         return .SCHWER
     }
 }
