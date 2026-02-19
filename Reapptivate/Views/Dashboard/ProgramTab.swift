@@ -11,12 +11,14 @@ struct ProgramTab: View {
     enum ExerciseSheet: Identifiable, Equatable {
         case progressLog(ExerciseWithPhase)
         case detail(ExerciseWithPhase)
+        case session(ExerciseWithPhase)
         case customProgressLog(CustomExercise)
 
         var id: String {
             switch self {
             case .progressLog(let e): "log-\(e.id)"
             case .detail(let e): "detail-\(e.id)"
+            case .session(let e): "session-\(e.id)"
             case .customProgressLog(let e): "custom-log-\(e.id)"
             }
         }
@@ -145,6 +147,7 @@ struct ProgramTab: View {
                         },
                         onStartSession: {
                             activeSheet = nil
+                            pendingSheet = .session(exercise)
                         }
                     )
                     .toolbar {
@@ -153,6 +156,16 @@ struct ProgramTab: View {
                         }
                     }
                 }
+            case .session(let exercise):
+                ExerciseSessionView(
+                    exercise: exercise,
+                    maxPainLevel: maxPainLevel,
+                    showSymptomResponse: appState.isNeck,
+                    onComplete: {
+                        exerciseVM?.markCompleted(exercise.id)
+                        onExerciseLogged?()
+                    }
+                )
             case .customProgressLog(let exercise):
                 CustomExerciseLogSheet(
                     exercise: exercise,
