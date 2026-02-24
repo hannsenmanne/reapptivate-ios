@@ -36,6 +36,8 @@ struct EdukationTab: View {
                 if let user = appState.currentUser {
                     WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false, isTension: true)
                 }
+            } else if appState.isAcl {
+                AclMicroModulesView(currentMilestone: appState.currentUser?.aclCurrentMilestone ?? 0)
             } else if let user = appState.currentUser {
                 WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false)
             }

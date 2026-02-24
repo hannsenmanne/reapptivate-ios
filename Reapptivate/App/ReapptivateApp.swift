@@ -58,6 +58,8 @@ struct RootView: View {
                     NeckScreeningView(isRescreening: false, isEmbedded: true)
                 } else if appState.needsTsiScreening {
                     TsiScreeningView(isRescreening: false, isEmbedded: true)
+                } else if appState.needsAclScreening {
+                    AclScreeningView(isEmbedded: true)
                 } else if !hasSeenWelcome {
                     ScreeningCompleteView()
                 } else if !hasSeenWalkthrough {

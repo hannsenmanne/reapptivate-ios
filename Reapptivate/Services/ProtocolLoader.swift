@@ -83,6 +83,8 @@ final class ProtocolLoader: @unchecked Sendable {
         case .neckShoulderTension:
             let grade = tsiSeverity ?? .LEICHT
             return "neck_shoulder_tension_\(grade.rawValue.lowercased())"
+        case .aclReconstruction:
+            return "acl_reconstruction"
         }
     }
 

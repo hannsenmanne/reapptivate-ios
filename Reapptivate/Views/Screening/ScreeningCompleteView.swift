@@ -140,6 +140,7 @@ struct ScreeningCompleteView: View {
         case .patellar: return "figure.strengthtraining.functional"
         case .rotatorCuff: return "figure.boxing"
         case .gluteal, .proximalHamstring: return "figure.cooldown"
+        case .aclReconstruction: return "figure.strengthtraining.functional"
         }
     }
 

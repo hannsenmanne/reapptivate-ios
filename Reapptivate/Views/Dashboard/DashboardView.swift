@@ -19,7 +19,7 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: appState.isLbp || appState.isNeck || appState.isTension
+                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl
                 )
 
                 // Tab Content
@@ -117,7 +117,15 @@ struct DashboardView: View {
     private var defaultTabContent: some View {
         switch selectedTab {
         case .overview:
-            if viewModel == nil || (viewModel?.isLoading == true && viewModel?.progressStats == nil) {
+            if appState.isAcl {
+                AclDashboardView(
+                    onNavigateToProgram: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = .program
+                        }
+                    }
+                )
+            } else if viewModel == nil || (viewModel?.isLoading == true && viewModel?.progressStats == nil) {
                 OverviewSkeletonView()
             } else {
                 OverviewTab(
@@ -131,16 +139,24 @@ struct DashboardView: View {
                 )
             }
         case .program:
-            ProgramTab(exerciseVM: exerciseVM, onExerciseLogged: {
-                Task { await viewModel?.refresh() }
-            })
+            if appState.isAcl {
+                AclStreamOverviewView()
+            } else {
+                ProgramTab(exerciseVM: exerciseVM, onExerciseLogged: {
+                    Task { await viewModel?.refresh() }
+                })
+            }
         case .edukation:
             EdukationTab()
         case .progress:
-            ProgressTab(
-                viewModel: viewModel,
-                phaseVM: phaseVM
-            )
+            if appState.isAcl {
+                AclDischargeProgressView()
+            } else {
+                ProgressTab(
+                    viewModel: viewModel,
+                    phaseVM: phaseVM
+                )
+            }
         case .insights:
             InsightsTab(viewModel: viewModel, phaseVM: phaseVM)
         }
@@ -157,6 +173,9 @@ struct DashboardView: View {
     }
 
     private func loadAll() async {
+        // ACL patients use their own dashboard views with separate data loading
+        guard !appState.isAcl else { return }
+
         // Dashboard VM (must load first — provides completedToday for exerciseVM)
         if viewModel == nil {
             viewModel = DashboardViewModel(apiClient: apiClient, appState: appState)

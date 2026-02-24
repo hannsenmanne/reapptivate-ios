@@ -15,6 +15,11 @@ final class CachedUser {
     var aemScreeningCompleted: Bool
     var neckScreeningCompleted: Bool
     var tensionScreeningCompleted: Bool
+    var aclScreeningCompleted: Bool
+    var aclAthleteLevel: String?
+    var aclGraftType: String?
+    var aclSurgeryDate: String?
+    var aclCurrentMilestone: Int?
     var startDate: String
     var lastSyncedAt: Date
 
@@ -31,6 +36,11 @@ final class CachedUser {
         aemScreeningCompleted: Bool = false,
         neckScreeningCompleted: Bool = false,
         tensionScreeningCompleted: Bool = false,
+        aclScreeningCompleted: Bool = false,
+        aclAthleteLevel: String? = nil,
+        aclGraftType: String? = nil,
+        aclSurgeryDate: String? = nil,
+        aclCurrentMilestone: Int? = nil,
         startDate: String,
         lastSyncedAt: Date = .now
     ) {
@@ -46,6 +56,11 @@ final class CachedUser {
         self.aemScreeningCompleted = aemScreeningCompleted
         self.neckScreeningCompleted = neckScreeningCompleted
         self.tensionScreeningCompleted = tensionScreeningCompleted
+        self.aclScreeningCompleted = aclScreeningCompleted
+        self.aclAthleteLevel = aclAthleteLevel
+        self.aclGraftType = aclGraftType
+        self.aclSurgeryDate = aclSurgeryDate
+        self.aclCurrentMilestone = aclCurrentMilestone
         self.startDate = startDate
         self.lastSyncedAt = lastSyncedAt
     }
@@ -62,6 +77,11 @@ final class CachedUser {
         aemScreeningCompleted = profile.aemScreeningCompleted ?? false
         neckScreeningCompleted = profile.neckScreeningCompleted ?? false
         tensionScreeningCompleted = profile.tensionScreeningCompleted ?? false
+        aclScreeningCompleted = profile.aclScreeningCompleted ?? false
+        aclAthleteLevel = profile.aclAthleteLevel?.rawValue
+        aclGraftType = profile.aclGraftType?.rawValue
+        aclSurgeryDate = profile.aclSurgeryDate
+        aclCurrentMilestone = profile.aclCurrentMilestone
         startDate = profile.startDate
         lastSyncedAt = .now
     }

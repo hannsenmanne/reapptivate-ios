@@ -15,6 +15,9 @@ struct InsightsTab: View {
         } else if appState.isTension {
             // Tension patients: TSI progress + focus areas
             TensionInsightsSection()
+        } else if appState.isAcl {
+            // ACL patients: comprehensive analytics dashboard
+            AclAnalyticsView()
         } else {
             // Tendinopathy patients: training overview + phase readiness
             TendinopathyInsightsView(viewModel: viewModel, phaseVM: phaseVM)

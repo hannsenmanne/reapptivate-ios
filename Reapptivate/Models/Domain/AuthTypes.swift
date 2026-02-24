@@ -21,6 +21,12 @@ struct LoginUser: Codable {
     let aemSubtype: AemSubtype?
     let neckScreeningCompleted: Bool?
     let neckSubtype: String?
+    let aclScreeningCompleted: Bool?
+    let aclAthleteLevel: AclAthleteLevel?
+    let aclGraftType: AclGraftType?
+    let aclSurgeryDate: String?
+    let aclCurrentMilestone: Int?
+    let aclConcomitantInjuries: [AclConcomitantInjury]?
 }
 
 // MARK: - Onboarding

@@ -307,6 +307,98 @@ enum APIEndpoints {
         get("work-timer/summary/history")
     }
 
+    // MARK: - ACL Screening
+
+    static func aclConfig() -> URLRequest {
+        get("acl/config")
+    }
+
+    static func submitAclScreening(body: AclScreeningSubmission) -> URLRequest {
+        post("acl/screening", encodable: body)
+    }
+
+    static func aclResult() -> URLRequest {
+        get("acl/screening")
+    }
+
+    // MARK: - ACL Streams
+
+    static func aclStreams() -> URLRequest {
+        get("acl/streams")
+    }
+
+    static func aclStreamDetail(streamId: String) -> URLRequest {
+        get("acl/streams/\(streamId)")
+    }
+
+    // MARK: - ACL Milestone
+
+    static func aclMilestoneStatus() -> URLRequest {
+        get("acl/milestone-status")
+    }
+
+    // MARK: - ACL Daily KPIs
+
+    static func submitAclDailyKpi(body: AclDailyKpiRequest) -> URLRequest {
+        post("acl/daily-kpi", encodable: body)
+    }
+
+    static func aclDailyKpiHistory(limit: Int = 30, date: String? = nil) -> URLRequest {
+        var query: [String: String] = ["limit": "\(limit)"]
+        if let date { query["date"] = date }
+        return get("acl/daily-kpi", query: query)
+    }
+
+    // MARK: - ACL Weekly KPIs
+
+    static func submitAclWeeklyKpi(body: AclWeeklyKpiRequest) -> URLRequest {
+        post("acl/weekly-kpi", encodable: body)
+    }
+
+    static func aclWeeklyKpiHistory(limit: Int = 30, currentWeek: Bool = false) -> URLRequest {
+        var query: [String: String] = ["limit": "\(limit)"]
+        if currentWeek { query["current_week"] = "true" }
+        return get("acl/weekly-kpi", query: query)
+    }
+
+    // MARK: - ACL Lab Assessments
+
+    static func aclLabAssessmentHistory() -> URLRequest {
+        get("acl/lab-assessment")
+    }
+
+    // MARK: - ACL Discharge
+
+    static func aclDischargeProgress() -> URLRequest {
+        get("acl/discharge-progress")
+    }
+
+    // MARK: - ACL Analytics
+
+    static func aclAnalytics() -> URLRequest {
+        get("acl/analytics")
+    }
+
+    // MARK: - ACL Micro-Modules
+
+    static func aclMicroModules(milestone: Int? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let milestone { query["milestone"] = "\(milestone)" }
+        return get("acl/micro-modules", query: query)
+    }
+
+    static func aclCompletedModules() -> URLRequest {
+        get("acl/micro-modules/completed")
+    }
+
+    static func startAclModule(key: String) -> URLRequest {
+        post("acl/micro-modules/\(key)/start")
+    }
+
+    static func completeAclModule(completionId: String) -> URLRequest {
+        post("acl/micro-modules/\(completionId)/complete")
+    }
+
     // MARK: - Custom Exercises
 
     static func customExercises() -> URLRequest {

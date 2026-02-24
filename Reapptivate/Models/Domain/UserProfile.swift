@@ -21,6 +21,14 @@ struct UserProfile: Codable, Identifiable {
     var tensionScreeningCompleted: Bool?
     var tsiSeverity: TsiSeverityGrade?
 
+    // ACL
+    var aclScreeningCompleted: Bool?
+    var aclAthleteLevel: AclAthleteLevel?
+    var aclGraftType: AclGraftType?
+    var aclSurgeryDate: String?
+    var aclCurrentMilestone: Int?
+    var aclConcomitantInjuries: [AclConcomitantInjury]?
+
     // Populated from phase-status endpoint, not from /me
     var adaptivePhase: Int?
     var ndiSeverity: NdiSeverityGrade?
@@ -37,7 +45,10 @@ struct UserProfile: Codable, Identifiable {
         adaptivePhase ?? 1
     }
 
+    var isAcl: Bool { tendinopathyType.isAcl }
+
     var maxPhase: Int {
+        if tendinopathyType.isAcl { return 5 }
         if tendinopathyType.isNeck || tendinopathyType.isTension { return 4 }
         return 3
     }

@@ -158,6 +158,47 @@ struct WorkTimerHistoryResponse: Codable {
     let history: [WorkTimerDaySummary]
 }
 
+// MARK: - ACL Screening Wrappers
+
+struct AclScreeningResponse: Codable {
+    let screening: AclScreeningResult
+}
+
+// MARK: - ACL Daily KPI Wrappers
+
+struct AclDailyKpiSingleResponse: Codable {
+    let kpi: AclDailyKpi
+}
+
+struct AclDailyKpiListResponse: Codable {
+    let kpis: [AclDailyKpi]?
+    let entries: [AclDailyKpi]?
+}
+
+// MARK: - ACL Weekly KPI Wrappers
+
+struct AclWeeklyKpiListResponse: Codable {
+    let kpis: [AclWeeklyKpi]?
+    let entries: [AclWeeklyKpi]?
+}
+
+// MARK: - ACL Lab Assessment Wrappers
+
+struct AclLabAssessmentListResponse: Codable {
+    let assessments: [AclLabAssessment]
+}
+
+// MARK: - ACL Micro-Module Wrappers
+
+struct AclMicroModulesResponse: Codable {
+    let modules: [AclMicroModule]
+}
+
+struct AclCompletedModulesResponse: Codable {
+    let completions: [MicroModuleCompletion]?
+    let completedModules: [MicroModuleCompletion]?
+}
+
 // MARK: - Custom Exercise Wrappers
 
 struct CustomExercisesResponse: Codable {

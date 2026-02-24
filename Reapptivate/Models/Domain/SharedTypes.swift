@@ -18,6 +18,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
     case lbpNonspecific = "LBP_NONSPECIFIC"
     case neckPain = "NECK_PAIN"
     case neckShoulderTension = "NECK_SHOULDER_TENSION"
+    case aclReconstruction = "ACL_RECONSTRUCTION"
 
     var displayName: String {
         switch self {
@@ -32,13 +33,15 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .lbpNonspecific: "Unspez. Rückenschmerz"
         case .neckPain: "Nackenschmerz"
         case .neckShoulderTension: "Nacken-Schulter-Verspannung"
+        case .aclReconstruction: "Kreuzbandrekonstruktion"
         }
     }
 
     var isLbp: Bool { self == .lbpNonspecific }
     var isNeck: Bool { self == .neckPain }
     var isTension: Bool { self == .neckShoulderTension }
-    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension }
+    var isAcl: Bool { self == .aclReconstruction }
+    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl }
 }
 
 // MARK: - Exercise Type

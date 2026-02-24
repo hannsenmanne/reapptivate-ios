@@ -17,7 +17,13 @@ enum TestFixtures {
         tensionScreeningCompleted: Bool? = nil,
         tsiSeverity: TsiSeverityGrade? = nil,
         adaptivePhase: Int? = nil,
-        ndiSeverity: NdiSeverityGrade? = nil
+        ndiSeverity: NdiSeverityGrade? = nil,
+        aclScreeningCompleted: Bool? = nil,
+        aclAthleteLevel: AclAthleteLevel? = nil,
+        aclGraftType: AclGraftType? = nil,
+        aclSurgeryDate: String? = nil,
+        aclCurrentMilestone: Int? = nil,
+        aclConcomitantInjuries: [AclConcomitantInjury]? = nil
     ) -> UserProfile {
         UserProfile(
             id: id,
@@ -33,6 +39,12 @@ enum TestFixtures {
             neckSubtype: nil,
             tensionScreeningCompleted: tensionScreeningCompleted,
             tsiSeverity: tsiSeverity,
+            aclScreeningCompleted: aclScreeningCompleted,
+            aclAthleteLevel: aclAthleteLevel,
+            aclGraftType: aclGraftType,
+            aclSurgeryDate: aclSurgeryDate,
+            aclCurrentMilestone: aclCurrentMilestone,
+            aclConcomitantInjuries: aclConcomitantInjuries,
             adaptivePhase: adaptivePhase,
             ndiSeverity: ndiSeverity
         )
@@ -59,6 +71,18 @@ enum TestFixtures {
             tendinopathyType: .neckShoulderTension,
             tensionScreeningCompleted: screened,
             tsiSeverity: severity
+        )
+    }
+
+    static func aclUser(screened: Bool = true, milestone: Int = 1) -> UserProfile {
+        userProfile(
+            tendinopathyType: .aclReconstruction,
+            aclScreeningCompleted: screened,
+            aclAthleteLevel: .recreational,
+            aclGraftType: .hamstring,
+            aclSurgeryDate: "2025-09-01",
+            aclCurrentMilestone: milestone,
+            aclConcomitantInjuries: [.none]
         )
     }
 
