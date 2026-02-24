@@ -1,5 +1,23 @@
 import Foundation
 
+// MARK: - Flexible Numeric Decoding
+
+extension KeyedDecodingContainer {
+    /// Decodes a Double that may arrive as a JSON number or a string (PostgreSQL numeric columns).
+    func flexibleDouble(forKey key: Key) -> Double? {
+        if let val = try? decode(Double.self, forKey: key) { return val }
+        if let str = try? decode(String.self, forKey: key) { return Double(str) }
+        return nil
+    }
+
+    /// Decodes an Int that may arrive as a JSON number or a string.
+    func flexibleInt(forKey key: Key) -> Int? {
+        if let val = try? decode(Int.self, forKey: key) { return val }
+        if let str = try? decode(String.self, forKey: key) { return Int(str) }
+        return nil
+    }
+}
+
 // MARK: - ACL Enums
 
 enum AclAthleteLevel: String, Codable {
@@ -211,6 +229,23 @@ struct AclMilestoneCriterion: Codable, Identifiable {
 
     // Operator is a keyword, use backticks
     let `operator`: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case id, label, labelDE, field, threshold, unit, met, currentValue, `operator`
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        label = try c.decodeIfPresent(String.self, forKey: .label)
+        labelDE = try c.decodeIfPresent(String.self, forKey: .labelDE)
+        field = try c.decodeIfPresent(String.self, forKey: .field)
+        threshold = c.flexibleDouble(forKey: .threshold)
+        unit = try c.decodeIfPresent(String.self, forKey: .unit)
+        met = try c.decodeIfPresent(Bool.self, forKey: .met)
+        currentValue = c.flexibleDouble(forKey: .currentValue)
+        `operator` = try c.decodeIfPresent(String.self, forKey: .operator)
+    }
 }
 
 // MARK: - ACL Daily KPIs
@@ -298,6 +333,43 @@ struct AclLabAssessment: Codable, Identifiable {
     let swellingGrade: Int?
     let notes: String?
     let createdAt: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case id, milestone, assessmentDate
+        case quadLsi, hamstringLsi, hipAbdLsi, hipAddLsi, hipErLsi, calfLsi
+        case dlCmjConcentricLsi, dlCmjEccentricLsi, slCmjHeightLsi
+        case dlDjRsi, slDjRsi, slDjContactTimeLsi
+        case runningSpeedKmh, ikdcScore, tampaScore
+        case kneeFlexionDeg, extensionDeficitDeg, swellingGrade
+        case notes, createdAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        milestone = try c.decode(Int.self, forKey: .milestone)
+        assessmentDate = try c.decodeIfPresent(String.self, forKey: .assessmentDate)
+        quadLsi = c.flexibleDouble(forKey: .quadLsi)
+        hamstringLsi = c.flexibleDouble(forKey: .hamstringLsi)
+        hipAbdLsi = c.flexibleDouble(forKey: .hipAbdLsi)
+        hipAddLsi = c.flexibleDouble(forKey: .hipAddLsi)
+        hipErLsi = c.flexibleDouble(forKey: .hipErLsi)
+        calfLsi = c.flexibleDouble(forKey: .calfLsi)
+        dlCmjConcentricLsi = c.flexibleDouble(forKey: .dlCmjConcentricLsi)
+        dlCmjEccentricLsi = c.flexibleDouble(forKey: .dlCmjEccentricLsi)
+        slCmjHeightLsi = c.flexibleDouble(forKey: .slCmjHeightLsi)
+        dlDjRsi = c.flexibleDouble(forKey: .dlDjRsi)
+        slDjRsi = c.flexibleDouble(forKey: .slDjRsi)
+        slDjContactTimeLsi = c.flexibleDouble(forKey: .slDjContactTimeLsi)
+        runningSpeedKmh = c.flexibleDouble(forKey: .runningSpeedKmh)
+        ikdcScore = c.flexibleDouble(forKey: .ikdcScore)
+        tampaScore = c.flexibleDouble(forKey: .tampaScore)
+        kneeFlexionDeg = c.flexibleDouble(forKey: .kneeFlexionDeg)
+        extensionDeficitDeg = c.flexibleDouble(forKey: .extensionDeficitDeg)
+        swellingGrade = c.flexibleInt(forKey: .swellingGrade)
+        notes = try c.decodeIfPresent(String.self, forKey: .notes)
+        createdAt = try c.decodeIfPresent(String.self, forKey: .createdAt)
+    }
 }
 
 // API response from POST /api/acl/lab-assessment: { assessment: { ... }, criteria, allCriteriaMet, milestoneAdvanced, newMilestone }
@@ -325,6 +397,23 @@ struct AclLabAssessmentResponse: Codable {
         let met: Bool
         let currentValue: Double?
         let `operator`: String?
+
+        private enum CodingKeys: String, CodingKey {
+            case id, label, labelDE, field, threshold, unit, met, currentValue, `operator`
+        }
+
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            id = try c.decode(String.self, forKey: .id)
+            label = try c.decodeIfPresent(String.self, forKey: .label)
+            labelDE = try c.decodeIfPresent(String.self, forKey: .labelDE)
+            field = try c.decodeIfPresent(String.self, forKey: .field)
+            threshold = c.flexibleDouble(forKey: .threshold)
+            unit = try c.decodeIfPresent(String.self, forKey: .unit)
+            met = try c.decode(Bool.self, forKey: .met)
+            currentValue = c.flexibleDouble(forKey: .currentValue)
+            `operator` = try c.decodeIfPresent(String.self, forKey: .operator)
+        }
     }
 }
 
@@ -350,6 +439,23 @@ struct AclDischargeCriterion: Codable, Identifiable {
     let met: Bool?
     let currentValue: Double?
     let `operator`: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case id, category, test, field, threshold, unit, met, currentValue, `operator`
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        category = try c.decodeIfPresent(String.self, forKey: .category)
+        test = try c.decodeIfPresent(String.self, forKey: .test)
+        field = try c.decodeIfPresent(String.self, forKey: .field)
+        threshold = c.flexibleDouble(forKey: .threshold)
+        unit = try c.decodeIfPresent(String.self, forKey: .unit)
+        met = try c.decodeIfPresent(Bool.self, forKey: .met)
+        currentValue = c.flexibleDouble(forKey: .currentValue)
+        `operator` = try c.decodeIfPresent(String.self, forKey: .operator)
+    }
 }
 
 // MARK: - ACL Analytics
@@ -396,6 +502,16 @@ struct AclScoreTrendPoint: Codable, Identifiable {
     let score: Int?
 
     var id: String { weekDate }
+
+    private enum CodingKeys: String, CodingKey {
+        case weekDate, score
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        weekDate = try c.decode(String.self, forKey: .weekDate)
+        score = c.flexibleInt(forKey: .score)
+    }
 }
 
 struct AclThighCircTrendPoint: Codable, Identifiable {
@@ -404,6 +520,17 @@ struct AclThighCircTrendPoint: Codable, Identifiable {
     let circ10cm: Double?
 
     var id: String { weekDate }
+
+    private enum CodingKeys: String, CodingKey {
+        case weekDate, circ5cm, circ10cm
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        weekDate = try c.decode(String.self, forKey: .weekDate)
+        circ5cm = c.flexibleDouble(forKey: .circ5cm)
+        circ10cm = c.flexibleDouble(forKey: .circ10cm)
+    }
 }
 
 struct AclLabSummaryPoint: Codable {
@@ -411,6 +538,18 @@ struct AclLabSummaryPoint: Codable {
     let date: String?
     let quadLsi: Double?
     let hamstringLsi: Double?
+
+    private enum CodingKeys: String, CodingKey {
+        case milestone, date, quadLsi, hamstringLsi
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        milestone = try c.decode(Int.self, forKey: .milestone)
+        date = try c.decodeIfPresent(String.self, forKey: .date)
+        quadLsi = c.flexibleDouble(forKey: .quadLsi)
+        hamstringLsi = c.flexibleDouble(forKey: .hamstringLsi)
+    }
 }
 
 // MARK: - ACL Micro-Modules

@@ -568,7 +568,7 @@ enum TestFixtures {
                     "threshold": 70.0,
                     "unit": "%",
                     "met": false,
-                    "currentValue": 55.0,
+                    "currentValue": "55.0",
                     "operator": ">=",
                 ]
             ],
@@ -754,7 +754,7 @@ enum TestFixtures {
                     "threshold": 90.0,
                     "unit": "%",
                     "met": true,
-                    "currentValue": 92.0,
+                    "currentValue": "92.0",
                     "operator": ">=",
                 ],
                 [
@@ -765,7 +765,7 @@ enum TestFixtures {
                     "threshold": 5.0,
                     "unit": "°",
                     "met": false,
-                    "currentValue": 8.0,
+                    "currentValue": "8.0",
                     "operator": "<=",
                 ],
             ] as [[String: Any]],
