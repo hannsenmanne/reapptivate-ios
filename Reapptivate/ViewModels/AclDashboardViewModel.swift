@@ -6,8 +6,15 @@ final class AclDashboardViewModel {
     var milestoneStatus: AclMilestoneStatus?
     var streams: [AclStream] = []
     var dischargeProgress: AclDischargeProgress?
+    var dailyTip: AclDailyTip?
+    var streak: StreakResponse?
     var isLoading = false
     var errorMessage: String?
+
+    // Milestone celebration
+    var milestoneAdvanced = false
+    var newMilestoneReached: Int?
+    private var previousMilestone: Int?
 
     private let apiClient: APIClient
 
@@ -21,6 +28,11 @@ final class AclDashboardViewModel {
         isLoading = true
         errorMessage = nil
 
+        // Remember previous milestone for celebration detection
+        if previousMilestone == nil {
+            previousMilestone = milestoneStatus?.currentMilestone
+        }
+
         async let milestoneResult: AclMilestoneStatus? = loadSafely {
             try await self.apiClient.request(APIEndpoints.aclMilestoneStatus())
         }
@@ -33,11 +45,28 @@ final class AclDashboardViewModel {
             try await self.apiClient.request(APIEndpoints.aclDischargeProgress())
         }
 
-        let (milestone, streamsResp, discharge) = await (milestoneResult, streamsResult, dischargeResult)
+        async let tipResult: AclDailyTip? = loadSafely {
+            try await self.apiClient.request(APIEndpoints.aclDailyTip())
+        }
+
+        async let streakResult: StreakResponse? = loadSafely {
+            try await self.apiClient.request(APIEndpoints.streak())
+        }
+
+        let (milestone, streamsResp, discharge, tip, streakResp) = await (milestoneResult, streamsResult, dischargeResult, tipResult, streakResult)
 
         milestoneStatus = milestone
         streams = streamsResp?.streams ?? []
         dischargeProgress = discharge
+        dailyTip = tip
+        streak = streakResp
+
+        // Detect milestone advancement
+        if let prev = previousMilestone, let current = milestone?.currentMilestone, current > prev {
+            newMilestoneReached = current
+            milestoneAdvanced = true
+        }
+        previousMilestone = milestone?.currentMilestone
 
         isLoading = false
     }

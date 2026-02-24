@@ -264,6 +264,7 @@ struct AclDailyKpi: Codable, Identifiable {
     let swellingGrade: Int?
     let quadsLag: Bool?
     let notes: String?
+    let donorSitePainNrs: Int?
 }
 
 struct AclDailyKpiRequest: Codable {
@@ -276,6 +277,7 @@ struct AclDailyKpiRequest: Codable {
     let swellingGrade: Int?
     let quadsLag: Bool?
     let notes: String?
+    let donorSitePainNrs: Int?
 }
 
 // MARK: - ACL Weekly KPIs
@@ -574,4 +576,21 @@ struct AclMicroModule: Codable, Identifiable {
         case key, title, takeHome, taskType, targetCondition, targetMilestone
         case content = "bodyMarkdown"
     }
+}
+
+// MARK: - ACL Daily Tip
+
+struct AclDailyTip: Codable {
+    let tip: String
+    let stream: String
+    let streamLabel: String
+}
+
+// MARK: - Streak
+
+struct StreakResponse: Codable {
+    let currentStreak: Int
+    let longestStreak: Int
+    let freezeTokens: Int
+    let lastTrainingDate: String?
 }

@@ -156,6 +156,19 @@ struct AclStreamCard: View {
         }
         .cardStyle()
         .opacity(isLocked ? 0.7 : 1.0)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(streamAccessibilityLabel)
+    }
+
+    private var streamAccessibilityLabel: String {
+        let name = stream.nameDE ?? stream.name
+        let exerciseCount = stream.exerciseCount ?? 0
+        if isLocked {
+            let milestone = stream.milestone ?? stream.unlockMilestone
+            let unlockInfo = milestone.map { "Wird ab Meilenstein \($0) freigeschaltet." } ?? ""
+            return "\(name), gesperrt, \(exerciseCount) Übungen. \(unlockInfo)"
+        }
+        return "\(name), \(exerciseCount) Übungen"
     }
 }
 

@@ -2,6 +2,7 @@ import SwiftUI
 import Charts
 
 struct AclAnalyticsView: View {
+    @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
 
     @State private var analytics: AclAnalytics?
@@ -329,7 +330,7 @@ struct AclAnalyticsView: View {
                         x: .value("Muskelgruppe", item.0),
                         y: .value("LSI %", item.1)
                     )
-                    .foregroundStyle(lsiColor(for: item.1))
+                    .foregroundStyle(lsiColor(for: item.1, milestone: latest.milestone))
                     .cornerRadius(4)
                 }
                 .chartYScale(domain: 0...110)
@@ -368,6 +369,8 @@ struct AclAnalyticsView: View {
             content()
         }
         .cardStyle()
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Diagramm: \(title)")
     }
 
     // MARK: - Helpers
@@ -376,9 +379,12 @@ struct AclAnalyticsView: View {
         DateFormatters.dateOnly.date(from: dateString)
     }
 
-    private func lsiColor(for value: Double) -> Color {
-        if value >= 85 { return .painGreen }
-        if value >= 70 { return .painAmber }
+    private func lsiColor(for value: Double, milestone: Int? = nil) -> Color {
+        let athleteLevel = appState.currentUser?.aclAthleteLevel
+        let greenThreshold: Double = (milestone ?? 0) >= 4 && athleteLevel == .competitive ? 90 : 85
+        let amberThreshold: Double = (milestone ?? 0) >= 4 && athleteLevel == .competitive ? 75 : 70
+        if value >= greenThreshold { return .painGreen }
+        if value >= amberThreshold { return .painAmber }
         return .painRed
     }
 

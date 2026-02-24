@@ -71,6 +71,9 @@ struct AclDailyKpiLoggerView: View {
                 // Pain NRS
                 painSection(vm)
 
+                // Donor Site Pain
+                donorSitePainSection(vm)
+
                 // Pain Location & Activity
                 painDetailSection(vm)
 
@@ -157,6 +160,40 @@ struct AclDailyKpiLoggerView: View {
         }
     }
 
+    // MARK: - Donor Site Pain
+
+    @ViewBuilder
+    private func donorSitePainSection(_ vm: AclDailyKpiViewModel) -> some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Entnahmestellen-Schmerz (NRS)")
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
+                Spacer()
+                Text("\(vm.donorSitePainNrs)/10")
+                    .font(.appSubheadlineMedium)
+                    .foregroundStyle(painColor(for: vm.donorSitePainNrs))
+            }
+
+            Slider(
+                value: Binding(
+                    get: { Double(vm.donorSitePainNrs) },
+                    set: { vm.donorSitePainNrs = Int($0.rounded()) }
+                ),
+                in: 0...10,
+                step: 1
+            )
+            .tint(painColor(for: vm.donorSitePainNrs))
+            .accessibilityLabel("Entnahmestellen-Schmerz")
+            .accessibilityValue("\(vm.donorSitePainNrs) von 10")
+
+            Text("Schmerz an der Transplantat-Entnahmestelle")
+                .font(.appCaption2)
+                .foregroundStyle(.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
     // MARK: - Pain Detail
 
     @ViewBuilder
@@ -192,30 +229,44 @@ struct AclDailyKpiLoggerView: View {
     private func romSection(_ vm: AclDailyKpiViewModel) -> some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 6) {
-                Text("Flexion")
+                Text("Flexion (0-160°)")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
-                Stepper(value: Binding(
-                    get: { vm.kneeFlexionDeg },
-                    set: { vm.kneeFlexionDeg = $0 }
-                ), in: 0...160, step: 5) {
-                    Text("\(vm.kneeFlexionDeg)°")
-                        .font(.appTitle3)
-                }
+                TextField("z.B. 90", text: Binding(
+                    get: { "\(vm.kneeFlexionDeg)" },
+                    set: { newValue in
+                        if let val = Int(newValue) {
+                            vm.kneeFlexionDeg = min(160, max(0, val))
+                        } else if newValue.isEmpty {
+                            vm.kneeFlexionDeg = 0
+                        }
+                    }
+                ))
+                .keyboardType(.numberPad)
+                .inputFieldStyle()
+                .accessibilityLabel("Knieflexion in Grad")
+                .accessibilityValue("\(vm.kneeFlexionDeg) Grad")
             }
             .frame(maxWidth: .infinity)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Extensionsdefizit")
+                Text("Ext.-Defizit (0-30°)")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
-                Stepper(value: Binding(
-                    get: { vm.extensionDeficitDeg },
-                    set: { vm.extensionDeficitDeg = $0 }
-                ), in: 0...30, step: 1) {
-                    Text("\(vm.extensionDeficitDeg)°")
-                        .font(.appTitle3)
-                }
+                TextField("z.B. 5", text: Binding(
+                    get: { "\(vm.extensionDeficitDeg)" },
+                    set: { newValue in
+                        if let val = Int(newValue) {
+                            vm.extensionDeficitDeg = min(30, max(0, val))
+                        } else if newValue.isEmpty {
+                            vm.extensionDeficitDeg = 0
+                        }
+                    }
+                ))
+                .keyboardType(.numberPad)
+                .inputFieldStyle()
+                .accessibilityLabel("Extensionsdefizit in Grad")
+                .accessibilityValue("\(vm.extensionDeficitDeg) Grad")
             }
             .frame(maxWidth: .infinity)
         }

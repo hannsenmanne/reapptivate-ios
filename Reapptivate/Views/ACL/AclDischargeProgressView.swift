@@ -76,6 +76,9 @@ struct AclDischargeProgressView: View {
                 }
             }
             .frame(height: 6)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Gesamtfortschritt")
+            .accessibilityValue("\(progress.overallPercent) Prozent, \(progress.metCount) von \(progress.totalCount) Kriterien erfüllt")
 
             if progress.metCount == progress.totalCount && progress.totalCount > 0 {
                 HStack(spacing: 8) {
@@ -210,7 +213,19 @@ struct DischargeCriterionCard: View {
                 }
             }
             .frame(height: 4)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(criterionAccessibilityLabel)
+            .accessibilityValue("\(Int(progressPercent * 100)) Prozent")
         }
         .cardStyle()
+    }
+
+    private var criterionAccessibilityLabel: String {
+        let name = criterion.test ?? criterion.category ?? criterion.id
+        let status = isMet ? "erfüllt" : "nicht erfüllt"
+        if let current = criterion.currentValue, let threshold = criterion.threshold {
+            return "\(name), \(status), \(Int(current)) von \(Int(threshold))\(criterion.unit ?? "")"
+        }
+        return "\(name), \(status)"
     }
 }

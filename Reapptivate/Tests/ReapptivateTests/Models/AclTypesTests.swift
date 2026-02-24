@@ -171,7 +171,8 @@ final class AclTypesTests: XCTestCase {
             extensionDeficitDeg: 10,
             swellingGrade: 2,
             quadsLag: true,
-            notes: nil
+            notes: nil,
+            donorSitePainNrs: nil
         )
         let data = try encoder.encode(request)
         let decoded = try decoder.decode(AclDailyKpiRequest.self, from: data)
@@ -360,5 +361,269 @@ final class AclTypesTests: XCTestCase {
 
         XCTAssertEqual(response.kpis?.count, 2)
         XCTAssertNil(response.entries)
+    }
+
+    // MARK: - Donor Site Pain
+
+    func testAclDailyKpiDecodesWithDonorSitePain() throws {
+        let data = TestFixtures.aclDailyKpiWithDonorSiteJSON()
+        let response = try decoder.decode(AclDailyKpiSingleResponse.self, from: data)
+
+        XCTAssertEqual(response.kpi.donorSitePainNrs, 5)
+    }
+
+    func testAclDailyKpiDecodesWithoutDonorSitePain() throws {
+        // Original fixture lacks donorSitePainNrs — should decode as nil
+        let data = TestFixtures.aclDailyKpiJSON()
+        let response = try decoder.decode(AclDailyKpiSingleResponse.self, from: data)
+
+        XCTAssertNil(response.kpi.donorSitePainNrs)
+    }
+
+    func testAclDailyKpiRequestEncodesWithDonorSitePain() throws {
+        let request = AclDailyKpiRequest(
+            date: nil,
+            painNrs: 3,
+            painLocation: nil,
+            painActivity: nil,
+            kneeFlexionDeg: 120,
+            extensionDeficitDeg: 2,
+            swellingGrade: 0,
+            quadsLag: false,
+            notes: nil,
+            donorSitePainNrs: 5
+        )
+        let data = try encoder.encode(request)
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+
+        XCTAssertEqual(json?["donorSitePainNrs"] as? Int, 5)
+    }
+
+    func testAclDailyKpiRequestEncodesNilDonorSitePain() throws {
+        let request = AclDailyKpiRequest(
+            date: nil,
+            painNrs: 3,
+            painLocation: nil,
+            painActivity: nil,
+            kneeFlexionDeg: 120,
+            extensionDeficitDeg: 2,
+            swellingGrade: 0,
+            quadsLag: false,
+            notes: nil,
+            donorSitePainNrs: nil
+        )
+        let data = try encoder.encode(request)
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+
+        // nil donorSitePainNrs should not appear in encoded JSON
+        XCTAssertNil(json?["donorSitePainNrs"])
+    }
+
+    // MARK: - AclDailyTip
+
+    func testAclDailyTipDecoding() throws {
+        let data = TestFixtures.aclDailyTipJSON()
+        let tip = try decoder.decode(AclDailyTip.self, from: data)
+
+        XCTAssertEqual(tip.stream, "rom")
+        XCTAssertEqual(tip.streamLabel, "ROM Wiederherstellung")
+        XCTAssertTrue(tip.tip.contains("Kühlen"))
+    }
+
+    // MARK: - StreakResponse
+
+    func testStreakResponseDecoding() throws {
+        let data = TestFixtures.streakResponseJSON()
+        let streak = try decoder.decode(StreakResponse.self, from: data)
+
+        XCTAssertEqual(streak.currentStreak, 5)
+        XCTAssertEqual(streak.longestStreak, 12)
+        XCTAssertEqual(streak.freezeTokens, 2)
+        XCTAssertEqual(streak.lastTrainingDate, "2025-10-15")
+    }
+
+    func testStreakResponseDecodesWithoutOptionalFields() throws {
+        let json: [String: Any] = [
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "freezeTokens": 0,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let streak = try decoder.decode(StreakResponse.self, from: data)
+
+        XCTAssertEqual(streak.currentStreak, 0)
+        XCTAssertNil(streak.lastTrainingDate)
+    }
+
+    // MARK: - flexibleDouble with String-Encoded Numerics
+
+    func testMilestoneCriterionDecodesStringThreshold() throws {
+        let json: [String: Any] = [
+            "currentMilestone": 3,
+            "weeksPostSurgery": 14,
+            "isPreOp": false,
+            "athleteLevel": "COMPETITIVE",
+            "graftType": "PATELLAR_TENDON",
+            "surgeryDate": "2025-06-01",
+            "concomitantInjuries": ["NONE"],
+            "nextCriteria": [
+                [
+                    "id": "crit-string",
+                    "label": "Quad LSI",
+                    "threshold": "92.0",
+                    "currentValue": "87.5",
+                    "operator": ">=",
+                    "met": false,
+                    "unit": "%",
+                ]
+            ],
+            "isReadyForLab": true,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let status = try decoder.decode(AclMilestoneStatus.self, from: data)
+
+        let criterion = try XCTUnwrap(status.nextCriteria?.first)
+        XCTAssertEqual(criterion.threshold, 92.0)
+        XCTAssertEqual(criterion.currentValue, 87.5)
+    }
+
+    func testMilestoneCriterionDecodesNumericThreshold() throws {
+        let json: [String: Any] = [
+            "currentMilestone": 2,
+            "weeksPostSurgery": 10,
+            "isPreOp": false,
+            "nextCriteria": [
+                [
+                    "id": "crit-num",
+                    "threshold": 70,
+                    "currentValue": 55,
+                    "operator": ">=",
+                    "met": false,
+                ]
+            ],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let status = try decoder.decode(AclMilestoneStatus.self, from: data)
+
+        let criterion = try XCTUnwrap(status.nextCriteria?.first)
+        XCTAssertEqual(criterion.threshold, 70.0)
+        XCTAssertEqual(criterion.currentValue, 55.0)
+    }
+
+    // MARK: - AclLabAssessment Full Decoding
+
+    func testAclLabAssessmentFullDecoding() throws {
+        let json: [String: Any] = [
+            "id": "lab-full-1",
+            "milestone": 3,
+            "assessmentDate": "2025-11-20",
+            "quadLsi": "88.5",
+            "hamstringLsi": 92.0,
+            "hipAbdLsi": "79.0",
+            "hipAddLsi": 85,
+            "hipErLsi": "91.2",
+            "calfLsi": 77.0,
+            "dlCmjConcentricLsi": "84.0",
+            "dlCmjEccentricLsi": 81,
+            "slCmjHeightLsi": "75.5",
+            "dlDjRsi": 0.95,
+            "slDjRsi": "0.88",
+            "slDjContactTimeLsi": "82.0",
+            "runningSpeedKmh": "12.5",
+            "ikdcScore": 72,
+            "tampaScore": "28",
+            "kneeFlexionDeg": "135",
+            "extensionDeficitDeg": 0,
+            "swellingGrade": "1",
+            "notes": "Post-M3 assessment",
+            "createdAt": "2025-11-20T10:00:00Z",
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let assessment = try decoder.decode(AclLabAssessment.self, from: data)
+
+        XCTAssertEqual(assessment.id, "lab-full-1")
+        XCTAssertEqual(assessment.milestone, 3)
+        XCTAssertEqual(assessment.assessmentDate, "2025-11-20")
+        // String-encoded values via flexibleDouble
+        XCTAssertEqual(assessment.quadLsi, 88.5)
+        XCTAssertEqual(assessment.hipAbdLsi, 79.0)
+        XCTAssertEqual(assessment.hipErLsi, 91.2)
+        XCTAssertEqual(assessment.slCmjHeightLsi, 75.5)
+        XCTAssertEqual(assessment.slDjRsi, 0.88)
+        XCTAssertEqual(assessment.runningSpeedKmh, 12.5)
+        XCTAssertEqual(assessment.tampaScore, 28.0)
+        XCTAssertEqual(assessment.kneeFlexionDeg, 135.0)
+        // Numeric values
+        XCTAssertEqual(assessment.hamstringLsi, 92.0)
+        XCTAssertEqual(assessment.hipAddLsi, 85.0)
+        XCTAssertEqual(assessment.dlDjRsi, 0.95)
+        XCTAssertEqual(assessment.ikdcScore, 72.0)
+        XCTAssertEqual(assessment.extensionDeficitDeg, 0.0)
+        // flexibleInt for swellingGrade
+        XCTAssertEqual(assessment.swellingGrade, 1)
+        XCTAssertEqual(assessment.notes, "Post-M3 assessment")
+        XCTAssertEqual(assessment.createdAt, "2025-11-20T10:00:00Z")
+    }
+
+    func testAclLabAssessmentDecodesWithAllNils() throws {
+        let json: [String: Any] = [
+            "id": "lab-sparse",
+            "milestone": 1,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let assessment = try decoder.decode(AclLabAssessment.self, from: data)
+
+        XCTAssertEqual(assessment.id, "lab-sparse")
+        XCTAssertEqual(assessment.milestone, 1)
+        XCTAssertNil(assessment.quadLsi)
+        XCTAssertNil(assessment.hamstringLsi)
+        XCTAssertNil(assessment.ikdcScore)
+        XCTAssertNil(assessment.swellingGrade)
+        XCTAssertNil(assessment.notes)
+    }
+
+    // MARK: - Empty and Null nextCriteria
+
+    func testMilestoneStatusWithEmptyNextCriteria() throws {
+        let json: [String: Any] = [
+            "currentMilestone": 4,
+            "weeksPostSurgery": 30,
+            "isPreOp": false,
+            "nextCriteria": [] as [[String: Any]],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let status = try decoder.decode(AclMilestoneStatus.self, from: data)
+
+        XCTAssertNotNil(status.nextCriteria)
+        XCTAssertTrue(status.nextCriteria?.isEmpty == true)
+    }
+
+    func testMilestoneStatusWithNullNextCriteria() throws {
+        let json: [String: Any] = [
+            "currentMilestone": 5,
+            "weeksPostSurgery": 40,
+            "isPreOp": false,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let status = try decoder.decode(AclMilestoneStatus.self, from: data)
+
+        XCTAssertNil(status.nextCriteria)
+    }
+
+    // MARK: - Unknown Enum Raw Values
+
+    func testUnknownGraftTypeThrows() {
+        let json = Data(#""UNKNOWN_GRAFT""#.utf8)
+        XCTAssertThrowsError(try decoder.decode(AclGraftType.self, from: json))
+    }
+
+    func testUnknownAthleteLevelThrows() {
+        let json = Data(#""ELITE""#.utf8)
+        XCTAssertThrowsError(try decoder.decode(AclAthleteLevel.self, from: json))
+    }
+
+    func testUnknownKneeSideThrows() {
+        let json = Data(#""BILATERAL""#.utf8)
+        XCTAssertThrowsError(try decoder.decode(AclKneeSide.self, from: json))
     }
 }

@@ -919,3 +919,372 @@ final class AclStreamViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.exercises.first?.name, "Nested Exercise")
     }
 }
+
+// MARK: - AclLabAssessmentViewModelTests
+
+@MainActor
+final class AclLabAssessmentViewModelTests: XCTestCase {
+
+    private var apiClient: APIClient!
+    private var viewModel: AclLabAssessmentViewModel!
+
+    override func setUp() async throws {
+        let session = TestHelpers.makeTestSession()
+        apiClient = APIClient(session: session)
+        viewModel = AclLabAssessmentViewModel(apiClient: apiClient)
+    }
+
+    override func tearDown() async throws {
+        MockURLProtocol.requestHandler = nil
+        viewModel = nil
+        apiClient = nil
+    }
+
+    // MARK: - loadAssessments
+
+    func testLoadAssessmentsSuccess() async {
+        MockURLProtocol.requestHandler = { _ in
+            (TestHelpers.makeHTTPResponse(statusCode: 200), TestFixtures.aclLabAssessmentListJSON())
+        }
+
+        await viewModel.loadAssessments()
+
+        XCTAssertEqual(viewModel.assessments.count, 1)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+    }
+
+    func testLoadAssessmentsHandlesError() async {
+        MockURLProtocol.requestHandler = { _ in
+            (TestHelpers.makeHTTPResponse(statusCode: 500), Data())
+        }
+
+        await viewModel.loadAssessments()
+
+        XCTAssertTrue(viewModel.assessments.isEmpty)
+        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertFalse(viewModel.isLoading)
+    }
+
+    // MARK: - LSI Color (Default Thresholds)
+
+    func testLsiColorNilReturnsNone() {
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: nil), .none)
+    }
+
+    func testLsiColorBelow70IsRed() {
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: 69), .red)
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: 50), .red)
+    }
+
+    func testLsiColor70To84IsAmber() {
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: 70), .amber)
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: 84), .amber)
+    }
+
+    func testLsiColor85PlusIsGreen() {
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: 85), .green)
+        XCTAssertEqual(AclLabAssessmentViewModel.lsiColor(for: 100), .green)
+    }
+
+    // MARK: - LSI Color (Competitive Athlete M4+)
+
+    func testLsiColorCompetitiveM4Below75IsRed() {
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 74, milestone: 4, athleteLevel: .competitive),
+            .red
+        )
+    }
+
+    func testLsiColorCompetitiveM4_75To89IsAmber() {
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 75, milestone: 4, athleteLevel: .competitive),
+            .amber
+        )
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 89, milestone: 4, athleteLevel: .competitive),
+            .amber
+        )
+    }
+
+    func testLsiColorCompetitiveM4_90PlusIsGreen() {
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 90, milestone: 4, athleteLevel: .competitive),
+            .green
+        )
+    }
+
+    func testLsiColorRecreationalM4UsesDefaultThresholds() {
+        // Recreational athlete at M4+ still uses standard 70/85 thresholds
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 85, milestone: 4, athleteLevel: .recreational),
+            .green
+        )
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 70, milestone: 4, athleteLevel: .recreational),
+            .amber
+        )
+    }
+
+    func testLsiColorCompetitiveM3UsesDefaultThresholds() {
+        // Competitive athlete below M4 still uses standard 70/85 thresholds
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 85, milestone: 3, athleteLevel: .competitive),
+            .green
+        )
+        XCTAssertEqual(
+            AclLabAssessmentViewModel.lsiColor(for: 70, milestone: 3, athleteLevel: .competitive),
+            .amber
+        )
+    }
+}
+
+// MARK: - AclDashboardViewModel Milestone Celebration Tests
+
+@MainActor
+final class AclDashboardMilestoneCelebrationTests: XCTestCase {
+
+    private var apiClient: APIClient!
+    private var viewModel: AclDashboardViewModel!
+
+    override func setUp() async throws {
+        let session = TestHelpers.makeTestSession()
+        apiClient = APIClient(session: session)
+        viewModel = AclDashboardViewModel(apiClient: apiClient)
+    }
+
+    override func tearDown() async throws {
+        MockURLProtocol.requestHandler = nil
+        viewModel = nil
+        apiClient = nil
+    }
+
+    func testMilestoneAdvancementDetectedOnSecondLoad() async {
+        // First load: milestone 1
+        let m1JSON = milestoneJSON(milestone: 1, weeks: 6)
+        MockURLProtocol.requestHandler = { request in
+            let url = request.url?.absoluteString ?? ""
+            let response = TestHelpers.makeHTTPResponse(statusCode: 200)
+            if url.contains("milestone-status") {
+                return (response, m1JSON)
+            } else if url.contains("streams") {
+                return (response, TestFixtures.aclStreamsResponseJSON())
+            }
+            return (response, Data())
+        }
+
+        await viewModel.loadAll()
+        XCTAssertEqual(viewModel.currentMilestone, 1)
+        XCTAssertFalse(viewModel.milestoneAdvanced)
+
+        // Second load: milestone 2
+        let m2JSON = milestoneJSON(milestone: 2, weeks: 8)
+        MockURLProtocol.requestHandler = { request in
+            let url = request.url?.absoluteString ?? ""
+            let response = TestHelpers.makeHTTPResponse(statusCode: 200)
+            if url.contains("milestone-status") {
+                return (response, m2JSON)
+            } else if url.contains("streams") {
+                return (response, TestFixtures.aclStreamsResponseJSON())
+            }
+            return (response, Data())
+        }
+
+        await viewModel.loadAll()
+        XCTAssertEqual(viewModel.currentMilestone, 2)
+        XCTAssertTrue(viewModel.milestoneAdvanced)
+        XCTAssertEqual(viewModel.newMilestoneReached, 2)
+    }
+
+    func testNoMilestoneAdvancementOnSameMilestone() async {
+        let m2JSON = milestoneJSON(milestone: 2, weeks: 8)
+        MockURLProtocol.requestHandler = { request in
+            let url = request.url?.absoluteString ?? ""
+            let response = TestHelpers.makeHTTPResponse(statusCode: 200)
+            if url.contains("milestone-status") {
+                return (response, m2JSON)
+            } else if url.contains("streams") {
+                return (response, TestFixtures.aclStreamsResponseJSON())
+            }
+            return (response, Data())
+        }
+
+        await viewModel.loadAll()
+        XCTAssertFalse(viewModel.milestoneAdvanced)
+
+        // Reload with same milestone
+        await viewModel.loadAll()
+        XCTAssertFalse(viewModel.milestoneAdvanced)
+    }
+
+    // MARK: - Helpers
+
+    private func milestoneJSON(milestone: Int, weeks: Int) -> Data {
+        let json: [String: Any] = [
+            "currentMilestone": milestone,
+            "weeksPostSurgery": weeks,
+            "isPreOp": false,
+            "athleteLevel": "RECREATIONAL",
+            "graftType": "HAMSTRING",
+            "surgeryDate": "2025-09-01",
+            "concomitantInjuries": ["NONE"],
+            "isReadyForLab": false,
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+}
+
+// MARK: - AclDailyKpiViewModel Donor Site Pain Tests
+
+@MainActor
+final class AclDailyKpiDonorSitePainTests: XCTestCase {
+
+    private var apiClient: APIClient!
+    private var viewModel: AclDailyKpiViewModel!
+
+    override func setUp() async throws {
+        let session = TestHelpers.makeTestSession()
+        apiClient = APIClient(session: session)
+        viewModel = AclDailyKpiViewModel(apiClient: apiClient)
+    }
+
+    override func tearDown() async throws {
+        MockURLProtocol.requestHandler = nil
+        viewModel = nil
+        apiClient = nil
+    }
+
+    func testHasUnsavedChangesIncludesDonorSitePain() {
+        XCTAssertFalse(viewModel.hasUnsavedChanges)
+
+        viewModel.donorSitePainNrs = 3
+        XCTAssertTrue(viewModel.hasUnsavedChanges)
+    }
+
+    func testSubmitIncludesDonorSitePainInRequest() async {
+        MockURLProtocol.requestHandler = { request in
+            XCTAssertEqual(request.httpMethod, "POST")
+            let url = request.url?.absoluteString ?? ""
+            XCTAssertTrue(url.contains("acl/daily-kpi"))
+            return (TestHelpers.makeHTTPResponse(statusCode: 200), TestFixtures.aclDailyKpiWithDonorSiteJSON())
+        }
+
+        viewModel.donorSitePainNrs = 5
+        let success = await viewModel.submit()
+
+        XCTAssertTrue(success)
+        XCTAssertTrue(viewModel.didSubmit)
+        // Encoding correctness verified in AclTypesTests.testAclDailyKpiRequestEncodesWithDonorSitePain
+    }
+
+    func testSubmitOmitsDonorSitePainWhenZero() async {
+        MockURLProtocol.requestHandler = { _ in
+            (TestHelpers.makeHTTPResponse(statusCode: 200), TestFixtures.aclDailyKpiJSON())
+        }
+
+        viewModel.donorSitePainNrs = 0 // should send nil
+        let success = await viewModel.submit()
+
+        XCTAssertTrue(success)
+        XCTAssertTrue(viewModel.didSubmit)
+        // Encoding correctness verified in AclTypesTests.testAclDailyKpiRequestEncodesNilDonorSitePain
+    }
+}
+
+// MARK: - Network Error Handling Tests
+
+@MainActor
+final class AclNetworkErrorTests: XCTestCase {
+
+    private var apiClient: APIClient!
+
+    override func setUp() async throws {
+        let session = TestHelpers.makeTestSession()
+        apiClient = APIClient(session: session)
+    }
+
+    override func tearDown() async throws {
+        MockURLProtocol.requestHandler = nil
+        apiClient = nil
+    }
+
+    func testDailyKpiSubmitHandlesNetworkError() async {
+        MockURLProtocol.requestHandler = { _ in
+            throw URLError(.notConnectedToInternet)
+        }
+
+        let vm = AclDailyKpiViewModel(apiClient: apiClient)
+        let success = await vm.submit()
+
+        XCTAssertFalse(success)
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isSubmitting)
+    }
+
+    func testDailyKpiLoadHistoryHandlesNetworkError() async {
+        MockURLProtocol.requestHandler = { _ in
+            throw URLError(.notConnectedToInternet)
+        }
+
+        let vm = AclDailyKpiViewModel(apiClient: apiClient)
+        await vm.loadHistory()
+
+        XCTAssertTrue(vm.dailyKpis.isEmpty)
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isLoadingHistory)
+    }
+
+    func testWeeklyKpiSubmitHandlesNetworkError() async {
+        MockURLProtocol.requestHandler = { _ in
+            throw URLError(.notConnectedToInternet)
+        }
+
+        let vm = AclWeeklyKpiViewModel(apiClient: apiClient)
+        vm.ikdcScoreText = "55"
+        let success = await vm.submit()
+
+        XCTAssertFalse(success)
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isSubmitting)
+    }
+
+    func testWeeklyKpiLoadHistoryHandlesNetworkError() async {
+        MockURLProtocol.requestHandler = { _ in
+            throw URLError(.notConnectedToInternet)
+        }
+
+        let vm = AclWeeklyKpiViewModel(apiClient: apiClient)
+        await vm.loadHistory()
+
+        XCTAssertTrue(vm.weeklyKpis.isEmpty)
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isLoadingHistory)
+    }
+
+    func testLabAssessmentLoadHandlesNetworkError() async {
+        MockURLProtocol.requestHandler = { _ in
+            throw URLError(.notConnectedToInternet)
+        }
+
+        let vm = AclLabAssessmentViewModel(apiClient: apiClient)
+        await vm.loadAssessments()
+
+        XCTAssertTrue(vm.assessments.isEmpty)
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isLoading)
+    }
+
+    func testDashboardLoadAllHandlesNetworkError() async {
+        MockURLProtocol.requestHandler = { _ in
+            throw URLError(.notConnectedToInternet)
+        }
+
+        let vm = AclDashboardViewModel(apiClient: apiClient)
+        await vm.loadAll()
+
+        XCTAssertNil(vm.milestoneStatus)
+        XCTAssertTrue(vm.streams.isEmpty)
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isLoading)
+    }
+}

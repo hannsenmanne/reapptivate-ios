@@ -7,14 +7,33 @@ struct AclDashboardView: View {
     @State private var viewModel: AclDashboardViewModel?
     @State private var showDailyKpi = false
     @State private var showWeeklyKpi = false
+    @State private var showMilestoneCelebration = false
+    @State private var celebrationHaptic = false
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
-        Group {
-            if let vm = viewModel, !vm.isLoading || vm.milestoneStatus != nil {
-                dashboardContent(vm: vm)
-            } else {
-                AclDashboardSkeletonView()
+        ZStack(alignment: .top) {
+            Group {
+                if let vm = viewModel, !vm.isLoading || vm.milestoneStatus != nil {
+                    dashboardContent(vm: vm)
+                } else {
+                    AclDashboardSkeletonView()
+                }
+            }
+
+            // Milestone Celebration Overlay
+            if showMilestoneCelebration, let milestone = viewModel?.newMilestoneReached {
+                AclMilestoneCelebrationView(
+                    milestone: milestone,
+                    onDismiss: {
+                        withAnimation(.easeIn(duration: 0.2)) {
+                            showMilestoneCelebration = false
+                        }
+                        viewModel?.milestoneAdvanced = false
+                    }
+                )
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .zIndex(100)
             }
         }
         .sheet(isPresented: $showDailyKpi) {
@@ -27,11 +46,20 @@ struct AclDashboardView: View {
                 Task { await viewModel?.loadAll() }
             })
         }
+        .conditionalHaptic(.success, trigger: celebrationHaptic)
         .task {
             if viewModel == nil {
                 let vm = AclDashboardViewModel(apiClient: apiClient)
                 viewModel = vm
                 await vm.loadAll()
+            }
+        }
+        .onChange(of: viewModel?.milestoneAdvanced) { _, newValue in
+            if newValue == true {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                    showMilestoneCelebration = true
+                }
+                celebrationHaptic.toggle()
             }
         }
     }
@@ -60,19 +88,31 @@ struct AclDashboardView: View {
                 .cardEntryAnimation(index: 0)
             }
 
+            // Streak
+            if let streak = vm.streak, streak.currentStreak > 0 || streak.longestStreak > 0 {
+                AclStreakCard(streak: streak)
+                    .cardEntryAnimation(index: 1)
+            }
+
+            // Daily Tip
+            if let tip = vm.dailyTip {
+                AclDailyTipCard(tip: tip)
+                    .cardEntryAnimation(index: 2)
+            }
+
             // KPI Quick Actions
             AclKpiQuickActionsCard(
                 onDailyKpi: { showDailyKpi = true },
                 onWeeklyKpi: { showWeeklyKpi = true }
             )
-            .cardEntryAnimation(index: 1)
+            .cardEntryAnimation(index: 3)
 
             // Milestone Timeline
             AclMilestoneTimelineView(
                 currentMilestone: vm.currentMilestone,
                 weeksPostSurgery: vm.weeksPostSurgery
             )
-            .cardEntryAnimation(index: 2)
+            .cardEntryAnimation(index: 4)
 
             // Milestone Criteria (next targets)
             if let criteria = vm.milestoneStatus?.nextCriteria, !criteria.isEmpty {
@@ -80,7 +120,7 @@ struct AclDashboardView: View {
                     milestone: vm.currentMilestone,
                     criteria: criteria
                 )
-                .cardEntryAnimation(index: 3)
+                .cardEntryAnimation(index: 5)
             }
 
             // Active Streams Quick Access
@@ -89,18 +129,18 @@ struct AclDashboardView: View {
                     streams: vm.unlockedStreams,
                     onViewAll: { onNavigateToProgram?() }
                 )
-                .cardEntryAnimation(index: 4)
+                .cardEntryAnimation(index: 6)
             }
 
             // Discharge Progress (milestone 4+)
             if vm.currentMilestone >= 4, let discharge = vm.dischargeProgress {
                 AclDischargeQuickCard(progress: discharge)
-                    .cardEntryAnimation(index: 5)
+                    .cardEntryAnimation(index: 7)
             }
 
             // Training Schedule
             TrainingScheduleCard()
-                .cardEntryAnimation(index: 6)
+                .cardEntryAnimation(index: 8)
         }
         .padding(.bottom, 32)
     }
@@ -123,17 +163,23 @@ struct AclProfileQuickCard: View {
                 label: "Meilenstein",
                 value: "\(milestone)/5"
             )
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Meilenstein \(milestone) von 5")
 
             StatCard(
                 label: "Wochen post-OP",
                 value: "\(weeksPostSurgery)"
             )
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(weeksPostSurgery) Wochen nach Operation")
 
             StatCard(
                 label: "Transplantat",
                 value: graftType?.shortName ?? "---",
                 isCompact: true
             )
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Transplantat: \(graftType?.displayName ?? "nicht angegeben")")
         }
     }
 }
@@ -208,6 +254,7 @@ struct AclActiveStreamsCard: View {
                         .font(.appCaptionMedium)
                         .foregroundStyle(.accent)
                 }
+                .accessibilityLabel("Alle Streams anzeigen")
             }
 
             ForEach(streams.prefix(4)) { stream in
@@ -218,6 +265,7 @@ struct AclActiveStreamsCard: View {
                         .frame(width: streamIconSize, height: streamIconSize)
                         .background(Color.accent.opacity(0.1))
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.iconRadius, style: .continuous))
+                        .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(stream.nameDE ?? stream.name)
@@ -233,6 +281,7 @@ struct AclActiveStreamsCard: View {
                     Image(systemName: "chevron.right")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
+                        .accessibilityHidden(true)
                 }
             }
         }
@@ -280,6 +329,9 @@ struct AclDischargeQuickCard: View {
                 }
             }
             .frame(height: 6)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Fortschritt")
+            .accessibilityValue("\(progress.overallPercent) Prozent")
 
             Text("\(progress.metCount) von \(progress.totalCount) Kriterien erfüllt")
                 .font(.appCaption)
@@ -313,6 +365,7 @@ struct AclKpiQuickActionsCard: View {
                     .frame(height: 44)
                 }
                 .buttonStyle(.secondary)
+                .accessibilityLabel("Tägliche KPIs erfassen")
 
                 Button(action: onWeeklyKpi) {
                     HStack(spacing: 8) {
@@ -325,6 +378,7 @@ struct AclKpiQuickActionsCard: View {
                     .frame(height: 44)
                 }
                 .buttonStyle(.secondary)
+                .accessibilityLabel("Wöchentliche KPIs erfassen")
             }
         }
         .cardStyle()
@@ -346,6 +400,105 @@ struct AclDashboardSkeletonView: View {
             SkeletonView(variant: .card(height: 80))
         }
         .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Streak Card
+
+private struct AclStreakCard: View {
+    let streak: StreakResponse
+
+    @ScaledMetric(relativeTo: .body) private var flameSize: CGFloat = 36
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 24))
+                .foregroundStyle(streak.currentStreak > 0 ? .painAmber : .textSecondary)
+                .frame(width: flameSize, height: flameSize)
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    Text("\(streak.currentStreak)")
+                        .font(.appTitle2)
+                        .foregroundStyle(.textPrimary)
+                    Text(streak.currentStreak == 1 ? "Tag Streak" : "Tage Streak")
+                        .font(.appSubheadline)
+                        .foregroundStyle(.textSecondary)
+                }
+
+                HStack(spacing: 12) {
+                    if streak.longestStreak > 0 {
+                        HStack(spacing: 4) {
+                            Image(systemName: "trophy.fill")
+                                .font(.appCaption2)
+                                .foregroundStyle(.painAmber)
+                            Text("Rekord: \(streak.longestStreak)")
+                                .font(.appCaption)
+                                .foregroundStyle(.textSecondary)
+                        }
+                    }
+
+                    if streak.freezeTokens > 0 {
+                        HStack(spacing: 4) {
+                            Image(systemName: "snowflake")
+                                .font(.appCaption2)
+                                .foregroundStyle(.farBlue)
+                            Text("\(streak.freezeTokens) Freeze")
+                                .font(.appCaption)
+                                .foregroundStyle(.textSecondary)
+                        }
+                    }
+                }
+            }
+
+            Spacer()
+        }
+        .cardStyle()
+    }
+}
+
+// MARK: - Daily Tip Card
+
+private struct AclDailyTipCard: View {
+    let tip: AclDailyTip
+
+    @ScaledMetric(relativeTo: .body) private var iconSize: CGFloat = 32
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
+                Image(systemName: "lightbulb.fill")
+                    .font(.appSubheadline)
+                    .foregroundStyle(.painAmber)
+                    .frame(width: iconSize, height: iconSize)
+                    .background(Color.painAmber.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.iconRadius, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Tipp des Tages")
+                        .font(.appSubheadlineMedium)
+                        .foregroundStyle(.textPrimary)
+
+                    HStack(spacing: 4) {
+                        Image(systemName: aclStreamIcon(for: tip.stream))
+                            .font(.appCaption2)
+                            .foregroundStyle(.accent)
+                        Text(tip.streamLabel)
+                            .font(.appCaption)
+                            .foregroundStyle(.textSecondary)
+                    }
+                }
+
+                Spacer()
+            }
+
+            Text(tip.tip)
+                .font(.appSubheadline)
+                .foregroundStyle(.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .cardStyle()
     }
 }
 

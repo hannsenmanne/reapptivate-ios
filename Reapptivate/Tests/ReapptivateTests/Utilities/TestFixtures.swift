@@ -792,4 +792,63 @@ enum TestFixtures {
         ]
         return try! JSONSerialization.data(withJSONObject: json)
     }
+
+    // MARK: - ACL Daily Tip
+
+    static func aclDailyTipJSON() -> Data {
+        let json: [String: Any] = [
+            "tip": "Kühlen Sie Ihr Knie nach dem Training für 15-20 Minuten.",
+            "stream": "rom",
+            "streamLabel": "ROM Wiederherstellung",
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    // MARK: - Streak
+
+    static func streakResponseJSON() -> Data {
+        let json: [String: Any] = [
+            "currentStreak": 5,
+            "longestStreak": 12,
+            "freezeTokens": 2,
+            "lastTrainingDate": "2025-10-15",
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    // MARK: - ACL Daily KPI with Donor Site Pain
+
+    static func aclDailyKpiWithDonorSiteJSON() -> Data {
+        let json: [String: Any] = [
+            "kpi": [
+                "id": "daily-kpi-3",
+                "date": "2025-10-16",
+                "painNrs": 3,
+                "kneeFlexionDeg": 120,
+                "extensionDeficitDeg": 2,
+                "swellingGrade": 0,
+                "quadsLag": false,
+                "donorSitePainNrs": 5,
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    // MARK: - ACL Lab Assessment
+
+    static func aclLabAssessmentListJSON() -> Data {
+        let json: [String: Any] = [
+            "assessments": [
+                [
+                    "id": "lab-1",
+                    "assessmentDate": "2025-10-20",
+                    "milestone": 3,
+                    "quadLsi": 78.0,
+                    "hamLsi": 82.0,
+                    "singleLegSquatLsi": 75.0,
+                ]
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
 }

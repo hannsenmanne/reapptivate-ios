@@ -5,7 +5,7 @@ struct AclMilestoneTimelineView: View {
     let weeksPostSurgery: Int
 
     private let milestones: [(id: Int, label: String, shortLabel: String, weekRange: String)] = [
-        (0, "Prä-OP", "Pre", ""),
+        (0, "Prä-OP", "Prä", ""),
         (1, "Meilenstein 1", "M1", "Woche 0-6"),
         (2, "Meilenstein 2", "M2", "Woche 7-12"),
         (3, "Meilenstein 3", "M3", "Woche 13-24"),
@@ -89,11 +89,22 @@ struct AclMilestoneTimelineView: View {
                         }
                         .frame(width: 60)
                         .position(x: xPos, y: 0)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(milestoneAccessibilityLabel(index: index, isPast: isPast, isCurrent: isCurrent))
                     }
                 }
             }
             .frame(height: 60)
         }
         .cardStyle()
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Rehabilitations-Fortschritt, Woche \(weeksPostSurgery) nach OP")
+    }
+
+    private func milestoneAccessibilityLabel(index: Int, isPast: Bool, isCurrent: Bool) -> String {
+        let milestone = milestones[index]
+        let state = isCurrent ? "aktuell" : isPast ? "abgeschlossen" : "ausstehend"
+        let weekInfo = milestone.weekRange.isEmpty ? "" : ", \(milestone.weekRange)"
+        return "\(milestone.label), \(state)\(weekInfo)"
     }
 }

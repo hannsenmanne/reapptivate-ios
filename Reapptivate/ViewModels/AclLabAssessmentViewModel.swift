@@ -35,10 +35,12 @@ final class AclLabAssessmentViewModel {
 
     // MARK: - LSI Color Helpers
 
-    static func lsiColor(for value: Double?) -> LSILevel {
+    static func lsiColor(for value: Double?, milestone: Int? = nil, athleteLevel: AclAthleteLevel? = nil) -> LSILevel {
         guard let value else { return .none }
-        if value < 70 { return .red }
-        if value < 85 { return .amber }
+        let greenThreshold: Double = (milestone ?? 0) >= 4 && athleteLevel == .competitive ? 90 : 85
+        let amberThreshold: Double = (milestone ?? 0) >= 4 && athleteLevel == .competitive ? 75 : 70
+        if value < amberThreshold { return .red }
+        if value < greenThreshold { return .amber }
         return .green
     }
 

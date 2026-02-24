@@ -12,6 +12,7 @@ final class AclDailyKpiViewModel {
     var swellingGrade: Int = 0
     var quadsLag: Bool = false
     var notes: String = ""
+    var donorSitePainNrs: Int = 0
 
     // Submission state
     var isSubmitting = false
@@ -32,6 +33,7 @@ final class AclDailyKpiViewModel {
         painNrs != 0 || !painLocation.isEmpty || !painActivity.isEmpty
             || kneeFlexionDeg != 90 || extensionDeficitDeg != 0
             || swellingGrade != 0 || quadsLag || !notes.isEmpty
+            || donorSitePainNrs != 0
     }
 
     // MARK: - Validation
@@ -63,7 +65,8 @@ final class AclDailyKpiViewModel {
             extensionDeficitDeg: extensionDeficitDeg,
             swellingGrade: swellingGrade,
             quadsLag: quadsLag,
-            notes: notes.isEmpty ? nil : notes
+            notes: notes.isEmpty ? nil : notes,
+            donorSitePainNrs: donorSitePainNrs > 0 ? donorSitePainNrs : nil
         )
 
         do {

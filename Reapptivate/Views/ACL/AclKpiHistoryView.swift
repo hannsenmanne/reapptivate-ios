@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct AclKpiHistoryView: View {
+    @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
 
     @State private var selectedTab = 0
@@ -126,7 +127,7 @@ struct AclKpiHistoryView: View {
             } else {
                 LazyVStack(spacing: 12) {
                     ForEach(vm.assessments) { assessment in
-                        LabAssessmentCard(assessment: assessment)
+                        LabAssessmentCard(assessment: assessment, athleteLevel: appState.currentUser?.aclAthleteLevel)
                     }
                 }
             }
@@ -284,6 +285,7 @@ private struct WeeklyKpiCard: View {
 
 private struct LabAssessmentCard: View {
     let assessment: AclLabAssessment
+    var athleteLevel: AclAthleteLevel?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -407,7 +409,7 @@ private struct LabAssessmentCard: View {
                 Spacer()
                 Text(String(format: "%.0f%%", value))
                     .font(.appCaptionMedium)
-                    .foregroundStyle(lsiColor(for: value))
+                    .foregroundStyle(lsiColor(for: value, milestone: assessment.milestone, athleteLevel: athleteLevel))
             }
         }
     }
@@ -427,9 +429,11 @@ private struct LabAssessmentCard: View {
 
     // MARK: - Helpers
 
-    private func lsiColor(for value: Double) -> Color {
-        if value < 70 { return .painRed }
-        if value < 85 { return .painAmber }
+    private func lsiColor(for value: Double, milestone: Int? = nil, athleteLevel: AclAthleteLevel? = nil) -> Color {
+        let greenThreshold: Double = (milestone ?? 0) >= 4 && athleteLevel == .competitive ? 90 : 85
+        let amberThreshold: Double = (milestone ?? 0) >= 4 && athleteLevel == .competitive ? 75 : 70
+        if value < amberThreshold { return .painRed }
+        if value < greenThreshold { return .painAmber }
         return .painGreen
     }
 

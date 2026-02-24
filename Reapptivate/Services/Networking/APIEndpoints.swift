@@ -399,6 +399,16 @@ enum APIEndpoints {
         post("acl/micro-modules/\(completionId)/complete")
     }
 
+    static func aclDailyTip() -> URLRequest {
+        get("acl/daily-tip")
+    }
+
+    // MARK: - Streak
+
+    static func streak() -> URLRequest {
+        get("patient/streak")
+    }
+
     // MARK: - Custom Exercises
 
     static func customExercises() -> URLRequest {

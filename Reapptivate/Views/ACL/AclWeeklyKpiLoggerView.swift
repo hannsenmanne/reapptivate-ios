@@ -124,6 +124,7 @@ struct AclWeeklyKpiLoggerView: View {
             ))
             .keyboardType(.numberPad)
             .inputFieldStyle()
+            .accessibilityLabel("IKDC-Score, 0 bis 100")
 
             Text("International Knee Documentation Committee \u{2014} subjektive Kniefunktion")
                 .font(.appCaption2)
@@ -145,6 +146,7 @@ struct AclWeeklyKpiLoggerView: View {
             ))
             .keyboardType(.numberPad)
             .inputFieldStyle()
+            .accessibilityLabel("Tampa-Score, 11 bis 44")
 
             Text("Tampa Scale of Kinesiophobia \u{2014} Bewegungsangst")
                 .font(.appCaption2)
@@ -186,6 +188,7 @@ struct AclWeeklyKpiLoggerView: View {
                 ))
                 .keyboardType(.decimalPad)
                 .inputFieldStyle()
+                .accessibilityLabel("Oberschenkelumfang 5 cm suprapatellär in Zentimetern")
 
                 Text("5 cm suprapatellär")
                     .font(.appCaption2)
@@ -202,6 +205,7 @@ struct AclWeeklyKpiLoggerView: View {
                 ))
                 .keyboardType(.decimalPad)
                 .inputFieldStyle()
+                .accessibilityLabel("Oberschenkelumfang 10 cm suprapatellär in Zentimetern")
 
                 Text("10 cm suprapatellär")
                     .font(.appCaption2)
