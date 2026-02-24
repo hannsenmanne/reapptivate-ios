@@ -195,8 +195,8 @@ struct AclMicroModulesResponse: Codable {
 }
 
 struct AclCompletedModulesResponse: Codable {
-    let completions: [MicroModuleCompletion]?
-    let completedModules: [MicroModuleCompletion]?
+    let completions: [String]?
+    let completedModules: [String]?
 }
 
 // MARK: - Custom Exercise Wrappers

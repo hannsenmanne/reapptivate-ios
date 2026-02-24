@@ -35,9 +35,10 @@ struct AclKpiHistoryView: View {
             weeklyVM = wvm
             let lvm = AclLabAssessmentViewModel(apiClient: apiClient)
             labVM = lvm
-            await dvm.loadHistory()
-            await wvm.loadHistory()
-            await lvm.loadAssessments()
+            async let d: Void = dvm.loadHistory()
+            async let w: Void = wvm.loadHistory()
+            async let l: Void = lvm.loadAssessments()
+            _ = await (d, w, l)
         }
     }
 
@@ -476,25 +477,34 @@ private struct KpiPill: View {
 
 // MARK: - Date Formatting
 
+private enum KpiDateFormatters {
+    nonisolated(unsafe) static let iso: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        return f
+    }()
+
+    nonisolated(unsafe) static let display: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "de_DE")
+        f.dateStyle = .medium
+        return f
+    }()
+
+    nonisolated(unsafe) static let fallback: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.timeZone = TimeZone(secondsFromGMT: 0)
+        return f
+    }()
+}
+
 private func formattedDate(_ dateString: String) -> String {
-    let isoFormatter = ISO8601DateFormatter()
-    isoFormatter.formatOptions = [.withFullDate]
-
-    let displayFormatter = DateFormatter()
-    displayFormatter.locale = Locale(identifier: "de_DE")
-    displayFormatter.dateStyle = .medium
-
-    if let date = isoFormatter.date(from: dateString) {
-        return displayFormatter.string(from: date)
+    if let date = KpiDateFormatters.iso.date(from: dateString) {
+        return KpiDateFormatters.display.string(from: date)
     }
-
-    // Fallback: try yyyy-MM-dd format
-    let fallback = DateFormatter()
-    fallback.dateFormat = "yyyy-MM-dd"
-    fallback.timeZone = TimeZone(secondsFromGMT: 0)
-    if let date = fallback.date(from: dateString) {
-        return displayFormatter.string(from: date)
+    if let date = KpiDateFormatters.fallback.date(from: dateString) {
+        return KpiDateFormatters.display.string(from: date)
     }
-
     return dateString
 }

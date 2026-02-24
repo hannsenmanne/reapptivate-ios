@@ -9,6 +9,7 @@ struct AclWeeklyKpiLoggerView: View {
     @State private var viewModel: AclWeeklyKpiViewModel?
     @State private var showSuccess = false
     @State private var submitSuccessTrigger = false
+    @State private var showDiscardConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -24,7 +25,13 @@ struct AclWeeklyKpiLoggerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button("Abbrechen") {
+                        if let vm = viewModel, vm.hasAnyValue {
+                            showDiscardConfirmation = true
+                        } else {
+                            dismiss()
+                        }
+                    }
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -49,6 +56,12 @@ struct AclWeeklyKpiLoggerView: View {
             }
         }
         .conditionalHaptic(.success, trigger: submitSuccessTrigger)
+        .confirmationDialog("Änderungen verwerfen?", isPresented: $showDiscardConfirmation, titleVisibility: .visible) {
+            Button("Verwerfen", role: .destructive) { dismiss() }
+            Button("Weiter bearbeiten", role: .cancel) {}
+        } message: {
+            Text("Ihre eingegebenen KPIs wurden noch nicht gespeichert.")
+        }
     }
 
     @ViewBuilder
@@ -62,7 +75,7 @@ struct AclWeeklyKpiLoggerView: View {
                 tampaSection(vm)
 
                 // Tampa Alert
-                if vm.isTampaElevated {
+                if vm.isTampaElevated || vm.showTampaAlert {
                     tampaAlertBanner
                 }
 
@@ -110,7 +123,7 @@ struct AclWeeklyKpiLoggerView: View {
                 set: { vm.ikdcScoreText = $0 }
             ))
             .keyboardType(.numberPad)
-            .textFieldStyle(.roundedBorder)
+            .inputFieldStyle()
 
             Text("International Knee Documentation Committee \u{2014} subjektive Kniefunktion")
                 .font(.appCaption2)
@@ -131,7 +144,7 @@ struct AclWeeklyKpiLoggerView: View {
                 set: { vm.tampaScoreText = $0 }
             ))
             .keyboardType(.numberPad)
-            .textFieldStyle(.roundedBorder)
+            .inputFieldStyle()
 
             Text("Tampa Scale of Kinesiophobia \u{2014} Bewegungsangst")
                 .font(.appCaption2)
@@ -172,7 +185,7 @@ struct AclWeeklyKpiLoggerView: View {
                     set: { vm.thighCirc5cmText = $0 }
                 ))
                 .keyboardType(.decimalPad)
-                .textFieldStyle(.roundedBorder)
+                .inputFieldStyle()
 
                 Text("5 cm suprapatellär")
                     .font(.appCaption2)
@@ -188,7 +201,7 @@ struct AclWeeklyKpiLoggerView: View {
                     set: { vm.thighCirc10cmText = $0 }
                 ))
                 .keyboardType(.decimalPad)
-                .textFieldStyle(.roundedBorder)
+                .inputFieldStyle()
 
                 Text("10 cm suprapatellär")
                     .font(.appCaption2)

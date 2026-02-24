@@ -49,6 +49,7 @@
 		2C70D791CA226D7B2F9B1D91 /* EdukationTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F26BAC5BAEB3F1E77BF7E3E /* EdukationTab.swift */; };
 		2CA16450BA3B676C7A305FA1 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1100DE5B8E50BC7EE5F690 /* AchievementsView.swift */; };
 		2D8F2B7B94F8BBC9970724A7 /* UserSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93B5E451FBD2CDC3466223F /* UserSchedule.swift */; };
+		2F78ECFDF6EEE87016EA34E8 /* AclViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2785C7C8C5300DA4162D7E /* AclViewModelTests.swift */; };
 		31482E11CA5A8733030FFFAC /* PhaseTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00C94651470E6C0D45A2DE3 /* PhaseTimelineView.swift */; };
 		315DEB60C5CE5074EB79470D /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C532275607E8B1426956558 /* APIClientTests.swift */; };
 		317807EDA110FC4FD1F6E83F /* AclDailyKpiLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6A65D5D7920C389652C119 /* AclDailyKpiLoggerView.swift */; };
@@ -74,6 +75,7 @@
 		45DBC6C5BDEA6DC79906ACE6 /* TensionProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F63B0FE6C0D405A1F990FA8 /* TensionProfileView.swift */; };
 		46289EBCFA68B3B7DB4B78B9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */; };
 		4697742F2F854D88F94432FC /* LoginFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923A63448A699A2472EE25C /* LoginFlowUITests.swift */; };
+		478C831767F2A1E0BAE883AC /* AclTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6176E8DBCB954A435B9509 /* AclTypesTests.swift */; };
 		48C1FC69266DC6363F6ECB9B /* TestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E7432BD599BF7478973BD8 /* TestFixtures.swift */; };
 		4CBD79C8950A01CB5B166B43 /* TokenManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F365DC7AA5C42834DD5A1AD /* TokenManagerTests.swift */; };
 		4F01B9F57358BB38EFC4CB39 /* AclLabAssessmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB3DE141026BAFAF84404A /* AclLabAssessmentViewModel.swift */; };
@@ -406,6 +408,7 @@
 		D8AEFD73DA58CDBBC9506718 /* education-cards.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "education-cards.json"; sourceTree = "<group>"; };
 		DA3C84FA7A85E2BCE0C9612D /* lbp_eer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lbp_eer.json; sourceTree = "<group>"; };
 		DC0729DD54714429DDBC4A6A /* ReapptivateUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReapptivateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC6176E8DBCB954A435B9509 /* AclTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTypesTests.swift; sourceTree = "<group>"; };
 		DCB027FF7B0D0E5B2A34D8BA /* CustomExerciseCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExerciseCardView.swift; sourceTree = "<group>"; };
 		DE1921EFAFE0C0BF074697A7 /* DataPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPrivacyView.swift; sourceTree = "<group>"; };
 		DE95373CCDB52F4911796962 /* achilles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = achilles.json; sourceTree = "<group>"; };
@@ -439,6 +442,7 @@
 		FAE70B2D8CE6156D3A9CC001 /* AemResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AemResultView.swift; sourceTree = "<group>"; };
 		FC644B3483AAEF32D1E7A6F8 /* micro-modules.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "micro-modules.json"; sourceTree = "<group>"; };
 		FDACB3522A9B56A8BDED7C1B /* PacingActivityLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacingActivityLogSheet.swift; sourceTree = "<group>"; };
+		FE2785C7C8C5300DA4162D7E /* AclViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclViewModelTests.swift; sourceTree = "<group>"; };
 		FF432A57B1D0AEAB0DF1DCD5 /* neck_pain.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = neck_pain.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -694,6 +698,7 @@
 		893228F89BDC2946020C68DE /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				DC6176E8DBCB954A435B9509 /* AclTypesTests.swift */,
 				BE89289F8064305976025A5D /* CodableRoundTripTests.swift */,
 				B8203AE335879B513334FAF0 /* PhaseAdaptationTests.swift */,
 				D7945964A40DC3910DD5FCD7 /* SharedTypesTests.swift */,
@@ -977,6 +982,7 @@
 		F696AB0A93CCF2CFF7222099 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				FE2785C7C8C5300DA4162D7E /* AclViewModelTests.swift */,
 				5DF3AF7103F41B2A1943FAF8 /* AuthViewModelTests.swift */,
 				C4CCC6EB174AF0AD312F403E /* DashboardViewModelTests.swift */,
 				01A10BA479A8198FA46A1D8B /* ProgressViewModelTests.swift */,
@@ -1338,6 +1344,8 @@
 			files = (
 				315DEB60C5CE5074EB79470D /* APIClientTests.swift in Sources */,
 				99A475230B10EAB816849980 /* APIEndpointsTests.swift in Sources */,
+				478C831767F2A1E0BAE883AC /* AclTypesTests.swift in Sources */,
+				2F78ECFDF6EEE87016EA34E8 /* AclViewModelTests.swift in Sources */,
 				A738DACEF8B8EFEAF350325A /* AppStateTests.swift in Sources */,
 				D725797B42BA564A795DADB2 /* AuthViewModelTests.swift in Sources */,
 				9063B4432534F7532D367284 /* CodableRoundTripTests.swift in Sources */,

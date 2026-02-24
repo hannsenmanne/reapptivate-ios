@@ -9,6 +9,7 @@ struct AclDailyKpiLoggerView: View {
     @State private var viewModel: AclDailyKpiViewModel?
     @State private var showSuccess = false
     @State private var submitSuccessTrigger = false
+    @State private var showDiscardConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -24,7 +25,13 @@ struct AclDailyKpiLoggerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button("Abbrechen") {
+                        if let vm = viewModel, vm.hasUnsavedChanges {
+                            showDiscardConfirmation = true
+                        } else {
+                            dismiss()
+                        }
+                    }
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -49,6 +56,12 @@ struct AclDailyKpiLoggerView: View {
             }
         }
         .conditionalHaptic(.success, trigger: submitSuccessTrigger)
+        .confirmationDialog("Änderungen verwerfen?", isPresented: $showDiscardConfirmation, titleVisibility: .visible) {
+            Button("Verwerfen", role: .destructive) { dismiss() }
+            Button("Weiter bearbeiten", role: .cancel) {}
+        } message: {
+            Text("Ihre eingegebenen KPIs wurden noch nicht gespeichert.")
+        }
     }
 
     @ViewBuilder
@@ -157,7 +170,7 @@ struct AclDailyKpiLoggerView: View {
                     get: { vm.painLocation },
                     set: { vm.painLocation = $0 }
                 ))
-                .textFieldStyle(.roundedBorder)
+                .inputFieldStyle()
             }
 
             VStack(alignment: .leading, spacing: 6) {
@@ -168,7 +181,7 @@ struct AclDailyKpiLoggerView: View {
                     get: { vm.painActivity },
                     set: { vm.painActivity = $0 }
                 ))
-                .textFieldStyle(.roundedBorder)
+                .inputFieldStyle()
             }
         }
     }
@@ -294,7 +307,7 @@ struct AclDailyKpiLoggerView: View {
                 get: { vm.notes },
                 set: { vm.notes = $0 }
             ), axis: .vertical)
-            .textFieldStyle(.roundedBorder)
+            .inputFieldStyle()
             .lineLimit(3...5)
         }
     }

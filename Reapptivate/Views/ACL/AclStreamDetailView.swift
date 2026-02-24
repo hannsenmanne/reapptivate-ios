@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AclStreamDetailView: View {
     @Environment(APIClient.self) private var apiClient
+    @Environment(AppState.self) private var appState
 
     let streamId: String
 
@@ -75,8 +76,13 @@ struct AclStreamDetailView: View {
 
         // Exercise list
         ForEach(Array(vm.exercises.enumerated()), id: \.element.id) { index, exercise in
-            AclExerciseCard(exercise: exercise, index: index)
-                .cardEntryAnimation(index: index + 1)
+            AclExerciseCard(
+                exercise: exercise,
+                index: index,
+                userGraftType: appState.currentUser?.aclGraftType?.rawValue,
+                userConcomitantInjuries: Set(appState.currentUser?.aclConcomitantInjuries?.map(\.rawValue) ?? [])
+            )
+            .cardEntryAnimation(index: index + 1)
         }
     }
 }
@@ -86,6 +92,8 @@ struct AclStreamDetailView: View {
 struct AclExerciseCard: View {
     let exercise: AclStreamExercise
     let index: Int
+    let userGraftType: String?
+    let userConcomitantInjuries: Set<String>
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -110,14 +118,19 @@ struct AclExerciseCard: View {
                 }
             }
 
-            // Graft modifier warning
-            if let graftModifier = exercise.graftModifier, !graftModifier.isEmpty {
-                graftModifierView(graftModifier)
+            // Graft modifier warning (filtered to user's graft type)
+            if let graftModifier = exercise.graftModifier, let graft = userGraftType,
+               let note = graftModifier[graft], !note.isEmpty {
+                graftModifierView(note)
             }
 
-            // Concomitant precaution
-            if let precaution = exercise.concomitantPrecaution, !precaution.isEmpty {
-                precautionView(precaution)
+            // Concomitant precaution (filtered to user's injuries)
+            if let precaution = exercise.concomitantPrecaution {
+                let relevant = precaution.filter { userConcomitantInjuries.contains($0.key) }
+                let notes = relevant.values.filter { !$0.isEmpty }.joined(separator: ". ")
+                if !notes.isEmpty {
+                    precautionView(notes)
+                }
             }
 
             // Parameters
@@ -127,47 +140,41 @@ struct AclExerciseCard: View {
     }
 
     @ViewBuilder
-    private func graftModifierView(_ modifiers: [String: String]) -> some View {
-        let notes = modifiers.values.joined(separator: ", ")
-        if !notes.isEmpty {
-            HStack(alignment: .top, spacing: 8) {
-                Image(systemName: "info.circle.fill")
-                    .font(.appCaption)
-                    .foregroundStyle(.farBlue)
+    private func graftModifierView(_ note: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "info.circle.fill")
+                .font(.appCaption)
+                .foregroundStyle(.farBlue)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Transplantat-Hinweis")
-                        .font(.appCaption2)
-                        .foregroundStyle(.farBlue)
-                    Text(notes)
-                        .font(.appCaption)
-                        .foregroundStyle(.textSecondary)
-                }
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Transplantat-Hinweis")
+                    .font(.appCaption2)
+                    .foregroundStyle(.farBlue)
+                Text(note)
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
             }
-            .infoBoxStyle(color: .farBlue)
         }
+        .infoBoxStyle(color: .farBlue)
     }
 
     @ViewBuilder
-    private func precautionView(_ precautions: [String: String]) -> some View {
-        let notes = precautions.values.joined(separator: ", ")
-        if !notes.isEmpty {
-            HStack(alignment: .top, spacing: 8) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.appCaption)
-                    .foregroundStyle(.painAmber)
+    private func precautionView(_ notes: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.appCaption)
+                .foregroundStyle(.painAmber)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Vorsicht")
-                        .font(.appCaption2)
-                        .foregroundStyle(.painAmber)
-                    Text(notes)
-                        .font(.appCaption)
-                        .foregroundStyle(.textSecondary)
-                }
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Vorsicht")
+                    .font(.appCaption2)
+                    .foregroundStyle(.painAmber)
+                Text(notes)
+                    .font(.appCaption)
+                    .foregroundStyle(.textSecondary)
             }
-            .infoBoxStyle(color: .painAmber)
         }
+        .infoBoxStyle(color: .painAmber)
     }
 
     @ViewBuilder

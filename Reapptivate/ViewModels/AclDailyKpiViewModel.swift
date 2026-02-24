@@ -28,6 +28,12 @@ final class AclDailyKpiViewModel {
         self.apiClient = apiClient
     }
 
+    var hasUnsavedChanges: Bool {
+        painNrs != 0 || !painLocation.isEmpty || !painActivity.isEmpty
+            || kneeFlexionDeg != 90 || extensionDeficitDeg != 0
+            || swellingGrade != 0 || quadsLag || !notes.isEmpty
+    }
+
     // MARK: - Validation
 
     var isValid: Bool {

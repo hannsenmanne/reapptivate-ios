@@ -150,7 +150,10 @@ struct DashboardView: View {
             EdukationTab()
         case .progress:
             if appState.isAcl {
-                AclDischargeProgressView()
+                VStack(spacing: 20) {
+                    AclDischargeProgressView()
+                    AclKpiHistoryView()
+                }
             } else {
                 ProgressTab(
                     viewModel: viewModel,

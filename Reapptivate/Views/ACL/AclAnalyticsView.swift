@@ -267,7 +267,7 @@ struct AclAnalyticsView: View {
                             .foregroundStyle(.painRed)
                     }
             }
-            .chartYScale(domain: 17...68)
+            .chartYScale(domain: 11...44)
             .chartYAxisLabel("Score")
             .frame(height: 180)
         }

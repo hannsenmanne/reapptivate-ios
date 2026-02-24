@@ -5,6 +5,8 @@ struct AclDashboardView: View {
     @Environment(APIClient.self) private var apiClient
 
     @State private var viewModel: AclDashboardViewModel?
+    @State private var showDailyKpi = false
+    @State private var showWeeklyKpi = false
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
@@ -14,6 +16,16 @@ struct AclDashboardView: View {
             } else {
                 AclDashboardSkeletonView()
             }
+        }
+        .sheet(isPresented: $showDailyKpi) {
+            AclDailyKpiLoggerView(onSuccess: {
+                Task { await viewModel?.loadAll() }
+            })
+        }
+        .sheet(isPresented: $showWeeklyKpi) {
+            AclWeeklyKpiLoggerView(onSuccess: {
+                Task { await viewModel?.loadAll() }
+            })
         }
         .task {
             if viewModel == nil {
@@ -48,12 +60,19 @@ struct AclDashboardView: View {
                 .cardEntryAnimation(index: 0)
             }
 
+            // KPI Quick Actions
+            AclKpiQuickActionsCard(
+                onDailyKpi: { showDailyKpi = true },
+                onWeeklyKpi: { showWeeklyKpi = true }
+            )
+            .cardEntryAnimation(index: 1)
+
             // Milestone Timeline
             AclMilestoneTimelineView(
                 currentMilestone: vm.currentMilestone,
                 weeksPostSurgery: vm.weeksPostSurgery
             )
-            .cardEntryAnimation(index: 1)
+            .cardEntryAnimation(index: 2)
 
             // Milestone Criteria (next targets)
             if let criteria = vm.milestoneStatus?.nextCriteria, !criteria.isEmpty {
@@ -61,7 +80,7 @@ struct AclDashboardView: View {
                     milestone: vm.currentMilestone,
                     criteria: criteria
                 )
-                .cardEntryAnimation(index: 2)
+                .cardEntryAnimation(index: 3)
             }
 
             // Active Streams Quick Access
@@ -70,18 +89,18 @@ struct AclDashboardView: View {
                     streams: vm.unlockedStreams,
                     onViewAll: { onNavigateToProgram?() }
                 )
-                .cardEntryAnimation(index: 3)
+                .cardEntryAnimation(index: 4)
             }
 
             // Discharge Progress (milestone 4+)
             if vm.currentMilestone >= 4, let discharge = vm.dischargeProgress {
                 AclDischargeQuickCard(progress: discharge)
-                    .cardEntryAnimation(index: 4)
+                    .cardEntryAnimation(index: 5)
             }
 
             // Training Schedule
             TrainingScheduleCard()
-                .cardEntryAnimation(index: 5)
+                .cardEntryAnimation(index: 6)
         }
         .padding(.bottom, 32)
     }
@@ -173,6 +192,8 @@ struct AclActiveStreamsCard: View {
     let streams: [AclStream]
     let onViewAll: () -> Void
 
+    @ScaledMetric(relativeTo: .body) private var streamIconSize: CGFloat = 32
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -191,10 +212,10 @@ struct AclActiveStreamsCard: View {
 
             ForEach(streams.prefix(4)) { stream in
                 HStack(spacing: 12) {
-                    Image(systemName: streamIcon(for: stream.id))
+                    Image(systemName: aclStreamIcon(for: stream.id))
                         .font(.appSubheadline)
                         .foregroundStyle(.accent)
-                        .frame(width: 32, height: 32)
+                        .frame(width: streamIconSize, height: streamIconSize)
                         .background(Color.accent.opacity(0.1))
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.iconRadius, style: .continuous))
 
@@ -268,6 +289,48 @@ struct AclDischargeQuickCard: View {
     }
 }
 
+// MARK: - KPI Quick Actions Card
+
+struct AclKpiQuickActionsCard: View {
+    let onDailyKpi: () -> Void
+    let onWeeklyKpi: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("KPIs erfassen")
+                .font(.appHeadline)
+                .foregroundStyle(.textPrimary)
+
+            HStack(spacing: 12) {
+                Button(action: onDailyKpi) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "heart.text.clipboard")
+                            .font(.appSubheadline)
+                        Text("Tägliche KPIs")
+                            .font(.appSubheadlineMedium)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                }
+                .buttonStyle(.secondary)
+
+                Button(action: onWeeklyKpi) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "calendar.badge.clock")
+                            .font(.appSubheadline)
+                        Text("Wöchentliche KPIs")
+                            .font(.appSubheadlineMedium)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                }
+                .buttonStyle(.secondary)
+            }
+        }
+        .cardStyle()
+    }
+}
+
 // MARK: - Skeleton
 
 struct AclDashboardSkeletonView: View {
@@ -283,27 +346,6 @@ struct AclDashboardSkeletonView: View {
             SkeletonView(variant: .card(height: 80))
         }
         .padding(.bottom, 32)
-    }
-}
-
-// MARK: - Helpers
-
-private func streamIcon(for streamId: String) -> String {
-    switch streamId {
-    case let id where id.contains("ROM"), let id where id.contains("CLINICAL"):
-        "figure.walk"
-    case let id where id.contains("STRENGTH"):
-        "figure.strengthtraining.functional"
-    case let id where id.contains("RUNNING"):
-        "figure.run"
-    case let id where id.contains("PLYO"), let id where id.contains("AGILITY"):
-        "figure.jumprope"
-    case let id where id.contains("BALANCE"), let id where id.contains("NEURO"):
-        "figure.cooldown"
-    case let id where id.contains("SPORT"):
-        "sportscourt"
-    default:
-        "figure.strengthtraining.traditional"
     }
 }
 

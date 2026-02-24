@@ -103,9 +103,11 @@ struct AclMicroModulesView: View {
             async let completedResp: AclCompletedModulesResponse = apiClient.request(APIEndpoints.aclCompletedModules())
 
             let (loadedModules, loadedCompleted) = try await (modsResp, completedResp)
-            modules = loadedModules.modules
+            modules = loadedModules.modules.filter { module in
+                module.targetCondition == nil || module.targetCondition == "ACL_RECONSTRUCTION"
+            }
             let completions = loadedCompleted.completedModules ?? loadedCompleted.completions ?? []
-            completedKeys = Set(completions.map(\.moduleKey))
+            completedKeys = Set(completions)
         } catch {
             errorMessage = "Module konnten nicht geladen werden."
         }
@@ -135,6 +137,7 @@ struct AclModuleCard: View {
     let isMarking: Bool
     let onMarkRead: () -> Void
 
+    @ScaledMetric(relativeTo: .body) private var moduleIconSize: CGFloat = 28
     @State private var isExpanded = false
 
     var body: some View {
@@ -148,7 +151,7 @@ struct AclModuleCard: View {
                     Image(systemName: "book.fill")
                         .font(.appCaption)
                         .foregroundStyle(.farBlue)
-                        .frame(width: 28, height: 28)
+                        .frame(width: moduleIconSize, height: moduleIconSize)
                         .background(Color.farBlue.opacity(0.1))
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                         .accessibilityHidden(true)

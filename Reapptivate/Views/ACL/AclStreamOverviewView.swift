@@ -110,7 +110,7 @@ struct AclStreamCard: View {
                 .fill(isLocked ? Color.gray300 : Color.accent)
                 .frame(width: iconContainerSize, height: iconContainerSize)
                 .overlay {
-                    Image(systemName: isLocked ? "lock.fill" : streamIcon(for: stream.id))
+                    Image(systemName: isLocked ? "lock.fill" : aclStreamIcon(for: stream.id))
                         .font(.appSubheadline)
                         .foregroundStyle(.white)
                 }
@@ -159,18 +159,26 @@ struct AclStreamCard: View {
     }
 }
 
-// MARK: - Helper
+// MARK: - Shared Stream Icon Helper
 
-private func streamIcon(for streamId: String) -> String {
+func aclStreamIcon(for streamId: String) -> String {
     switch streamId {
-    case let id where id.contains("ROM"), let id where id.contains("CLINICAL"):
+    case let id where id.contains("CLINICAL"), let id where id.contains("ROM"):
         "figure.walk"
+    case let id where id.contains("MOTOR_CONTROL"):
+        "figure.mind.and.body"
+    case let id where id.contains("REACTIVE"), let id where id.contains("PLYO"), let id where id.contains("AGILITY"):
+        "figure.jumprope"
+    case let id where id.contains("EXPLOSIVE"):
+        "bolt.fill"
+    case let id where id.contains("CHANGE_OF_DIRECTION"):
+        "arrow.triangle.swap"
+    case let id where id.contains("CONDITIONING"):
+        "heart.circle"
     case let id where id.contains("STRENGTH"):
         "figure.strengthtraining.functional"
     case let id where id.contains("RUNNING"):
         "figure.run"
-    case let id where id.contains("PLYO"), let id where id.contains("AGILITY"):
-        "figure.jumprope"
     case let id where id.contains("BALANCE"), let id where id.contains("NEURO"):
         "figure.cooldown"
     case let id where id.contains("SPORT"):

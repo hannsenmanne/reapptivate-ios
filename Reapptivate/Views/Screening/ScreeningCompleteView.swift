@@ -154,6 +154,8 @@ struct ScreeningCompleteView: View {
             return "Ihr NDI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nackenbeschwerden adressiert."
         case .neckShoulderTension:
             return "Ihr TSI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nacken-Schulter-Verspannungen adressiert."
+        case .aclReconstruction:
+            return "Ihr ACL-Screening wurde ausgewertet. Basierend auf Ihrem Transplantattyp und Sportniveau erhalten Sie ein 5-Meilenstein-Programm mit 9 Trainings-Streams fuer Ihre Kreuzbandrekonstruktion."
         default:
             return "Ihr Programm wurde basierend auf Ihrer Diagnose erstellt. Es besteht aus drei Phasen, die sich an Ihren Schmerzlevel und Fortschritt anpassen."
         }
@@ -183,6 +185,13 @@ struct ScreeningCompleteView: View {
                 "4 progressive Trainingsphasen",
                 "Mikro-Module fuer Verspannungen",
                 "Regelmaessige TSI-Verlaufskontrolle"
+            ]
+        case .aclReconstruction:
+            return [
+                "5-Meilenstein-Programm (Pre-OP bis Return-to-Sport)",
+                "9 spezialisierte Trainings-Streams",
+                "Taegliche und woechentliche KPI-Erfassung",
+                "Entlassungskriterien-Tracking"
             ]
         default:
             return [

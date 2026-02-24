@@ -113,9 +113,21 @@ struct AclCriterionRow: View {
     private var isMet: Bool { criterion.met == true }
 
     private var progressPercent: Double {
-        guard let current = criterion.currentValue, let threshold = criterion.threshold, threshold > 0 else {
+        if isMet { return 1.0 }
+        guard let current = criterion.currentValue, let threshold = criterion.threshold else {
             return 0
         }
+        // For "<=" operators, lower values are better (e.g., extension deficit <= 0)
+        if criterion.operator == "<=" {
+            if current <= threshold { return 1.0 }
+            if threshold <= 0 {
+                // Target is 0 or below: scale progress inversely with current value
+                return max(0, 1.0 - (current - threshold) / max(1, abs(current)))
+            }
+            return min(1.0, threshold / current)
+        }
+        // For ">=" operators (default), higher values are better
+        guard threshold > 0 else { return 0 }
         return min(1.0, current / threshold)
     }
 

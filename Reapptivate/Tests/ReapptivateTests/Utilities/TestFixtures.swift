@@ -464,4 +464,332 @@ enum TestFixtures {
         let json: [String: Any] = ["error": "Error", "message": message]
         return try! JSONSerialization.data(withJSONObject: json)
     }
+
+    // MARK: - ACL JSON Response Helpers
+
+    static func aclDailyKpiJSON() -> Data {
+        let json: [String: Any] = [
+            "kpi": [
+                "id": "daily-kpi-1",
+                "date": "2025-10-15",
+                "painNrs": 4,
+                "painLocation": "anterior",
+                "painActivity": "walking",
+                "kneeFlexionDeg": 110,
+                "extensionDeficitDeg": 5,
+                "swellingGrade": 1,
+                "quadsLag": false,
+                "notes": "Feeling better",
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclDailyKpiHistoryJSON() -> Data {
+        let json: [String: Any] = [
+            "kpis": [
+                [
+                    "id": "daily-kpi-1",
+                    "date": "2025-10-15",
+                    "painNrs": 4,
+                    "kneeFlexionDeg": 110,
+                    "extensionDeficitDeg": 5,
+                    "swellingGrade": 1,
+                    "quadsLag": false,
+                ],
+                [
+                    "id": "daily-kpi-2",
+                    "date": "2025-10-14",
+                    "painNrs": 5,
+                    "kneeFlexionDeg": 100,
+                    "extensionDeficitDeg": 8,
+                    "swellingGrade": 2,
+                    "quadsLag": true,
+                ],
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclWeeklyKpiJSON() -> Data {
+        let json: [String: Any] = [
+            "kpi": [
+                "id": "weekly-kpi-1",
+                "weekDate": "2025-10-13",
+                "ikdcScore": 55,
+                "tampaScore": 30,
+                "thighCirc5cm": 42.5,
+                "thighCirc10cm": 48.0,
+            ],
+            "tampaAlert": false,
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclWeeklyKpiHistoryJSON() -> Data {
+        let json: [String: Any] = [
+            "kpis": [
+                [
+                    "id": "weekly-kpi-1",
+                    "weekDate": "2025-10-13",
+                    "ikdcScore": 55,
+                    "tampaScore": 30,
+                    "thighCirc5cm": 42.5,
+                    "thighCirc10cm": 48.0,
+                ],
+                [
+                    "id": "weekly-kpi-2",
+                    "weekDate": "2025-10-06",
+                    "ikdcScore": 48,
+                    "tampaScore": 35,
+                    "thighCirc5cm": 41.0,
+                    "thighCirc10cm": 47.0,
+                ],
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclMilestoneStatusJSON() -> Data {
+        let json: [String: Any] = [
+            "currentMilestone": 2,
+            "weeksPostSurgery": 8,
+            "isPreOp": false,
+            "athleteLevel": "RECREATIONAL",
+            "graftType": "HAMSTRING",
+            "surgeryDate": "2025-09-01",
+            "concomitantInjuries": ["NONE"],
+            "nextCriteria": [
+                [
+                    "id": "crit-1",
+                    "label": "Quad LSI",
+                    "labelDE": "Quad LSI",
+                    "field": "quadLsi",
+                    "threshold": 70.0,
+                    "unit": "%",
+                    "met": false,
+                    "currentValue": 55.0,
+                    "operator": ">=",
+                ]
+            ],
+            "isReadyForLab": false,
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclStreamsResponseJSON() -> Data {
+        let json: [String: Any] = [
+            "streams": [
+                [
+                    "id": "stream-rom",
+                    "name": "ROM Recovery",
+                    "nameDE": "ROM Wiederherstellung",
+                    "description": "Range of motion exercises",
+                    "unlockMilestone": 0,
+                    "milestone": 1,
+                    "isUnlocked": true,
+                    "locked": false,
+                    "exerciseCount": 5,
+                ],
+                [
+                    "id": "stream-strength",
+                    "name": "Strength",
+                    "nameDE": "Kraft",
+                    "description": "Strengthening exercises",
+                    "unlockMilestone": 2,
+                    "milestone": 2,
+                    "isUnlocked": true,
+                    "locked": false,
+                    "exerciseCount": 8,
+                ],
+                [
+                    "id": "stream-plyo",
+                    "name": "Plyometrics",
+                    "nameDE": "Plyometrie",
+                    "description": "Plyometric exercises",
+                    "unlockMilestone": 3,
+                    "milestone": 3,
+                    "isUnlocked": false,
+                    "locked": true,
+                    "exerciseCount": 4,
+                ],
+            ],
+            "currentMilestone": 2,
+            "weeksPostSurgery": 8,
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclScreeningConfigJSON() -> Data {
+        let json: [String: Any] = [
+            "version": "1.0",
+            "title": "ACL Screening",
+            "titleDE": "ACL Screening",
+            "description": "Complete the ACL screening",
+            "descriptionDE": "Bitte füllen Sie das ACL Screening aus",
+            "steps": [
+                [
+                    "id": "surgery_date",
+                    "label": "Surgery Date",
+                    "labelDE": "OP-Datum",
+                    "type": "date",
+                    "required": true,
+                ],
+                [
+                    "id": "graft_type",
+                    "label": "Graft Type",
+                    "labelDE": "Transplantattyp",
+                    "type": "radio",
+                    "required": true,
+                    "options": [
+                        [
+                            "value": "HAMSTRING",
+                            "label": "Hamstring",
+                            "labelDE": "Hamstring (Semitendinosus)",
+                        ],
+                        [
+                            "value": "PATELLAR_TENDON",
+                            "label": "Patellar Tendon",
+                            "labelDE": "Patellasehne (BTB)",
+                        ],
+                    ],
+                ],
+                [
+                    "id": "athlete_level",
+                    "label": "Athlete Level",
+                    "labelDE": "Sportler-Level",
+                    "type": "radio",
+                    "required": true,
+                    "options": [
+                        [
+                            "value": "COMPETITIVE",
+                            "label": "Competitive",
+                            "labelDE": "Leistungssportler",
+                        ],
+                        [
+                            "value": "RECREATIONAL",
+                            "label": "Recreational",
+                            "labelDE": "Freizeitsportler",
+                        ],
+                    ],
+                ],
+                [
+                    "id": "knee_side",
+                    "label": "Knee Side",
+                    "labelDE": "Knieseite",
+                    "type": "radio",
+                    "required": true,
+                    "options": [
+                        [
+                            "value": "LEFT",
+                            "label": "Left",
+                            "labelDE": "Links",
+                        ],
+                        [
+                            "value": "RIGHT",
+                            "label": "Right",
+                            "labelDE": "Rechts",
+                        ],
+                    ],
+                ],
+                [
+                    "id": "concomitant_injuries",
+                    "label": "Concomitant Injuries",
+                    "labelDE": "Begleitverletzungen",
+                    "type": "checkbox",
+                    "required": false,
+                    "options": [
+                        [
+                            "value": "NONE",
+                            "label": "None",
+                            "labelDE": "Keine",
+                        ],
+                        [
+                            "value": "MENISCAL_REPAIR",
+                            "label": "Meniscal Repair",
+                            "labelDE": "Meniskusnaht",
+                        ],
+                    ],
+                ],
+                [
+                    "id": "sport",
+                    "label": "Sport",
+                    "labelDE": "Sportart",
+                    "type": "text",
+                    "required": false,
+                    "placeholder": "z.B. Fußball",
+                ],
+            ] as [[String: Any]],
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclScreeningResultJSON() -> Data {
+        let json: [String: Any] = [
+            "screening": [
+                "id": "acl-screening-1",
+                "surgeryDate": "2025-09-01",
+                "graftType": "HAMSTRING",
+                "athleteLevel": "RECREATIONAL",
+                "concomitantInjuries": ["NONE"],
+                "sport": "Fußball",
+                "kneeSide": "LEFT",
+                "initialMilestone": 0,
+                "currentMilestone": 1,
+                "createdAt": "2025-09-01T10:00:00.000Z",
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclDischargeProgressJSON() -> Data {
+        let json: [String: Any] = [
+            "athleteLevel": "RECREATIONAL",
+            "criteria": [
+                [
+                    "id": "dc-1",
+                    "category": "strength",
+                    "test": "Quad LSI",
+                    "field": "quadLsi",
+                    "threshold": 90.0,
+                    "unit": "%",
+                    "met": true,
+                    "currentValue": 92.0,
+                    "operator": ">=",
+                ],
+                [
+                    "id": "dc-2",
+                    "category": "functional",
+                    "test": "Extension Deficit",
+                    "field": "extensionDeficitDeg",
+                    "threshold": 5.0,
+                    "unit": "°",
+                    "met": false,
+                    "currentValue": 8.0,
+                    "operator": "<=",
+                ],
+            ] as [[String: Any]],
+            "overallPercent": 50,
+            "metCount": 1,
+            "totalCount": 2,
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aclMicroModuleJSON() -> Data {
+        let json: [String: Any] = [
+            "modules": [
+                [
+                    "key": "acl_intro",
+                    "title": "Einführung ACL Reha",
+                    "bodyMarkdown": "## ACL Rehabilitation\nWichtige Informationen...",
+                    "takeHome": "Geduld ist wichtig",
+                    "taskType": "read",
+                    "targetCondition": "ACL_RECONSTRUCTION",
+                    "targetMilestone": [0, 1],
+                ]
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
 }
