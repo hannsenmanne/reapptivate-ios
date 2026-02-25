@@ -53,13 +53,25 @@ final class AclDashboardViewModel {
             try await self.apiClient.request(APIEndpoints.streak())
         }
 
-        let (milestone, streamsResp, discharge, tip, streakResp) = await (milestoneResult, streamsResult, dischargeResult, tipResult, streakResult)
+        async let todayProgressResult: TodayProgressResponse? = loadSafely {
+            try await self.apiClient.request(APIEndpoints.getTodayProgress())
+        }
+
+        let (milestone, streamsResp, discharge, tip, streakResp, todayProgress) = await (milestoneResult, streamsResult, dischargeResult, tipResult, streakResult, todayProgressResult)
 
         milestoneStatus = milestone
         streams = streamsResp?.streams ?? []
         dischargeProgress = discharge
         dailyTip = tip
         streak = streakResp
+        todayCompletedCount = todayProgress?.count ?? 0
+
+        // Compute today's total from schedule streams + unlocked stream exercise counts
+        let todayIds = AclScheduleData.today(forWeek: milestone?.weeksPostSurgery ?? 0)?.day.streamIds ?? []
+        let allStreams = streamsResp?.streams ?? []
+        todayTotalCount = todayIds.reduce(0) { total, streamId in
+            total + (allStreams.first { $0.id == streamId }?.exerciseCount ?? 0)
+        }
 
         // Detect milestone advancement
         if let prev = previousMilestone, let current = milestone?.currentMilestone, current > prev {
@@ -87,6 +99,36 @@ final class AclDashboardViewModel {
 
     var lockedStreams: [AclStream] {
         streams.filter { $0.locked == true }
+    }
+
+    // MARK: - Today's Schedule
+
+    var todaySchedule: AclScheduleData.ScheduleDay? {
+        AclScheduleData.today(forWeek: weeksPostSurgery)?.day
+    }
+
+    var isRestDay: Bool {
+        todaySchedule?.isRest ?? true
+    }
+
+    var todayStreamIds: [String] {
+        todaySchedule?.streamIds ?? []
+    }
+
+    // MARK: - Today's Progress
+
+    var todayCompletedCount = 0
+    var todayTotalCount = 0
+
+    func loadTodayProgress() async {
+        do {
+            let response: TodayProgressResponse = try await apiClient.request(
+                APIEndpoints.getTodayProgress()
+            )
+            todayCompletedCount = response.count
+        } catch {
+            Log.api.error("ACL today progress load error: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Private

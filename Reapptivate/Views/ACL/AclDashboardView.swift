@@ -7,6 +7,8 @@ struct AclDashboardView: View {
     @State private var viewModel: AclDashboardViewModel?
     @State private var showDailyKpi = false
     @State private var showWeeklyKpi = false
+    @State private var showTodayProgram = false
+    @State private var todayProgramStreams: [String] = []
     @State private var showMilestoneCelebration = false
     @State private var celebrationHaptic = false
     var onNavigateToProgram: (() -> Void)?
@@ -45,6 +47,15 @@ struct AclDashboardView: View {
             AclWeeklyKpiLoggerView(onSuccess: {
                 Task { await viewModel?.loadAll() }
             })
+        }
+        .fullScreenCover(isPresented: $showTodayProgram) {
+            AclTodayProgramView(
+                streamIds: todayProgramStreams,
+                dayLabel: viewModel?.todaySchedule?.label ?? "",
+                onComplete: {
+                    Task { await viewModel?.loadAll() }
+                }
+            )
         }
         .conditionalHaptic(.success, trigger: celebrationHaptic)
         .task {
@@ -94,10 +105,34 @@ struct AclDashboardView: View {
                     .cardEntryAnimation(index: 1)
             }
 
+            // Today's Program Card
+            AclTodayProgramCard(
+                todayLabel: vm.todaySchedule?.label ?? "",
+                streamIds: vm.todayStreamIds,
+                completedCount: vm.todayCompletedCount,
+                totalCount: vm.todayTotalCount,
+                isRestDay: vm.isRestDay,
+                onTap: {
+                    todayProgramStreams = vm.todayStreamIds
+                    showTodayProgram = true
+                }
+            )
+            .cardEntryAnimation(index: 2)
+
+            // Weekly Schedule Card
+            AclWeeklyScheduleCard(
+                weeksPostSurgery: vm.weeksPostSurgery,
+                onStartTodayProgram: { streams in
+                    todayProgramStreams = streams
+                    showTodayProgram = true
+                }
+            )
+            .cardEntryAnimation(index: 3)
+
             // Daily Tip
             if let tip = vm.dailyTip {
                 AclDailyTipCard(tip: tip)
-                    .cardEntryAnimation(index: 2)
+                    .cardEntryAnimation(index: 4)
             }
 
             // KPI Quick Actions
@@ -105,14 +140,14 @@ struct AclDashboardView: View {
                 onDailyKpi: { showDailyKpi = true },
                 onWeeklyKpi: { showWeeklyKpi = true }
             )
-            .cardEntryAnimation(index: 3)
+            .cardEntryAnimation(index: 5)
 
             // Milestone Timeline
             AclMilestoneTimelineView(
                 currentMilestone: vm.currentMilestone,
                 weeksPostSurgery: vm.weeksPostSurgery
             )
-            .cardEntryAnimation(index: 4)
+            .cardEntryAnimation(index: 6)
 
             // Milestone Criteria (next targets)
             if let criteria = vm.milestoneStatus?.nextCriteria, !criteria.isEmpty {
@@ -120,7 +155,7 @@ struct AclDashboardView: View {
                     milestone: vm.currentMilestone,
                     criteria: criteria
                 )
-                .cardEntryAnimation(index: 5)
+                .cardEntryAnimation(index: 7)
             }
 
             // Active Streams Quick Access
@@ -129,18 +164,14 @@ struct AclDashboardView: View {
                     streams: vm.unlockedStreams,
                     onViewAll: { onNavigateToProgram?() }
                 )
-                .cardEntryAnimation(index: 6)
+                .cardEntryAnimation(index: 8)
             }
 
             // Discharge Progress (milestone 4+)
             if vm.currentMilestone >= 4, let discharge = vm.dischargeProgress {
                 AclDischargeQuickCard(progress: discharge)
-                    .cardEntryAnimation(index: 7)
+                    .cardEntryAnimation(index: 9)
             }
-
-            // Training Schedule
-            TrainingScheduleCard()
-                .cardEntryAnimation(index: 8)
         }
         .padding(.bottom, 32)
     }
