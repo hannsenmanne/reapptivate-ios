@@ -27,6 +27,12 @@ enum APIEndpoints {
         get("patient/me")
     }
 
+    // MARK: - Account Deletion
+
+    static func deleteAccount() -> URLRequest {
+        delete("patient/account")
+    }
+
     // MARK: - Schedule
 
     static func getSchedule() -> URLRequest {
@@ -478,6 +484,14 @@ private extension APIEndpoints {
         if let body {
             request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         }
+        return request
+    }
+
+    static func delete(_ path: String) -> URLRequest {
+        var request = URLRequest(url: baseURL.appendingPathComponent(path))
+        request.httpMethod = "DELETE"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.timeoutInterval = 30
         return request
     }
 

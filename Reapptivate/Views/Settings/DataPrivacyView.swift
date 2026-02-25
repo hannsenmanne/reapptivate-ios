@@ -3,9 +3,11 @@ import SwiftUI
 struct DataPrivacyView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
+    @Environment(\.dismiss) private var dismiss
     @State private var showDeleteConfirmation = false
-    @State private var showDeleteNotAvailable = false
     @State private var showExportInfo = false
+    @State private var isDeleting = false
+    @State private var deleteError: String?
 
     var body: some View {
         List {
@@ -46,10 +48,15 @@ struct DataPrivacyView: View {
                     showDeleteConfirmation = true
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "trash.fill")
+                        if isDeleting {
+                            ProgressView()
+                        } else {
+                            Image(systemName: "trash.fill")
+                        }
                         Text("Konto und Daten löschen")
                     }
                 }
+                .disabled(isDeleting)
             } footer: {
                 Text("Diese Aktion ist unwiderruflich. Alle Ihre Daten werden permanent gelöscht.")
                     .font(.appCaption2)
@@ -65,15 +72,30 @@ struct DataPrivacyView: View {
         .alert("Konto löschen?", isPresented: $showDeleteConfirmation) {
             Button("Abbrechen", role: .cancel) { }
             Button("Endgültig löschen", role: .destructive) {
-                showDeleteNotAvailable = true
+                Task { await deleteAccount() }
             }
         } message: {
             Text("Alle Ihre Daten werden unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.")
         }
-        .alert("Nicht verfügbar", isPresented: $showDeleteNotAvailable) {
+        .alert("Fehler", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
             Button("OK") { }
         } message: {
-            Text("Diese Funktion ist noch nicht verfügbar. Bitte kontaktieren Sie uns direkt für die Löschung Ihres Kontos.")
+            Text(deleteError ?? "")
+        }
+    }
+}
+
+extension DataPrivacyView {
+    private func deleteAccount() async {
+        isDeleting = true
+        defer { isDeleting = false }
+
+        do {
+            try await apiClient.requestVoid(APIEndpoints.deleteAccount())
+            dismiss()
+            appState.performLogout(apiClient: apiClient)
+        } catch {
+            deleteError = "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
         }
     }
 }
