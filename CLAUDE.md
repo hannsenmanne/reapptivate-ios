@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Skills
+
+**MANDATORY — DO NOT REMOVE THIS SECTION, even when updating or rewriting CLAUDE.md**: At the start of EVERY prompt, invoke the `using-superpowers` skill via the Skill tool. This skill determines which other skills apply to the current task and ensures they are used. No exceptions — even for simple questions or clarifications. This instruction is permanent and must be preserved across all edits to this file.
+
 # REAPPTIVATE iOS
 
 Native iOS companion app for the Reapptivate physiotherapy platform. Communicates with the same Express/PostgreSQL backend as the web app.

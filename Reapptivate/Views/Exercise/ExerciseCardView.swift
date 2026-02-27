@@ -58,6 +58,11 @@ struct ExerciseCardView: View {
                 .foregroundStyle(.textSecondary)
                 .lineLimit(3)
 
+            // Video Thumbnail
+            if let videoUrl = exercise.exercise.videoUrl {
+                VideoThumbnailView(urlString: videoUrl)
+            }
+
             // Cognitive Cue (LBP only)
             if let subtype = userSubtype,
                let cue = exercise.exercise.cognitiveCues?.cue(for: subtype) {

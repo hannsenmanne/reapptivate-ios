@@ -199,6 +199,7 @@ struct AclStreamExercise: Codable, Identifiable {
     let weekRange: [Int]?
     let graftModifier: [String: String]?
     let concomitantPrecaution: [String: String]?
+    let videoUrl: String?
 }
 
 // MARK: - ACL Milestone Status

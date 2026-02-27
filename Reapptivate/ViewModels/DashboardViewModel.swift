@@ -6,6 +6,7 @@ enum DashboardTab: String, CaseIterable {
     case edukation = "Edukation"
     case progress = "Fortschritt"
     case insights = "Analyse"
+    case messages = "Nachrichten"
 }
 
 @Observable
@@ -98,6 +99,13 @@ final class DashboardViewModel {
 
     func refresh() async {
         await loadDashboard()
+    }
+
+    func fetchTodayCheckin() async {
+        let response: CheckinTodayResponse? = await loadSafely { [apiClient] in
+            try await apiClient.request(APIEndpoints.morningCheckinToday())
+        }
+        appState?.hasCheckedInToday = response?.checkedIn ?? false
     }
 
     // MARK: - Helpers

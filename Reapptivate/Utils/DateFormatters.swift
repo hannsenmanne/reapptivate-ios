@@ -41,6 +41,17 @@ enum DateFormatters: Sendable {
         return formatter
     }()
 
+    /// Time-only formatter (user's current timezone)
+    /// Use for displaying time in messaging threads (e.g., "14:30")
+    nonisolated(unsafe) static let timeOnly: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "de_DE")
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.timeZone = .current
+        return formatter
+    }()
+
     /// German date+time formatter (user's current timezone)
     /// Use for displaying date and time to users
     nonisolated(unsafe) static let germanDateTime: DateFormatter = {

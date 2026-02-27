@@ -118,6 +118,11 @@ struct AclExerciseCard: View {
                 }
             }
 
+            // Video Thumbnail
+            if let videoUrl = exercise.videoUrl {
+                VideoThumbnailView(urlString: videoUrl)
+            }
+
             // Graft modifier warning (filtered to user's graft type)
             if let graftModifier = exercise.graftModifier, let graft = userGraftType,
                let note = graftModifier[graft], !note.isEmpty {

@@ -7,6 +7,8 @@ final class AppState {
     var currentUser: UserProfile?
     var isCheckingAuth = true
     var isLoading = false
+    var unreadMessageCount = 0
+    var hasCheckedInToday = false
 
     /// Called during logout to clear caches (set by ReapptivateApp)
     var onLogout: (() -> Void)?
@@ -51,6 +53,8 @@ final class AppState {
     func handleLogout() {
         currentUser = nil
         isAuthenticated = false
+        unreadMessageCount = 0
+        hasCheckedInToday = false
         WorkTimerViewModel.clearPersistedState()
         clearUserScopedDefaults()
         onLogout?()

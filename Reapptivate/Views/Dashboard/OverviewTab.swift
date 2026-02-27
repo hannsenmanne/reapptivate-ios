@@ -7,15 +7,16 @@ struct OverviewTab: View {
     let exerciseVM: ExerciseViewModel?
     var onNavigateToProgram: (() -> Void)?
 
-    private var completedTodayCount: Int {
-        viewModel?.completedToday.count ?? 0
-    }
-
-    private var totalExerciseCount: Int {
-        exerciseVM?.exercises.count ?? 0
-    }
-
     var body: some View {
+        SmartDayGateView {
+            overviewFallbackContent
+        }
+    }
+
+    // MARK: - Fallback Content (shown when Smart Day API is unavailable)
+
+    @ViewBuilder
+    private var overviewFallbackContent: some View {
         VStack(spacing: 20) {
             // Stats Row
             if let user = appState.currentUser {
@@ -30,6 +31,8 @@ struct OverviewTab: View {
             }
 
             // Today's Plan
+            let completedTodayCount = viewModel?.completedToday.count ?? 0
+            let totalExerciseCount = exerciseVM?.exercises.count ?? 0
             if viewModel?.isRestDay != true && totalExerciseCount > 0 {
                 TodaysPlanCard(
                     completedCount: completedTodayCount,

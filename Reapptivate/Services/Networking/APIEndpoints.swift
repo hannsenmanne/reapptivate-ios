@@ -421,6 +421,42 @@ enum APIEndpoints {
         get("patient/custom-exercises")
     }
 
+    // MARK: - Bridge (Morning Check-In + Smart Day)
+
+    static func submitMorningCheckin(body: MorningCheckinRequest) -> URLRequest {
+        post("bridge/morning-checkin", encodable: body)
+    }
+
+    static func morningCheckinToday() -> URLRequest {
+        get("bridge/morning-checkin/today")
+    }
+
+    static func smartDay() -> URLRequest {
+        get("bridge/smart-day")
+    }
+
+    // MARK: - Clinical Channel
+
+    static func createClinicalThread(body: CreateThreadRequest) -> URLRequest {
+        post("clinical-channel/threads", encodable: body)
+    }
+
+    static func clinicalThreads() -> URLRequest {
+        get("clinical-channel/threads")
+    }
+
+    static func clinicalThreadDetail(_ id: String) -> URLRequest {
+        get("clinical-channel/threads/\(id)")
+    }
+
+    static func sendClinicalMessage(threadId: String, body: SendMessageRequest) -> URLRequest {
+        post("clinical-channel/threads/\(threadId)/messages", encodable: body)
+    }
+
+    static func clinicalUnreadCount() -> URLRequest {
+        get("clinical-channel/unread")
+    }
+
     // MARK: - Config
 
     static func features() -> URLRequest {

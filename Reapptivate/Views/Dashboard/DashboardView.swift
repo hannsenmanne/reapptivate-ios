@@ -6,12 +6,14 @@ struct DashboardView: View {
     @State private var viewModel: DashboardViewModel?
     @State private var exerciseVM: ExerciseViewModel?
     @State private var phaseVM: PhaseViewModel?
+    @State private var messagingVM: MessagingViewModel?
     @State private var selectedTab: DashboardTab = .overview
     @State private var showSettings = false
     @State private var showLogoutConfirmation = false
     @State private var milestoneService = MilestoneService()
     @State private var activeMilestone: Milestone?
     @State private var ratingService = RatingService()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         NavigationStack {
@@ -19,7 +21,8 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl
+                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl,
+                    unreadCount: messagingVM?.unreadCount ?? 0
                 )
 
                 // Tab Content
@@ -109,6 +112,16 @@ struct DashboardView: View {
         .task {
             await loadAll()
         }
+        .onChange(of: scenePhase) { _, phase in
+            switch phase {
+            case .active:
+                messagingVM?.startUnreadPolling()
+            case .background, .inactive:
+                messagingVM?.stopPolling()
+            @unknown default:
+                break
+            }
+        }
     }
 
     // MARK: - Default Tab Content
@@ -162,6 +175,13 @@ struct DashboardView: View {
             }
         case .insights:
             InsightsTab(viewModel: viewModel, phaseVM: phaseVM)
+        case .messages:
+            if let messagingVM {
+                MessagesTab(viewModel: messagingVM)
+            } else {
+                ProgressView("Nachrichten laden...")
+                    .frame(maxWidth: .infinity, minHeight: 200)
+            }
         }
     }
 
@@ -176,6 +196,12 @@ struct DashboardView: View {
     }
 
     private func loadAll() async {
+        // Messaging VM (available for all conditions)
+        if messagingVM == nil {
+            messagingVM = MessagingViewModel(apiClient: apiClient, appState: appState)
+            messagingVM?.startUnreadPolling()
+        }
+
         // ACL patients use their own dashboard views with separate data loading
         guard !appState.isAcl else { return }
 
@@ -237,12 +263,14 @@ struct DashboardView: View {
 struct DashboardTabBar: View {
     @Binding var selectedTab: DashboardTab
     let showInsights: Bool
+    var unreadCount: Int = 0
 
     var tabs: [DashboardTab] {
         var result: [DashboardTab] = [.overview, .program, .edukation, .progress]
         if showInsights {
             result.append(.insights)
         }
+        result.append(.messages)
         return result
     }
 
@@ -256,10 +284,22 @@ struct DashboardTabBar: View {
                         }
                     } label: {
                         VStack(spacing: 8) {
-                            Text(tab.rawValue.uppercased())
-                                .font(.appCaptionMedium)
-                                .tracking(0.8)
-                                .foregroundStyle(selectedTab == tab ? .textPrimary : .textSecondary)
+                            HStack(spacing: 4) {
+                                Text(tab.rawValue.uppercased())
+                                    .font(.appCaptionMedium)
+                                    .tracking(0.8)
+                                    .foregroundStyle(selectedTab == tab ? .textPrimary : .textSecondary)
+
+                                // Unread badge on messages tab
+                                if tab == .messages && unreadCount > 0 {
+                                    Text("\(unreadCount)")
+                                        .font(.system(size: 10, weight: .bold))
+                                        .foregroundStyle(.white)
+                                        .frame(minWidth: 16, minHeight: 16)
+                                        .background(Color.red)
+                                        .clipShape(Circle())
+                                }
+                            }
 
                             Rectangle()
                                 .frame(height: 2)
