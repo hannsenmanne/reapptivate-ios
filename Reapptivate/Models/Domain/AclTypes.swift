@@ -326,6 +326,20 @@ struct AclWeeklyKpi: Codable, Identifiable {
     let tampaScore: Int?
     let thighCirc5cm: Double?
     let thighCirc10cm: Double?
+
+    private enum CodingKeys: String, CodingKey {
+        case id, weekDate, ikdcScore, tampaScore, thighCirc5cm, thighCirc10cm
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        weekDate = try c.decode(String.self, forKey: .weekDate)
+        ikdcScore = c.flexibleInt(forKey: .ikdcScore)
+        tampaScore = c.flexibleInt(forKey: .tampaScore)
+        thighCirc5cm = c.flexibleDouble(forKey: .thighCirc5cm)
+        thighCirc10cm = c.flexibleDouble(forKey: .thighCirc10cm)
+    }
 }
 
 struct AclWeeklyKpiRequest: Codable {
