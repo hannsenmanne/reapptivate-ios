@@ -36,7 +36,9 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: true
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait"
         INFOPLIST_KEY_UIRequiresFullScreen: true
+        TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_KEY_NSCameraUsageDescription: "Kamera wird für das Scannen von QR-Codes benötigt."
+        ITSAppUsesNonExemptEncryption: false
         INFOPLIST_KEY_CFBundleDisplayName: "Reapptivate"
         PRODUCT_BUNDLE_IDENTIFIER: com.reapptivate.ios
         PRODUCT_NAME: Reapptivate
