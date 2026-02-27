@@ -1,5 +1,5 @@
 import SwiftUI
-import AVFoundation
+@preconcurrency import AVFoundation
 
 struct QRScannerView: View {
     @Environment(\.dismiss) private var dismiss

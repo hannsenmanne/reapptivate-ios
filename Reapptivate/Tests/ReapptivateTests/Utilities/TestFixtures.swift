@@ -445,16 +445,7 @@ enum TestFixtures {
 
     static func todayProgressResponseJSON() -> Data {
         let json: [String: Any] = [
-            "completedExercises": [
-                [
-                    "id": "entry-1",
-                    "exerciseId": "ex-1",
-                    "completedAt": "2025-06-01T10:00:00.000Z",
-                    "setsCompleted": 3,
-                    "repsCompleted": 10,
-                    "painLevel": 2,
-                ]
-            ],
+            "completedExercises": ["ex-1"],
             "count": 1,
         ]
         return try! JSONSerialization.data(withJSONObject: json)

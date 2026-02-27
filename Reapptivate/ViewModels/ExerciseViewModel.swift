@@ -37,8 +37,8 @@ final class ExerciseViewModel {
         )
     }
 
-    func updateCompletedToday(from entries: [ProgressEntry]) {
-        completedToday = Set(entries.map(\.exerciseId))
+    func updateCompletedToday(from exerciseIds: [String]) {
+        completedToday = Set(exerciseIds)
     }
 
     func markCompleted(_ exerciseId: String) {

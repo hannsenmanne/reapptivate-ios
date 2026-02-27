@@ -14,7 +14,7 @@ enum DashboardTab: String, CaseIterable {
 final class DashboardViewModel {
     var phaseStatus: AdaptivePhaseStatus?
     var progressStats: ProgressStats?
-    var completedToday: [ProgressEntry] = []
+    var completedToday: [String] = []
     var recentEntries: [ProgressEntry] = []
     var scheduleResponse: ScheduleResponse?
     var isLoading = false
@@ -116,7 +116,7 @@ final class DashboardViewModel {
     }
 
     func isExerciseCompletedToday(_ exerciseId: String) -> Bool {
-        completedToday.contains { $0.exerciseId == exerciseId }
+        completedToday.contains(exerciseId)
     }
 
     private func loadSafely<T: Sendable>(_ work: @Sendable () async throws -> T) async -> T? {

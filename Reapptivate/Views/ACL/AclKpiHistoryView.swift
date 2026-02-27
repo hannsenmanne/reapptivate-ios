@@ -488,14 +488,14 @@ private enum KpiDateFormatters {
         return f
     }()
 
-    nonisolated(unsafe) static let display: DateFormatter = {
+    static let display: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "de_DE")
         f.dateStyle = .medium
         return f
     }()
 
-    nonisolated(unsafe) static let fallback: DateFormatter = {
+    static let fallback: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
         f.timeZone = TimeZone(secondsFromGMT: 0)

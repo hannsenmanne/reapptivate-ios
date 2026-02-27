@@ -75,36 +75,43 @@ final class AclTodayProgramViewModel {
         isLoading = true
         errorMessage = nil
 
-        do {
-            async let streamsResult = loadStreams()
-            async let todayResult: TodayProgressResponse = apiClient.request(
-                APIEndpoints.getTodayProgress()
-            )
+        streamGroups = await loadStreams()
 
-            streamGroups = try await streamsResult
-            let today = try await todayResult
-            completedExerciseIds = Set(today.completedExercises.map(\.exerciseId))
-        } catch {
-            Log.api.error("ACL today program load error: \(error.localizedDescription)")
-            errorMessage = "Programm konnte nicht geladen werden."
+        if let today: TodayProgressResponse = try? await apiClient.request(
+            APIEndpoints.getTodayProgress()
+        ) {
+            completedExerciseIds = Set(today.completedExercises)
+        }
+
+        if streamGroups.isEmpty {
+            errorMessage = "Keine freigeschalteten Streams für heute."
         }
 
         isLoading = false
     }
 
-    private func loadStreams() async throws -> [StreamGroup] {
-        try await withThrowingTaskGroup(of: (String, AclStreamDetailResponse).self) { group in
+    private func loadStreams() async -> [StreamGroup] {
+        await withTaskGroup(of: (String, AclStreamDetailResponse?).self) { group in
             for streamId in streamIds {
                 group.addTask { [apiClient] in
-                    let response: AclStreamDetailResponse = try await apiClient.request(
-                        APIEndpoints.aclStreamDetail(streamId: streamId)
-                    )
-                    return (streamId, response)
+                    do {
+                        let response: AclStreamDetailResponse = try await apiClient.request(
+                            APIEndpoints.aclStreamDetail(streamId: streamId)
+                        )
+                        return (streamId, response)
+                    } catch APIError.forbidden {
+                        // Stream locked (milestone not reached) — skip silently
+                        return (streamId, nil)
+                    } catch {
+                        Log.api.error("Failed to load stream \(streamId): \(error.localizedDescription)")
+                        return (streamId, nil)
+                    }
                 }
             }
 
             var groups: [StreamGroup] = []
-            for try await (_, response) in group {
+            for await (_, response) in group {
+                guard let response else { continue }
                 let exercises = response.exercises.isEmpty
                     ? (response.stream.exercises ?? [])
                     : response.exercises

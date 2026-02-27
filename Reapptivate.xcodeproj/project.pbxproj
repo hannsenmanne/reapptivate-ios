@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -337,7 +337,7 @@
 		4D091C40616A3407751C6238 /* AclTodayProgramCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTodayProgramCard.swift; sourceTree = "<group>"; };
 		4F45E597178D17EC528DCAB8 /* ThreadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailView.swift; sourceTree = "<group>"; };
 		4F76FC19CE5EF7FE3F37C107 /* ExerciseSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSessionView.swift; sourceTree = "<group>"; };
-		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522523B00DA8A09984ACA606 /* UserProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		52C5C9F2D2ADDB53A0EE3208 /* NdiProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NdiProgressView.swift; sourceTree = "<group>"; };
 		5359A7494A03CCE028643ABB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -392,7 +392,7 @@
 		8EE21B35C9D66F92733D103F /* PainSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSliderView.swift; sourceTree = "<group>"; };
 		8F365DC7AA5C42834DD5A1AD /* TokenManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManagerTests.swift; sourceTree = "<group>"; };
 		91D1051695F6EC94743F3119 /* LbpTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LbpTypes.swift; sourceTree = "<group>"; };
-		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModifiers+Design.swift"; sourceTree = "<group>"; };
 		98C609B2EEEA0B25CCA73910 /* OverviewTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTab.swift; sourceTree = "<group>"; };
 		9B3D6CFD4A5014C27978DC1B /* AuthTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTypes.swift; sourceTree = "<group>"; };
@@ -1199,6 +1199,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					A7AECD66B703CF0A134DD96F = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1213,6 +1214,7 @@
 			);
 			mainGroup = 085D8C9692D8AA7A0ABF3326;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1588,7 +1590,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
@@ -1597,6 +1598,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1742,7 +1744,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
@@ -1751,6 +1752,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

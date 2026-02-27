@@ -29,7 +29,7 @@ struct StatsResponse: Codable {
 }
 
 struct TodayProgressResponse: Codable {
-    let completedExercises: [ProgressEntry]
+    let completedExercises: [String]
     let count: Int
 }
 

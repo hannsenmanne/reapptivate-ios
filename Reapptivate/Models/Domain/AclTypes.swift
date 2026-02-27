@@ -200,6 +200,39 @@ struct AclStreamExercise: Codable, Identifiable {
     let graftModifier: [String: String]?
     let concomitantPrecaution: [String: String]?
     let videoUrl: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, nameDE, description, descriptionDE, sets, reps, holdTime
+        case tempo, intensity, milestoneRange, weekRange, graftModifier
+        case concomitantPrecaution, videoUrl
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        nameDE = try container.decodeIfPresent(String.self, forKey: .nameDE)
+        description = try container.decodeIfPresent(String.self, forKey: .description)
+        descriptionDE = try container.decodeIfPresent(String.self, forKey: .descriptionDE)
+        sets = try container.decodeIfPresent(Int.self, forKey: .sets)
+        holdTime = try container.decodeIfPresent(Int.self, forKey: .holdTime)
+        tempo = try container.decodeIfPresent(String.self, forKey: .tempo)
+        intensity = try container.decodeIfPresent(String.self, forKey: .intensity)
+        milestoneRange = try container.decodeIfPresent([Int].self, forKey: .milestoneRange)
+        weekRange = try container.decodeIfPresent([Int].self, forKey: .weekRange)
+        graftModifier = try container.decodeIfPresent([String: String].self, forKey: .graftModifier)
+        concomitantPrecaution = try container.decodeIfPresent([String: String].self, forKey: .concomitantPrecaution)
+        videoUrl = try container.decodeIfPresent(String.self, forKey: .videoUrl)
+
+        // reps can be String or Number from the backend
+        if let stringVal = try? container.decodeIfPresent(String.self, forKey: .reps) {
+            reps = stringVal
+        } else if let intVal = try? container.decodeIfPresent(Int.self, forKey: .reps) {
+            reps = String(intVal)
+        } else {
+            reps = nil
+        }
+    }
 }
 
 // MARK: - ACL Milestone Status
