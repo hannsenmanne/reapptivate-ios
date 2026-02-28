@@ -149,13 +149,13 @@ struct ScreeningCompleteView: View {
 
         switch user.tendinopathyType {
         case .lbpNonspecific:
-            return "Ihr Screening wurde ausgewertet und ein individuelles Programm fuer Ihren unspezifischen Rueckenschmerz erstellt. Das Programm passt sich laufend an Ihren Fortschritt an."
+            return "Ihr Screening wurde ausgewertet und ein individuelles Programm für Ihren unspezifischen Rückenschmerz erstellt. Das Programm passt sich laufend an Ihren Fortschritt an."
         case .neckPain:
             return "Ihr NDI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nackenbeschwerden adressiert."
         case .neckShoulderTension:
             return "Ihr TSI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nacken-Schulter-Verspannungen adressiert."
         case .aclReconstruction:
-            return "Ihr ACL-Screening wurde ausgewertet. Basierend auf Ihrem Transplantattyp und Sportniveau erhalten Sie ein 5-Meilenstein-Programm mit 9 Trainings-Streams fuer Ihre Kreuzbandrekonstruktion."
+            return "Ihr ACL-Screening wurde ausgewertet. Basierend auf Ihrem Transplantattyp und Sportniveau erhalten Sie ein 5-Meilenstein-Programm mit 9 Trainings-Streams für Ihre Kreuzbandrekonstruktion."
         default:
             return "Ihr Programm wurde basierend auf Ihrer Diagnose erstellt. Es besteht aus drei Phasen, die sich an Ihren Schmerzlevel und Fortschritt anpassen."
         }
@@ -167,37 +167,37 @@ struct ScreeningCompleteView: View {
         switch user.tendinopathyType {
         case .lbpNonspecific:
             return [
-                "Individuell angepasste Uebungen",
+                "Individuell angepasste Übungen",
                 "Schmerzadaptive Phasen-Progression",
                 "Psychoedukative Mikro-Module",
                 "Fortschritts-Tracking und Analysen"
             ]
         case .neckPain:
             return [
-                "Auf Ihren Schweregrad abgestimmte Uebungen",
+                "Auf Ihren Schweregrad abgestimmte Übungen",
                 "4 progressive Trainingsphasen",
-                "Mikro-Module fuer Nackenbeschwerden",
-                "Regelmaessige NDI-Verlaufskontrolle"
+                "Mikro-Module für Nackenbeschwerden",
+                "Regelmäßige NDI-Verlaufskontrolle"
             ]
         case .neckShoulderTension:
             return [
-                "Auf Ihren Schweregrad abgestimmte Uebungen",
+                "Auf Ihren Schweregrad abgestimmte Übungen",
                 "4 progressive Trainingsphasen",
-                "Mikro-Module fuer Verspannungen",
-                "Regelmaessige TSI-Verlaufskontrolle"
+                "Mikro-Module für Verspannungen",
+                "Regelmäßige TSI-Verlaufskontrolle"
             ]
         case .aclReconstruction:
             return [
                 "5-Meilenstein-Programm (Pre-OP bis Return-to-Sport)",
                 "9 spezialisierte Trainings-Streams",
-                "Taegliche und woechentliche KPI-Erfassung",
+                "Tägliche und wöchentliche KPI-Erfassung",
                 "Entlassungskriterien-Tracking"
             ]
         default:
             return [
                 "3-Phasen-Programm (Isometrisch, HSR, Exzentrisch)",
                 "Schmerzadaptive Anpassung",
-                "Taeglich neue Wissenskarten",
+                "Täglich neue Wissenskarten",
                 "Fortschritts-Tracking"
             ]
         }
@@ -210,9 +210,9 @@ struct ScreeningCompleteView: View {
 
         switch subtype {
         case .FAR:
-            return "Ihr Profil zeigt erhoehte Angst-Vermeidung. Ihr Programm beinhaltet eine Angst-Hierarchie und schrittweise Konfrontationsuebungen, um Bewegungsangst abzubauen."
+            return "Ihr Profil zeigt erhöhte Angst-Vermeidung. Ihr Programm beinhaltet eine Angst-Hierarchie und schrittweise Konfrontationsübungen, um Bewegungsangst abzubauen."
         case .DER:
-            return "Ihr Profil zeigt Distress-Durchhaltemuster. Ihr Programm beinhaltet Pacing-Strategien, um Ueberbelastung zu vermeiden und Aktivitaeten besser zu dosieren."
+            return "Ihr Profil zeigt Distress-Durchhaltemuster. Ihr Programm beinhaltet Pacing-Strategien, um Überbelastung zu vermeiden und Aktivitäten besser zu dosieren."
         case .EER:
             return "Ihr Profil zeigt Eustress-Durchhaltemuster. Ihr Programm beinhaltet Pacing-Strategien, um trotz guter Motivation die richtige Balance zu finden."
         case .AR:

@@ -79,7 +79,7 @@ struct NotificationPrefsView: View {
                     Text("Trainings-Erinnerungen werden an Ihren geplanten Trainingstagen zur eingestellten Uhrzeit gesendet.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
-                    Text("Sie konnen die Trainingstage in den Einstellungen unter 'Trainingsplan' anpassen.")
+                    Text("Sie können die Trainingstage in den Einstellungen unter 'Trainingsplan' anpassen.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }

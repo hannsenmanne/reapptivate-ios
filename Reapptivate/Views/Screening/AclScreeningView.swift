@@ -273,7 +273,7 @@ private struct AclCheckboxStepView: View {
                 )
             }
 
-            Text("Mehrfachauswahl moeglich. Waehlen Sie \"Keine\", wenn keine Begleitverletzungen vorliegen.")
+            Text("Mehrfachauswahl möglich. Wählen Sie \"Keine\", wenn keine Begleitverletzungen vorliegen.")
                 .font(.appCaption)
                 .foregroundStyle(.textSecondary)
                 .padding(.top, 4)
