@@ -13,12 +13,12 @@ struct MorningCheckinView: View {
             VStack(spacing: 24) {
                 // Header
                 VStack(spacing: 8) {
-                    Image(systemName: "sun.horizon.fill")
+                    Image(systemName: timeBasedIcon)
                         .font(.system(size: 40))
                         .foregroundStyle(.accent)
                         .accessibilityHidden(true)
 
-                    Text("Guten Morgen!")
+                    Text(timeBasedGreeting)
                         .font(.appTitle)
                         .foregroundStyle(.textPrimary)
 
@@ -239,6 +239,28 @@ struct MorningCheckinView: View {
     }
 
     // MARK: - Constants
+
+    private var timeBasedGreeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        if hour < 12 {
+            return "Guten Morgen!"
+        } else if hour < 18 {
+            return "Guten Tag!"
+        } else {
+            return "Guten Abend!"
+        }
+    }
+
+    private var timeBasedIcon: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        if hour < 12 {
+            return "sun.horizon.fill"
+        } else if hour < 18 {
+            return "sun.max.fill"
+        } else {
+            return "moon.stars.fill"
+        }
+    }
 
     private let moodEmojis = ["😫", "😕", "😐", "🙂", "😊"]
     private let moodLabels = ["Sehr schlecht", "Schlecht", "Neutral", "Gut", "Sehr gut"]

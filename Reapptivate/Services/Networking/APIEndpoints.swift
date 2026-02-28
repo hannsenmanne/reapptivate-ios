@@ -432,7 +432,8 @@ enum APIEndpoints {
     }
 
     static func smartDay() -> URLRequest {
-        get("bridge/smart-day")
+        let tz = TimeZone.current.identifier
+        return get("bridge/smart-day?tz=\(tz)")
     }
 
     // MARK: - Clinical Channel
