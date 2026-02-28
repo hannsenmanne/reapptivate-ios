@@ -17,8 +17,8 @@ struct WorkTimerBreakExercise: Codable, Identifiable {
     let name: String
     let description: String
     let durationSeconds: Int
-    let targetConditions: [String]
-    let minPhase: Int
+    let targetConditions: [String]?
+    let minPhase: Int?
     let category: String
 }
 
