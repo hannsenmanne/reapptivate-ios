@@ -21,6 +21,9 @@ struct SmartDayView: View {
                     restDayContent(data)
                 }
 
+                // Work Timer (LBP / Neck / Tension)
+                WorkTimerCard()
+
                 // Streak
                 streakCard(data.streakInfo)
 
@@ -28,6 +31,9 @@ struct SmartDayView: View {
                 if !data.educationSuggestions.isEmpty {
                     educationSuggestionsCard(data.educationSuggestions)
                 }
+
+                // Training Schedule
+                TrainingScheduleCard()
             } else {
                 EmptyStateView(
                     icon: "sun.max",
