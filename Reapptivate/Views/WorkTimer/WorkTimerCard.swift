@@ -3,6 +3,7 @@ import SwiftUI
 struct WorkTimerCard: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var viewModel: WorkTimerViewModel?
     @State private var hapticStart = false
@@ -22,13 +23,18 @@ struct WorkTimerCard: View {
                 }
             }
             .conditionalHaptic(.impact(weight: .medium), trigger: hapticStart)
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active, let vm = viewModel {
+                    vm.handleForegroundReturn()
+                }
+            }
             .task {
                 let vm = WorkTimerViewModel(apiClient: apiClient)
                 viewModel = vm
                 vm.requestNotificationPermission()
+                vm.restoreTimerState()
                 await vm.loadSettings()
                 await vm.loadExercises()
-                vm.restoreTimerState()
             }
         }
     }

@@ -344,11 +344,13 @@ final class WorkTimerViewModel {
             if nextBreak > Date() {
                 nextBreakAt = nextBreak
             } else {
-                // Missed break(s) — log and advance
+                // Missed break(s) — trigger the last due one
                 let missedCount = missedBreakCount(since: nextBreak)
-                breaksSkippedToday += missedCount
-                currentBreakNumber += missedCount
-                calculateNextBreak(from: Date())
+                if missedCount > 1 {
+                    breaksSkippedToday += (missedCount - 1)
+                    currentBreakNumber += (missedCount - 1)
+                }
+                triggerBreak()
             }
         } else {
             calculateNextBreak(from: Date())
@@ -357,6 +359,26 @@ final class WorkTimerViewModel {
         startWorkTimer()
         scheduleBreakNotification()
         AudioService.shared.activateSession()
+    }
+
+    // MARK: - Foreground Return
+
+    func handleForegroundReturn() {
+        guard isRunning, !isOnBreak else { return }
+
+        if let nextBreak = nextBreakAt {
+            secondsUntilBreak = max(0, Int(nextBreak.timeIntervalSinceNow))
+
+            if secondsUntilBreak <= 0 {
+                triggerBreak()
+                return
+            }
+        }
+
+        // Timer could have been invalidated in background
+        if workTimer == nil {
+            startWorkTimer()
+        }
     }
 
     // MARK: - Local Notifications
