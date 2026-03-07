@@ -1,11 +1,10 @@
 import SwiftUI
 import AVKit
 
-struct ExerciseDetailView: View {
-    @Environment(AppState.self) private var appState
-    let exercise: ExerciseWithPhase
-    let onLog: () -> Void
-    let onStartSession: () -> Void
+struct AclExerciseDetailView: View {
+    let exercise: AclStreamExercise
+    let isCompleted: Bool
+    let onToggle: () -> Void
 
     private let videoStore = ExerciseVideoStore.shared
     @State private var savedVideoURL: URL?
@@ -20,23 +19,19 @@ struct ExerciseDetailView: View {
             VStack(alignment: .leading, spacing: 20) {
                 headerSection
 
-                // Cognitive Cue
-                if let subtype = appState.currentUser?.aemSubtype,
-                   let cue = exercise.exercise.cognitiveCues?.cue(for: subtype) {
-                    CognitiveCueBadge(subtype: subtype, cue: cue)
-                }
-
                 // Video or Description
                 if let videoURL = savedVideoURL {
-                    RecordedVideoSection(
+                    AclRecordedVideoSection(
                         videoURL: videoURL,
                         onReRecord: { showVideoSourcePicker = true },
                         onDelete: deleteVideo
                     )
                 } else {
-                    Text(exercise.exercise.description)
-                        .font(.appBody)
-                        .foregroundStyle(.textPrimary)
+                    if let desc = exercise.descriptionDE ?? exercise.description {
+                        Text(desc)
+                            .font(.appBody)
+                            .foregroundStyle(.textPrimary)
+                    }
 
                     recordVideoButton
                 }
@@ -47,8 +42,31 @@ struct ExerciseDetailView: View {
                     })
                 }
 
-                parametersCard
-                actionButtons
+                // Parameters Card
+                if hasParameters {
+                    parametersCard
+                }
+
+                // Complete Button
+                if isCompleted {
+                    Button {
+                        onToggle()
+                    } label: {
+                        Label("Als unerledigt markieren", systemImage: "checkmark.circle.fill")
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 48)
+                    }
+                    .buttonStyle(.secondary)
+                } else {
+                    Button {
+                        onToggle()
+                    } label: {
+                        Label("Als erledigt markieren", systemImage: "checkmark.circle")
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 48)
+                    }
+                    .buttonStyle(.accentFilled)
+                }
             }
             .padding(16)
         }
@@ -73,21 +91,15 @@ struct ExerciseDetailView: View {
 
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(exercise.exercise.type.displayName)
-                .font(.appCaptionMedium)
-                .foregroundStyle(.textSecondary)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.accent.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
-
-            Text(exercise.exercise.name)
+            Text(exercise.nameDE ?? exercise.name)
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            Text(exercise.phaseTitle)
-                .font(.appSubheadline)
-                .foregroundStyle(.textSecondary)
+            if let intensity = exercise.intensity {
+                Text(intensity)
+                    .font(.appSubheadline)
+                    .foregroundStyle(.textSecondary)
+            }
         }
     }
 
@@ -109,47 +121,29 @@ struct ExerciseDetailView: View {
 
     // MARK: - Parameters Card
 
-    private var parametersCard: some View {
-        VStack(spacing: 12) {
-            ParameterRow(label: "Sätze", value: "\(exercise.exercise.sets)")
-            ParameterRow(label: "Wiederholungen", value: "\(exercise.exercise.reps)")
-
-            if let holdTime = exercise.exercise.holdTime {
-                ParameterRow(label: "Haltezeit", value: "\(holdTime) Sek.")
-            }
-
-            if let tempo = exercise.exercise.tempo {
-                ParameterRow(label: "Tempo", value: tempo)
-            }
-
-            ParameterRow(label: "Intensität", value: exercise.exercise.intensity)
-            ParameterRow(label: "Pause zwischen Sätzen", value: "\(exercise.exercise.restBetweenSets) Sek.")
-        }
-        .cardStyle()
+    private var hasParameters: Bool {
+        exercise.sets != nil || exercise.reps != nil || exercise.holdTime != nil || exercise.tempo != nil
     }
 
-    // MARK: - Action Buttons
-
-    private var actionButtons: some View {
+    private var parametersCard: some View {
         VStack(spacing: 12) {
-            Button {
-                onStartSession()
-            } label: {
-                Label("Training starten", systemImage: "play.fill")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
+            if let sets = exercise.sets {
+                ParameterRow(label: "Sätze", value: "\(sets)")
             }
-            .buttonStyle(.accentFilled)
-
-            Button {
-                onLog()
-            } label: {
-                Label("Schnell protokollieren", systemImage: "checkmark.circle")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
+            if let reps = exercise.reps {
+                ParameterRow(label: "Wiederholungen", value: reps)
             }
-            .buttonStyle(.secondary)
+            if let holdTime = exercise.holdTime, holdTime > 0 {
+                ParameterRow(label: "Haltezeit", value: "\(holdTime) Sek.")
+            }
+            if let tempo = exercise.tempo {
+                ParameterRow(label: "Tempo", value: tempo)
+            }
+            if let intensity = exercise.intensity {
+                ParameterRow(label: "Intensität", value: intensity)
+            }
         }
+        .cardStyle()
     }
 
     // MARK: - Actions
@@ -175,9 +169,9 @@ struct ExerciseDetailView: View {
     }
 }
 
-// MARK: - Recorded Video Section
+// MARK: - Recorded Video Section (ACL)
 
-private struct RecordedVideoSection: View {
+private struct AclRecordedVideoSection: View {
     let videoURL: URL
     let onReRecord: () -> Void
     let onDelete: () -> Void
@@ -216,23 +210,6 @@ private struct RecordedVideoSection: View {
                         .foregroundStyle(.red)
                 }
             }
-        }
-    }
-}
-
-struct ParameterRow: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-        HStack {
-            Text(label)
-                .font(.appSubheadline)
-                .foregroundStyle(.textSecondary)
-            Spacer()
-            Text(value)
-                .font(.appSubheadlineMedium)
-                .foregroundStyle(.textPrimary)
         }
     }
 }

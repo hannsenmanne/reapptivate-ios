@@ -8,6 +8,7 @@ struct AclTodayExerciseRow: View {
     let userGraftType: String?
     let userConcomitantInjuries: Set<String>
     let onToggle: () -> Void
+    var onTap: (() -> Void)?
 
     @State private var isExpanded = false
 
@@ -21,22 +22,34 @@ struct AclTodayExerciseRow: View {
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 8) {
-                        Text(exercise.nameDE ?? exercise.name)
-                            .font(.appSubheadlineSemibold)
-                            .foregroundStyle(isCompleted ? .textSecondary.opacity(0.6) : .textPrimary)
-                            .strikethrough(isCompleted, color: .textSecondary)
+                    Button {
+                        onTap?()
+                    } label: {
+                        HStack(spacing: 8) {
+                            Text(exercise.nameDE ?? exercise.name)
+                                .font(.appSubheadlineSemibold)
+                                .foregroundStyle(isCompleted ? .textSecondary.opacity(0.6) : .textPrimary)
+                                .strikethrough(isCompleted, color: .textSecondary)
+                                .multilineTextAlignment(.leading)
 
-                        if isCompleted {
-                            Text("Erledigt")
+                            if isCompleted {
+                                Text("Erledigt")
+                                    .font(.appCaption2)
+                                    .foregroundStyle(.painGreen)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.painGreen.opacity(0.1))
+                                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                            }
+
+                            Spacer(minLength: 0)
+
+                            Image(systemName: "chevron.right")
                                 .font(.appCaption2)
-                                .foregroundStyle(.painGreen)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.painGreen.opacity(0.1))
-                                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                .foregroundStyle(.textSecondary)
                         }
                     }
+                    .buttonStyle(.plain)
 
                     parameterBadges
                         .opacity(isCompleted ? 0.5 : 1.0)

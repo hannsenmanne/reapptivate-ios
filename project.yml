@@ -37,7 +37,9 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait"
         INFOPLIST_KEY_UIRequiresFullScreen: true
         TARGETED_DEVICE_FAMILY: "1"
-        INFOPLIST_KEY_NSCameraUsageDescription: "Kamera wird für das Scannen von QR-Codes benötigt."
+        INFOPLIST_KEY_NSCameraUsageDescription: "Kamera wird für das Scannen von QR-Codes und das Aufnehmen von Übungsvideos benötigt."
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "Mikrofon wird für die Tonaufnahme bei Übungsvideos benötigt."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Zugriff auf die Mediathek wird benötigt, um Übungsvideos auszuwählen."
         ITSAppUsesNonExemptEncryption: false
         INFOPLIST_KEY_CFBundleDisplayName: "Reapptivate"
         PRODUCT_BUNDLE_IDENTIFIER: com.reapptivate.ios

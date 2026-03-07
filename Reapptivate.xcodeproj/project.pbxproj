@@ -47,6 +47,7 @@
 		2505AE1D180A02C7543A8F1C /* ProgressEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391510978626F99B56ACF4B4 /* ProgressEntry.swift */; };
 		254C27148296B183E2333412 /* neck-screening-config.json in Resources */ = {isa = PBXBuildFile; fileRef = 6BC31BABF9F1BF461A014C18 /* neck-screening-config.json */; };
 		2A4EE9227FE4F3E0E6E13FE9 /* AemResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE70B2D8CE6156D3A9CC001 /* AemResultView.swift */; };
+		2AD3E26A375EBDB318F89C92 /* ExerciseVideoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18040656876AA536FE86AEAE /* ExerciseVideoStore.swift */; };
 		2B69E6C5029896BDDDADBC39 /* LbpEnhancementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDB43D091607E9E4B7FD550 /* LbpEnhancementsView.swift */; };
 		2B91E3D8EEAE4B51634C76B0 /* TsiScreeningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BFDF7147A7EAD0AF57A785E /* TsiScreeningViewModel.swift */; };
 		2C70D791CA226D7B2F9B1D91 /* EdukationTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F26BAC5BAEB3F1E77BF7E3E /* EdukationTab.swift */; };
@@ -101,8 +102,10 @@
 		5E8E171F7C4B77991B463301 /* DataPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1921EFAFE0C0BF074697A7 /* DataPrivacyView.swift */; };
 		5FAABE22E9E743EF74B057FA /* AclWeeklyScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6887D7E49ADEB30F6109F5 /* AclWeeklyScheduleCard.swift */; };
 		5FE98B6FF282CD5DCB4730E6 /* tennis_elbow.json in Resources */ = {isa = PBXBuildFile; fileRef = E1BF610789D69BAAC789349C /* tennis_elbow.json */; };
+		61032FF229C0AFF74BABC4F2 /* AclExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884DD19C41804CB8932F6DE7 /* AclExerciseDetailView.swift */; };
 		6120308E1587C9E1C3628410 /* Color+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC38F175D682C73EEC92448 /* Color+Theme.swift */; };
 		61E804948DE98EE251D0C9EB /* CachedProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8215E083211512080FE72C52 /* CachedProgress.swift */; };
+		62D72B495B9703E1C67039DF /* VideoCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C793528267FA9D82D1E1E5BF /* VideoCaptureView.swift */; };
 		6322345B1632DE880ABE5927 /* WorkTimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7161F66473CA1253CD1B0D /* WorkTimerViewModelTests.swift */; };
 		63C1B1ABDFCD6BBABC4ED937 /* MessagesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740130DB81474539A042F1AF /* MessagesTab.swift */; };
 		6542E10E5ED5CC46920FDE56 /* ProtocolLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5201BA0FF2B2975C42011AB /* ProtocolLoader.swift */; };
@@ -198,6 +201,7 @@
 		D725797B42BA564A795DADB2 /* AuthViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3AF7103F41B2A1943FAF8 /* AuthViewModelTests.swift */; };
 		D7399525383FF10D3FF5C021 /* SmartDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFEB9BBF559D9E963D46245 /* SmartDayView.swift */; };
 		D74F3B21C522B6E690152A28 /* plantar_fascia.json in Resources */ = {isa = PBXBuildFile; fileRef = 82547C2DA3D14A0DB1B250F4 /* plantar_fascia.json */; };
+		D7FAE311FB1B5C1CAFD5E7B9 /* VideoLibraryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C5204DF551A5D087E92B33 /* VideoLibraryPicker.swift */; };
 		D838A2CF7973C917113038E7 /* ClinicalThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B58B67539C7B11528DCAEB2 /* ClinicalThread.swift */; };
 		D8C0778CD024EFC78CBAAA1D /* lbp_der.json in Resources */ = {isa = PBXBuildFile; fileRef = E1CDBF1B16CE6E034A77933D /* lbp_der.json */; };
 		DBD174D2AB171990D30056D4 /* WissenCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C62A55C28AC9F571C6BDE9 /* WissenCardView.swift */; };
@@ -277,6 +281,7 @@
 		1467B6CD844471E3A9532B76 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		15C00F57E59D22204B132DA9 /* ScheduleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEditorView.swift; sourceTree = "<group>"; };
 		17BF06A2499669BBEA54C546 /* Outfit-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Medium.ttf"; sourceTree = "<group>"; };
+		18040656876AA536FE86AEAE /* ExerciseVideoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseVideoStore.swift; sourceTree = "<group>"; };
 		1966E14D61D54E483FF42850 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1A676D70ED0CABDCCB31F301 /* SharedTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTypes.swift; sourceTree = "<group>"; };
 		1B1DC731193E22ADD63979F6 /* AclStreamOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclStreamOverviewView.swift; sourceTree = "<group>"; };
@@ -382,6 +387,7 @@
 		860F3FA1B06D4271AA9F4A1E /* NeckScreeningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckScreeningViewModel.swift; sourceTree = "<group>"; };
 		86A3E4253A904F6BDE9825F6 /* ExerciseCompletionCelebration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCompletionCelebration.swift; sourceTree = "<group>"; };
 		86F9C17534FF5A855DBA9DEE /* Reapptivate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Reapptivate.entitlements; sourceTree = "<group>"; };
+		884DD19C41804CB8932F6DE7 /* AclExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclExerciseDetailView.swift; sourceTree = "<group>"; };
 		89AF7526D710618645103209 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		8A6D974438EBC139A854EB6B /* ReapptivateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReapptivateApp.swift; sourceTree = "<group>"; };
 		8D094C9E0C9CAE6E2B9A8E60 /* ReapptivateTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReapptivateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -433,6 +439,7 @@
 		C3567B6AB2B7907FEAD9350A /* MilestoneService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneService.swift; sourceTree = "<group>"; };
 		C4654AA3ADB590090F824DE2 /* PendingSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSync.swift; sourceTree = "<group>"; };
 		C4CCC6EB174AF0AD312F403E /* DashboardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModelTests.swift; sourceTree = "<group>"; };
+		C793528267FA9D82D1E1E5BF /* VideoCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCaptureView.swift; sourceTree = "<group>"; };
 		C7D61F59D3E40B37D8F9279A /* AclDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclDashboardViewModel.swift; sourceTree = "<group>"; };
 		C8186469BFF084D8C6E3C65C /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		CA0083A4D036D4ED2FFCF579 /* MorningCheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningCheckinView.swift; sourceTree = "<group>"; };
@@ -448,6 +455,7 @@
 		D1ECF19FA4CFB55BAF05653C /* golfers_elbow.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = golfers_elbow.json; sourceTree = "<group>"; };
 		D2D91FCDE4E176932D666767 /* neck_shoulder_tension_leicht.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = neck_shoulder_tension_leicht.json; sourceTree = "<group>"; };
 		D3713835120B3FA41D35F1C7 /* MorningCheckinViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningCheckinViewModel.swift; sourceTree = "<group>"; };
+		D3C5204DF551A5D087E92B33 /* VideoLibraryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLibraryPicker.swift; sourceTree = "<group>"; };
 		D3D93FB08E6105E1C60B44F5 /* BaselineTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaselineTrackerView.swift; sourceTree = "<group>"; };
 		D7945964A40DC3910DD5FCD7 /* SharedTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTypesTests.swift; sourceTree = "<group>"; };
 		D7F04853CB33232850CDB8D6 /* MotivationalQuoteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationalQuoteCard.swift; sourceTree = "<group>"; };
@@ -723,6 +731,7 @@
 				EF6A65D5D7920C389652C119 /* AclDailyKpiLoggerView.swift */,
 				6729A16F569658CE5F1E3624 /* AclDashboardView.swift */,
 				3502B3E86E7A340FDE9C177C /* AclDischargeProgressView.swift */,
+				884DD19C41804CB8932F6DE7 /* AclExerciseDetailView.swift */,
 				A96D30034B0571D6E4FF2839 /* AclKpiHistoryView.swift */,
 				BE2C0D170133B0034C369128 /* AclMicroModulesView.swift */,
 				9C29EA17ABA32471756F915C /* AclMilestoneCelebrationView.swift */,
@@ -813,6 +822,8 @@
 			isa = PBXGroup;
 			children = (
 				2A5A78E0347D3425AE0AA333 /* ExerciseVideoPlayer.swift */,
+				C793528267FA9D82D1E1E5BF /* VideoCaptureView.swift */,
+				D3C5204DF551A5D087E92B33 /* VideoLibraryPicker.swift */,
 				440050E209B850AC57C696CB /* VideoThumbnailView.swift */,
 			);
 			path = Video;
@@ -973,6 +984,7 @@
 				E9DF91FA2FE83ED762115AF9 /* Notifications */,
 				692EE9A2D6F0B96366C32E45 /* Sync */,
 				2D0039B45744461E924D7F19 /* AudioService.swift */,
+				18040656876AA536FE86AEAE /* ExerciseVideoStore.swift */,
 				C3567B6AB2B7907FEAD9350A /* MilestoneService.swift */,
 				3B4A16B4B26941CCD45C333D /* NotificationService.swift */,
 				A5201BA0FF2B2975C42011AB /* ProtocolLoader.swift */,
@@ -1293,6 +1305,7 @@
 				1E3B89605B4DB20C1F34EBC2 /* AclDashboardView.swift in Sources */,
 				21BB61D4434DCAA8001D41D9 /* AclDashboardViewModel.swift in Sources */,
 				9DD0A8E2175324BD6697BE1A /* AclDischargeProgressView.swift in Sources */,
+				61032FF229C0AFF74BABC4F2 /* AclExerciseDetailView.swift in Sources */,
 				8E126430EE5B645823D41782 /* AclKpiHistoryView.swift in Sources */,
 				4F01B9F57358BB38EFC4CB39 /* AclLabAssessmentViewModel.swift in Sources */,
 				B827DD479A480B0AAD782FC1 /* AclMicroModulesView.swift in Sources */,
@@ -1350,6 +1363,7 @@
 				7D854B6E6E6D7064E95F693B /* ExerciseQuestionButton.swift in Sources */,
 				C10FA8CEF8EF58FFD8DD28F5 /* ExerciseSessionView.swift in Sources */,
 				442F54164B0BE53E7D4E3037 /* ExerciseVideoPlayer.swift in Sources */,
+				2AD3E26A375EBDB318F89C92 /* ExerciseVideoStore.swift in Sources */,
 				74000A88ABCB4E450CE9FEB3 /* ExerciseViewModel.swift in Sources */,
 				A97657AF9FBB9CED7A2E4231 /* ExposureLogSheet.swift in Sources */,
 				CA885466E815FCC537927808 /* FearHierarchyBuilderView.swift in Sources */,
@@ -1443,6 +1457,8 @@
 				2B91E3D8EEAE4B51634C76B0 /* TsiScreeningViewModel.swift in Sources */,
 				82581F4C0A8155BA45478461 /* UserProfile.swift in Sources */,
 				2D8F2B7B94F8BBC9970724A7 /* UserSchedule.swift in Sources */,
+				62D72B495B9703E1C67039DF /* VideoCaptureView.swift in Sources */,
+				D7FAE311FB1B5C1CAFD5E7B9 /* VideoLibraryPicker.swift in Sources */,
 				511C61DD43951AA33CA168D9 /* VideoThumbnailView.swift in Sources */,
 				A5F22CA31F3AA86ED49DA2D0 /* VideoURLDetector.swift in Sources */,
 				5315BDFBFF8B5CFD3D62118C /* View+Conditional.swift in Sources */,
@@ -1594,7 +1610,9 @@
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
 				INFOPLIST_KEY_CFBundleDisplayName = Reapptivate;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Kamera wird für das Scannen von QR-Codes benötigt.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Kamera wird für das Scannen von QR-Codes und das Aufnehmen von Übungsvideos benötigt.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Mikrofon wird für die Tonaufnahme bei Übungsvideos benötigt.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Zugriff auf die Mediathek wird benötigt, um Übungsvideos auszuwählen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1749,7 +1767,9 @@
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
 				INFOPLIST_KEY_CFBundleDisplayName = Reapptivate;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Kamera wird für das Scannen von QR-Codes benötigt.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Kamera wird für das Scannen von QR-Codes und das Aufnehmen von Übungsvideos benötigt.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Mikrofon wird für die Tonaufnahme bei Übungsvideos benötigt.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Zugriff auf die Mediathek wird benötigt, um Übungsvideos auszuwählen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

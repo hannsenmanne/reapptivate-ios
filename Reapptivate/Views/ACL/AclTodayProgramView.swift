@@ -11,6 +11,7 @@ struct AclTodayProgramView: View {
 
     @State private var viewModel: AclTodayProgramViewModel?
     @State private var completionHaptic = false
+    @State private var selectedExercise: AclStreamExercise?
 
     var body: some View {
         NavigationStack {
@@ -37,6 +38,29 @@ struct AclTodayProgramView: View {
                         dismiss()
                     }
                     .font(.appSubheadlineMedium)
+                }
+            }
+        }
+        .sheet(item: $selectedExercise) { exercise in
+            NavigationStack {
+                AclExerciseDetailView(
+                    exercise: exercise,
+                    isCompleted: viewModel?.isCompleted(exercise.id) ?? false,
+                    onToggle: {
+                        guard let vm = viewModel else { return }
+                        Task {
+                            await vm.toggleExercise(exercise)
+                            if vm.allDone {
+                                completionHaptic.toggle()
+                            }
+                        }
+                        selectedExercise = nil
+                    }
+                )
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Fertig") { selectedExercise = nil }
+                    }
                 }
             }
         }
@@ -96,7 +120,8 @@ struct AclTodayProgramView: View {
                                             completionHaptic.toggle()
                                         }
                                     }
-                                }
+                                },
+                                onTap: { selectedExercise = exercise }
                             )
                             .padding(.horizontal, 16)
                             .cardEntryAnimation(index: groupIndex * 5 + index)

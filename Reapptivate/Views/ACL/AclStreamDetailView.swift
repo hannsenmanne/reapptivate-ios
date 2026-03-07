@@ -7,6 +7,7 @@ struct AclStreamDetailView: View {
     let streamId: String
 
     @State private var viewModel: AclStreamViewModel?
+    @State private var selectedExercise: AclStreamExercise?
 
     var body: some View {
         ScrollView {
@@ -36,6 +37,20 @@ struct AclStreamDetailView: View {
         .background(Color.appBg)
         .navigationTitle(viewModel?.streamDetail?.nameDE ?? viewModel?.streamDetail?.name ?? "Stream")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $selectedExercise) { exercise in
+            NavigationStack {
+                AclExerciseDetailView(
+                    exercise: exercise,
+                    isCompleted: false,
+                    onToggle: { selectedExercise = nil }
+                )
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Fertig") { selectedExercise = nil }
+                    }
+                }
+            }
+        }
         .task {
             if viewModel == nil {
                 let vm = AclStreamViewModel(apiClient: apiClient, streamId: streamId)
@@ -82,6 +97,8 @@ struct AclStreamDetailView: View {
                 userGraftType: appState.currentUser?.aclGraftType?.rawValue,
                 userConcomitantInjuries: Set(appState.currentUser?.aclConcomitantInjuries?.map(\.rawValue) ?? [])
             )
+            .contentShape(Rectangle())
+            .onTapGesture { selectedExercise = exercise }
             .cardEntryAnimation(index: index + 1)
         }
     }

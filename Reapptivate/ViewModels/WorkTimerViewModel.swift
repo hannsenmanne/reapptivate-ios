@@ -55,6 +55,8 @@ final class WorkTimerViewModel {
     private static let udKeyBreaksSkipped = "workTimer_breaksSkipped"
     private static let udKeyCurrentBreakNumber = "workTimer_currentBreakNumber"
     private static let udKeyDate = "workTimer_date"
+    private static let udKeyIsOnBreak = "workTimer_isOnBreak"
+    private static let udKeyBreakStartedAt = "workTimer_breakStartedAt"
 
     // MARK: - Init
 
@@ -245,6 +247,7 @@ final class WorkTimerViewModel {
         isOnBreak = true
         showingBreak = true
         startBreakTimer()
+        saveBreakState()
 
         AudioService.shared.playAlarm()
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
@@ -255,6 +258,7 @@ final class WorkTimerViewModel {
         showingBreak = false
         breaksTakenToday += 1
         stopBreakTimer()
+        clearBreakState()
 
         let log = WorkTimerBreakLog(
             breakNumber: currentBreakNumber,
@@ -282,6 +286,7 @@ final class WorkTimerViewModel {
         showingBreak = false
         breaksSkippedToday += 1
         stopBreakTimer()
+        clearBreakState()
 
         let log = WorkTimerBreakLog(
             breakNumber: currentBreakNumber,
@@ -338,6 +343,31 @@ final class WorkTimerViewModel {
         currentBreakNumber = defaults.integer(forKey: Self.udKeyCurrentBreakNumber)
         isRunning = true
 
+        // Check if we were in the middle of a break
+        if defaults.bool(forKey: Self.udKeyIsOnBreak) {
+            let breakStartInterval = defaults.double(forKey: Self.udKeyBreakStartedAt)
+            if breakStartInterval > 0 {
+                let breakStarted = Date(timeIntervalSince1970: breakStartInterval)
+                let elapsed = Int(Date().timeIntervalSince(breakStarted))
+                let totalBreakSeconds = breakDurationMinutes * 60
+                let remaining = totalBreakSeconds - elapsed
+
+                if remaining > 0 {
+                    // Break still in progress — resume it
+                    breakSecondsRemaining = remaining
+                    selectBreakExercises()
+                    isOnBreak = true
+                    showingBreak = true
+                    startBreakTimer()
+                    startWorkTimer()
+                    AudioService.shared.activateSession()
+                    return
+                }
+            }
+            // Break expired while app was closed — clear and continue
+            clearBreakState()
+        }
+
         let nextBreakInterval = defaults.double(forKey: Self.udKeyNextBreakAt)
         if nextBreakInterval > 0 {
             let nextBreak = Date(timeIntervalSince1970: nextBreakInterval)
@@ -364,7 +394,24 @@ final class WorkTimerViewModel {
     // MARK: - Foreground Return
 
     func handleForegroundReturn() {
-        guard isRunning, !isOnBreak else { return }
+        guard isRunning else { return }
+
+        if isOnBreak {
+            // Recalculate break time remaining from persisted start time
+            let defaults = UserDefaults.standard
+            let breakStartInterval = defaults.double(forKey: Self.udKeyBreakStartedAt)
+            if breakStartInterval > 0 {
+                let breakStarted = Date(timeIntervalSince1970: breakStartInterval)
+                let elapsed = Int(Date().timeIntervalSince(breakStarted))
+                let totalBreakSeconds = breakDurationMinutes * 60
+                breakSecondsRemaining = max(0, totalBreakSeconds - elapsed)
+            }
+            // Restart break timer (invalidated in background)
+            if breakTimer == nil {
+                startBreakTimer()
+            }
+            return
+        }
 
         if let nextBreak = nextBreakAt {
             secondsUntilBreak = max(0, Int(nextBreak.timeIntervalSinceNow))
@@ -528,6 +575,19 @@ final class WorkTimerViewModel {
         return formatter.string(from: Date())
     }
 
+    private func saveBreakState() {
+        let defaults = UserDefaults.standard
+        defaults.set(true, forKey: Self.udKeyIsOnBreak)
+        defaults.set(Date().timeIntervalSince1970, forKey: Self.udKeyBreakStartedAt)
+        saveTimerState()
+    }
+
+    private func clearBreakState() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: Self.udKeyIsOnBreak)
+        defaults.removeObject(forKey: Self.udKeyBreakStartedAt)
+    }
+
     private func clearTimerState() {
         Self.clearPersistedState()
     }
@@ -543,6 +603,8 @@ final class WorkTimerViewModel {
         defaults.removeObject(forKey: udKeyBreaksSkipped)
         defaults.removeObject(forKey: udKeyCurrentBreakNumber)
         defaults.removeObject(forKey: udKeyDate)
+        defaults.removeObject(forKey: udKeyIsOnBreak)
+        defaults.removeObject(forKey: udKeyBreakStartedAt)
     }
 
     private func cancelPendingNotifications() {
