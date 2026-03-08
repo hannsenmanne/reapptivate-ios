@@ -7,7 +7,7 @@ struct ClinicalThread: Codable, Identifiable {
     let status: String
     let lastMessage: String?
     let lastMessageAt: Date?
-    let unreadCount: Int
+    let unreadCount: Int?
     let createdAt: Date
 
     var isOpen: Bool { status == "open" }

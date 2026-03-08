@@ -106,8 +106,8 @@ private struct ThreadRow: View {
             }
 
             // Unread Badge
-            if thread.unreadCount > 0 {
-                Text("\(thread.unreadCount)")
+            if let unread = thread.unreadCount, unread > 0 {
+                Text("\(unread)")
                     .font(.appCaptionBold)
                     .foregroundStyle(.white)
                     .frame(minWidth: 20, minHeight: 20)
