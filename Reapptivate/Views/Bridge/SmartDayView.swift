@@ -27,10 +27,10 @@ struct SmartDayView: View {
                 // Streak
                 streakCard(data.streakInfo)
 
-                // Education Suggestions
-                if !data.educationSuggestions.isEmpty {
-                    educationSuggestionsCard(data.educationSuggestions)
-                }
+                // Education Suggestions — hidden until content actually exists
+                // if !data.educationSuggestions.isEmpty {
+                //     educationSuggestionsCard(data.educationSuggestions)
+                // }
 
                 // Training Schedule
                 TrainingScheduleCard()
