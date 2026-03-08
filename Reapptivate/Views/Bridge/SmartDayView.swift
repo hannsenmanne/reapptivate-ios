@@ -242,12 +242,27 @@ struct SmartDayView: View {
                     Image(systemName: "book.fill")
                         .font(.appCaption)
                         .foregroundStyle(.accent)
-                    Text(suggestion)
+                    Text(educationSuggestionTitle(for: suggestion))
                         .font(.appBody)
                         .foregroundStyle(.textPrimary)
                 }
             }
         }
         .cardStyle()
+    }
+
+    private func educationSuggestionTitle(for id: String) -> String {
+        // Phase intro patterns: phase_1_intro, phase_2_intro, phase_3_intro
+        if let match = id.wholeMatch(of: /phase_(\d+)_intro/) {
+            return "Einführung in Phase \(match.1)"
+        }
+
+        let titles: [String: String] = [
+            "motivation_adherence": "Motivation & Durchhalten",
+            "exposure_principles": "Prinzipien der Exposition",
+            "pacing_strategies": "Pacing-Strategien",
+        ]
+
+        return titles[id] ?? id.replacingOccurrences(of: "_", with: " ").capitalized
     }
 }

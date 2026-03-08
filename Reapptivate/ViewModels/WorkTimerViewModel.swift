@@ -375,6 +375,7 @@ final class WorkTimerViewModel {
             let nextBreak = Date(timeIntervalSince1970: nextBreakInterval)
             if nextBreak > Date() {
                 nextBreakAt = nextBreak
+                secondsUntilBreak = Int(nextBreak.timeIntervalSinceNow)
             } else {
                 // Missed break(s) — trigger the last due one
                 let missedCount = missedBreakCount(since: nextBreak)
@@ -428,6 +429,8 @@ final class WorkTimerViewModel {
         if workTimer == nil {
             startWorkTimer()
         }
+
+        saveTimerState()
     }
 
     // MARK: - Local Notifications

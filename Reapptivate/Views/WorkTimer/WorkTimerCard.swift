@@ -32,8 +32,8 @@ struct WorkTimerCard: View {
                 let vm = WorkTimerViewModel(apiClient: apiClient)
                 viewModel = vm
                 vm.requestNotificationPermission()
-                vm.restoreTimerState()
                 await vm.loadSettings()
+                vm.restoreTimerState()
                 await vm.loadExercises()
             }
         }
