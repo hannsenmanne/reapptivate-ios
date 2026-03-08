@@ -104,6 +104,7 @@ final class WorkTimerTypesTests: XCTestCase {
 
     func testWorkTimerBreakLogEncodeToSnakeCase() throws {
         let log = WorkTimerBreakLog(
+            date: "2026-03-08",
             breakNumber: 3,
             completed: true,
             skipped: false,
@@ -111,14 +112,14 @@ final class WorkTimerTypesTests: XCTestCase {
         )
 
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try encoder.encode(log)
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
 
-        XCTAssertEqual(json?["break_number"] as? Int, 3)
+        XCTAssertEqual(json?["date"] as? String, "2026-03-08")
+        XCTAssertEqual(json?["breakNumber"] as? Int, 3)
         XCTAssertEqual(json?["completed"] as? Bool, true)
         XCTAssertEqual(json?["skipped"] as? Bool, false)
-        XCTAssertEqual(json?["exercises_shown"] as? [String], ["wt_lbp_pelvic_tilt", "wt_lbp_cat_cow"])
+        XCTAssertEqual(json?["exercisesShown"] as? [String], ["wt_lbp_pelvic_tilt", "wt_lbp_cat_cow"])
     }
 
     // MARK: - API Response Wrappers

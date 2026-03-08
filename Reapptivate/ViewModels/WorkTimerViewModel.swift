@@ -261,6 +261,7 @@ final class WorkTimerViewModel {
         clearBreakState()
 
         let log = WorkTimerBreakLog(
+            date: DateFormatters.dateOnly.string(from: Date()),
             breakNumber: currentBreakNumber,
             completed: true,
             skipped: false,
@@ -289,6 +290,7 @@ final class WorkTimerViewModel {
         clearBreakState()
 
         let log = WorkTimerBreakLog(
+            date: DateFormatters.dateOnly.string(from: Date()),
             breakNumber: currentBreakNumber,
             completed: false,
             skipped: true,

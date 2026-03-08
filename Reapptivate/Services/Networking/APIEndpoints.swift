@@ -302,15 +302,15 @@ enum APIEndpoints {
     }
 
     static func logWorkTimerBreak(body: WorkTimerBreakLog) -> URLRequest {
-        post("work-timer/break-log", encodable: body)
+        post("work-timer/breaks", encodable: body)
     }
 
     static func getWorkTimerTodaySummary() -> URLRequest {
-        get("work-timer/summary/today")
+        get("work-timer/breaks/today")
     }
 
     static func getWorkTimerHistory() -> URLRequest {
-        get("work-timer/summary/history")
+        get("work-timer/history")
     }
 
     // MARK: - ACL Screening

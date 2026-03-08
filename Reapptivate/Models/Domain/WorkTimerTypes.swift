@@ -25,6 +25,7 @@ struct WorkTimerBreakExercise: Codable, Identifiable {
 // MARK: - Work Timer Break Log (POST body)
 
 struct WorkTimerBreakLog: Codable {
+    let date: String
     let breakNumber: Int
     let completed: Bool
     let skipped: Bool
