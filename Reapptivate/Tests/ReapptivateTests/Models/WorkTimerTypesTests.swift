@@ -102,7 +102,7 @@ final class WorkTimerTypesTests: XCTestCase {
 
     // MARK: - WorkTimerBreakLog Encoding
 
-    func testWorkTimerBreakLogEncodeToSnakeCase() throws {
+    func testWorkTimerBreakLogEncodeToCamelCase() throws {
         let log = WorkTimerBreakLog(
             date: "2026-03-08",
             breakNumber: 3,

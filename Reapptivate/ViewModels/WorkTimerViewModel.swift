@@ -575,9 +575,7 @@ final class WorkTimerViewModel {
     }
 
     private func todayDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: Date())
+        DateFormatters.dateOnly.string(from: Date())
     }
 
     private func saveBreakState() {
