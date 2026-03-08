@@ -49,12 +49,12 @@ struct CustomExerciseCardView: View {
             FlowLayout(spacing: 6) {
                 ParameterPill(label: "\(exercise.sets) x \(exercise.reps)", icon: "repeat")
 
-                if exercise.pauseSeconds > 0 {
-                    ParameterPill(label: "\(exercise.pauseSeconds)s Pause", icon: "pause.circle")
+                if let pauseSeconds = exercise.pauseSeconds, pauseSeconds > 0 {
+                    ParameterPill(label: "\(pauseSeconds)s Pause", icon: "pause.circle")
                 }
 
-                if !exercise.extra.isEmpty {
-                    ParameterPill(label: exercise.extra, icon: "dumbbell")
+                if let extra = exercise.extra, !extra.isEmpty {
+                    ParameterPill(label: extra, icon: "dumbbell")
                 }
             }
 

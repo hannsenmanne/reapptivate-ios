@@ -96,23 +96,23 @@ struct WissenAllCardsView: View {
     var isTension: Bool = false
 
     @AppStorage("readEducationCardIds") private var readCardIdsData: Data = Data()
+    @State private var cachedReadCardIds: Set<String> = []
 
     private var cards: [EducationCard] {
         EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension)
     }
 
-    private var readCardIds: Set<String> {
-        (try? JSONDecoder().decode(Set<String>.self, from: readCardIdsData)) ?? []
-    }
-
     private var readCount: Int {
-        cards.filter { readCardIds.contains($0.id) }.count
+        cards.filter { cachedReadCardIds.contains($0.id) }.count
     }
 
     private func markRead(_ cardId: String) {
-        var ids = readCardIds
-        ids.insert(cardId)
-        readCardIdsData = (try? JSONEncoder().encode(ids)) ?? Data()
+        cachedReadCardIds.insert(cardId)
+        readCardIdsData = (try? JSONEncoder().encode(cachedReadCardIds)) ?? Data()
+    }
+
+    private static func decodeIds(from data: Data) -> Set<String> {
+        (try? JSONDecoder().decode(Set<String>.self, from: data)) ?? []
     }
 
     var body: some View {
@@ -155,11 +155,17 @@ struct WissenAllCardsView: View {
                 ForEach(cards) { card in
                     WissenExpandableCard(
                         card: card,
-                        isRead: readCardIds.contains(card.id),
+                        isRead: cachedReadCardIds.contains(card.id),
                         onMarkRead: { markRead(card.id) }
                     )
                 }
             }
+        }
+        .onAppear {
+            cachedReadCardIds = Self.decodeIds(from: readCardIdsData)
+        }
+        .onChange(of: readCardIdsData) { _, newValue in
+            cachedReadCardIds = Self.decodeIds(from: newValue)
         }
     }
 }

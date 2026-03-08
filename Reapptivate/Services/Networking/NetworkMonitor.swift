@@ -2,6 +2,7 @@ import Foundation
 import Network
 
 @Observable
+@MainActor
 final class NetworkMonitor: @unchecked Sendable {
     var isConnected = true
     var connectionType: NWInterface.InterfaceType?

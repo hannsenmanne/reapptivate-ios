@@ -200,11 +200,15 @@ struct AclStreamExercise: Codable, Identifiable {
     let graftModifier: [String: String]?
     let concomitantPrecaution: [String: String]?
     let videoUrl: String?
+    /// Pre-resolved graft-specific note from backend's `enrichExercisesWithModifiers`
+    let graftNote: String?
+    /// Pre-resolved concomitant precaution text from backend's `enrichExercisesWithModifiers`
+    let precautions: String?
 
     private enum CodingKeys: String, CodingKey {
         case id, name, nameDE, description, descriptionDE, sets, reps, holdTime
         case tempo, intensity, milestoneRange, weekRange, graftModifier
-        case concomitantPrecaution, videoUrl
+        case concomitantPrecaution, videoUrl, graftNote, precautions
     }
 
     init(from decoder: Decoder) throws {
@@ -223,6 +227,8 @@ struct AclStreamExercise: Codable, Identifiable {
         graftModifier = try container.decodeIfPresent([String: String].self, forKey: .graftModifier)
         concomitantPrecaution = try container.decodeIfPresent([String: String].self, forKey: .concomitantPrecaution)
         videoUrl = try container.decodeIfPresent(String.self, forKey: .videoUrl)
+        graftNote = try container.decodeIfPresent(String.self, forKey: .graftNote)
+        precautions = try container.decodeIfPresent(String.self, forKey: .precautions)
 
         // reps can be String or Number from the backend
         if let stringVal = try? container.decodeIfPresent(String.self, forKey: .reps) {

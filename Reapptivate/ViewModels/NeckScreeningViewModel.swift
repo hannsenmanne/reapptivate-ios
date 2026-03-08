@@ -15,6 +15,7 @@ final class NeckScreeningViewModel {
     var isRescreening = false
 
     private let apiClient: APIClient
+    private var autoAdvanceTask: Task<Void, Never>?
 
     init(apiClient: APIClient, isRescreening: Bool = false) {
         self.apiClient = apiClient
@@ -69,19 +70,22 @@ final class NeckScreeningViewModel {
 
     func selectResponse(itemId: String, value: Int) {
         responses[itemId] = value
+        autoAdvanceTask?.cancel()
 
         let partItems = items
         if currentItemIndex < partItems.count - 1 {
-            Task {
+            autoAdvanceTask = Task {
                 try? await Task.sleep(for: .milliseconds(500))
+                guard !Task.isCancelled else { return }
                 withAnimation(.easeInOut(duration: 0.3)) {
                     currentItemIndex += 1
                 }
             }
         } else if currentPart == "A" && !isRescreening {
             // Transition from Part A to Part B
-            Task {
+            autoAdvanceTask = Task {
                 try? await Task.sleep(for: .milliseconds(500))
+                guard !Task.isCancelled else { return }
                 withAnimation {
                     showPartTransition = true
                 }
@@ -90,6 +94,7 @@ final class NeckScreeningViewModel {
     }
 
     func continueToPartB() {
+        autoAdvanceTask?.cancel()
         withAnimation(.easeInOut(duration: 0.3)) {
             currentPart = "B"
             currentItemIndex = 0
@@ -98,6 +103,7 @@ final class NeckScreeningViewModel {
     }
 
     func goBack() {
+        autoAdvanceTask?.cancel()
         if currentItemIndex > 0 {
             withAnimation(.easeInOut(duration: 0.3)) {
                 currentItemIndex -= 1

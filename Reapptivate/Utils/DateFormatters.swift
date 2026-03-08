@@ -61,24 +61,4 @@ enum DateFormatters: Sendable {
         formatter.timeStyle = .short
         formatter.timeZone = .current // Explicit current timezone
         return formatter
-    }()
-
-    static let apiDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .custom { decoder in
-            let container = try decoder.singleValueContainer()
-            let dateString = try container.decode(String.self)
-            if let date = iso8601.date(from: dateString) {
-                return date
-            }
-            if let date = iso8601NoFractional.date(from: dateString) {
-                return date
-            }
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Cannot decode date: \(dateString)"
-            )
-        }
-        return decoder
-    }()
-}
+    }()}

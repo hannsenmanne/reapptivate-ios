@@ -395,6 +395,7 @@ struct PacingTimerView: View {
 
     private func completeTimer() {
         timerState = .completed
+        AudioService.shared.deactivateSession()
     }
 
     private func startBreak() {

@@ -125,7 +125,12 @@ struct ProgramTab: View {
             }
         }
         .padding(.bottom, 32)
-        .sheet(item: $activeSheet) { sheet in
+        .sheet(item: $activeSheet, onDismiss: {
+            if let pending = pendingSheet {
+                pendingSheet = nil
+                activeSheet = pending
+            }
+        }) { sheet in
             switch sheet {
             case .progressLog(let exercise):
                 ProgressLogSheet(
@@ -174,16 +179,6 @@ struct ProgramTab: View {
                         onExerciseLogged?()
                     }
                 )
-            }
-        }
-        .onChange(of: activeSheet) { _, newValue in
-            // Handle pending sheet transition after current sheet dismisses
-            if newValue == nil, let pending = pendingSheet {
-                Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(300))
-                    pendingSheet = nil
-                    activeSheet = pending
-                }
             }
         }
     }

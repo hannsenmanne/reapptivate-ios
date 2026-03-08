@@ -22,7 +22,7 @@ struct MorningCheckinView: View {
                         .font(.appTitle)
                         .foregroundStyle(.textPrimary)
 
-                    Text("Wie geht es dir heute?")
+                    Text("Wie geht es Ihnen heute?")
                         .font(.appBody)
                         .foregroundStyle(.textSecondary)
                 }
@@ -217,7 +217,7 @@ struct MorningCheckinView: View {
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
-            TextField("Wie fühlst du dich heute?", text: Binding(
+            TextField("Wie fühlen Sie sich heute?", text: Binding(
                 get: { vm.notes },
                 set: { vm.notes = $0 }
             ), axis: .vertical)

@@ -15,9 +15,11 @@ struct SmartDayView: View {
                 }
 
                 // Training Day vs Rest Day
-                if data.isTrainingDay {
-                    trainingDayContent(data)
-                } else {
+                // Exercise order hidden — exerciseOrder contains raw IDs that can't be resolved to names here
+                // if data.isTrainingDay {
+                //     trainingDayContent(data)
+                // }
+                if !data.isTrainingDay {
                     restDayContent(data)
                 }
 
@@ -38,7 +40,7 @@ struct SmartDayView: View {
                 EmptyStateView(
                     icon: "sun.max",
                     title: "Tagesplan wird geladen",
-                    message: "Dein personalisierter Tagesplan wird erstellt."
+                    message: "Ihr personalisierter Tagesplan wird erstellt."
                 )
             }
         }

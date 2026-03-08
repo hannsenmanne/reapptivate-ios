@@ -141,7 +141,7 @@ enum AclScheduleData {
             ]
         ),
         ScheduleBlock(
-            weekRange: 18...52,
+            weekRange: 18...156,
             title: "Sportspezifisches Training + RTS",
             days: [
                 .init(label: "Kraft + Explosivität", streamIds: ["STRENGTH", "EXPLOSIVENESS"], type: .training),

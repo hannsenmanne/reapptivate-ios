@@ -38,73 +38,31 @@ final class APIClient {
     // MARK: - Generic Request
 
     func request<T: Decodable>(_ urlRequest: URLRequest) async throws -> T {
-        var request = urlRequest
-        injectAuth(&request)
-
+        let data = try await performRequest(urlRequest)
         do {
-            let (data, response) = try await session.data(for: request)
-            try validateResponse(response, data: data)
             return try decoder.decode(T.self, from: data)
-        } catch let error as APIError {
-            throw error
         } catch let error as DecodingError {
-            Log.api.error("Decoding error for \(request.url?.path ?? "?"): \(error)")
+            Log.api.error("Decoding error for \(urlRequest.url?.path ?? "?"): \(error)")
             throw APIError.decodingError(error)
-        } catch {
-            // Retry once on network failure
-            Log.api.warning("Network error, retrying: \(error.localizedDescription)")
-            try await Task.sleep(for: .seconds(2))
-
-            var retryRequest = urlRequest
-            injectAuth(&retryRequest)
-
-            do {
-                let (data, response) = try await session.data(for: retryRequest)
-                try validateResponse(response, data: data)
-                return try decoder.decode(T.self, from: data)
-            } catch let retryError as APIError {
-                throw retryError
-            } catch let retryError as DecodingError {
-                throw APIError.decodingError(retryError)
-            } catch {
-                throw APIError.networkError(error)
-            }
         }
     }
 
     // MARK: - Request without response body
 
     func requestVoid(_ urlRequest: URLRequest) async throws {
-        var request = urlRequest
-        injectAuth(&request)
-
-        do {
-            let (data, response) = try await session.data(for: request)
-            try validateResponse(response, data: data)
-        } catch let error as APIError {
-            throw error
-        } catch {
-            // Retry once on network failure
-            Log.api.warning("Network error (void), retrying: \(error.localizedDescription)")
-            try await Task.sleep(for: .seconds(2))
-
-            var retryRequest = urlRequest
-            injectAuth(&retryRequest)
-
-            do {
-                let (data, response) = try await session.data(for: retryRequest)
-                try validateResponse(response, data: data)
-            } catch let retryError as APIError {
-                throw retryError
-            } catch {
-                throw APIError.networkError(error)
-            }
-        }
+        _ = try await performRequest(urlRequest)
     }
 
     // MARK: - Request returning raw Data
 
     func requestData(_ urlRequest: URLRequest) async throws -> Data {
+        try await performRequest(urlRequest)
+    }
+
+    // MARK: - Core request with retry
+
+    /// Executes a URL request with auth injection, validation, and one retry on network errors.
+    private func performRequest(_ urlRequest: URLRequest) async throws -> Data {
         var request = urlRequest
         injectAuth(&request)
 
@@ -114,9 +72,11 @@ final class APIClient {
             return data
         } catch let error as APIError {
             throw error
+        } catch let error as DecodingError {
+            throw APIError.decodingError(error)
         } catch {
             // Retry once on network failure
-            Log.api.warning("Network error (data), retrying: \(error.localizedDescription)")
+            Log.api.warning("Network error, retrying: \(error.localizedDescription)")
             try await Task.sleep(for: .seconds(2))
 
             var retryRequest = urlRequest

@@ -56,7 +56,7 @@ final class AuthViewModel {
             apiClient.resetLogoutGuard()
             appState.handleLogin(user: userResponse.user)
 
-            Log.auth.info("Login successful for \(response.user.name)")
+            Log.auth.info("Login successful for user \(response.user.id)")
         } catch let error as APIError {
             switch error {
             case .unauthorized:
@@ -97,7 +97,7 @@ final class AuthViewModel {
         do {
             let userResponse: UserResponse = try await apiClient.request(APIEndpoints.me())
             appState.handleLogin(user: userResponse.user)
-            Log.auth.info("Auto-login successful for \(userResponse.user.name)")
+            Log.auth.info("Auto-login successful for user \(userResponse.user.id)")
         } catch {
             Log.auth.warning("Auto-login failed, clearing token: \(error.localizedDescription)")
             tokenManager.clearAll()
@@ -192,7 +192,7 @@ final class AuthViewModel {
             let userResponse: UserResponse = try await apiClient.request(APIEndpoints.me())
             appState.handleLogin(user: userResponse.user)
 
-            Log.auth.info("Onboarding completed for \(response.user.name)")
+            Log.auth.info("Onboarding completed for user \(response.user.id)")
         } catch let error as APIError {
             errorMessage = error.localizedDescription
         } catch {

@@ -13,7 +13,7 @@ struct PainSliderView: View {
     var body: some View {
         VStack(spacing: 16) {
             // Threshold indicator
-            Text("Fur Ihr Profil empfohlen: max. \(maxPainLevel)/10")
+            Text("Für Ihr Profil empfohlen: max. \(maxPainLevel)/10")
                 .font(.appCaption)
                 .foregroundStyle(.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -113,7 +113,7 @@ struct PainSliderView: View {
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                 Spacer()
-                Text("10 (starkster)")
+                Text("10 (stärkster)")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
             }

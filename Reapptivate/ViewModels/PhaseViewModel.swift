@@ -19,6 +19,7 @@ final class PhaseViewModel {
             let response: PhaseStatusResponse = try await apiClient.request(APIEndpoints.phaseStatus())
             phaseStatus = response.phaseStatus
         } catch {
+            self.error = "Phasenstatus konnte nicht geladen werden."
             Log.api.error("Failed to load phase status: \(error)")
         }
     }

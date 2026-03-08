@@ -87,7 +87,7 @@ struct ProgressLogSheet: View {
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                         TextField("Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
-                            .textFieldStyle(.roundedBorder)
+                            .inputFieldStyle()
                             .lineLimit(3...5)
                     }
 

@@ -38,7 +38,7 @@ struct OnboardingView: View {
                     // Email
                     FormField(label: "E-Mail") {
                         TextField("ihre@email.de", text: $viewModel.onboardingEmail)
-                            .textFieldStyle(.roundedBorder)
+                            .inputFieldStyle()
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocorrectionDisabled()
@@ -51,7 +51,7 @@ struct OnboardingView: View {
                     // Password
                     FormField(label: "Passwort", hint: "Mindestens 8 Zeichen") {
                         SecureField("Passwort", text: $viewModel.onboardingPassword)
-                            .textFieldStyle(.roundedBorder)
+                            .inputFieldStyle()
                             .textContentType(.newPassword)
                             .focused($focusedField, equals: .password)
                             .submitLabel(.next)
@@ -61,7 +61,7 @@ struct OnboardingView: View {
                     // Confirm Password
                     FormField(label: "Passwort bestätigen") {
                         SecureField("Passwort bestätigen", text: $viewModel.onboardingPasswordConfirm)
-                            .textFieldStyle(.roundedBorder)
+                            .inputFieldStyle()
                             .textContentType(.newPassword)
                             .focused($focusedField, equals: .confirm)
                             .submitLabel(.next)
@@ -78,7 +78,7 @@ struct OnboardingView: View {
                     // Phone (optional)
                     FormField(label: "Telefon (optional)") {
                         TextField("+49...", text: $viewModel.onboardingPhone)
-                            .textFieldStyle(.roundedBorder)
+                            .inputFieldStyle()
                             .textContentType(.telephoneNumber)
                             .keyboardType(.phonePad)
                             .focused($focusedField, equals: .phone)

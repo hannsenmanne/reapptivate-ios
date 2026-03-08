@@ -56,6 +56,7 @@ final class AppState {
         unreadMessageCount = 0
         hasCheckedInToday = false
         WorkTimerViewModel.clearPersistedState()
+        ExerciseVideoStore.shared.deleteAllVideos()
         clearUserScopedDefaults()
         onLogout?()
     }

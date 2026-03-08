@@ -10,9 +10,6 @@ enum APIError: LocalizedError {
     case serverError(Int)
     case networkError(Error)
     case decodingError(Error)
-    case tokenExpired
-    case noData
-    case invalidURL
 
     var errorDescription: String? {
         switch self {
@@ -38,12 +35,6 @@ enum APIError: LocalizedError {
             "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung."
         case .decodingError:
             "Daten konnten nicht verarbeitet werden."
-        case .tokenExpired:
-            "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
-        case .noData:
-            "Keine Daten empfangen."
-        case .invalidURL:
-            "Ungultige URL."
         }
     }
 }

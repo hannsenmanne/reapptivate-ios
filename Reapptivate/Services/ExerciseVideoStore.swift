@@ -41,4 +41,17 @@ final class ExerciseVideoStore {
             try fileManager.removeItem(at: url)
         }
     }
+
+    /// Deletes the entire ExerciseVideos directory and recreates it empty.
+    /// Called on logout to prevent videos from one user leaking to another.
+    func deleteAllVideos() {
+        if fileManager.fileExists(atPath: videosDirectory.path) {
+            try? fileManager.removeItem(at: videosDirectory)
+        }
+        try? fileManager.createDirectory(at: videosDirectory, withIntermediateDirectories: true)
+        var mutableDir = videosDirectory
+        var resourceValues = URLResourceValues()
+        resourceValues.isExcludedFromBackup = true
+        try? mutableDir.setResourceValues(resourceValues)
+    }
 }

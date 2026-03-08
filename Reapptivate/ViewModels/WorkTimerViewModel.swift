@@ -58,10 +58,24 @@ final class WorkTimerViewModel {
     private static let udKeyIsOnBreak = "workTimer_isOnBreak"
     private static let udKeyBreakStartedAt = "workTimer_breakStartedAt"
 
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
     // MARK: - Init
 
     init(apiClient: APIClient) {
         self.apiClient = apiClient
+    }
+
+    deinit {
+        MainActor.assumeIsolated {
+            workTimer?.invalidate()
+            breakTimer?.invalidate()
+        }
     }
 
     // MARK: - Computed Properties
@@ -558,20 +572,16 @@ final class WorkTimerViewModel {
         breakIntervalMinutes = s.breakIntervalMinutes
         breakDurationMinutes = s.breakDurationMinutes
 
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        if let start = formatter.date(from: s.startTime) {
+        if let start = Self.timeFormatter.date(from: s.startTime) {
             startTime = start
         }
-        if let end = formatter.date(from: s.endTime) {
+        if let end = Self.timeFormatter.date(from: s.endTime) {
             endTime = end
         }
     }
 
     private func formatTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: date)
+        Self.timeFormatter.string(from: date)
     }
 
     private func todayDateString() -> String {
@@ -611,7 +621,13 @@ final class WorkTimerViewModel {
     }
 
     private func cancelPendingNotifications() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        let center = UNUserNotificationCenter.current()
+        center.getPendingNotificationRequests { requests in
+            let ids = requests
+                .filter { $0.identifier.hasPrefix("work_timer_break_") }
+                .map(\.identifier)
+            center.removePendingNotificationRequests(withIdentifiers: ids)
+        }
     }
 }
 

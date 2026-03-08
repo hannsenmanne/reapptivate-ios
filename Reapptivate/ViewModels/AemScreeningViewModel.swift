@@ -12,6 +12,7 @@ final class AemScreeningViewModel {
     var result: AemScreeningResult?
 
     private let apiClient: APIClient
+    private var autoAdvanceTask: Task<Void, Never>?
 
     init(apiClient: APIClient) {
         self.apiClient = apiClient
@@ -55,11 +56,13 @@ final class AemScreeningViewModel {
 
     func selectResponse(itemId: String, value: Int) {
         responses[itemId] = value
+        autoAdvanceTask?.cancel()
 
         // Auto-advance after brief delay
         if currentItemIndex < items.count - 1 {
-            Task {
+            autoAdvanceTask = Task {
                 try? await Task.sleep(for: .milliseconds(500))
+                guard !Task.isCancelled else { return }
                 withAnimation(.easeInOut(duration: 0.3)) {
                     currentItemIndex += 1
                 }
@@ -68,6 +71,7 @@ final class AemScreeningViewModel {
     }
 
     func goBack() {
+        autoAdvanceTask?.cancel()
         if currentItemIndex > 0 {
             withAnimation(.easeInOut(duration: 0.3)) {
                 currentItemIndex -= 1

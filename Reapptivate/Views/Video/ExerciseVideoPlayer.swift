@@ -16,14 +16,14 @@ struct ExerciseVideoPlayer: View {
             Group {
                 switch source {
                 case .youtube(let id):
-                    WebVideoPlayer(
-                        url: URL(string: "https://www.youtube-nocookie.com/embed/\(id)?autoplay=1&rel=0&playsinline=1")!
-                    )
+                    if let embedURL = URL(string: "https://www.youtube-nocookie.com/embed/\(id)?autoplay=1&rel=0&playsinline=1") {
+                        WebVideoPlayer(url: embedURL)
+                    }
 
                 case .vimeo(let id):
-                    WebVideoPlayer(
-                        url: URL(string: "https://player.vimeo.com/video/\(id)?autoplay=1")!
-                    )
+                    if let embedURL = URL(string: "https://player.vimeo.com/video/\(id)?autoplay=1") {
+                        WebVideoPlayer(url: embedURL)
+                    }
 
                 case .directVideo(let url):
                     NativeVideoPlayer(url: url)

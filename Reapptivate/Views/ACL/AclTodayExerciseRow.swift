@@ -121,6 +121,7 @@ struct AclTodayExerciseRow: View {
     }
 
     private var hasGraftNote: Bool {
+        if let note = exercise.graftNote, !note.isEmpty { return true }
         guard let graftModifier = exercise.graftModifier,
               let graft = userGraftType,
               let note = graftModifier[graft] else { return false }
@@ -128,8 +129,27 @@ struct AclTodayExerciseRow: View {
     }
 
     private var hasPrecaution: Bool {
+        if let notes = exercise.precautions, !notes.isEmpty { return true }
         guard let precaution = exercise.concomitantPrecaution else { return false }
         return precaution.contains { userConcomitantInjuries.contains($0.key) && !$0.value.isEmpty }
+    }
+
+    /// Prefer enriched flat field, fall back to dictionary lookup
+    private var resolvedGraftNote: String? {
+        if let note = exercise.graftNote, !note.isEmpty { return note }
+        guard let graftModifier = exercise.graftModifier,
+              let graft = userGraftType,
+              let note = graftModifier[graft], !note.isEmpty else { return nil }
+        return note
+    }
+
+    /// Prefer enriched flat field, fall back to dictionary lookup
+    private var resolvedPrecautions: String? {
+        if let notes = exercise.precautions, !notes.isEmpty { return notes }
+        guard let precaution = exercise.concomitantPrecaution else { return nil }
+        let relevant = precaution.filter { userConcomitantInjuries.contains($0.key) }
+        let notes = relevant.values.filter { !$0.isEmpty }.joined(separator: ". ")
+        return notes.isEmpty ? nil : notes
     }
 
     @ViewBuilder
@@ -143,9 +163,7 @@ struct AclTodayExerciseRow: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            if let graftModifier = exercise.graftModifier,
-               let graft = userGraftType,
-               let note = graftModifier[graft], !note.isEmpty {
+            if let note = resolvedGraftNote {
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "info.circle.fill")
                         .font(.appCaption)
@@ -157,20 +175,16 @@ struct AclTodayExerciseRow: View {
                 .infoBoxStyle(color: .farBlue)
             }
 
-            if let precaution = exercise.concomitantPrecaution {
-                let relevant = precaution.filter { userConcomitantInjuries.contains($0.key) }
-                let notes = relevant.values.filter { !$0.isEmpty }.joined(separator: ". ")
-                if !notes.isEmpty {
-                    HStack(alignment: .top, spacing: 8) {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .font(.appCaption)
-                            .foregroundStyle(.painAmber)
-                        Text(notes)
-                            .font(.appCaption)
-                            .foregroundStyle(.textSecondary)
-                    }
-                    .infoBoxStyle(color: .painAmber)
+            if let notes = resolvedPrecautions {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.appCaption)
+                        .foregroundStyle(.painAmber)
+                    Text(notes)
+                        .font(.appCaption)
+                        .foregroundStyle(.textSecondary)
                 }
+                .infoBoxStyle(color: .painAmber)
             }
         }
         .padding(.leading, 36)

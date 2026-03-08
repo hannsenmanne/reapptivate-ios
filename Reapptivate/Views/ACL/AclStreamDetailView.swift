@@ -140,14 +140,18 @@ struct AclExerciseCard: View {
                 VideoThumbnailView(urlString: videoUrl)
             }
 
-            // Graft modifier warning (filtered to user's graft type)
-            if let graftModifier = exercise.graftModifier, let graft = userGraftType,
+            // Graft modifier warning — prefer enriched flat field, fall back to dictionary lookup
+            if let note = exercise.graftNote, !note.isEmpty {
+                graftModifierView(note)
+            } else if let graftModifier = exercise.graftModifier, let graft = userGraftType,
                let note = graftModifier[graft], !note.isEmpty {
                 graftModifierView(note)
             }
 
-            // Concomitant precaution (filtered to user's injuries)
-            if let precaution = exercise.concomitantPrecaution {
+            // Concomitant precaution — prefer enriched flat field, fall back to dictionary lookup
+            if let notes = exercise.precautions, !notes.isEmpty {
+                precautionView(notes)
+            } else if let precaution = exercise.concomitantPrecaution {
                 let relevant = precaution.filter { userConcomitantInjuries.contains($0.key) }
                 let notes = relevant.values.filter { !$0.isEmpty }.joined(separator: ". ")
                 if !notes.isEmpty {

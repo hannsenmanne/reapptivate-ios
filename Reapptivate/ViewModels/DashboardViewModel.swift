@@ -124,6 +124,9 @@ final class DashboardViewModel {
             return try await work()
         } catch {
             Log.api.error("Dashboard load error: \(error.localizedDescription)")
+            if self.error == nil {
+                self.error = "Daten konnten nicht geladen werden."
+            }
             return nil
         }
     }

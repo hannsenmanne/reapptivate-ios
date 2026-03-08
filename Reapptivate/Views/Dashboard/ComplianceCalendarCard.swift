@@ -96,7 +96,7 @@ struct ComplianceCalendarCard: View {
 }
 
 private struct CalendarDay: Identifiable {
-    let id = UUID()
+    var id: Date { date }
     let date: Date
     let count: Int
     let isFuture: Bool
