@@ -61,8 +61,10 @@ final class WorkTimerViewModel {
     private static let udKeyIsOnBreak = "workTimer_isOnBreak"
     private static let udKeyBreakStartedAt = "workTimer_breakStartedAt"
     private static let udKeyAutoStart = "workTimer_autoStart"
+    private static let udKeySnoozesUsed = "workTimer_snoozesUsed"
 
     private static let maxSnoozes = 2
+    private var isAutoStopping = false
 
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -401,6 +403,7 @@ final class WorkTimerViewModel {
         defaults.set(breaksTakenToday, forKey: Self.udKeyBreaksTaken)
         defaults.set(breaksSkippedToday, forKey: Self.udKeyBreaksSkipped)
         defaults.set(currentBreakNumber, forKey: Self.udKeyCurrentBreakNumber)
+        defaults.set(snoozesUsed, forKey: Self.udKeySnoozesUsed)
         defaults.set(todayDateString(), forKey: Self.udKeyDate)
     }
 
@@ -426,6 +429,7 @@ final class WorkTimerViewModel {
         breaksTakenToday = defaults.integer(forKey: Self.udKeyBreaksTaken)
         breaksSkippedToday = defaults.integer(forKey: Self.udKeyBreaksSkipped)
         currentBreakNumber = defaults.integer(forKey: Self.udKeyCurrentBreakNumber)
+        snoozesUsed = defaults.integer(forKey: Self.udKeySnoozesUsed)
         isRunning = true
 
         // Check if we were in the middle of a break
@@ -449,7 +453,12 @@ final class WorkTimerViewModel {
                     return
                 }
             }
-            // Break expired while app was closed — clear and continue
+            // Break expired while app was closed — count it
+            if isMicroBreak {
+                breaksTakenToday += 1 // micro-breaks auto-complete
+            } else {
+                breaksSkippedToday += 1 // regular breaks expire as skipped
+            }
             clearBreakState()
         }
 
@@ -602,7 +611,12 @@ final class WorkTimerViewModel {
     }
 
     private func autoStopWorkday() {
-        Task { await stopWorkday() }
+        guard !isAutoStopping else { return }
+        isAutoStopping = true
+        Task {
+            await stopWorkday()
+            isAutoStopping = false
+        }
     }
 
     private func breakTimerTick() {
@@ -697,6 +711,8 @@ final class WorkTimerViewModel {
         defaults.removeObject(forKey: udKeyDate)
         defaults.removeObject(forKey: udKeyIsOnBreak)
         defaults.removeObject(forKey: udKeyBreakStartedAt)
+        defaults.removeObject(forKey: udKeyAutoStart)
+        defaults.removeObject(forKey: udKeySnoozesUsed)
     }
 
     private func cancelPendingNotifications() {
@@ -716,7 +732,7 @@ private struct SeededRandomNumberGenerator: RandomNumberGenerator {
     private var state: UInt64
 
     init(seed: UInt64) {
-        state = seed
+        state = seed == 0 ? 1 : seed
     }
 
     mutating func next() -> UInt64 {

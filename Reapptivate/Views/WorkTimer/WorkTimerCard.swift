@@ -32,19 +32,22 @@ struct WorkTimerCard: View {
                 let vm = WorkTimerViewModel(apiClient: apiClient)
                 viewModel = vm
 
-                NotificationDelegate.shared.onBreakComplete = {
+                NotificationDelegate.shared.onBreakComplete = { [weak vm] in
+                    guard let vm else { return }
                     if vm.isOnBreak {
                         Task { await vm.completeBreak() }
                     } else {
                         vm.triggerBreak()
                     }
                 }
-                NotificationDelegate.shared.onBreakSnooze = {
+                NotificationDelegate.shared.onBreakSnooze = { [weak vm] in
+                    guard let vm else { return }
                     if vm.isOnBreak {
                         vm.snoozeBreak()
                     }
                 }
-                NotificationDelegate.shared.onBreakSkip = {
+                NotificationDelegate.shared.onBreakSkip = { [weak vm] in
+                    guard let vm else { return }
                     if vm.isOnBreak {
                         Task { await vm.skipBreak() }
                     }
@@ -139,7 +142,6 @@ struct WorkTimerCard: View {
                 Spacer()
 
                 Button {
-                    Task { await vm.loadHistory() }
                     vm.showingHistory = true
                 } label: {
                     Image(systemName: "chart.bar.fill")

@@ -1,6 +1,7 @@
 @preconcurrency import UserNotifications
 
-final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+@MainActor
+final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationDelegate()
 
     var onBreakComplete: (() -> Void)?
@@ -8,7 +9,7 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @u
     var onBreakSkip: (() -> Void)?
 
     // Show notifications while app is in foreground
-    func userNotificationCenter(
+    nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
@@ -16,24 +17,24 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @u
     }
 
     // Handle notification actions
-    func userNotificationCenter(
+    nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
         guard response.notification.request.content.categoryIdentifier == "WORK_TIMER_BREAK" else { return }
 
-        switch response.actionIdentifier {
-        case "COMPLETE_BREAK":
-            await MainActor.run { onBreakComplete?() }
-        case "SNOOZE_BREAK":
-            await MainActor.run { onBreakSnooze?() }
-        case "SKIP_BREAK":
-            await MainActor.run { onBreakSkip?() }
-        case UNNotificationDefaultActionIdentifier:
-            // User tapped the notification itself — treat as wanting to start the break
-            await MainActor.run { onBreakComplete?() }
-        default:
-            break
+        let actionId = response.actionIdentifier
+        await MainActor.run {
+            switch actionId {
+            case "COMPLETE_BREAK", UNNotificationDefaultActionIdentifier:
+                onBreakComplete?()
+            case "SNOOZE_BREAK":
+                onBreakSnooze?()
+            case "SKIP_BREAK":
+                onBreakSkip?()
+            default:
+                break
+            }
         }
     }
 }

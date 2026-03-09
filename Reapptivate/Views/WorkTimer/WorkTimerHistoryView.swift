@@ -158,6 +158,13 @@ private struct BarColumn: View {
     let barWidth: CGFloat
     let maxHeight: CGFloat
 
+    private static let shortDayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "de_DE")
+        f.dateFormat = "EE"
+        return f
+    }()
+
     private var barColor: Color {
         let pct = day.adherencePercent
         if pct >= 70 { return .painGreen }
@@ -174,11 +181,7 @@ private struct BarColumn: View {
         guard let date = DateFormatters.dateOnly.date(from: day.date) else {
             return "?"
         }
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "de_DE")
-        formatter.dateFormat = "EE"
-        let label = formatter.string(from: date)
-        // EE gives "Mo.", "Di." etc. — strip the trailing period
+        let label = Self.shortDayFormatter.string(from: date)
         return label.replacingOccurrences(of: ".", with: "")
     }
 
@@ -233,14 +236,18 @@ private struct StatPill: View {
 private struct DayDetailRow: View {
     let day: WorkTimerDaySummary
 
+    private static let detailDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "de_DE")
+        f.dateFormat = "EE, d. MMM"
+        return f
+    }()
+
     private var formattedDate: String {
         guard let date = DateFormatters.dateOnly.date(from: day.date) else {
             return day.date
         }
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "de_DE")
-        formatter.dateFormat = "EE, d. MMM"
-        return formatter.string(from: date)
+        return Self.detailDateFormatter.string(from: date)
     }
 
     private var adherenceColor: Color {

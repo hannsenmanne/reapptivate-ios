@@ -126,12 +126,14 @@ struct WorkTimerBreakView: View {
         }
         .conditionalHaptic(.success, trigger: completeTrigger)
         .onChange(of: viewModel.breakSecondsRemaining) { _, newValue in
-            guard viewModel.isMicroBreak, newValue <= 0, !autoCompleted else { return }
+            guard viewModel.isMicroBreak, newValue <= 0, !autoCompleted, !isLogging else { return }
             autoCompleted = true
+            isLogging = true
             Task {
                 try? await Task.sleep(for: .milliseconds(500))
                 await viewModel.completeBreak()
                 completeTrigger.toggle()
+                isLogging = false
                 dismiss()
             }
         }
