@@ -141,6 +141,7 @@ struct ScreeningCompleteView: View {
         case .rotatorCuff: return "figure.boxing"
         case .gluteal, .proximalHamstring: return "figure.cooldown"
         case .aclReconstruction: return "figure.strengthtraining.functional"
+        case .unknown: return "heart.text.clipboard"
         }
     }
 
@@ -215,7 +216,7 @@ struct ScreeningCompleteView: View {
             return "Ihr Profil zeigt Distress-Durchhaltemuster. Ihr Programm beinhaltet Pacing-Strategien, um Überbelastung zu vermeiden und Aktivitäten besser zu dosieren."
         case .EER:
             return "Ihr Profil zeigt Eustress-Durchhaltemuster. Ihr Programm beinhaltet Pacing-Strategien, um trotz guter Motivation die richtige Balance zu finden."
-        case .AR:
+        case .AR, .unknown:
             return "Ihr Profil zeigt einen adaptiven Umgang mit Schmerz. Ihr Programm setzt auf konsequente Progression mit angepasster Belastung."
         }
     }

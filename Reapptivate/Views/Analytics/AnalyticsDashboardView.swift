@@ -30,7 +30,7 @@ struct AnalyticsDashboardView: View {
                         if let pacing = pacingAnalytics {
                             pacingSection(pacing)
                         }
-                    case .AR:
+                    case .AR, .unknown:
                         arSection(summary)
                     }
 
@@ -278,7 +278,7 @@ struct AnalyticsDashboardView: View {
                 fearAnalytics = try? await apiClient.request(APIEndpoints.fearReductionAnalytics())
             case .DER, .EER:
                 pacingAnalytics = try? await apiClient.request(APIEndpoints.pacingComplianceAnalytics())
-            case .AR:
+            case .AR, .unknown:
                 break
             }
         } catch {

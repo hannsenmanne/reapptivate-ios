@@ -130,6 +130,7 @@ final class AclTodayProgramViewModel {
 
     func toggleExercise(_ exercise: AclStreamExercise) async {
         let exerciseId = exercise.id
+        guard !submittingExerciseIds.contains(exerciseId) else { return }
         let wasCompleted = completedExerciseIds.contains(exerciseId)
 
         submittingExerciseIds.insert(exerciseId)

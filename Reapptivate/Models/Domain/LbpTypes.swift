@@ -94,7 +94,7 @@ struct ExposureLogRequest: Codable {
 
 // MARK: - AnyCodable helper (for JSON objects like performed_dose)
 
-struct AnyCodable: Codable {
+struct AnyCodable: Codable, @unchecked Sendable {
     let value: Any
 
     init(_ value: Any) {

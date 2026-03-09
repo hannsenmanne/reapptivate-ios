@@ -62,7 +62,7 @@ struct NeckProfileView: View {
         switch severity {
         case .LEICHT: return "checkmark.circle"
         case .MITTEL: return "exclamationmark.circle"
-        case .SCHWER: return "exclamationmark.triangle"
+        case .SCHWER, .unknown: return "exclamationmark.triangle"
         }
     }
 
@@ -70,7 +70,7 @@ struct NeckProfileView: View {
         switch severity {
         case .LEICHT: return "Mild"
         case .MITTEL: return "Moderat"
-        case .SCHWER: return "Schwer"
+        case .SCHWER, .unknown: return "Schwer"
         }
     }
 
@@ -80,7 +80,7 @@ struct NeckProfileView: View {
             "Leichte Einschränkung. Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
             "Moderate Einschränkung. Angepasste Übungen mit langsamerer Steigerung."
-        case .SCHWER:
+        case .SCHWER, .unknown:
             "Deutliche Einschränkung. Sanfter Beginn mit verlängerten Phasen und reduzierter Belastung."
         }
     }

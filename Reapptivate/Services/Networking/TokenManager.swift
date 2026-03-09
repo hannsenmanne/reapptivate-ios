@@ -71,6 +71,8 @@ final class TokenManager: Sendable {
         guard parts.count == 3 else { return nil }
 
         var base64 = String(parts[1])
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
         // Pad to multiple of 4
         while base64.count % 4 != 0 {
             base64.append("=")

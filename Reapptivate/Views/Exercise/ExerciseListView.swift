@@ -4,7 +4,7 @@ struct ExerciseListView: View {
     @Environment(AppState.self) private var appState
     let exercises: [ExerciseWithPhase]
     let completedToday: Set<String>
-    let onLog: (ExerciseWithPhase) -> Void
+    let onTap: (ExerciseWithPhase) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -28,13 +28,12 @@ struct ExerciseListView: View {
             }
 
             // Exercise Cards
-            ForEach(Array(exercises.enumerated()), id: \.element.id) { index, exercise in
+            ForEach(exercises, id: \.id) { exercise in
                 ExerciseCardView(
                     exercise: exercise,
-                    index: index,
                     isCompleted: completedToday.contains(exercise.id),
                     userSubtype: appState.currentUser?.aemSubtype,
-                    onLog: { onLog(exercise) }
+                    onTap: { onTap(exercise) }
                 )
             }
         }

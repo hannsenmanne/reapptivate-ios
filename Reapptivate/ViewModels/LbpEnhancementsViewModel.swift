@@ -48,7 +48,7 @@ final class LbpEnhancementsViewModel {
             async let pacingTask: () = loadPacingPlan()
             async let logsTask: () = loadPacingLogs()
             _ = await (pacingTask, logsTask, modulesTask)
-        case .AR:
+        case .AR, .unknown:
             await modulesTask
         }
 
@@ -248,7 +248,7 @@ final class LbpEnhancementsViewModel {
                 module.targetCondition == nil || module.targetCondition == "LBP_NONSPECIFIC"
             }
 
-            completedModuleKeys = Set(loadedCompleted.completedModules)
+            completedModuleKeys = Set(loadedCompleted.completedModules ?? [])
         } catch {
             errorMessage = "Module konnten nicht geladen werden."
             Log.api.error("Failed to load micro-modules: \(error.localizedDescription)")

@@ -71,7 +71,7 @@ extension Color {
         case .FAR: return .farBlue
         case .DER: return .derOrange
         case .EER: return .eerGreen
-        case .AR: return .arGray
+        case .AR, .unknown: return .arGray
         }
     }
 
@@ -79,7 +79,7 @@ extension Color {
         switch severity {
         case .LEICHT: return .severityLeicht
         case .MITTEL: return .severityMittel
-        case .SCHWER: return .severitySchwer
+        case .SCHWER, .unknown: return .severitySchwer
         }
     }
 
@@ -87,7 +87,7 @@ extension Color {
         switch severity {
         case .LEICHT: return .severityLeicht
         case .MITTEL: return .severityMittel
-        case .SCHWER: return .severitySchwer
+        case .SCHWER, .unknown: return .severitySchwer
         }
     }
 }

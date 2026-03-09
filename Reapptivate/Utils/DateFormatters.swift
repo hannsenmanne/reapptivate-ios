@@ -22,7 +22,7 @@ enum DateFormatters: Sendable {
     /// Date-only formatter for "yyyy-MM-dd" strings (UTC timezone)
     /// Use for parsing/formatting date strings without time component
     /// IMPORTANT: Uses UTC to prevent date shifts across timezones
-    static let dateOnly: DateFormatter = {
+    nonisolated(unsafe) static let dateOnly: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.timeZone = TimeZone(secondsFromGMT: 0) // Explicit UTC
@@ -32,7 +32,7 @@ enum DateFormatters: Sendable {
 
     /// German date formatter (user's current timezone)
     /// Use for displaying dates to users
-    static let germanDate: DateFormatter = {
+    nonisolated(unsafe) static let germanDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
         formatter.dateStyle = .medium
@@ -43,7 +43,7 @@ enum DateFormatters: Sendable {
 
     /// Time-only formatter (user's current timezone)
     /// Use for displaying time in messaging threads (e.g., "14:30")
-    static let timeOnly: DateFormatter = {
+    nonisolated(unsafe) static let timeOnly: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
         formatter.dateStyle = .none
@@ -54,7 +54,7 @@ enum DateFormatters: Sendable {
 
     /// German date+time formatter (user's current timezone)
     /// Use for displaying date and time to users
-    static let germanDateTime: DateFormatter = {
+    nonisolated(unsafe) static let germanDateTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
         formatter.dateStyle = .medium

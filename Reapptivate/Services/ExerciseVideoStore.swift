@@ -26,20 +26,27 @@ final class ExerciseVideoStore {
         return fileManager.fileExists(atPath: url.path) ? url : nil
     }
 
-    func saveVideo(from sourceURL: URL, for exerciseId: String) throws -> URL {
+    func saveVideo(from sourceURL: URL, for exerciseId: String) async throws -> URL {
         let destination = videosDirectory.appendingPathComponent("\(exerciseId).mov")
-        if fileManager.fileExists(atPath: destination.path) {
-            try fileManager.removeItem(at: destination)
-        }
-        try fileManager.copyItem(at: sourceURL, to: destination)
-        return destination
+        let source = sourceURL
+        return try await Task.detached {
+            let fm = FileManager.default
+            if fm.fileExists(atPath: destination.path) {
+                try fm.removeItem(at: destination)
+            }
+            try fm.copyItem(at: source, to: destination)
+            return destination
+        }.value
     }
 
-    func deleteVideo(for exerciseId: String) throws {
+    func deleteVideo(for exerciseId: String) async throws {
         let url = videosDirectory.appendingPathComponent("\(exerciseId).mov")
-        if fileManager.fileExists(atPath: url.path) {
-            try fileManager.removeItem(at: url)
-        }
+        try await Task.detached {
+            let fm = FileManager.default
+            if fm.fileExists(atPath: url.path) {
+                try fm.removeItem(at: url)
+            }
+        }.value
     }
 
     /// Deletes the entire ExerciseVideos directory and recreates it empty.

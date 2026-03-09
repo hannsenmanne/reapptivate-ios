@@ -86,7 +86,7 @@ struct NeckResultView: View {
             "Leichte Einschränkung. Ihr Programm folgt der Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
             "Moderate Einschränkung. Ihr Programm enthält angepasste Übungen mit langsamerer Steigerung."
-        case .SCHWER:
+        case .SCHWER, .unknown:
             "Deutliche Einschränkung. Ihr Programm beginnt sanft mit verlängerten Phasen und reduzierter Belastung."
         }
     }

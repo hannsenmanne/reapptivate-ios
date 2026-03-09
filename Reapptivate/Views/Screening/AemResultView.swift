@@ -73,7 +73,7 @@ struct AemResultView: View {
         case .FAR: Image(systemName: "magnifyingglass")
         case .DER: Image(systemName: "timer")
         case .EER: Image(systemName: "chart.bar")
-        case .AR: Image(systemName: "checkmark.circle")
+        case .AR, .unknown: Image(systemName: "checkmark.circle")
         }
     }
 
@@ -85,7 +85,7 @@ struct AemResultView: View {
             "Sie neigen dazu, trotz Belastung weiterzumachen. Ihr Programm betont Pacing und geplante Pausen."
         case .EER:
             "Sie sind hoch motiviert und neigen zu Überbelastung. Ihr Programm fokussiert auf Qualität statt Quantität."
-        case .AR:
+        case .AR, .unknown:
             "Sie haben ein ausgewogenes Belastungsprofil. Ihr Programm folgt dem Standardprotokoll."
         }
     }

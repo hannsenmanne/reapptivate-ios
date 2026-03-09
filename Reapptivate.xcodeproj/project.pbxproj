@@ -71,6 +71,7 @@
 		3C7C51C1A2B73F99251259F9 /* TsiScreeningViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A307873EBDFB86EB7F01850 /* TsiScreeningViewModelTests.swift */; };
 		402749A09E60A78F92ABF616 /* proximal_hamstring.json in Resources */ = {isa = PBXBuildFile; fileRef = AE2E3F636718CE0ABF694FA3 /* proximal_hamstring.json */; };
 		406604BDD97180691EC9CEFE /* RestDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3BCD2AA9F0C9AA061809D0 /* RestDayCard.swift */; };
+		411177C8C866C675C3C8F1F9 /* NotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A81ED8962E6CD45426EA8F /* NotificationDelegate.swift */; };
 		418155AE687F3E6C1A977949 /* WorkTimerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1C99A0A9D1FFBFE8B11BA8 /* WorkTimerCard.swift */; };
 		42406F88931CD781997C97E3 /* MilestoneAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF06927D9866714A1E956C9A /* MilestoneAlert.swift */; };
 		42C738C800013C9D6255B43E /* neck_shoulder_tension_schwer.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C0D9C495191CB22806366AB /* neck_shoulder_tension_schwer.json */; };
@@ -91,7 +92,6 @@
 		5249434F0ACCBD123F317B26 /* Outfit-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4438F58BBE0D1E763B9503 /* Outfit-ExtraBold.ttf */; };
 		52682014826F50B9D28E6AC4 /* ViewModifiers+Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */; };
 		52D8D1BFED284C50E609E964 /* AemQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6D2A6547F78F14108BB6F7 /* AemQuestionView.swift */; };
-		5315BDFBFF8B5CFD3D62118C /* View+Conditional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E194175EAB66F85E076F35D /* View+Conditional.swift */; };
 		53C4D34670D9EE06B45AEC9A /* TrainingScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A5F2CE571648B3749291E2 /* TrainingScheduleCard.swift */; };
 		54A6605C301A6467A08B8DB4 /* RatingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C52E6AF0029C1915AAF19C9 /* RatingServiceTests.swift */; };
 		54FBAAD910DFEA0ECFCE75BB /* InlineErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F4CBEE5796A50514969469 /* InlineErrorView.swift */; };
@@ -203,6 +203,7 @@
 		D74F3B21C522B6E690152A28 /* plantar_fascia.json in Resources */ = {isa = PBXBuildFile; fileRef = 82547C2DA3D14A0DB1B250F4 /* plantar_fascia.json */; };
 		D7FAE311FB1B5C1CAFD5E7B9 /* VideoLibraryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C5204DF551A5D087E92B33 /* VideoLibraryPicker.swift */; };
 		D838A2CF7973C917113038E7 /* ClinicalThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B58B67539C7B11528DCAEB2 /* ClinicalThread.swift */; };
+		D884EFAD656EB6939EE8EE9C /* WorkTimerHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA142C4B93A6250632D54BD5 /* WorkTimerHistoryView.swift */; };
 		D8C0778CD024EFC78CBAAA1D /* lbp_der.json in Resources */ = {isa = PBXBuildFile; fileRef = E1CDBF1B16CE6E034A77933D /* lbp_der.json */; };
 		DBD174D2AB171990D30056D4 /* WissenCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C62A55C28AC9F571C6BDE9 /* WissenCardView.swift */; };
 		DFBBC970179153F0390CA3FF /* View+ConditionalHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66D5732F85B3047C76C5642 /* View+ConditionalHaptic.swift */; };
@@ -358,6 +359,7 @@
 		620074AAA30E749DA22389A1 /* QuotaProgressionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotaProgressionView.swift; sourceTree = "<group>"; };
 		62936268881018BC964676AB /* ScreeningCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreeningCompleteView.swift; sourceTree = "<group>"; };
 		6729A16F569658CE5F1E3624 /* AclDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclDashboardView.swift; sourceTree = "<group>"; };
+		67A81ED8962E6CD45426EA8F /* NotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDelegate.swift; sourceTree = "<group>"; };
 		68405C4F24EE5E4BD00FFEB8 /* AclTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTypes.swift; sourceTree = "<group>"; };
 		6A307873EBDFB86EB7F01850 /* TsiScreeningViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TsiScreeningViewModelTests.swift; sourceTree = "<group>"; };
 		6BC31BABF9F1BF461A014C18 /* neck-screening-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "neck-screening-config.json"; sourceTree = "<group>"; };
@@ -365,7 +367,6 @@
 		6C2A7477F905315DD72B7B54 /* gluteal.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = gluteal.json; sourceTree = "<group>"; };
 		6CCA1979EE2CF1E6DE7CC706 /* PhaseChangeAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhaseChangeAlert.swift; sourceTree = "<group>"; };
 		6DA2A2075FB5B4732B9E44DA /* NeckScreeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckScreeningView.swift; sourceTree = "<group>"; };
-		6E194175EAB66F85E076F35D /* View+Conditional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Conditional.swift"; sourceTree = "<group>"; };
 		6E754BE4CB9B723E79D7A2F3 /* MotivationalQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationalQuote.swift; sourceTree = "<group>"; };
 		6FCABF725F409B0F31701161 /* CustomExerciseLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExerciseLogSheet.swift; sourceTree = "<group>"; };
 		734E983E0E2C8D130D67D966 /* VideoURLDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoURLDetector.swift; sourceTree = "<group>"; };
@@ -478,6 +479,7 @@
 		E7E7432BD599BF7478973BD8 /* TestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFixtures.swift; sourceTree = "<group>"; };
 		E8CD31AA5D8CCB1D71286A5C /* TensionTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensionTypesTests.swift; sourceTree = "<group>"; };
 		E8FE83D167C57552EC1AAFF6 /* NeckQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckQuestionView.swift; sourceTree = "<group>"; };
+		EA142C4B93A6250632D54BD5 /* WorkTimerHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkTimerHistoryView.swift; sourceTree = "<group>"; };
 		EBADD85BB3402B9C79ED3ADC /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		ECDB43D091607E9E4B7FD550 /* LbpEnhancementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LbpEnhancementsView.swift; sourceTree = "<group>"; };
 		ED1B67EBCBA454C2785CE46A /* PhaseAdaptation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhaseAdaptation.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 			children = (
 				F00F40C190828020A69B0D18 /* WorkTimerBreakView.swift */,
 				2B1C99A0A9D1FFBFE8B11BA8 /* WorkTimerCard.swift */,
+				EA142C4B93A6250632D54BD5 /* WorkTimerHistoryView.swift */,
 				0A7294D9CC926AD67473EBD3 /* WorkTimerSettingsSheet.swift */,
 				9E0A58AAC4E32671D2C89546 /* WorkTimerSummarySheet.swift */,
 			);
@@ -937,6 +940,7 @@
 			isa = PBXGroup;
 			children = (
 				CB41DB00D8491D5A671A766D /* AppState.swift */,
+				67A81ED8962E6CD45426EA8F /* NotificationDelegate.swift */,
 				8A6D974438EBC139A854EB6B /* ReapptivateApp.swift */,
 			);
 			path = App;
@@ -1046,7 +1050,6 @@
 				1EC38F175D682C73EEC92448 /* Color+Theme.swift */,
 				F40ED328FCE7C3338B2D1A1C /* Date+Helpers.swift */,
 				0B7BADE86F091E3E408174AA /* Font+Theme.swift */,
-				6E194175EAB66F85E076F35D /* View+Conditional.swift */,
 				F66D5732F85B3047C76C5642 /* View+ConditionalHaptic.swift */,
 				94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */,
 			);
@@ -1403,6 +1406,7 @@
 				E2DB93AB532E9E376694F474 /* NeckScreeningViewModel.swift in Sources */,
 				7FE7FA93E312E5AB41E160E4 /* NeckTypes.swift in Sources */,
 				1108E3368EAD0BC9736D4AF2 /* NetworkMonitor.swift in Sources */,
+				411177C8C866C675C3C8F1F9 /* NotificationDelegate.swift in Sources */,
 				F287D6FFABFBCCD978E31174 /* NotificationPrefsView.swift in Sources */,
 				EF702429B241315761783C7D /* NotificationService.swift in Sources */,
 				C8E37F56D320E949F84409E8 /* OnboardingView.swift in Sources */,
@@ -1461,12 +1465,12 @@
 				D7FAE311FB1B5C1CAFD5E7B9 /* VideoLibraryPicker.swift in Sources */,
 				511C61DD43951AA33CA168D9 /* VideoThumbnailView.swift in Sources */,
 				A5F22CA31F3AA86ED49DA2D0 /* VideoURLDetector.swift in Sources */,
-				5315BDFBFF8B5CFD3D62118C /* View+Conditional.swift in Sources */,
 				DFBBC970179153F0390CA3FF /* View+ConditionalHaptic.swift in Sources */,
 				52682014826F50B9D28E6AC4 /* ViewModifiers+Design.swift in Sources */,
 				DBD174D2AB171990D30056D4 /* WissenCardView.swift in Sources */,
 				F2B8411CC82E7E4C77F95B0B /* WorkTimerBreakView.swift in Sources */,
 				418155AE687F3E6C1A977949 /* WorkTimerCard.swift in Sources */,
+				D884EFAD656EB6939EE8EE9C /* WorkTimerHistoryView.swift in Sources */,
 				7ACA5ED736611376FE038892 /* WorkTimerSettingsSheet.swift in Sources */,
 				02880045EA80FA281C6245E9 /* WorkTimerSummarySheet.swift in Sources */,
 				1B76903A623E517110FD1A31 /* WorkTimerTypes.swift in Sources */,

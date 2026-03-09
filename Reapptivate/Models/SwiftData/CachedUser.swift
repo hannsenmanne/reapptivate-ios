@@ -20,6 +20,7 @@ final class CachedUser {
     var aclGraftType: String?
     var aclSurgeryDate: String?
     var aclCurrentMilestone: Int?
+    var aclConcomitantInjuries: String?
     var startDate: String
     var lastSyncedAt: Date
 
@@ -41,6 +42,7 @@ final class CachedUser {
         aclGraftType: String? = nil,
         aclSurgeryDate: String? = nil,
         aclCurrentMilestone: Int? = nil,
+        aclConcomitantInjuries: String? = nil,
         startDate: String,
         lastSyncedAt: Date = .now
     ) {
@@ -61,6 +63,7 @@ final class CachedUser {
         self.aclGraftType = aclGraftType
         self.aclSurgeryDate = aclSurgeryDate
         self.aclCurrentMilestone = aclCurrentMilestone
+        self.aclConcomitantInjuries = aclConcomitantInjuries
         self.startDate = startDate
         self.lastSyncedAt = lastSyncedAt
     }
@@ -82,6 +85,7 @@ final class CachedUser {
         aclGraftType = profile.aclGraftType?.rawValue
         aclSurgeryDate = profile.aclSurgeryDate
         aclCurrentMilestone = profile.aclCurrentMilestone
+        aclConcomitantInjuries = profile.aclConcomitantInjuries?.map(\.rawValue).joined(separator: ",")
         startDate = profile.startDate
         lastSyncedAt = .now
     }

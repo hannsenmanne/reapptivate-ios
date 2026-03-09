@@ -17,6 +17,7 @@ struct PacingTimerView: View {
     @State private var soundPlayed100 = false
     @State private var backgroundDate: Date?
     @State private var activitySelectionTrigger = false
+    @State private var showLogPrompt = false
     @State private var timerCancellable: Cancellable?
 
     @ScaledMetric(relativeTo: .title2) private var playPauseSize: CGFloat = 56
@@ -66,6 +67,14 @@ struct PacingTimerView: View {
             }
         }
         .conditionalHaptic(.selection, trigger: activitySelectionTrigger)
+        .alert("Ziel erreicht!", isPresented: $showLogPrompt) {
+            Button("Aktivität loggen") {
+                completeTimer()
+            }
+            Button("Weiter trainieren", role: .cancel) {}
+        } message: {
+            Text("Sie haben Ihre Quota erreicht. Möchten Sie die Aktivität jetzt abschließen?")
+        }
         .onAppear {
             timerCancellable = timerPublisher
                 .autoconnect()
@@ -100,7 +109,11 @@ struct PacingTimerView: View {
                                 soundPlayed100 = true
                                 AudioService.shared.playTripleBeep()
                             }
-                            if isDer { startBreak() }
+                            if isDer {
+                                startBreak()
+                            } else if !showLogPrompt {
+                                showLogPrompt = true
+                            }
                         }
                     } else if timerState == .onBreak {
                         breakSeconds += elapsed
@@ -378,9 +391,11 @@ struct PacingTimerView: View {
             soundPlayed100 = true
             AudioService.shared.playTripleBeep()
 
-            // DER: mandatory break
+            // DER: mandatory break, others: prompt to log
             if isDer {
                 startBreak()
+            } else {
+                showLogPrompt = true
             }
         }
     }

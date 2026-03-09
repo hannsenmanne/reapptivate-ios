@@ -265,6 +265,7 @@ struct ExerciseSessionView: View {
     }
 
     private func completeSet() {
+        guard !showCelebration, currentSet <= totalSets else { return }
         if currentSet >= totalSets {
             // All sets done — show celebration, then progress log
             allSetsDoneTrigger.toggle()

@@ -3,6 +3,9 @@ import SwiftUI
 struct ScheduleEditorView: View {
     @Environment(APIClient.self) private var apiClient
 
+    @AppStorage("reminderTimeHour") private var savedHour: Int = 9
+    @AppStorage("reminderTimeMinute") private var savedMinute: Int = 0
+
     @State private var selectedDays: Set<Int> = [] // 1=Sunday, 2=Monday, ...
     @State private var reminderTime = Date()
     @State private var isLoading = true
@@ -66,7 +69,7 @@ struct ScheduleEditorView: View {
                     HStack {
                         Spacer()
                         if isSaving {
-                            ProgressView("Zeitplan laden...")
+                            ProgressView("Speichern...")
                         } else if showSaved {
                             Label("Gespeichert", systemImage: "checkmark")
                                 .foregroundStyle(.painGreen)
@@ -85,6 +88,13 @@ struct ScheduleEditorView: View {
         .navigationTitle("Trainingsplan")
         .navigationBarTitleDisplayMode(.inline)
         .task {
+            // Restore persisted reminder time
+            var components = DateComponents()
+            components.hour = savedHour
+            components.minute = savedMinute
+            if let restored = Calendar.current.date(from: components) {
+                reminderTime = restored
+            }
             await loadSchedule()
         }
     }
@@ -113,6 +123,10 @@ struct ScheduleEditorView: View {
 
         do {
             let _: ScheduleResponse = try await apiClient.request(APIEndpoints.updateSchedule(body: body))
+
+            // Persist reminder time
+            savedHour = hour
+            savedMinute = minute
 
             // Update notifications
             await NotificationService.shared.scheduleReminders(

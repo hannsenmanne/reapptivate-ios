@@ -2,30 +2,36 @@ import SwiftUI
 
 struct CustomExerciseCardView: View {
     let exercise: CustomExercise
-    let index: Int
     let isCompleted: Bool
     let onLog: () -> Void
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header
-            HStack(alignment: .top) {
-                // Number badge (blue to distinguish from protocol exercises)
-                Text(String(format: "%02d", index + 1))
-                    .font(.appCaptionBold.monospacedDigit())
-                    .foregroundStyle(.white)
-                    .frame(width: 28, height: 28)
-                    .background(isCompleted ? Color.painGreen : Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
+    @ScaledMetric(relativeTo: .body) private var thumbnailSize: CGFloat = 56
 
-                VStack(alignment: .leading, spacing: 2) {
+    var body: some View {
+        Button {
+            onLog()
+        } label: {
+            HStack(spacing: 14) {
+                // Thumbnail placeholder (blue to distinguish from protocol exercises)
+                RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous)
+                    .fill(isCompleted ? Color.painGreen.opacity(0.15) : Color.blue.opacity(0.12))
+                    .frame(width: thumbnailSize, height: thumbnailSize)
+                    .overlay {
+                        Image(systemName: "person.fill")
+                            .font(.appTitle3)
+                            .foregroundStyle(isCompleted ? .painGreen : .blue)
+                    }
+
+                VStack(alignment: .leading, spacing: 3) {
                     Text(exercise.name)
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
+                        .lineLimit(1)
 
-                    Text("Therapeuten-Übung")
+                    Text(exerciseSummary)
                         .font(.appCaption)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(.textSecondary)
+                        .lineLimit(1)
                 }
 
                 Spacer()
@@ -33,52 +39,34 @@ struct CustomExerciseCardView: View {
                 if isCompleted {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.painGreen)
-                        .font(.appTitle3)
+                        .font(.appTitle2)
+                        .accessibilityLabel("Abgeschlossen")
+                } else {
+                    Image(systemName: "play.circle.fill")
+                        .foregroundStyle(.blue)
+                        .font(.appTitle2)
+                        .accessibilityHidden(true)
                 }
             }
-
-            // Description
-            if !exercise.description.isEmpty {
-                Text(exercise.description)
-                    .font(.appCaption)
-                    .foregroundStyle(.textSecondary)
-                    .lineLimit(3)
-            }
-
-            // Parameter pills
-            FlowLayout(spacing: 6) {
-                ParameterPill(label: "\(exercise.sets) x \(exercise.reps)", icon: "repeat")
-
-                if let pauseSeconds = exercise.pauseSeconds, pauseSeconds > 0 {
-                    ParameterPill(label: "\(pauseSeconds)s Pause", icon: "pause.circle")
-                }
-
-                if let extra = exercise.extra, !extra.isEmpty {
-                    ParameterPill(label: extra, icon: "dumbbell")
-                }
-            }
-
-            // Action Button
-            if isCompleted {
-                Button {
-                    onLog()
-                } label: {
-                    Text("Erneut")
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 36)
-                }
-                .buttonStyle(.secondary)
-            } else {
-                Button {
-                    onLog()
-                } label: {
-                    Text("Eintragen")
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 36)
-                }
-                .buttonStyle(.accentFilled)
-            }
+            .padding(12)
+            .background(Color.cardBg)
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+            .shadow(
+                color: DesignTokens.cardShadowColor,
+                radius: DesignTokens.cardShadowRadius,
+                y: DesignTokens.cardShadowY
+            )
         }
-        .cardStyle()
+        .buttonStyle(.plain)
+    }
+
+    private var exerciseSummary: String {
+        var parts: [String] = []
+        parts.append("\(exercise.sets) × \(exercise.reps)")
+        if let pauseSeconds = exercise.pauseSeconds, pauseSeconds > 0 {
+            parts.append("\(pauseSeconds)s Pause")
+        }
+        parts.append("Therapeuten-Übung")
+        return parts.joined(separator: " · ")
     }
 }

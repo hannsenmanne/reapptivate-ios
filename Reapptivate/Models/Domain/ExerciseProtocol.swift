@@ -13,7 +13,7 @@ struct CognitiveCues: Codable {
         case .FAR: FAR
         case .DER: DER
         case .EER: EER
-        case .AR: AR ?? FAR ?? DER ?? EER
+        case .AR, .unknown: AR ?? FAR ?? DER ?? EER
         }
     }
 }

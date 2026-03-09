@@ -18,7 +18,6 @@ final class ProtocolLoader: @unchecked Sendable {
     func protocolFor(
         type: TendinopathyType,
         aemSubtype: AemSubtype? = nil,
-        ndiSeverity: NdiSeverityGrade? = nil,
         tsiSeverity: TsiSeverityGrade? = nil
     ) -> ExerciseProtocol? {
         let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity)
@@ -42,8 +41,7 @@ final class ProtocolLoader: @unchecked Sendable {
     /// Get exercises for a specific phase, with optional severity filtering
     func exercisesForPhase(
         protocol proto: ExerciseProtocol,
-        phase: Int,
-        ndiSeverity: NdiSeverityGrade? = nil
+        phase: Int
     ) -> [ExerciseWithPhase] {
         proto.exercises.filter { $0.phase == phase }
     }
@@ -85,6 +83,8 @@ final class ProtocolLoader: @unchecked Sendable {
             return "neck_shoulder_tension_\(grade.rawValue.lowercased())"
         case .aclReconstruction:
             return "acl_reconstruction"
+        case .unknown:
+            return "unknown"
         }
     }
 

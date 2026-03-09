@@ -31,7 +31,7 @@ struct ExerciseDetailView: View {
                     RecordedVideoSection(
                         videoURL: videoURL,
                         onReRecord: { showVideoSourcePicker = true },
-                        onDelete: deleteVideo
+                        onDelete: { Task { await deleteVideo() } }
                     )
                 } else {
                     Text(exercise.exercise.description)
@@ -61,10 +61,10 @@ struct ExerciseDetailView: View {
             Button("Abbrechen", role: .cancel) {}
         }
         .fullScreenCover(isPresented: $showCamera) {
-            VideoCaptureView(onVideoRecorded: saveVideo)
+            VideoCaptureView(onVideoRecorded: { url in Task { await saveVideo(from: url) } })
         }
         .sheet(isPresented: $showLibrary) {
-            VideoLibraryPicker(onVideoPicked: saveVideo)
+            VideoLibraryPicker(onVideoPicked: { url in Task { await saveVideo(from: url) } })
         }
         .sensoryFeedback(.success, trigger: hapticTrigger)
     }
@@ -158,9 +158,9 @@ struct ExerciseDetailView: View {
         savedVideoURL = videoStore.videoURL(for: exercise.id)
     }
 
-    private func saveVideo(from sourceURL: URL) {
+    private func saveVideo(from sourceURL: URL) async {
         do {
-            let saved = try videoStore.saveVideo(from: sourceURL, for: exercise.id)
+            let saved = try await videoStore.saveVideo(from: sourceURL, for: exercise.id)
             savedVideoURL = saved
             errorMessage = nil
             hapticTrigger.toggle()
@@ -169,8 +169,8 @@ struct ExerciseDetailView: View {
         }
     }
 
-    private func deleteVideo() {
-        try? videoStore.deleteVideo(for: exercise.id)
+    private func deleteVideo() async {
+        try? await videoStore.deleteVideo(for: exercise.id)
         savedVideoURL = nil
     }
 }

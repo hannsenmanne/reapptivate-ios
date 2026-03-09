@@ -11,6 +11,7 @@ struct ExposureLogSheet: View {
 
     @State private var step: ExposureStep = .prepare
     @State private var preFear: Double = 5
+    @State private var prePain: Double = 0
     @State private var postFear: Double = 3
     @State private var postPain: Double = 2
     @State private var notes: String = ""
@@ -19,7 +20,7 @@ struct ExposureLogSheet: View {
     @State private var stepAdvanceTrigger = false
 
     private var hasUnsavedChanges: Bool {
-        step != .prepare || Int(preFear) != 5 || !notes.isEmpty
+        step != .prepare || Int(preFear) != 5 || Int(prePain) != 0 || !notes.isEmpty
     }
 
     var body: some View {
@@ -122,6 +123,32 @@ struct ExposureLogSheet: View {
                         .foregroundStyle(.textSecondary)
                     Spacer()
                     Text("Maximale Angst")
+                        .font(.appCaption2)
+                        .foregroundStyle(.textSecondary)
+                }
+            }
+
+            // Pre-pain rating
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Aktueller Schmerz jetzt")
+                    .font(.appSubheadlineMedium)
+                    .foregroundStyle(.textPrimary)
+
+                HStack(spacing: 12) {
+                    Slider(value: $prePain, in: 0...10, step: 1)
+                        .tint(Color.painColor(for: Int(prePain), maxPainLevel: 5))
+                    Text("\(Int(prePain))")
+                        .font(.appTitle3.monospacedDigit())
+                        .foregroundStyle(Color.painColor(for: Int(prePain), maxPainLevel: 5))
+                        .frame(width: 28)
+                }
+
+                HStack {
+                    Text("Kein Schmerz")
+                        .font(.appCaption2)
+                        .foregroundStyle(.textSecondary)
+                    Spacer()
+                    Text("Maximaler Schmerz")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
@@ -259,6 +286,7 @@ struct ExposureLogSheet: View {
     private func submitExposure() async {
         isSubmitting = true
         let fb = Int(preFear)
+        let pp0 = Int(prePain)
         let fa = Int(postFear)
         let pp = Int(postPain)
         fearReduction = fb - fa
@@ -267,7 +295,7 @@ struct ExposureLogSheet: View {
             predictedHarm: nil,
             predictedFear: nil,
             preFear: fb,
-            prePain: 0,
+            prePain: pp0,
             performedDose: nil,
             postFear: fa,
             postPain: pp,

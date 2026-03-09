@@ -1,99 +1,143 @@
 import SwiftUI
+import AVFoundation
 
 struct ExerciseCardView: View {
     let exercise: ExerciseWithPhase
-    let index: Int
     let isCompleted: Bool
     var userSubtype: AemSubtype?
-    let onLog: () -> Void
-    var onDetail: (() -> Void)?
+    let onTap: () -> Void
 
-    @ScaledMetric(relativeTo: .caption) private var badgeSize: CGFloat = 28
+    @ScaledMetric(relativeTo: .body) private var thumbnailSize: CGFloat = 56
+    @State private var videoThumbnail: UIImage?
+
+    private let videoStore = ExerciseVideoStore.shared
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header (tappable for detail)
-            Button {
-                onDetail?()
-            } label: {
-                HStack(alignment: .top) {
-                    // Number badge
-                    Text(String(format: "%02d", index + 1))
-                        .font(.appCaptionBold.monospacedDigit())
-                        .foregroundStyle(.white)
-                        .frame(width: badgeSize, height: badgeSize)
-                        .background(isCompleted ? Color.painGreen : Color.accent)
+        Button {
+            onTap()
+        } label: {
+            HStack(spacing: 14) {
+                // Thumbnail: video frame if available, otherwise icon placeholder
+                if let thumbnail = videoThumbnail {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: thumbnailSize, height: thumbnailSize)
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
+                } else {
+                    RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous)
+                        .fill(isCompleted ? Color.painGreen.opacity(0.15) : Color.accent.opacity(0.12))
+                        .frame(width: thumbnailSize, height: thumbnailSize)
+                        .overlay {
+                            Image(systemName: exerciseTypeIcon)
+                                .font(.appTitle3)
+                                .foregroundStyle(isCompleted ? .painGreen : .accent)
+                        }
+                }
 
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(exercise.exercise.name)
-                            .font(.appSubheadlineSemibold)
-                            .foregroundStyle(.textPrimary)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(exercise.exercise.name)
+                        .font(.appSubheadlineSemibold)
+                        .foregroundStyle(.textPrimary)
+                        .lineLimit(1)
 
-                        Text(exercise.exercise.type.displayName)
-                            .font(.appCaption)
-                            .foregroundStyle(.textSecondary)
+                    Text(exerciseSummary)
+                        .font(.appCaption)
+                        .foregroundStyle(.textSecondary)
+                        .lineLimit(1)
+
+                    if let subtype = userSubtype,
+                       let cue = exercise.exercise.cognitiveCues?.cue(for: subtype) {
+                        HStack(spacing: 4) {
+                            Circle()
+                                .fill(Color.subtypeColor(for: subtype))
+                                .frame(width: 6, height: 6)
+                            Text(cue)
+                                .font(.appCaption2)
+                                .foregroundStyle(Color.subtypeColor(for: subtype))
+                                .lineLimit(1)
+                        }
                     }
+                }
 
-                    Spacer()
+                Spacer()
 
-                    if isCompleted {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.painGreen)
-                            .font(.appTitle3)
-                            .accessibilityLabel("Abgeschlossen")
-                    } else {
-                        Image(systemName: "chevron.right")
-                            .font(.appCaption)
-                            .foregroundStyle(.textSecondary)
+                if isCompleted {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.painGreen)
+                        .font(.appTitle2)
+                        .accessibilityLabel("Abgeschlossen")
+                } else {
+                    HStack(spacing: 6) {
+                        if videoThumbnail == nil, exercise.exercise.videoUrl != nil {
+                            Image(systemName: "play.rectangle.fill")
+                                .foregroundStyle(.textSecondary)
+                                .font(.appCaption)
+                                .accessibilityLabel("Video verfügbar")
+                        }
+                        Image(systemName: "play.circle.fill")
+                            .foregroundStyle(.accent)
+                            .font(.appTitle2)
                             .accessibilityHidden(true)
                     }
                 }
             }
-            .buttonStyle(.plain)
-
-            // Description
-            Text(exercise.exercise.description)
-                .font(.appCaption)
-                .foregroundStyle(.textSecondary)
-                .lineLimit(3)
-
-            // Video Thumbnail
-            if let videoUrl = exercise.exercise.videoUrl {
-                VideoThumbnailView(urlString: videoUrl)
-            }
-
-            // Cognitive Cue (LBP only)
-            if let subtype = userSubtype,
-               let cue = exercise.exercise.cognitiveCues?.cue(for: subtype) {
-                CognitiveCueBadge(subtype: subtype, cue: cue)
-            }
-
-            // Parameters
-            ExerciseParameterPills(exercise: exercise.exercise)
-
-            // Action Button
-            if isCompleted {
-                Button {
-                    onLog()
-                } label: {
-                    Text("Erneut")
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 36)
-                }
-                .buttonStyle(.secondary)
-            } else {
-                Button {
-                    onLog()
-                } label: {
-                    Text("Eintragen")
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 36)
-                }
-                .buttonStyle(.accentFilled)
-            }
+            .padding(12)
+            .background(Color.cardBg)
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
+            .shadow(
+                color: DesignTokens.cardShadowColor,
+                radius: DesignTokens.cardShadowRadius,
+                y: DesignTokens.cardShadowY
+            )
         }
-        .cardStyle()
+        .buttonStyle(.plain)
+        .task(id: exercise.id) { await loadVideoThumbnail() }
+    }
+
+    private func loadVideoThumbnail() async {
+        guard let videoURL = videoStore.videoURL(for: exercise.id) else {
+            videoThumbnail = nil
+            return
+        }
+        // Skip if already loaded
+        guard videoThumbnail == nil else { return }
+        let url = videoURL
+        let image: UIImage? = await Task.detached(priority: .utility) {
+            let asset = AVAsset(url: url)
+            let generator = AVAssetImageGenerator(asset: asset)
+            generator.appliesPreferredTrackTransform = true
+            generator.maximumSize = CGSize(width: 200, height: 200)
+            guard let cgImage = try? generator.copyCGImage(at: .zero, actualTime: nil) else { return nil }
+            return UIImage(cgImage: cgImage)
+        }.value
+        if let image {
+            videoThumbnail = image
+        }
+    }
+
+    private var exerciseSummary: String {
+        var parts: [String] = []
+        parts.append("\(exercise.exercise.sets) × \(exercise.exercise.reps)")
+        if let holdTime = exercise.exercise.holdTime {
+            parts.append("\(holdTime)s halten")
+        }
+        parts.append(exercise.exercise.type.displayName)
+        return parts.joined(separator: " · ")
+    }
+
+    private var exerciseTypeIcon: String {
+        switch exercise.exercise.type {
+        case .isometric: "hand.raised"
+        case .hsr: "dumbbell.fill"
+        case .eccentric: "arrow.down.circle"
+        case .concentric: "arrow.up.circle"
+        case .motorControl: "figure.mind.and.body"
+        case .bodyAwareness: "figure.cooldown"
+        case .pacing: "timer"
+        case .gradedActivity: "chart.bar.fill"
+        case .unknown: "questionmark.circle"
+        }
     }
 }
 
@@ -108,7 +152,7 @@ struct CognitiveCueBadge: View {
         case .FAR: "magnifyingglass"
         case .DER: "timer"
         case .EER: "chart.bar"
-        case .AR: "checkmark.circle"
+        case .AR, .unknown: "checkmark.circle"
         }
     }
 

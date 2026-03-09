@@ -52,6 +52,11 @@ final class MessagingViewModel {
     // MARK: - Thread Detail
 
     func fetchThreadDetail(_ threadId: String) async {
+        guard TokenManager.shared.getToken() != nil else {
+            stopMessagePolling()
+            return
+        }
+
         isLoadingMessages = true
         activeThreadId = threadId
 
@@ -116,6 +121,11 @@ final class MessagingViewModel {
     // MARK: - Unread Count
 
     func fetchUnreadCount() async {
+        guard TokenManager.shared.getToken() != nil else {
+            stopPolling()
+            return
+        }
+
         do {
             let response: UnreadCountResponse = try await apiClient.request(
                 APIEndpoints.clinicalUnreadCount()

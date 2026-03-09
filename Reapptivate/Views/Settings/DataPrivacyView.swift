@@ -92,7 +92,6 @@ extension DataPrivacyView {
 
         do {
             try await apiClient.requestVoid(APIEndpoints.deleteAccount())
-            dismiss()
             appState.performLogout(apiClient: apiClient)
         } catch {
             deleteError = "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."

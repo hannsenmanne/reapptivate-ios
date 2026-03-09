@@ -69,6 +69,8 @@ struct WorkTimerBreakView: View {
                     // Actions
                     VStack(spacing: 12) {
                         Button {
+                            guard !autoCompleted else { return }
+                            autoCompleted = true
                             isLogging = true
                             Task {
                                 await viewModel.completeBreak()

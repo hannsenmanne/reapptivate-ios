@@ -209,7 +209,7 @@ struct BaselineTrackerView: View {
                     .background(Color.painGreen)
                     .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
                 }
-                .disabled(isCalculating)
+                .disabled(isCalculating || viewModel.baselineDaysLogged < 5)
             }
         }
     }

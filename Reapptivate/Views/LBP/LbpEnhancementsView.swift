@@ -38,7 +38,7 @@ struct LbpEnhancementsView: View {
                 farContent(vm)
             case .DER, .EER:
                 pacingContent(vm)
-            case .AR:
+            case .AR, .unknown:
                 arContent(vm)
             }
         }

@@ -270,7 +270,7 @@ struct DecisionBadge: View {
         case .progress: .phaseProgress
         case .hold: .phaseHold
         case .regress: .phaseRegress
-        case .initial: .phaseInitial
+        case .initial, .unknown: .phaseInitial
         }
     }
 

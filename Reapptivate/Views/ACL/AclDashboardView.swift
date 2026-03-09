@@ -541,6 +541,7 @@ extension AclGraftType {
         case .hamstring: "Hamstring"
         case .patellarTendon: "BTB"
         case .quadriceps: "Quadrizeps"
+        case .unknown: "---"
         }
     }
 }

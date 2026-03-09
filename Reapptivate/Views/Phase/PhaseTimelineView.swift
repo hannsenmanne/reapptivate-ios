@@ -38,7 +38,7 @@ struct TimelineEntryView: View {
         case .progress: .phaseProgress
         case .hold: .phaseHold
         case .regress: .phaseRegress
-        case .initial: .phaseInitial
+        case .initial, .unknown: .phaseInitial
         }
     }
 
@@ -47,7 +47,7 @@ struct TimelineEntryView: View {
         case .progress: "arrow.up.circle.fill"
         case .hold: "pause.circle.fill"
         case .regress: "arrow.down.circle.fill"
-        case .initial: "play.circle.fill"
+        case .initial, .unknown: "play.circle.fill"
         }
     }
 

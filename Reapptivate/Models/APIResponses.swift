@@ -93,7 +93,7 @@ struct MicroModulesResponse: Codable {
 }
 
 struct CompletedModulesResponse: Codable {
-    let completedModules: [String]
+    let completedModules: [String]?
 }
 
 struct ModuleCompletionResponse: Codable {

@@ -28,6 +28,11 @@ struct WorkTimerCard: View {
                     vm.handleForegroundReturn()
                 }
             }
+            .onDisappear {
+                NotificationDelegate.shared.onBreakComplete = nil
+                NotificationDelegate.shared.onBreakSnooze = nil
+                NotificationDelegate.shared.onBreakSkip = nil
+            }
             .task {
                 let vm = WorkTimerViewModel(apiClient: apiClient)
                 viewModel = vm

@@ -103,8 +103,13 @@ struct TensionMicroModulesView: View {
             async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.tensionCompletedModules())
 
             let (loadedModules, loadedCompleted) = try await (modsResp, completedResp)
-            modules = loadedModules.modules
-            completedKeys = Set(loadedCompleted.completedModules)
+
+            // Client-side defensive filtering: Only show Tension modules
+            // Excludes LBP and Neck modules that may leak from backend
+            modules = loadedModules.modules.filter { module in
+                module.targetCondition == nil || module.targetCondition == "NECK_SHOULDER_TENSION"
+            }
+            completedKeys = Set(loadedCompleted.completedModules ?? [])
         } catch {
             errorMessage = "Module konnten nicht geladen werden."
         }

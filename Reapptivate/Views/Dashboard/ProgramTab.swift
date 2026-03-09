@@ -67,20 +67,15 @@ struct ProgramTab: View {
                             .foregroundStyle(.textSecondary)
                     }
 
-                    ForEach(Array(exerciseVM.exercises.enumerated()), id: \.element.id) { index, exercise in
+                    ForEach(exerciseVM.exercises, id: \.id) { exercise in
                         ExerciseCardView(
                             exercise: exercise,
-                            index: index,
                             isCompleted: exerciseVM.isCompleted(exercise.id),
                             userSubtype: appState.currentUser?.aemSubtype,
-                            onLog: {
-                                activeSheet = .progressLog(exercise)
-                            },
-                            onDetail: {
+                            onTap: {
                                 activeSheet = .detail(exercise)
                             }
                         )
-                        .cardEntryAnimation(index: index + 1)
                     }
                 }
             } else {
@@ -106,10 +101,9 @@ struct ProgramTab: View {
                         Spacer()
                     }
 
-                    ForEach(Array(exerciseVM.customExercises.enumerated()), id: \.element.id) { index, exercise in
+                    ForEach(exerciseVM.customExercises, id: \.id) { exercise in
                         CustomExerciseCardView(
                             exercise: exercise,
-                            index: index,
                             isCompleted: exerciseVM.isCustomExerciseCompleted(exercise),
                             onLog: {
                                 activeSheet = .customProgressLog(exercise)
@@ -232,7 +226,7 @@ struct AemProfileQuickCard: View {
         case .FAR: Image(systemName: "magnifyingglass")
         case .DER: Image(systemName: "timer")
         case .EER: Image(systemName: "chart.bar")
-        case .AR: Image(systemName: "checkmark.circle")
+        case .AR, .unknown: Image(systemName: "checkmark.circle")
         }
     }
 }

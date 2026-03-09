@@ -38,7 +38,7 @@ struct CustomExerciseLogSheet: View {
                     }
 
                     // Pain Slider
-                    PainSliderView(painLevel: $painLevel, maxPainLevel: 3)
+                    PainSliderView(painLevel: $painLevel, maxPainLevel: appState.currentUser?.aemSubtype?.maxPainLevel ?? 3)
 
                     // Sets & Reps
                     HStack(spacing: 16) {

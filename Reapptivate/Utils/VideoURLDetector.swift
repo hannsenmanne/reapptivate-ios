@@ -9,7 +9,7 @@ enum VideoSource {
 
     static func detect(_ urlString: String) -> VideoSource {
         guard let url = URL(string: urlString) else { return .unknown }
-        let host = url.host?.lowercased() ?? ""
+        let host = url.host(percentEncoded: false)?.lowercased() ?? ""
         let path = url.path.lowercased()
 
         // YouTube: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID

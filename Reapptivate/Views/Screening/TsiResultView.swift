@@ -70,7 +70,7 @@ struct TsiResultView: View {
             "Leichte Verspannung. Ihr Programm folgt der Standard-Progression mit Fokus auf Entspannung und Mobilisation."
         case .MITTEL:
             "Moderate Verspannung. Ihr Programm enthält angepasste Übungen mit langsamerer Steigerung und gezielter Entspannung."
-        case .SCHWER:
+        case .SCHWER, .unknown:
             "Deutliche Verspannung. Ihr Programm beginnt sanft mit verlängerten Entspannungsphasen und reduzierter Belastung."
         }
     }

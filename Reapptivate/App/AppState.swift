@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 @Observable
 @MainActor
@@ -58,6 +59,10 @@ final class AppState {
         WorkTimerViewModel.clearPersistedState()
         ExerciseVideoStore.shared.deleteAllVideos()
         clearUserScopedDefaults()
+        NotificationDelegate.shared.onBreakComplete = nil
+        NotificationDelegate.shared.onBreakSnooze = nil
+        NotificationDelegate.shared.onBreakSkip = nil
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         onLogout?()
     }
 
@@ -68,6 +73,8 @@ final class AppState {
         defaults.removeObject(forKey: "rating_prompt_count")
         defaults.removeObject(forKey: "rating_last_prompt_date")
         defaults.removeObject(forKey: "hasCompletedFirstExercise")
+        defaults.removeObject(forKey: "hasSeenWelcome")
+        defaults.removeObject(forKey: "hasSeenWalkthrough")
     }
 
     /// Single consolidated logout path — clears tokens, resets API guard, and updates state.

@@ -74,6 +74,10 @@ final class APIClient {
             throw error
         } catch let error as DecodingError {
             throw APIError.decodingError(error)
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as URLError where error.code == .cancelled {
+            throw error
         } catch {
             // Retry once on network failure
             Log.api.warning("Network error, retrying: \(error.localizedDescription)")

@@ -23,11 +23,19 @@ extension KeyedDecodingContainer {
 enum AclAthleteLevel: String, Codable {
     case competitive = "COMPETITIVE"
     case recreational = "RECREATIONAL"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
         case .competitive: "Leistungssportler"
         case .recreational: "Freizeitsportler"
+        case .unknown: "Unbekannt"
         }
     }
 }
@@ -36,12 +44,20 @@ enum AclGraftType: String, Codable {
     case hamstring = "HAMSTRING"
     case patellarTendon = "PATELLAR_TENDON"
     case quadriceps = "QUADRICEPS"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
         case .hamstring: "Hamstring (Semitendinosus)"
         case .patellarTendon: "Patellasehne (BTB)"
         case .quadriceps: "Quadrizepssehne"
+        case .unknown: "Unbekannt"
         }
     }
 }
@@ -52,6 +68,13 @@ enum AclConcomitantInjury: String, Codable {
     case chondralRepair = "CHONDRAL_REPAIR"
     case lateralExtraArticularTenodesis = "LATERAL_EXTRA_ARTICULAR_TENODESIS"
     case posterolateralCorner = "POSTEROLATERAL_CORNER"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
@@ -60,6 +83,7 @@ enum AclConcomitantInjury: String, Codable {
         case .chondralRepair: "Knorpelreparatur"
         case .lateralExtraArticularTenodesis: "Laterale extraartikuläre Tenodese"
         case .posterolateralCorner: "Posterolaterale Ecke Reparatur"
+        case .unknown: "Unbekannt"
         }
     }
 }
@@ -67,11 +91,19 @@ enum AclConcomitantInjury: String, Codable {
 enum AclKneeSide: String, Codable {
     case left = "LEFT"
     case right = "RIGHT"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
         case .left: "Links"
         case .right: "Rechts"
+        case .unknown: "Unbekannt"
         }
     }
 }

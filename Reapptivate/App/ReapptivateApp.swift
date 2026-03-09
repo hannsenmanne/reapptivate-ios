@@ -23,11 +23,6 @@ struct ReapptivateApp: App {
                 .environment(networkMonitor)
                 .environment(\.hapticsEnabled, hapticsEnabled)
                 .preferredColorScheme(appearanceMode.colorScheme)
-                .onAppear {
-                    apiClient.onTokenExpired = { [apiClient] in
-                        appState.performLogout(apiClient: apiClient)
-                    }
-                }
         }
         .modelContainer(for: [
             CachedUser.self,
@@ -73,6 +68,11 @@ struct RootView: View {
             }
         }
         .task {
+            // Set up token-expired callback before any API calls to avoid race condition
+            apiClient.onTokenExpired = { [apiClient] in
+                appState.performLogout(apiClient: apiClient)
+            }
+
             // Initialize SyncService with ModelContext from environment
             if syncService == nil {
                 let service = SyncService(

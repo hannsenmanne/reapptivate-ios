@@ -612,18 +612,21 @@ final class AclTypesTests: XCTestCase {
 
     // MARK: - Unknown Enum Raw Values
 
-    func testUnknownGraftTypeThrows() {
+    func testUnknownGraftTypeDecodesToUnknown() throws {
         let json = Data(#""UNKNOWN_GRAFT""#.utf8)
-        XCTAssertThrowsError(try decoder.decode(AclGraftType.self, from: json))
+        let result = try decoder.decode(AclGraftType.self, from: json)
+        XCTAssertEqual(result, .unknown)
     }
 
-    func testUnknownAthleteLevelThrows() {
+    func testUnknownAthleteLevelDecodesToUnknown() throws {
         let json = Data(#""ELITE""#.utf8)
-        XCTAssertThrowsError(try decoder.decode(AclAthleteLevel.self, from: json))
+        let result = try decoder.decode(AclAthleteLevel.self, from: json)
+        XCTAssertEqual(result, .unknown)
     }
 
-    func testUnknownKneeSideThrows() {
+    func testUnknownKneeSideDecodesToUnknown() throws {
         let json = Data(#""BILATERAL""#.utf8)
-        XCTAssertThrowsError(try decoder.decode(AclKneeSide.self, from: json))
+        let result = try decoder.decode(AclKneeSide.self, from: json)
+        XCTAssertEqual(result, .unknown)
     }
 }

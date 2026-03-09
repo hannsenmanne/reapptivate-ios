@@ -617,6 +617,8 @@ final class WorkTimerViewModel {
 
         if breakSecondsRemaining <= 0 {
             breakSecondsRemaining = 0
+            // Auto-complete the break
+            Task { await completeBreak() }
         }
     }
 

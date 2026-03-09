@@ -23,7 +23,6 @@ final class ExerciseViewModel {
         guard let proto = protocolLoader.protocolFor(
             type: user.tendinopathyType,
             aemSubtype: user.aemSubtype,
-            ndiSeverity: user.ndiSeverity,
             tsiSeverity: user.tsiSeverity
         ) else {
             Log.exercise.error("No protocol found for \(user.tendinopathyType.rawValue)")
@@ -32,8 +31,7 @@ final class ExerciseViewModel {
 
         exercises = protocolLoader.exercisesForPhase(
             protocol: proto,
-            phase: user.currentPhase,
-            ndiSeverity: user.ndiSeverity
+            phase: user.currentPhase
         )
     }
 

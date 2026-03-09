@@ -19,6 +19,20 @@ enum TendinopathyType: String, Codable, CaseIterable {
     case neckPain = "NECK_PAIN"
     case neckShoulderTension = "NECK_SHOULDER_TENSION"
     case aclReconstruction = "ACL_RECONSTRUCTION"
+    case unknown = "UNKNOWN"
+
+    /// All known cases, excluding `.unknown`.
+    static var allCases: [TendinopathyType] {
+        [.tennisElbow, .golfersElbow, .achilles, .patellar, .rotatorCuff,
+         .gluteal, .proximalHamstring, .plantarFascia, .lbpNonspecific,
+         .neckPain, .neckShoulderTension, .aclReconstruction]
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
@@ -34,6 +48,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .neckPain: "Nackenschmerz"
         case .neckShoulderTension: "Nacken-Schulter-Verspannung"
         case .aclReconstruction: "Kreuzbandrekonstruktion"
+        case .unknown: "Unbekannt"
         }
     }
 
@@ -41,7 +56,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
     var isNeck: Bool { self == .neckPain }
     var isTension: Bool { self == .neckShoulderTension }
     var isAcl: Bool { self == .aclReconstruction }
-    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl }
+    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && self != .unknown }
 }
 
 // MARK: - Exercise Type
@@ -55,6 +70,13 @@ enum ExerciseType: String, Codable {
     case bodyAwareness = "BODY_AWARENESS"
     case pacing = "PACING"
     case gradedActivity = "GRADED_ACTIVITY"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
@@ -66,6 +88,7 @@ enum ExerciseType: String, Codable {
         case .bodyAwareness: "Korperwahrnehmung"
         case .pacing: "Pacing"
         case .gradedActivity: "Graded Activity"
+        case .unknown: "Unbekannt"
         }
     }
 }
@@ -77,6 +100,13 @@ enum AdaptationDecision: String, Codable {
     case hold = "HOLD"
     case regress = "REGRESS"
     case initial = "INITIAL"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
@@ -84,6 +114,7 @@ enum AdaptationDecision: String, Codable {
         case .hold: "Gehalten"
         case .regress: "Angepasst"
         case .initial: "Start"
+        case .unknown: "Unbekannt"
         }
     }
 }
@@ -95,6 +126,13 @@ enum AemSubtype: String, Codable {
     case DER
     case EER
     case AR
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
@@ -102,6 +140,7 @@ enum AemSubtype: String, Codable {
         case .DER: "Distress-Endurance"
         case .EER: "Eustress-Endurance"
         case .AR: "Adaptiver Responder"
+        case .unknown: "Unbekannt"
         }
     }
 
@@ -111,6 +150,7 @@ enum AemSubtype: String, Codable {
         case .DER: 3
         case .EER: 3
         case .AR: 4
+        case .unknown: 4
         }
     }
 }
@@ -132,12 +172,20 @@ enum NdiSeverityGrade: String, Codable {
     case LEICHT
     case MITTEL
     case SCHWER
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
         case .LEICHT: "Leicht"
         case .MITTEL: "Mittel"
         case .SCHWER: "Schwer"
+        case .unknown: "Unbekannt"
         }
     }
 
@@ -155,12 +203,20 @@ enum TsiSeverityGrade: String, Codable {
     case LEICHT
     case MITTEL
     case SCHWER
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
         case .LEICHT: "Leicht"
         case .MITTEL: "Mittel"
         case .SCHWER: "Schwer"
+        case .unknown: "Unbekannt"
         }
     }
 
@@ -178,12 +234,20 @@ enum SymptomResponse: String, Codable {
     case centralized = "CENTRALIZED"
     case unchanged = "UNCHANGED"
     case peripheralized = "PERIPHERALIZED"
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
 
     var displayName: String {
         switch self {
         case .centralized: "Zentralisiert"
         case .unchanged: "Unverändert"
         case .peripheralized: "Peripheralisiert"
+        case .unknown: "Unbekannt"
         }
     }
 }
