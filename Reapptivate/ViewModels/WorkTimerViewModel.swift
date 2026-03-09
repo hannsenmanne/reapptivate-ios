@@ -445,13 +445,24 @@ final class WorkTimerViewModel {
                     return
                 }
             }
-            // Break expired while app was closed — count it
-            if isMicroBreak {
-                breaksTakenToday += 1 // micro-breaks auto-complete
-            } else {
-                breaksSkippedToday += 1 // regular breaks expire as skipped
-            }
+            // Break expired while app was closed — user completed the full duration
+            breaksTakenToday += 1
             clearBreakState()
+            // Log completed break to backend
+            let log = WorkTimerBreakLog(
+                date: DateFormatters.dateOnly.string(from: Date()),
+                breakNumber: currentBreakNumber,
+                completed: true,
+                skipped: false,
+                exercisesShown: []
+            )
+            Task {
+                do {
+                    try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
+                } catch {
+                    Log.api.error("Failed to log expired break as completed: \(error.localizedDescription)")
+                }
+            }
         }
 
         let nextBreakInterval = defaults.double(forKey: Self.udKeyNextBreakAt)
@@ -491,7 +502,15 @@ final class WorkTimerViewModel {
                 let breakStarted = Date(timeIntervalSince1970: breakStartInterval)
                 let elapsed = Int(Date().timeIntervalSince(breakStarted))
                 let totalBreakSeconds = isMicroBreak ? microBreakDuration : breakDurationMinutes * 60
-                breakSecondsRemaining = max(0, totalBreakSeconds - elapsed)
+                let remaining = totalBreakSeconds - elapsed
+
+                if remaining <= 0 {
+                    // Break expired while in background — auto-complete
+                    Task { await completeBreak() }
+                    return
+                }
+
+                breakSecondsRemaining = remaining
             }
             // Restart break timer (invalidated in background)
             if breakTimer == nil {
