@@ -164,23 +164,21 @@ final class WorkTimerTypesTests: XCTestCase {
         XCTAssertEqual(response.exercises[0].id, "wt_1")
     }
 
-    func testWorkTimerSummaryResponseDecode() throws {
+    func testWorkTimerDaySummaryDecodeWithoutTotalWorkMinutes() throws {
         let json = """
         {
-            "summary": {
-                "date": "2026-02-18",
-                "totalWorkMinutes": 360,
-                "breaksOffered": 6,
-                "breaksCompleted": 5,
-                "breaksSkipped": 1,
-                "adherencePercent": 83.3
-            }
+            "date": "2026-02-18",
+            "breaksOffered": 6,
+            "breaksCompleted": 5,
+            "breaksSkipped": 1,
+            "adherencePercent": 83.3
         }
         """.data(using: .utf8)!
 
-        let response = try JSONDecoder().decode(WorkTimerSummaryResponse.self, from: json)
-        XCTAssertEqual(response.summary.breaksCompleted, 5)
-        XCTAssertEqual(response.summary.adherencePercent, 83.3, accuracy: 0.1)
+        let summary = try JSONDecoder().decode(WorkTimerDaySummary.self, from: json)
+        XCTAssertEqual(summary.breaksCompleted, 5)
+        XCTAssertEqual(summary.adherencePercent, 83.3, accuracy: 0.1)
+        XCTAssertNil(summary.totalWorkMinutes)
     }
 
     func testWorkTimerHistoryResponseDecode() throws {

@@ -150,10 +150,6 @@ struct WorkTimerExercisesResponse: Codable {
     let exercises: [WorkTimerBreakExercise]
 }
 
-struct WorkTimerSummaryResponse: Codable {
-    let summary: WorkTimerDaySummary
-}
-
 struct WorkTimerHistoryResponse: Codable {
     let history: [WorkTimerDaySummary]
 }

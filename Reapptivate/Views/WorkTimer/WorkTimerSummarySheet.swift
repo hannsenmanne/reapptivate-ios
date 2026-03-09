@@ -56,7 +56,7 @@ struct WorkTimerSummarySheet: View {
                     ], spacing: 16) {
                         SummaryStatCard(
                             label: "Arbeitszeit",
-                            value: formatWorkMinutes(summary.totalWorkMinutes)
+                            value: formatWorkMinutes(summary.totalWorkMinutes ?? 0)
                         )
 
                         SummaryStatCard(

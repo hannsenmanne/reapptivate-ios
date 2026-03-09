@@ -271,29 +271,21 @@ final class WorkTimerViewModel {
         cancelPendingNotifications()
         AudioService.shared.deactivateSession()
 
-        // Load summary from backend
-        do {
-            let response: WorkTimerSummaryResponse = try await apiClient.request(
-                APIEndpoints.getWorkTimerTodaySummary()
-            )
-            todaySummary = response.summary
-        } catch {
-            // Build local summary
-            let totalMinutes: Int
-            if let started = timerStartedAt {
-                totalMinutes = Int(Date().timeIntervalSince(started)) / 60
-            } else {
-                totalMinutes = 0
-            }
-            todaySummary = WorkTimerDaySummary(
-                date: todayDateString(),
-                totalWorkMinutes: totalMinutes,
-                breaksOffered: breaksTakenToday + breaksSkippedToday,
-                breaksCompleted: breaksTakenToday,
-                breaksSkipped: breaksSkippedToday,
-                adherencePercent: adherencePercent
-            )
+        // Build local summary (backend endpoint returns raw break logs, not aggregated)
+        let totalMinutes: Int
+        if let started = timerStartedAt {
+            totalMinutes = Int(Date().timeIntervalSince(started)) / 60
+        } else {
+            totalMinutes = 0
         }
+        todaySummary = WorkTimerDaySummary(
+            date: todayDateString(),
+            totalWorkMinutes: totalMinutes,
+            breaksOffered: breaksTakenToday + breaksSkippedToday,
+            breaksCompleted: breaksTakenToday,
+            breaksSkipped: breaksSkippedToday,
+            adherencePercent: adherencePercent
+        )
 
         showingSummary = true
         clearTimerState()

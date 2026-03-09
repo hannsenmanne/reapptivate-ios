@@ -36,7 +36,7 @@ struct WorkTimerBreakLog: Codable {
 
 struct WorkTimerDaySummary: Codable {
     let date: String
-    let totalWorkMinutes: Int
+    let totalWorkMinutes: Int?
     let breaksOffered: Int
     let breaksCompleted: Int
     let breaksSkipped: Int
