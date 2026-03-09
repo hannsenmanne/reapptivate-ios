@@ -59,6 +59,14 @@ struct WorkTimerSettingsSheet: View {
                 } footer: {
                     Text("Timer startet automatisch innerhalb der Arbeitszeit.")
                 }
+
+                if let error = viewModel.errorMessage {
+                    Section {
+                        Text(error)
+                            .font(.appCaption)
+                            .foregroundStyle(.painRed)
+                    }
+                }
             }
             .navigationTitle("Timer-Einstellungen")
             .navigationBarTitleDisplayMode(.inline)
@@ -72,7 +80,9 @@ struct WorkTimerSettingsSheet: View {
                         Task {
                             await viewModel.saveSettings()
                             isSaving = false
-                            dismiss()
+                            if viewModel.errorMessage == nil {
+                                dismiss()
+                            }
                         }
                     }
                     .disabled(isSaving)

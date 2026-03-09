@@ -20,7 +20,6 @@ final class WorkTimerViewModel {
     var secondsUntilBreak: Int = 0
     var breaksTakenToday: Int = 0
     var breaksSkippedToday: Int = 0
-    var totalBreaksExpected: Int = 0
 
     // MARK: - Break State
 
@@ -65,6 +64,7 @@ final class WorkTimerViewModel {
 
     private static let maxSnoozes = 2
     private var isAutoStopping = false
+    private var isCompletingBreak = false
 
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -104,7 +104,7 @@ final class WorkTimerViewModel {
 
     var formattedWorkTime: String {
         guard let startedAt = timerStartedAt else { return "0 Min." }
-        let elapsed = Int(Date().timeIntervalSince(startedAt))
+        let elapsed = max(0, Int(Date().timeIntervalSince(startedAt)))
         let hours = elapsed / 3600
         let minutes = (elapsed % 3600) / 60
         if hours > 0 {
@@ -139,7 +139,15 @@ final class WorkTimerViewModel {
         let startTotal = startHour * 60 + startMin
         let endTotal = endHour * 60 + endMin
 
-        return nowTotal >= startTotal && nowTotal < endTotal
+        if endTotal > startTotal {
+            // Normal: e.g., 08:00–17:00
+            return nowTotal >= startTotal && nowTotal < endTotal
+        } else if endTotal < startTotal {
+            // Overnight: e.g., 22:00–06:00
+            return nowTotal >= startTotal || nowTotal < endTotal
+        } else {
+            return false // start == end means no work hours
+        }
     }
 
     var formattedBreakTimeRemaining: String {
@@ -265,6 +273,23 @@ final class WorkTimerViewModel {
     }
 
     func stopWorkday() async {
+        // If a snoozed break is pending, count it as skipped
+        if snoozesUsed > 0, !isOnBreak, let next = nextBreakAt, next > Date() {
+            breaksSkippedToday += 1
+            let log = WorkTimerBreakLog(
+                date: DateFormatters.dateOnly.string(from: Date()),
+                breakNumber: currentBreakNumber + 1,
+                completed: false,
+                skipped: true,
+                exercisesShown: []
+            )
+            do {
+                try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
+            } catch {
+                Log.api.error("Failed to log snoozed break as skipped on stop: \(error.localizedDescription)")
+            }
+        }
+
         isRunning = false
         stopWorkTimer()
         stopBreakTimer()
@@ -304,10 +329,13 @@ final class WorkTimerViewModel {
         saveBreakState()
 
         AudioService.shared.playAlarm()
-        UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
 
     func completeBreak() async {
+        guard isOnBreak, !isCompletingBreak else { return }
+        isCompletingBreak = true
+        defer { isCompletingBreak = false }
+
         isOnBreak = false
         showingBreak = false
         breaksTakenToday += 1
@@ -333,7 +361,6 @@ final class WorkTimerViewModel {
         scheduleBreakNotification()
 
         AudioService.shared.playComplete()
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
 
     func skipBreak() async {
@@ -655,12 +682,15 @@ final class WorkTimerViewModel {
             return
         }
 
-        // Seed based on date + break number for consistent rotation
+        // Stable seed based on date + break number for deterministic rotation across relaunches
         let dayString = todayDateString()
-        var seed = dayString.hashValue &+ currentBreakNumber
-        seed = seed ^ (seed >> 16)
+        var seed: UInt64 = 5381
+        for byte in dayString.utf8 {
+            seed = seed &* 33 &+ UInt64(byte)
+        }
+        seed = seed &+ UInt64(bitPattern: Int64(currentBreakNumber))
 
-        var rng = SeededRandomNumberGenerator(seed: UInt64(bitPattern: Int64(seed)))
+        var rng = SeededRandomNumberGenerator(seed: seed)
         let shuffled = allExercises.shuffled(using: &rng)
         breakExercises = Array(shuffled.prefix(isMicroBreak ? 1 : 3))
     }

@@ -38,12 +38,8 @@ struct WorkTimerCard: View {
                 viewModel = vm
 
                 NotificationDelegate.shared.onBreakComplete = { [weak vm] in
-                    guard let vm else { return }
-                    if vm.isOnBreak {
-                        Task { await vm.completeBreak() }
-                    } else {
-                        vm.triggerBreak()
-                    }
+                    guard let vm, vm.isOnBreak else { return }
+                    Task { await vm.completeBreak() }
                 }
                 NotificationDelegate.shared.onBreakSnooze = { [weak vm] in
                     guard let vm else { return }

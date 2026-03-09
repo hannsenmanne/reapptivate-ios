@@ -118,6 +118,17 @@ struct WorkTimerBreakView: View {
                                 .foregroundStyle(.textSecondary)
                         }
                         .disabled(isLogging)
+
+                        if isLogging {
+                            Button {
+                                isLogging = false
+                                dismiss()
+                            } label: {
+                                Text("Schließen")
+                                    .font(.appCaption)
+                                    .foregroundStyle(.textTertiary)
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal, 20)

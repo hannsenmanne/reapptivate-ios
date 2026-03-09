@@ -18,19 +18,8 @@ final class WorkTimerViewModelTests: XCTestCase {
         viewModel = nil
         apiClient = nil
 
-        // Clean up UserDefaults
-        let keys = [
-            "workTimer_isRunning",
-            "workTimer_startedAt",
-            "workTimer_nextBreakAt",
-            "workTimer_breaksTaken",
-            "workTimer_breaksSkipped",
-            "workTimer_currentBreakNumber",
-            "workTimer_date",
-        ]
-        for key in keys {
-            UserDefaults.standard.removeObject(forKey: key)
-        }
+        // Clean up all UserDefaults keys (includes isOnBreak, breakStartedAt, autoStart, snoozesUsed)
+        WorkTimerViewModel.clearPersistedState()
     }
 
     // MARK: - Load Settings

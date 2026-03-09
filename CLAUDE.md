@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **MANDATORY — DO NOT REMOVE THIS SECTION, even when updating or rewriting CLAUDE.md**: At the start of EVERY prompt, invoke the `using-superpowers` skill via the Skill tool. This skill determines which other skills apply to the current task and ensures they are used. No exceptions — even for simple questions or clarifications. This instruction is permanent and must be preserved across all edits to this file.
 
+## Code Review
+
+After writing or modifying code, always run the `ios-code-reviewer` agent to review the changes before considering the task complete. This applies to new features, bug fixes, and refactors.
+
 # REAPPTIVATE iOS
 
 Native iOS companion app for the Reapptivate physiotherapy platform. Communicates with the same Express/PostgreSQL backend as the web app.
@@ -220,6 +224,7 @@ To prevent cross-contamination of condition-specific educational content:
 - `EducationCard.swift` — Education card model + `EducationCardLoader` singleton (loads bundled `education-cards.json`, filters by phase/condition, daily rotation via day-of-year modulo)
 - `CustomExercise.swift` — Custom exercises added by users (displayed in ProgramTab alongside protocol exercises)
 - `UserSchedule.swift` — `ScheduleResponse` (GET response with `trainingDays` + `isTrainingDay`, JS weekday convention) and `ScheduleUpdateRequest` (PUT body, with `fromIOSWeekdays()` converter)
+- `AclTypes.swift` — ACL stream/exercise models, milestone status, schedule data, KPI types. `AclStreamExercise` has custom decoder for flexible backend shapes.
 
 ## Design System
 
@@ -289,6 +294,7 @@ Views that load data from API use a consistent pattern:
 - **LBP**: AEM subtyping → FAR (fear hierarchy + exposure), DER/EER (pacing plans + timer), AR (standard)
 - **Neck Pain**: NDI severity (LEICHT/MITTEL/SCHWER), 4-phase progression
 - **Tension**: TSI severity grading (LEICHT/MITTEL/SCHWER), 4-phase progression, micro-modules
+- **ACL**: Milestone-based progression, stream-based exercise programs, weekly schedule is client-side (`AclScheduleData`), stream unlocking is backend-controlled via milestone
 ### Pain-Adaptive Phase Progression
 After every progress log, backend returns `AdaptationResult` with potential phase change (PROGRESS/HOLD/REGRESS). Frontend shows `PhaseChangeAlert` overlay.
 
@@ -300,6 +306,20 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 - Tension: Focus areas + TSI rescreening + tension micro-modules — shown in EdukationTab via `TensionMicroModulesView`
 - Tendinopathy (no micro-modules): EdukationTab shows all `EducationCard`s for current phase via `WissenAllCardsView`
 
+### Exercise Video Recording
+Users can record or pick a video from their photo library for any exercise. Videos are stored locally in `Documents/ExerciseVideos/` (excluded from iCloud backup), keyed by exercise ID. `ExerciseVideoStore` (singleton) manages save/load/delete. Works across all programs (tendinopathy, LBP, neck, tension, ACL). The video replaces the exercise description in the detail view when present.
+
+### ACL Program Architecture
+ACL patients have a separate dashboard (`AclDashboardView`) with milestone-based progression instead of phase-based. Key differences from other conditions:
+- **Streams** replace protocols — exercises are grouped into streams (e.g., range-of-motion, strengthening)
+- **Schedule is client-side** — `AclScheduleData.swift` contains hardcoded schedule blocks mapped to weeks post-surgery
+- **Stream unlocking** — Backend returns `403 Forbidden` if user's `currentMilestone` hasn't reached the stream's `unlockMilestone`
+- **Exercise model** — `AclStreamExercise` (not `ExerciseWithPhase`): optional fields, German name/description variants (`nameDE`, `descriptionDE`), graft modifiers, concomitant precautions
+- **Today's program** — `AclTodayProgramView` loads stream details in parallel via `withTaskGroup`, silently skips locked/failed streams
+
+### Work Timer (Bewegungspause)
+`WorkTimerViewModel` manages work-break cycle with UserDefaults persistence. Both work timer state AND break state are persisted — on app relaunch during a break, remaining time is recalculated from the persisted `breakStartedAt` timestamp. `handleForegroundReturn()` handles both work and break timer restoration when returning from background.
+
 ## Backend API (~50 endpoints)
 
 | Route group | Prefix | Purpose |
@@ -310,6 +330,8 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 | Neck | `/neck/*` | NDI screening, focus areas, micro-modules |
 | Tension | `/tension/*` | TSI screening, focus areas, micro-modules |
 | LBP | `/lbp-enhancements/*` | Fear hierarchy, pacing, micro-modules, analytics |
+| ACL | `/acl/*` | Streams, milestones, schedule, KPI logging |
+| Work Timer | `/work-timer/*` | Settings, exercises, break logging, summary |
 | Config | `/config/*` | Feature flags, health check |
 
 All endpoint definitions are in `Services/Networking/APIEndpoints.swift`.

@@ -161,6 +161,7 @@ private struct BarColumn: View {
     private static let shortDayFormatter: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "de_DE")
+        f.timeZone = TimeZone(secondsFromGMT: 0)
         f.dateFormat = "EE"
         return f
     }()
@@ -239,6 +240,7 @@ private struct DayDetailRow: View {
     private static let detailDateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "de_DE")
+        f.timeZone = TimeZone(secondsFromGMT: 0)
         f.dateFormat = "EE, d. MMM"
         return f
     }()
