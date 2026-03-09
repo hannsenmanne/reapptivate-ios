@@ -12,6 +12,7 @@ struct ReapptivateApp: App {
 
     init() {
         registerNotificationCategories()
+        UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
     }
 
     var body: some Scene {
@@ -98,19 +99,24 @@ struct RootView: View {
 
 private extension ReapptivateApp {
     func registerNotificationCategories() {
-        let startBreakAction = UNNotificationAction(
-            identifier: "START_BREAK",
-            title: "Pause starten",
+        let completeAction = UNNotificationAction(
+            identifier: "COMPLETE_BREAK",
+            title: "Erledigt",
             options: .foreground
         )
-        let skipBreakAction = UNNotificationAction(
+        let snoozeAction = UNNotificationAction(
+            identifier: "SNOOZE_BREAK",
+            title: "Später (5 Min.)",
+            options: []
+        )
+        let skipAction = UNNotificationAction(
             identifier: "SKIP_BREAK",
             title: "Überspringen",
-            options: []
+            options: .destructive
         )
         let breakCategory = UNNotificationCategory(
             identifier: "WORK_TIMER_BREAK",
-            actions: [startBreakAction, skipBreakAction],
+            actions: [completeAction, snoozeAction, skipAction],
             intentIdentifiers: []
         )
         UNUserNotificationCenter.current().setNotificationCategories([breakCategory])

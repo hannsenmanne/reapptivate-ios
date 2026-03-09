@@ -31,10 +31,30 @@ struct WorkTimerCard: View {
             .task {
                 let vm = WorkTimerViewModel(apiClient: apiClient)
                 viewModel = vm
+
+                NotificationDelegate.shared.onBreakComplete = {
+                    if vm.isOnBreak {
+                        Task { await vm.completeBreak() }
+                    } else {
+                        vm.triggerBreak()
+                    }
+                }
+                NotificationDelegate.shared.onBreakSnooze = {
+                    if vm.isOnBreak {
+                        vm.snoozeBreak()
+                    }
+                }
+                NotificationDelegate.shared.onBreakSkip = {
+                    if vm.isOnBreak {
+                        Task { await vm.skipBreak() }
+                    }
+                }
+
                 vm.requestNotificationPermission()
                 await vm.loadSettings()
                 vm.restoreTimerState()
                 await vm.loadExercises()
+                vm.checkAutoStart()
             }
         }
     }
@@ -118,6 +138,16 @@ struct WorkTimerCard: View {
 
                 Spacer()
 
+                Button {
+                    Task { await vm.loadHistory() }
+                    vm.showingHistory = true
+                } label: {
+                    Image(systemName: "chart.bar.fill")
+                        .font(.appBody)
+                        .foregroundStyle(.textSecondary)
+                }
+                .accessibilityLabel("Wochenverlauf")
+
                 Text(vm.formattedWorkTime)
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
@@ -180,6 +210,9 @@ struct WorkTimerCard: View {
         }
         .sheet(isPresented: Bindable(vm).showingSettings) {
             WorkTimerSettingsSheet(viewModel: vm)
+        }
+        .sheet(isPresented: Bindable(vm).showingHistory) {
+            WorkTimerHistoryView(viewModel: vm)
         }
     }
 }

@@ -50,6 +50,15 @@ struct WorkTimerSettingsSheet: View {
                 } footer: {
                     Text("Wie lange jede Bewegungspause dauert.")
                 }
+
+                Section {
+                    Toggle("Automatisch starten", isOn: Binding(
+                        get: { viewModel.autoStartEnabled },
+                        set: { viewModel.autoStartEnabled = $0 }
+                    ))
+                } footer: {
+                    Text("Timer startet automatisch innerhalb der Arbeitszeit.")
+                }
             }
             .navigationTitle("Timer-Einstellungen")
             .navigationBarTitleDisplayMode(.inline)

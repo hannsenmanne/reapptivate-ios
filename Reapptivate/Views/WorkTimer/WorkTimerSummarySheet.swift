@@ -84,9 +84,21 @@ struct WorkTimerSummarySheet: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
 
+                // History link
+                Button {
+                    viewModel.showingHistory = true
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chart.bar.fill")
+                        Text("Wochenverlauf anzeigen")
+                    }
+                    .font(.appSubheadlineMedium)
+                    .foregroundStyle(.accent)
+                }
+
                 Spacer()
 
-                Button("Schließen") {
+                Button("Schlie\u{00DF}en") {
                     dismiss()
                 }
                 .buttonStyle(.primary)
@@ -98,6 +110,9 @@ struct WorkTimerSummarySheet: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .presentationDetents([.medium, .large])
+        .sheet(isPresented: $viewModel.showingHistory) {
+            WorkTimerHistoryView(viewModel: viewModel)
+        }
     }
 
     private func formatWorkMinutes(_ minutes: Int) -> String {

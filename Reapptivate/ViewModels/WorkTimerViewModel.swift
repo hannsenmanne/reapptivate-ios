@@ -29,11 +29,14 @@ final class WorkTimerViewModel {
     var allExercises: [WorkTimerBreakExercise] = []
     var breakSecondsRemaining: Int = 0
     var currentBreakNumber: Int = 0
+    var snoozesUsed: Int = 0
 
     // MARK: - Summary
 
     var todaySummary: WorkTimerDaySummary?
     var showingSummary = false
+    var weekHistory: [WorkTimerDaySummary] = []
+    var showingHistory = false
 
     // MARK: - UI
 
@@ -57,6 +60,9 @@ final class WorkTimerViewModel {
     private static let udKeyDate = "workTimer_date"
     private static let udKeyIsOnBreak = "workTimer_isOnBreak"
     private static let udKeyBreakStartedAt = "workTimer_breakStartedAt"
+    private static let udKeyAutoStart = "workTimer_autoStart"
+
+    private static let maxSnoozes = 2
 
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -141,10 +147,35 @@ final class WorkTimerViewModel {
     }
 
     var breakProgress: Double {
-        let total = Double(breakDurationMinutes * 60)
-        guard total > 0 else { return 0 }
-        let elapsed = total - Double(breakSecondsRemaining)
-        return min(1.0, max(0, elapsed / total))
+        let totalSeconds = isMicroBreak ? Double(microBreakDuration) : Double(breakDurationMinutes * 60)
+        guard totalSeconds > 0 else { return 0 }
+        let elapsed = totalSeconds - Double(breakSecondsRemaining)
+        return min(1.0, max(0, elapsed / totalSeconds))
+    }
+
+    var canSnooze: Bool { snoozesUsed < Self.maxSnoozes }
+
+    var isMicroBreak: Bool { currentBreakNumber % 2 == 1 }
+
+    var microBreakDuration: Int { 30 }
+
+    var autoStartEnabled: Bool {
+        get { UserDefaults.standard.bool(forKey: Self.udKeyAutoStart) }
+        set { UserDefaults.standard.set(newValue, forKey: Self.udKeyAutoStart) }
+    }
+
+    var weeklyAdherence: Double {
+        guard !weekHistory.isEmpty else { return 0 }
+        return weekHistory.map(\.adherencePercent).reduce(0, +) / Double(weekHistory.count)
+    }
+
+    var currentStreak: Int {
+        var streak = 0
+        let sorted = weekHistory.sorted { $0.date > $1.date }
+        for day in sorted {
+            if day.breaksCompleted > 0 { streak += 1 } else { break }
+        }
+        return streak
     }
 
     // MARK: - API: Settings
@@ -198,6 +229,19 @@ final class WorkTimerViewModel {
         }
     }
 
+    // MARK: - API: History
+
+    func loadHistory() async {
+        do {
+            let response: WorkTimerHistoryResponse = try await apiClient.request(
+                APIEndpoints.getWorkTimerHistory()
+            )
+            weekHistory = response.history
+        } catch {
+            Log.api.error("Failed to load work timer history: \(error.localizedDescription)")
+        }
+    }
+
     // MARK: - Workday Control
 
     func startWorkday() {
@@ -207,6 +251,7 @@ final class WorkTimerViewModel {
         breaksTakenToday = 0
         breaksSkippedToday = 0
         currentBreakNumber = 0
+        snoozesUsed = 0
 
         calculateNextBreak(from: now)
         startWorkTimer()
@@ -256,8 +301,9 @@ final class WorkTimerViewModel {
 
     func triggerBreak() {
         currentBreakNumber += 1
+        snoozesUsed = 0
         selectBreakExercises()
-        breakSecondsRemaining = breakDurationMinutes * 60
+        breakSecondsRemaining = isMicroBreak ? microBreakDuration : breakDurationMinutes * 60
         isOnBreak = true
         showingBreak = true
         startBreakTimer()
@@ -322,6 +368,29 @@ final class WorkTimerViewModel {
         scheduleBreakNotification()
     }
 
+    func snoozeBreak() {
+        isOnBreak = false
+        showingBreak = false
+        stopBreakTimer()
+        clearBreakState()
+        snoozesUsed += 1
+
+        // Schedule next break in 5 minutes (short snooze, not full interval)
+        let next = Date().addingTimeInterval(5 * 60)
+        nextBreakAt = next
+        secondsUntilBreak = Int(next.timeIntervalSinceNow)
+
+        saveTimerState()
+        scheduleBreakNotification()
+
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+
+    func checkAutoStart() {
+        guard autoStartEnabled, isWithinWorkHours, !isRunning, settings != nil else { return }
+        startWorkday()
+    }
+
     // MARK: - Timer Persistence
 
     func saveTimerState() {
@@ -365,7 +434,7 @@ final class WorkTimerViewModel {
             if breakStartInterval > 0 {
                 let breakStarted = Date(timeIntervalSince1970: breakStartInterval)
                 let elapsed = Int(Date().timeIntervalSince(breakStarted))
-                let totalBreakSeconds = breakDurationMinutes * 60
+                let totalBreakSeconds = isMicroBreak ? microBreakDuration : breakDurationMinutes * 60
                 let remaining = totalBreakSeconds - elapsed
 
                 if remaining > 0 {
@@ -420,7 +489,7 @@ final class WorkTimerViewModel {
             if breakStartInterval > 0 {
                 let breakStarted = Date(timeIntervalSince1970: breakStartInterval)
                 let elapsed = Int(Date().timeIntervalSince(breakStarted))
-                let totalBreakSeconds = breakDurationMinutes * 60
+                let totalBreakSeconds = isMicroBreak ? microBreakDuration : breakDurationMinutes * 60
                 breakSecondsRemaining = max(0, totalBreakSeconds - elapsed)
             }
             // Restart break timer (invalidated in background)
@@ -517,6 +586,12 @@ final class WorkTimerViewModel {
     private func workTimerTick() {
         guard isRunning, !isOnBreak else { return }
 
+        // Auto-stop when work hours end
+        if !isWithinWorkHours {
+            autoStopWorkday()
+            return
+        }
+
         if let nextBreak = nextBreakAt {
             secondsUntilBreak = max(0, Int(nextBreak.timeIntervalSinceNow))
 
@@ -524,6 +599,10 @@ final class WorkTimerViewModel {
                 triggerBreak()
             }
         }
+    }
+
+    private func autoStopWorkday() {
+        Task { await stopWorkday() }
     }
 
     private func breakTimerTick() {
@@ -556,7 +635,7 @@ final class WorkTimerViewModel {
 
         var rng = SeededRandomNumberGenerator(seed: UInt64(bitPattern: Int64(seed)))
         let shuffled = allExercises.shuffled(using: &rng)
-        breakExercises = Array(shuffled.prefix(3))
+        breakExercises = Array(shuffled.prefix(isMicroBreak ? 1 : 3))
     }
 
     private func missedBreakCount(since date: Date) -> Int {

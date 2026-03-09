@@ -6,6 +6,7 @@ struct WorkTimerBreakView: View {
     @ScaledMetric(relativeTo: .title) private var ringSize: CGFloat = 100
     @State private var completeTrigger = false
     @State private var isLogging = false
+    @State private var autoCompleted = false
 
     var body: some View {
         NavigationStack {
@@ -13,12 +14,12 @@ struct WorkTimerBreakView: View {
                 VStack(spacing: 24) {
                     // Header
                     VStack(spacing: 8) {
-                        Image(systemName: "figure.cooldown")
+                        Image(systemName: viewModel.isMicroBreak ? "figure.stand" : "figure.cooldown")
                             .font(.system(size: 40))
                             .foregroundStyle(.accent)
                             .accessibilityHidden(true)
 
-                        Text("Bewegungspause!")
+                        Text(viewModel.isMicroBreak ? "Kurze Bewegungspause" : "Bewegungspause!")
                             .font(.appTitle2)
                             .foregroundStyle(.textPrimary)
 
@@ -30,15 +31,17 @@ struct WorkTimerBreakView: View {
 
                     // Countdown ring
                     ZStack {
+                        let effectiveRingSize = viewModel.isMicroBreak ? ringSize * 0.75 : ringSize
+
                         Circle()
                             .stroke(Color.gray200, lineWidth: 8)
-                            .frame(width: ringSize, height: ringSize)
+                            .frame(width: effectiveRingSize, height: effectiveRingSize)
 
                         Circle()
                             .trim(from: 0, to: viewModel.breakProgress)
                             .stroke(Color.accent, style: StrokeStyle(lineWidth: 8, lineCap: .round))
                             .rotationEffect(.degrees(-90))
-                            .frame(width: ringSize, height: ringSize)
+                            .frame(width: effectiveRingSize, height: effectiveRingSize)
                             .animation(.linear(duration: 1), value: viewModel.breakProgress)
 
                         Text(viewModel.formattedBreakTimeRemaining)
@@ -83,6 +86,24 @@ struct WorkTimerBreakView: View {
                         .disabled(isLogging)
 
                         Button {
+                            viewModel.snoozeBreak()
+                            dismiss()
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "clock.arrow.circlepath")
+                                Text("Später (5 Min.)")
+                            }
+                        }
+                        .buttonStyle(.secondary)
+                        .disabled(!viewModel.canSnooze || isLogging)
+
+                        if viewModel.canSnooze {
+                            Text("Noch \(2 - viewModel.snoozesUsed)\u{d7} verschiebbar")
+                                .font(.appCaption)
+                                .foregroundStyle(.textTertiary)
+                        }
+
+                        Button {
                             isLogging = true
                             Task {
                                 await viewModel.skipBreak()
@@ -104,6 +125,16 @@ struct WorkTimerBreakView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .conditionalHaptic(.success, trigger: completeTrigger)
+        .onChange(of: viewModel.breakSecondsRemaining) { _, newValue in
+            guard viewModel.isMicroBreak, newValue <= 0, !autoCompleted else { return }
+            autoCompleted = true
+            Task {
+                try? await Task.sleep(for: .milliseconds(500))
+                await viewModel.completeBreak()
+                completeTrigger.toggle()
+                dismiss()
+            }
+        }
     }
 }
 
