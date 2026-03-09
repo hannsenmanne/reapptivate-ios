@@ -12,6 +12,7 @@ struct ProgramTab: View {
         case progressLog(ExerciseWithPhase)
         case detail(ExerciseWithPhase)
         case session(ExerciseWithPhase)
+        case customDetail(CustomExercise)
         case customProgressLog(CustomExercise)
 
         var id: String {
@@ -19,6 +20,7 @@ struct ProgramTab: View {
             case .progressLog(let e): "log-\(e.id)"
             case .detail(let e): "detail-\(e.id)"
             case .session(let e): "session-\(e.id)"
+            case .customDetail(let e): "custom-detail-\(e.id)"
             case .customProgressLog(let e): "custom-log-\(e.id)"
             }
         }
@@ -105,8 +107,8 @@ struct ProgramTab: View {
                         CustomExerciseCardView(
                             exercise: exercise,
                             isCompleted: exerciseVM.isCustomExerciseCompleted(exercise),
-                            onLog: {
-                                activeSheet = .customProgressLog(exercise)
+                            onTap: {
+                                activeSheet = .customDetail(exercise)
                             }
                         )
                     }
@@ -165,6 +167,21 @@ struct ProgramTab: View {
                         onExerciseLogged?()
                     }
                 )
+            case .customDetail(let exercise):
+                NavigationStack {
+                    CustomExerciseDetailView(
+                        exercise: exercise,
+                        onLog: {
+                            activeSheet = nil
+                            pendingSheet = .customProgressLog(exercise)
+                        }
+                    )
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Fertig") { activeSheet = nil }
+                        }
+                    }
+                }
             case .customProgressLog(let exercise):
                 CustomExerciseLogSheet(
                     exercise: exercise,

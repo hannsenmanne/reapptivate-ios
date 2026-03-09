@@ -177,7 +177,7 @@ struct ExerciseDetailView: View {
 
 // MARK: - Recorded Video Section
 
-private struct RecordedVideoSection: View {
+struct RecordedVideoSection: View {
     let videoURL: URL
     let onReRecord: () -> Void
     let onDelete: () -> Void
