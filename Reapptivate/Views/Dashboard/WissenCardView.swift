@@ -5,20 +5,22 @@ struct WissenCardView: View {
     let isLbp: Bool
     let isNeck: Bool
     let isTension: Bool
+    let isShoulder: Bool
 
-    init(phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false) {
+    init(phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false, isShoulder: Bool = false) {
         self.phase = phase
         self.isLbp = isLbp
         self.isNeck = isNeck
         self.isTension = isTension
+        self.isShoulder = isShoulder
     }
 
     private var phaseCards: [EducationCard] {
-        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension)
+        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension, isShoulder: isShoulder)
     }
 
     private var todaysCard: EducationCard? {
-        EducationCardLoader.shared.todaysCard(phase: phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension)
+        EducationCardLoader.shared.todaysCard(phase: phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension, isShoulder: isShoulder)
     }
 
     private var activeIndex: Int {

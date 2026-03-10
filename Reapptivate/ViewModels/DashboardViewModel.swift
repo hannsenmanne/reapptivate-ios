@@ -81,6 +81,16 @@ final class DashboardViewModel {
             }
         }
 
+        // Populate siSeverity for shoulder patients from screening result
+        if appState?.isShoulder == true, appState?.currentUser?.siSeverity == nil {
+            let siResult: SiScreeningResponse? = await loadSafely { [apiClient] in
+                try await apiClient.request(APIEndpoints.siResult())
+            }
+            if let result = siResult?.screening {
+                appState?.currentUser?.siSeverity = SiSeverityGrade.from(quickDashScore: result.quickDashScore)
+            }
+        }
+
         if let s = stats?.stats {
             progressStats = ProgressStats(
                 totalSessions: s.totalSessions,

@@ -78,7 +78,8 @@ struct OverviewTab: View {
                     phase: user.currentPhase,
                     isLbp: appState.isLbp,
                     isNeck: appState.isNeck,
-                    isTension: appState.isTension
+                    isTension: appState.isTension,
+                    isShoulder: appState.isShoulder
                 )
                 .cardEntryAnimation(index: 8)
             }

@@ -19,13 +19,14 @@ enum TendinopathyType: String, Codable, CaseIterable {
     case neckPain = "NECK_PAIN"
     case neckShoulderTension = "NECK_SHOULDER_TENSION"
     case aclReconstruction = "ACL_RECONSTRUCTION"
+    case shoulderImpingement = "SHOULDER_IMPINGEMENT"
     case unknown = "UNKNOWN"
 
     /// All known cases, excluding `.unknown`.
     static var allCases: [TendinopathyType] {
         [.tennisElbow, .golfersElbow, .achilles, .patellar, .rotatorCuff,
          .gluteal, .proximalHamstring, .plantarFascia, .lbpNonspecific,
-         .neckPain, .neckShoulderTension, .aclReconstruction]
+         .neckPain, .neckShoulderTension, .aclReconstruction, .shoulderImpingement]
     }
 
     init(from decoder: Decoder) throws {
@@ -48,6 +49,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .neckPain: "Nackenschmerz"
         case .neckShoulderTension: "Nacken-Schulter-Verspannung"
         case .aclReconstruction: "Kreuzbandrekonstruktion"
+        case .shoulderImpingement: "Schulter-Impingement"
         case .unknown: "Unbekannt"
         }
     }
@@ -56,7 +58,8 @@ enum TendinopathyType: String, Codable, CaseIterable {
     var isNeck: Bool { self == .neckPain }
     var isTension: Bool { self == .neckShoulderTension }
     var isAcl: Bool { self == .aclReconstruction }
-    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && self != .unknown }
+    var isShoulder: Bool { self == .shoulderImpingement }
+    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && !isShoulder && self != .unknown }
 }
 
 // MARK: - Exercise Type
@@ -70,6 +73,8 @@ enum ExerciseType: String, Codable {
     case bodyAwareness = "BODY_AWARENESS"
     case pacing = "PACING"
     case gradedActivity = "GRADED_ACTIVITY"
+    case relaxation = "RELAXATION"
+    case functional = "FUNCTIONAL"
     case unknown = "UNKNOWN"
 
     init(from decoder: Decoder) throws {
@@ -88,6 +93,8 @@ enum ExerciseType: String, Codable {
         case .bodyAwareness: "Korperwahrnehmung"
         case .pacing: "Pacing"
         case .gradedActivity: "Graded Activity"
+        case .relaxation: "Entspannung"
+        case .functional: "Funktionell"
         case .unknown: "Unbekannt"
         }
     }
@@ -226,6 +233,37 @@ enum TsiSeverityGrade: String, Codable {
         // LEICHT: ≤30% = ≤15 raw, MITTEL: ≤55% = ≤27 raw
         if tsiScore <= 15 { return .LEICHT }
         if tsiScore <= 27 { return .MITTEL }
+        return .SCHWER
+    }
+}
+
+// MARK: - SI Severity Grade
+
+enum SiSeverityGrade: String, Codable {
+    case LEICHT
+    case MITTEL
+    case SCHWER
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
+
+    var displayName: String {
+        switch self {
+        case .LEICHT: "Leicht"
+        case .MITTEL: "Mittel"
+        case .SCHWER: "Schwer"
+        case .unknown: "Unbekannt"
+        }
+    }
+
+    static func from(quickDashScore: Double) -> SiSeverityGrade {
+        // QuickDASH 0-100. LEICHT: ≤40, MITTEL: ≤60, SCHWER: >60
+        if quickDashScore <= 40 { return .LEICHT }
+        if quickDashScore <= 60 { return .MITTEL }
         return .SCHWER
     }
 }

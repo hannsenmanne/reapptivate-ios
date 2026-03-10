@@ -140,6 +140,20 @@ struct TsiFocusAreasResponse: Codable {
     let focusAreas: [TsiFocusArea]
 }
 
+// MARK: - Shoulder Impingement Wrappers
+
+struct SiScreeningResponse: Codable {
+    let screening: SiScreeningResult
+}
+
+struct SiHistoryResponse: Codable {
+    let history: [SiHistoryEntry]
+}
+
+struct SiFocusAreasResponse: Codable {
+    let focusAreas: [SiFocusArea]
+}
+
 // MARK: - Work Timer Wrappers
 
 struct WorkTimerSettingsResponse: Codable {

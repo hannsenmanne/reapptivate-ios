@@ -15,6 +15,9 @@ struct InsightsTab: View {
         } else if appState.isTension {
             // Tension patients: TSI progress + focus areas
             TensionInsightsSection()
+        } else if appState.isShoulder {
+            // Shoulder patients: QuickDASH progress + focus areas
+            ShoulderInsightsSection()
         } else if appState.isAcl {
             // ACL patients: comprehensive analytics dashboard
             AclAnalyticsView()
@@ -44,6 +47,18 @@ struct TensionInsightsSection: View {
         VStack(spacing: 20) {
             TsiProgressView()
             TensionFocusAreasView()
+        }
+        .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Shoulder Insights
+
+struct ShoulderInsightsSection: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            SiProgressView()
+            ShoulderFocusAreasView()
         }
         .padding(.bottom, 32)
     }

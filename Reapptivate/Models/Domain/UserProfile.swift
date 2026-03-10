@@ -29,6 +29,10 @@ struct UserProfile: Codable, Identifiable {
     var aclCurrentMilestone: Int?
     var aclConcomitantInjuries: [AclConcomitantInjury]?
 
+    // Shoulder Impingement
+    var siScreeningCompleted: Bool?
+    var siSeverity: SiSeverityGrade?
+
     // Populated from phase-status endpoint, not from /me
     var adaptivePhase: Int?
     var ndiSeverity: NdiSeverityGrade?
@@ -49,7 +53,7 @@ struct UserProfile: Codable, Identifiable {
 
     var maxPhase: Int {
         if tendinopathyType.isAcl { return 5 }
-        if tendinopathyType.isNeck || tendinopathyType.isTension { return 4 }
+        if tendinopathyType.isNeck || tendinopathyType.isTension || tendinopathyType.isShoulder { return 4 }
         return 3
     }
 }

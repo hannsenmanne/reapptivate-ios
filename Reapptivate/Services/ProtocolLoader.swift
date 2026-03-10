@@ -18,9 +18,10 @@ final class ProtocolLoader: @unchecked Sendable {
     func protocolFor(
         type: TendinopathyType,
         aemSubtype: AemSubtype? = nil,
-        tsiSeverity: TsiSeverityGrade? = nil
+        tsiSeverity: TsiSeverityGrade? = nil,
+        siSeverity: SiSeverityGrade? = nil
     ) -> ExerciseProtocol? {
-        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity)
+        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity)
 
         lock.lock()
         defer { lock.unlock() }
@@ -56,6 +57,8 @@ final class ProtocolLoader: @unchecked Sendable {
             return neckPhaseName(phase)
         case .neckShoulderTension:
             return tensionPhaseName(phase)
+        case .shoulderImpingement:
+            return shoulderPhaseName(phase)
         default:
             return tendinopathyPhaseName(phase)
         }
@@ -63,7 +66,7 @@ final class ProtocolLoader: @unchecked Sendable {
 
     // MARK: - Private
 
-    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil) -> String {
+    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil, siSeverity: SiSeverityGrade? = nil) -> String {
         switch type {
         case .tennisElbow: return "tennis_elbow"
         case .golfersElbow: return "golfers_elbow"
@@ -81,6 +84,9 @@ final class ProtocolLoader: @unchecked Sendable {
         case .neckShoulderTension:
             let grade = tsiSeverity ?? .LEICHT
             return "neck_shoulder_tension_\(grade.rawValue.lowercased())"
+        case .shoulderImpingement:
+            let grade = siSeverity ?? .LEICHT
+            return "shoulder_impingement_\(grade.rawValue.lowercased())"
         case .aclReconstruction:
             return "acl_reconstruction"
         case .unknown:
@@ -136,6 +142,16 @@ final class ProtocolLoader: @unchecked Sendable {
         case 2: "Phase 2: Mobilisation"
         case 3: "Phase 3: Kräftigung"
         case 4: "Phase 4: Funktionstraining"
+        default: "Phase \(phase)"
+        }
+    }
+
+    private func shoulderPhaseName(_ phase: Int) -> String {
+        switch phase {
+        case 1: "Phase 1: Akut / Schmerzlinderung"
+        case 2: "Phase 2: Kräftigung"
+        case 3: "Phase 3: Aufbau"
+        case 4: "Phase 4: Rückkehr zur Aktivität"
         default: "Phase \(phase)"
         }
     }

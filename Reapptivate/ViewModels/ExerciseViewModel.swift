@@ -23,7 +23,8 @@ final class ExerciseViewModel {
         guard let proto = protocolLoader.protocolFor(
             type: user.tendinopathyType,
             aemSubtype: user.aemSubtype,
-            tsiSeverity: user.tsiSeverity
+            tsiSeverity: user.tsiSeverity,
+            siSeverity: user.siSeverity
         ) else {
             Log.exercise.error("No protocol found for \(user.tendinopathyType.rawValue)")
             return

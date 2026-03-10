@@ -14,7 +14,7 @@ final class SharedTypesTests: XCTestCase {
     }
 
     func testTendinopathyTypeCount() {
-        XCTAssertEqual(TendinopathyType.allCases.count, 12)
+        XCTAssertEqual(TendinopathyType.allCases.count, 13)
     }
 
     func testIsLbpOnlyForLbpNonspecific() {
@@ -34,6 +34,7 @@ final class SharedTypesTests: XCTestCase {
         XCTAssertFalse(TendinopathyType.neckPain.isTendinopathy)
         XCTAssertFalse(TendinopathyType.neckShoulderTension.isTendinopathy)
         XCTAssertFalse(TendinopathyType.aclReconstruction.isTendinopathy)
+        XCTAssertFalse(TendinopathyType.shoulderImpingement.isTendinopathy)
         XCTAssertTrue(TendinopathyType.achilles.isTendinopathy)
         XCTAssertTrue(TendinopathyType.tennisElbow.isTendinopathy)
         XCTAssertTrue(TendinopathyType.rotatorCuff.isTendinopathy)

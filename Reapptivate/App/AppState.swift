@@ -30,6 +30,10 @@ final class AppState {
         currentUser?.tendinopathyType == .aclReconstruction
     }
 
+    var isShoulder: Bool {
+        currentUser?.tendinopathyType == .shoulderImpingement
+    }
+
     var needsAemScreening: Bool {
         isLbp && currentUser?.aemScreeningCompleted != true
     }
@@ -44,6 +48,10 @@ final class AppState {
 
     var needsAclScreening: Bool {
         isAcl && currentUser?.aclScreeningCompleted != true
+    }
+
+    var needsShoulderScreening: Bool {
+        isShoulder && currentUser?.siScreeningCompleted != true
     }
 
     func handleLogin(user: UserProfile) {

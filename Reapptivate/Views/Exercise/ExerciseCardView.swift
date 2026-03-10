@@ -136,6 +136,8 @@ struct ExerciseCardView: View {
         case .bodyAwareness: "figure.cooldown"
         case .pacing: "timer"
         case .gradedActivity: "chart.bar.fill"
+        case .relaxation: "leaf"
+        case .functional: "figure.walk"
         case .unknown: "questionmark.circle"
         }
     }

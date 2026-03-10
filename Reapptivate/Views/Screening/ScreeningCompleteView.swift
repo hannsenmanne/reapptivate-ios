@@ -141,6 +141,7 @@ struct ScreeningCompleteView: View {
         case .rotatorCuff: return "figure.boxing"
         case .gluteal, .proximalHamstring: return "figure.cooldown"
         case .aclReconstruction: return "figure.strengthtraining.functional"
+        case .shoulderImpingement: return "figure.arms.open"
         case .unknown: return "heart.text.clipboard"
         }
     }
@@ -157,6 +158,8 @@ struct ScreeningCompleteView: View {
             return "Ihr TSI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein abgestuftes Programm, das gezielt Ihre Nacken-Schulter-Verspannungen adressiert."
         case .aclReconstruction:
             return "Ihr ACL-Screening wurde ausgewertet. Basierend auf Ihrem Transplantattyp und Sportniveau erhalten Sie ein 5-Meilenstein-Programm mit 9 Trainings-Streams für Ihre Kreuzbandrekonstruktion."
+        case .shoulderImpingement:
+            return "Ihr QuickDASH-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein 4-Phasen-Programm, das gezielt Ihre Schulter-Impingement-Beschwerden adressiert."
         default:
             return "Ihr Programm wurde basierend auf Ihrer Diagnose erstellt. Es besteht aus drei Phasen, die sich an Ihren Schmerzlevel und Fortschritt anpassen."
         }
@@ -193,6 +196,13 @@ struct ScreeningCompleteView: View {
                 "9 spezialisierte Trainings-Streams",
                 "Tägliche und wöchentliche KPI-Erfassung",
                 "Entlassungskriterien-Tracking"
+            ]
+        case .shoulderImpingement:
+            return [
+                "Auf Ihren Schweregrad abgestimmte Übungen",
+                "4 progressive Trainingsphasen",
+                "Mikro-Module für Schulterbeschwerden",
+                "Regelmäßige QuickDASH-Verlaufskontrolle"
             ]
         default:
             return [

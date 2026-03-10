@@ -36,6 +36,18 @@ struct EdukationTab: View {
                 if let user = appState.currentUser {
                     WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false, isTension: true)
                 }
+            } else if appState.isShoulder {
+                if let severity = appState.currentUser?.siSeverity {
+                    ShoulderMicroModulesView(severity: severity)
+                } else {
+                    ProgressView("Schulter-Module laden...")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 32)
+                }
+
+                if let user = appState.currentUser {
+                    WissenAllCardsView(phase: user.currentPhase, isLbp: false, isNeck: false, isShoulder: true)
+                }
             } else if appState.isAcl {
                 AclMicroModulesView(currentMilestone: appState.currentUser?.aclCurrentMilestone ?? 0)
             } else if let user = appState.currentUser {
@@ -94,12 +106,13 @@ struct WissenAllCardsView: View {
     let isLbp: Bool
     let isNeck: Bool
     var isTension: Bool = false
+    var isShoulder: Bool = false
 
     @AppStorage("readEducationCardIds") private var readCardIdsData: Data = Data()
     @State private var cachedReadCardIds: Set<String> = []
 
     private var cards: [EducationCard] {
-        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension)
+        EducationCardLoader.shared.cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension, isShoulder: isShoulder)
     }
 
     private var readCount: Int {

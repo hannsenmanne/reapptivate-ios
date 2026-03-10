@@ -179,6 +179,50 @@ enum APIEndpoints {
         post("tension/micro-modules/\(completionId)/complete")
     }
 
+    // MARK: - Shoulder Impingement Screening
+
+    static func siConfig() -> URLRequest {
+        get("shoulder-impingement/config")
+    }
+
+    static func submitSiScreening(body: SiScreeningSubmission) -> URLRequest {
+        post("shoulder-impingement/screening", encodable: body)
+    }
+
+    static func siResult() -> URLRequest {
+        get("shoulder-impingement/result")
+    }
+
+    static func siHistory() -> URLRequest {
+        get("shoulder-impingement/history")
+    }
+
+    static func siFocusAreas() -> URLRequest {
+        get("shoulder-impingement/focus-areas")
+    }
+
+    static func submitSiRescreening(body: SiScreeningSubmission) -> URLRequest {
+        post("shoulder-impingement/rescreening", encodable: body)
+    }
+
+    static func siMicroModules(severity: String? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let severity { query["severity"] = severity }
+        return get("shoulder-impingement/micro-modules", query: query)
+    }
+
+    static func siCompletedModules() -> URLRequest {
+        get("shoulder-impingement/micro-modules/completed")
+    }
+
+    static func startSiModule(key: String) -> URLRequest {
+        post("shoulder-impingement/micro-modules/\(key)/start")
+    }
+
+    static func completeSiModule(completionId: String) -> URLRequest {
+        post("shoulder-impingement/micro-modules/\(completionId)/complete")
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {
