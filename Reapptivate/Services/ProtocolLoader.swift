@@ -19,9 +19,10 @@ final class ProtocolLoader: @unchecked Sendable {
         type: TendinopathyType,
         aemSubtype: AemSubtype? = nil,
         tsiSeverity: TsiSeverityGrade? = nil,
-        siSeverity: SiSeverityGrade? = nil
+        siSeverity: SiSeverityGrade? = nil,
+        fsSeverity: FsSeverityGrade? = nil
     ) -> ExerciseProtocol? {
-        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity)
+        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity, fsSeverity: fsSeverity)
 
         lock.lock()
         defer { lock.unlock() }
@@ -135,6 +136,8 @@ final class ProtocolLoader: @unchecked Sendable {
             return tensionPhaseName(phase)
         case .shoulderImpingement:
             return shoulderPhaseName(phase)
+        case .frozenShoulder:
+            return frozenShoulderPhaseName(phase)
         default:
             return tendinopathyPhaseName(phase)
         }
@@ -142,7 +145,7 @@ final class ProtocolLoader: @unchecked Sendable {
 
     // MARK: - Private
 
-    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil, siSeverity: SiSeverityGrade? = nil) -> String {
+    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil, siSeverity: SiSeverityGrade? = nil, fsSeverity: FsSeverityGrade? = nil) -> String {
         switch type {
         case .tennisElbow: return "tennis_elbow"
         case .golfersElbow: return "golfers_elbow"
@@ -163,6 +166,9 @@ final class ProtocolLoader: @unchecked Sendable {
         case .shoulderImpingement:
             let grade = siSeverity ?? .LEICHT
             return "shoulder_impingement_\(grade.rawValue.lowercased())"
+        case .frozenShoulder:
+            let grade = fsSeverity ?? .LEICHT
+            return "frozen_shoulder_\(grade.rawValue.lowercased())"
         case .aclReconstruction:
             return "acl_reconstruction"
         case .unknown:
@@ -228,6 +234,16 @@ final class ProtocolLoader: @unchecked Sendable {
         case 2: "Phase 2: Kräftigung"
         case 3: "Phase 3: Aufbau"
         case 4: "Phase 4: Rückkehr zur Aktivität"
+        default: "Phase \(phase)"
+        }
+    }
+
+    private func frozenShoulderPhaseName(_ phase: Int) -> String {
+        switch phase {
+        case 1: "Phase 1: Schmerzmanagement"
+        case 2: "Phase 2: Intensive Dehnung"
+        case 3: "Phase 3: Kräftigung"
+        case 4: "Phase 4: Rückkehr & Erhaltung"
         default: "Phase \(phase)"
         }
     }

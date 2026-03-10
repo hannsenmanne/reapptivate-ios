@@ -20,13 +20,15 @@ enum TendinopathyType: String, Codable, CaseIterable {
     case neckShoulderTension = "NECK_SHOULDER_TENSION"
     case aclReconstruction = "ACL_RECONSTRUCTION"
     case shoulderImpingement = "SHOULDER_IMPINGEMENT"
+    case frozenShoulder = "FROZEN_SHOULDER"
     case unknown = "UNKNOWN"
 
     /// All known cases, excluding `.unknown`.
     static var allCases: [TendinopathyType] {
         [.tennisElbow, .golfersElbow, .achilles, .patellar, .rotatorCuff,
          .gluteal, .proximalHamstring, .plantarFascia, .lbpNonspecific,
-         .neckPain, .neckShoulderTension, .aclReconstruction, .shoulderImpingement]
+         .neckPain, .neckShoulderTension, .aclReconstruction, .shoulderImpingement,
+         .frozenShoulder]
     }
 
     init(from decoder: Decoder) throws {
@@ -50,6 +52,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .neckShoulderTension: "Nacken-Schulter-Verspannung"
         case .aclReconstruction: "Kreuzbandrekonstruktion"
         case .shoulderImpingement: "Schulter-Impingement"
+        case .frozenShoulder: "Frozen Shoulder"
         case .unknown: "Unbekannt"
         }
     }
@@ -59,7 +62,8 @@ enum TendinopathyType: String, Codable, CaseIterable {
     var isTension: Bool { self == .neckShoulderTension }
     var isAcl: Bool { self == .aclReconstruction }
     var isShoulder: Bool { self == .shoulderImpingement }
-    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && !isShoulder && self != .unknown }
+    var isFrozenShoulder: Bool { self == .frozenShoulder }
+    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && !isShoulder && !isFrozenShoulder && self != .unknown }
 }
 
 // MARK: - Exercise Type
@@ -264,6 +268,37 @@ enum SiSeverityGrade: String, Codable {
         // QuickDASH 0-100. LEICHT: ≤40, MITTEL: ≤60, SCHWER: >60
         if quickDashScore <= 40 { return .LEICHT }
         if quickDashScore <= 60 { return .MITTEL }
+        return .SCHWER
+    }
+}
+
+// MARK: - FS Severity Grade
+
+enum FsSeverityGrade: String, Codable {
+    case LEICHT
+    case MITTEL
+    case SCHWER
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
+
+    var displayName: String {
+        switch self {
+        case .LEICHT: "Leicht"
+        case .MITTEL: "Mittel"
+        case .SCHWER: "Schwer"
+        case .unknown: "Unbekannt"
+        }
+    }
+
+    static func from(spadiScore: Double) -> FsSeverityGrade {
+        // SPADI 0-100. LEICHT: <=34, MITTEL: <=59, SCHWER: >59
+        if spadiScore <= 34 { return .LEICHT }
+        if spadiScore <= 59 { return .MITTEL }
         return .SCHWER
     }
 }

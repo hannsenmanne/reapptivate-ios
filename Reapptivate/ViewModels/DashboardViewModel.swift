@@ -91,6 +91,16 @@ final class DashboardViewModel {
             }
         }
 
+        // Populate fsSeverity for frozen shoulder patients from screening result
+        if appState?.isFrozenShoulder == true, appState?.currentUser?.fsSeverity == nil {
+            let fsResult: FsScreeningResponse? = await loadSafely { [apiClient] in
+                try await apiClient.request(APIEndpoints.fsResult())
+            }
+            if let result = fsResult?.screening {
+                appState?.currentUser?.fsSeverity = FsSeverityGrade.from(spadiScore: result.spadiTotalScore)
+            }
+        }
+
         if let s = stats?.stats {
             progressStats = ProgressStats(
                 totalSessions: s.totalSessions,

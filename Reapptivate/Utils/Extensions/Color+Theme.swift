@@ -98,6 +98,14 @@ extension Color {
         case .SCHWER, .unknown: return .severitySchwer
         }
     }
+
+    static func severityColor(for severity: FsSeverityGrade) -> Color {
+        switch severity {
+        case .LEICHT: return .severityLeicht
+        case .MITTEL: return .severityMittel
+        case .SCHWER, .unknown: return .severitySchwer
+        }
+    }
 }
 
 // MARK: - ShapeStyle convenience (enables .foregroundStyle(.textPrimary) syntax)

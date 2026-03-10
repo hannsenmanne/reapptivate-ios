@@ -58,6 +58,8 @@ struct RootView: View {
                     AclScreeningView(isEmbedded: true)
                 } else if appState.needsShoulderScreening {
                     SiScreeningView(isRescreening: false, isEmbedded: true)
+                } else if appState.needsFsScreening {
+                    FsScreeningView(isRescreening: false, isEmbedded: true)
                 } else if !hasSeenWelcome {
                     ScreeningCompleteView()
                 } else if !hasSeenWalkthrough {

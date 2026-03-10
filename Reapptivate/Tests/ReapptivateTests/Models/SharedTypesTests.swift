@@ -14,7 +14,7 @@ final class SharedTypesTests: XCTestCase {
     }
 
     func testTendinopathyTypeCount() {
-        XCTAssertEqual(TendinopathyType.allCases.count, 13)
+        XCTAssertEqual(TendinopathyType.allCases.count, 14)
     }
 
     func testIsLbpOnlyForLbpNonspecific() {

@@ -21,7 +21,7 @@ struct DashboardView: View {
                 // Tab Bar
                 DashboardTabBar(
                     selectedTab: $selectedTab,
-                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl || appState.isShoulder,
+                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl || appState.isShoulder || appState.isFrozenShoulder,
                     unreadCount: messagingVM?.unreadCount ?? 0
                 )
 

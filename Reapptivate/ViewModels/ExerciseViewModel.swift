@@ -24,7 +24,8 @@ final class ExerciseViewModel {
             type: user.tendinopathyType,
             aemSubtype: user.aemSubtype,
             tsiSeverity: user.tsiSeverity,
-            siSeverity: user.siSeverity
+            siSeverity: user.siSeverity,
+            fsSeverity: user.fsSeverity
         ) else {
             Log.exercise.error("No protocol found for \(user.tendinopathyType.rawValue)")
             return

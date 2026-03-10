@@ -154,6 +154,20 @@ struct SiFocusAreasResponse: Codable {
     let focusAreas: [SiFocusArea]
 }
 
+// MARK: - Frozen Shoulder Wrappers
+
+struct FsScreeningResponse: Codable {
+    let screening: FsScreeningResult
+}
+
+struct FsHistoryResponse: Codable {
+    let history: [FsHistoryEntry]
+}
+
+struct FsFocusAreasResponse: Codable {
+    let focusAreas: [FsFocusArea]
+}
+
 // MARK: - Work Timer Wrappers
 
 struct WorkTimerSettingsResponse: Codable {

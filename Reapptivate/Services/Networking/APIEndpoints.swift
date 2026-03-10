@@ -223,6 +223,50 @@ enum APIEndpoints {
         post("shoulder-impingement/micro-modules/\(completionId)/complete")
     }
 
+    // MARK: - Frozen Shoulder Screening
+
+    static func fsConfig() -> URLRequest {
+        get("frozen-shoulder/config")
+    }
+
+    static func submitFsScreening(body: FsScreeningSubmission) -> URLRequest {
+        post("frozen-shoulder/screening", encodable: body)
+    }
+
+    static func fsResult() -> URLRequest {
+        get("frozen-shoulder/result")
+    }
+
+    static func fsHistory() -> URLRequest {
+        get("frozen-shoulder/history")
+    }
+
+    static func fsFocusAreas() -> URLRequest {
+        get("frozen-shoulder/focus-areas")
+    }
+
+    static func submitFsRescreening(body: FsScreeningSubmission) -> URLRequest {
+        post("frozen-shoulder/rescreening", encodable: body)
+    }
+
+    static func fsMicroModules(severity: String? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let severity { query["severity"] = severity }
+        return get("frozen-shoulder/micro-modules", query: query)
+    }
+
+    static func fsCompletedModules() -> URLRequest {
+        get("frozen-shoulder/micro-modules/completed")
+    }
+
+    static func startFsModule(key: String) -> URLRequest {
+        post("frozen-shoulder/micro-modules/\(key)/start")
+    }
+
+    static func completeFsModule(completionId: String) -> URLRequest {
+        post("frozen-shoulder/micro-modules/\(completionId)/complete")
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {

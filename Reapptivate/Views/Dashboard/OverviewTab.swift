@@ -72,14 +72,13 @@ struct OverviewTab: View {
                     .cardEntryAnimation(index: 7)
             }
 
-            // Wissen
-            if let user = appState.currentUser {
+            // Wissen (not for shoulder impingement / frozen shoulder — micro-modules cover education)
+            if let user = appState.currentUser, !appState.isShoulder, !appState.isFrozenShoulder, !appState.isAcl {
                 WissenCardView(
                     phase: user.currentPhase,
                     isLbp: appState.isLbp,
                     isNeck: appState.isNeck,
-                    isTension: appState.isTension,
-                    isShoulder: appState.isShoulder
+                    isTension: appState.isTension
                 )
                 .cardEntryAnimation(index: 8)
             }

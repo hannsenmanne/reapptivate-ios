@@ -36,20 +36,19 @@ final class EducationCardLoader: @unchecked Sendable {
         return cards
     }
 
-    func cardsForPhase(_ phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false, isShoulder: Bool = false) -> [EducationCard] {
+    func cardsForPhase(_ phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false) -> [EducationCard] {
         allCards().filter { card in
             card.phase == phase && {
                 if isLbp { return card.condition == "LBP_NONSPECIFIC" }
                 if isNeck { return card.condition == "NECK_PAIN" }
                 if isTension { return card.condition == "NECK_SHOULDER_TENSION" }
-                if isShoulder { return card.condition == nil }
                 return card.condition == nil
             }()
         }
     }
 
-    func todaysCard(phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false, isShoulder: Bool = false) -> EducationCard? {
-        let phaseCards = cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension, isShoulder: isShoulder)
+    func todaysCard(phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false) -> EducationCard? {
+        let phaseCards = cardsForPhase(phase, isLbp: isLbp, isNeck: isNeck, isTension: isTension)
         guard !phaseCards.isEmpty else { return nil }
 
         let startOfYear = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: .now)) ?? .now

@@ -142,6 +142,7 @@ struct ScreeningCompleteView: View {
         case .gluteal, .proximalHamstring: return "figure.cooldown"
         case .aclReconstruction: return "figure.strengthtraining.functional"
         case .shoulderImpingement: return "figure.arms.open"
+        case .frozenShoulder: return "figure.arms.open"
         case .unknown: return "heart.text.clipboard"
         }
     }
@@ -160,6 +161,8 @@ struct ScreeningCompleteView: View {
             return "Ihr ACL-Screening wurde ausgewertet. Basierend auf Ihrem Transplantattyp und Sportniveau erhalten Sie ein 5-Meilenstein-Programm mit 9 Trainings-Streams für Ihre Kreuzbandrekonstruktion."
         case .shoulderImpingement:
             return "Ihr QuickDASH-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein 4-Phasen-Programm, das gezielt Ihre Schulter-Impingement-Beschwerden adressiert."
+        case .frozenShoulder:
+            return "Ihr SPADI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein 4-Phasen-Programm, das gezielt Ihre Frozen Shoulder (Adhesive Capsulitis) behandelt — von sanfter Mobilisation bis zur vollen Rückkehr in Alltag und Sport."
         default:
             return "Ihr Programm wurde basierend auf Ihrer Diagnose erstellt. Es besteht aus drei Phasen, die sich an Ihren Schmerzlevel und Fortschritt anpassen."
         }
@@ -203,6 +206,13 @@ struct ScreeningCompleteView: View {
                 "4 progressive Trainingsphasen",
                 "Mikro-Module für Schulterbeschwerden",
                 "Regelmäßige QuickDASH-Verlaufskontrolle"
+            ]
+        case .frozenShoulder:
+            return [
+                "Auf Ihr Stadium abgestimmte Übungen",
+                "4 progressive Trainingsphasen (Mobilisation bis Rückkehr)",
+                "Mikro-Module für Frozen Shoulder",
+                "Regelmäßige SPADI-Verlaufskontrolle"
             ]
         default:
             return [

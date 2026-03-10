@@ -18,6 +18,9 @@ struct InsightsTab: View {
         } else if appState.isShoulder {
             // Shoulder patients: QuickDASH progress + focus areas
             ShoulderInsightsSection()
+        } else if appState.isFrozenShoulder {
+            // Frozen Shoulder patients: SPADI progress + focus areas
+            FrozenShoulderInsightsSection()
         } else if appState.isAcl {
             // ACL patients: comprehensive analytics dashboard
             AclAnalyticsView()
@@ -59,6 +62,18 @@ struct ShoulderInsightsSection: View {
         VStack(spacing: 20) {
             SiProgressView()
             ShoulderFocusAreasView()
+        }
+        .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Frozen Shoulder Insights
+
+struct FrozenShoulderInsightsSection: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            FsProgressView()
+            FrozenShoulderFocusAreasView()
         }
         .padding(.bottom, 32)
     }

@@ -21,6 +21,10 @@ final class CachedUser {
     var aclSurgeryDate: String?
     var aclCurrentMilestone: Int?
     var aclConcomitantInjuries: String?
+    var siScreeningCompleted: Bool
+    var siSeverity: String?
+    var fsScreeningCompleted: Bool
+    var fsSeverity: String?
     var startDate: String
     var lastSyncedAt: Date
 
@@ -43,6 +47,10 @@ final class CachedUser {
         aclSurgeryDate: String? = nil,
         aclCurrentMilestone: Int? = nil,
         aclConcomitantInjuries: String? = nil,
+        siScreeningCompleted: Bool = false,
+        siSeverity: String? = nil,
+        fsScreeningCompleted: Bool = false,
+        fsSeverity: String? = nil,
         startDate: String,
         lastSyncedAt: Date = .now
     ) {
@@ -64,6 +72,10 @@ final class CachedUser {
         self.aclSurgeryDate = aclSurgeryDate
         self.aclCurrentMilestone = aclCurrentMilestone
         self.aclConcomitantInjuries = aclConcomitantInjuries
+        self.siScreeningCompleted = siScreeningCompleted
+        self.siSeverity = siSeverity
+        self.fsScreeningCompleted = fsScreeningCompleted
+        self.fsSeverity = fsSeverity
         self.startDate = startDate
         self.lastSyncedAt = lastSyncedAt
     }
@@ -86,6 +98,10 @@ final class CachedUser {
         aclSurgeryDate = profile.aclSurgeryDate
         aclCurrentMilestone = profile.aclCurrentMilestone
         aclConcomitantInjuries = profile.aclConcomitantInjuries?.map(\.rawValue).joined(separator: ",")
+        siScreeningCompleted = profile.siScreeningCompleted ?? false
+        siSeverity = profile.siSeverity?.rawValue
+        fsScreeningCompleted = profile.fsScreeningCompleted ?? false
+        fsSeverity = profile.fsSeverity?.rawValue
         startDate = profile.startDate
         lastSyncedAt = .now
     }
