@@ -62,12 +62,13 @@ struct ExerciseWithPhase: Codable, Identifiable {
     let phaseGoal: String
     let ndiSeverity: NdiSeverityGrade?
     let dosageModifier: DosageModifier?
+    let exerciseGroup: String?
 
     var id: String { exercise.id }
     var name: String { exercise.name }
 
     // Manual init for constructing from code
-    init(exercise: Exercise, phase: Int, phaseTitle: String, weeksRange: String, phaseGoal: String, ndiSeverity: NdiSeverityGrade? = nil, dosageModifier: DosageModifier? = nil) {
+    init(exercise: Exercise, phase: Int, phaseTitle: String, weeksRange: String, phaseGoal: String, ndiSeverity: NdiSeverityGrade? = nil, dosageModifier: DosageModifier? = nil, exerciseGroup: String? = nil) {
         self.exercise = exercise
         self.phase = phase
         self.phaseTitle = phaseTitle
@@ -75,6 +76,7 @@ struct ExerciseWithPhase: Codable, Identifiable {
         self.phaseGoal = phaseGoal
         self.ndiSeverity = ndiSeverity
         self.dosageModifier = dosageModifier
+        self.exerciseGroup = exerciseGroup
     }
 
     // Custom decoder: handles both nested {"exercise": {...}, "phase": 1}
@@ -95,11 +97,12 @@ struct ExerciseWithPhase: Codable, Identifiable {
         phaseGoal = try container.decodeIfPresent(String.self, forKey: .phaseGoal) ?? ""
         ndiSeverity = try container.decodeIfPresent(NdiSeverityGrade.self, forKey: .ndiSeverity)
         dosageModifier = try container.decodeIfPresent(DosageModifier.self, forKey: .dosageModifier)
+        exerciseGroup = try container.decodeIfPresent(String.self, forKey: .exerciseGroup)
     }
 
     enum CodingKeys: String, CodingKey {
         case exercise, phase, phaseTitle, weeksRange, phaseGoal
-        case ndiSeverity, dosageModifier
+        case ndiSeverity, dosageModifier, exerciseGroup
     }
 }
 

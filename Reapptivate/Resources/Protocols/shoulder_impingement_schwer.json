@@ -39,7 +39,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "mobilisation"
     },
     {
       "id": "si-p1-e2",
@@ -54,7 +55,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "mobilisation"
     },
     {
       "id": "si-p1-e3",
@@ -69,7 +71,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "mobilisation"
     },
     {
       "id": "si-p1-e4",
@@ -84,7 +87,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "mobilisation"
     },
     {
       "id": "si-p1-e5",
@@ -99,7 +103,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "mobilisation"
     },
     {
       "id": "si-p1-e6",
@@ -114,7 +119,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "mobilisation"
     },
     {
       "id": "si-p1-e7",
@@ -129,7 +135,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "isometric"
     },
     {
       "id": "si-p1-e8",
@@ -144,7 +151,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "isometric"
     },
     {
       "id": "si-p1-e9",
@@ -159,7 +167,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "isometric"
     },
     {
       "id": "si-p1-e10",
@@ -174,7 +183,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "isometric"
     },
     {
       "id": "si-p1-e11",
@@ -189,7 +199,8 @@
       "phase": 1,
       "phase_title": "Akut / Schmerzlinderung",
       "weeks_range": "Woche 1–2",
-      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung"
+      "phase_goal": "Schmerzreduktion, Beweglichkeit erhalten, sanfte Aktivierung",
+      "exercise_group": "thoracic"
     },
     {
       "id": "si-p2-e1",
@@ -204,7 +215,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "rotator_cuff"
     },
     {
       "id": "si-p2-e2",
@@ -219,7 +231,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "rotator_cuff"
     },
     {
       "id": "si-p2-e3",
@@ -234,7 +247,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "rotator_cuff"
     },
     {
       "id": "si-p2-e4",
@@ -249,7 +263,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "rotator_cuff"
     },
     {
       "id": "si-p2-e5",
@@ -264,7 +279,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "rotator_cuff"
     },
     {
       "id": "si-p2-e6",
@@ -279,7 +295,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "scapular"
     },
     {
       "id": "si-p2-e7",
@@ -294,7 +311,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "scapular"
     },
     {
       "id": "si-p2-e8",
@@ -309,7 +327,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "scapular"
     },
     {
       "id": "si-p2-e9",
@@ -324,7 +343,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "scapular"
     },
     {
       "id": "si-p2-e10",
@@ -339,7 +359,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "scapular"
     },
     {
       "id": "si-p2-e11",
@@ -354,7 +375,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "closed_chain"
     },
     {
       "id": "si-p2-e12",
@@ -369,7 +391,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "closed_chain"
     },
     {
       "id": "si-p2-e13",
@@ -384,7 +407,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "closed_chain"
     },
     {
       "id": "si-p2-e14",
@@ -399,7 +423,8 @@
       "phase": 2,
       "phase_title": "Kräftigung",
       "weeks_range": "Woche 3–6",
-      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle"
+      "phase_goal": "Aktive Beweglichkeit wiederherstellen, Kräftigung beginnen, neuromuskuläre Kontrolle",
+      "exercise_group": "closed_chain"
     },
     {
       "id": "si-p2-e15",
@@ -430,7 +455,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "progressive"
     },
     {
       "id": "si-p3-e2",
@@ -446,7 +472,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "progressive"
     },
     {
       "id": "si-p3-e3",
@@ -461,7 +488,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "progressive"
     },
     {
       "id": "si-p3-e4",
@@ -476,7 +504,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "progressive"
     },
     {
       "id": "si-p3-e5",
@@ -491,7 +520,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "progressive"
     },
     {
       "id": "si-p3-e6",
@@ -506,7 +536,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "integration"
     },
     {
       "id": "si-p3-e7",
@@ -521,7 +552,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "integration"
     },
     {
       "id": "si-p3-e8",
@@ -536,7 +568,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "integration"
     },
     {
       "id": "si-p3-e9",
@@ -551,7 +584,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "integration"
     },
     {
       "id": "si-p3-e10",
@@ -566,7 +600,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "plyometric"
     },
     {
       "id": "si-p3-e11",
@@ -581,7 +616,8 @@
       "phase": 3,
       "phase_title": "Fortgeschrittene Kräftigung",
       "weeks_range": "Woche 7–10",
-      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung"
+      "phase_goal": "Volle Kraft, Überkopf-Funktion, sport-/arbeitsspezifische Vorbereitung",
+      "exercise_group": "plyometric"
     },
     {
       "id": "si-p4-e1",

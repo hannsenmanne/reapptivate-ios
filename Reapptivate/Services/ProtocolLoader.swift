@@ -39,12 +39,88 @@ final class ProtocolLoader: @unchecked Sendable {
         return proto
     }
 
-    /// Get exercises for a specific phase, with optional severity filtering
+    /// Get exercises for a specific phase.
+    /// When exercises have `exerciseGroup` tags, returns a balanced daily subset
+    /// (rotating based on training day count) instead of all exercises at once.
+    /// - Parameter trainingDays: iOS weekday numbers (1=Sun...7=Sat) the patient trains on.
     func exercisesForPhase(
         protocol proto: ExerciseProtocol,
-        phase: Int
+        phase: Int,
+        trainingDays: [Int]? = nil
     ) -> [ExerciseWithPhase] {
-        proto.exercises.filter { $0.phase == phase }
+        let allExercises = proto.exercises.filter { $0.phase == phase }
+
+        // If no exercises have groups, return all (legacy behavior)
+        let hasGroups = allExercises.contains { $0.exerciseGroup != nil }
+        guard hasGroups else { return allExercises }
+
+        return dailyRotationSubset(from: allExercises, trainingDays: trainingDays)
+    }
+
+    /// Selects a balanced daily subset by picking exercises from each group.
+    /// Rotation is based on training day index (how many training days have passed
+    /// since start of year), so exercises only rotate on actual training days.
+    private func dailyRotationSubset(from exercises: [ExerciseWithPhase], trainingDays: [Int]?) -> [ExerciseWithPhase] {
+        // Group exercises by their exerciseGroup (ungrouped exercises always included)
+        var alwaysInclude: [ExerciseWithPhase] = []
+        var groups: [String: [ExerciseWithPhase]] = [:]
+
+        for exercise in exercises {
+            if let group = exercise.exerciseGroup {
+                groups[group, default: []].append(exercise)
+            } else {
+                alwaysInclude.append(exercise)
+            }
+        }
+
+        let rotationIndex = trainingDayIndex(trainingDays: trainingDays)
+
+        var selected: [ExerciseWithPhase] = alwaysInclude
+
+        // Pick 2 exercises from each group, rotating per training day
+        for (_, groupExercises) in groups.sorted(by: { $0.key < $1.key }) {
+            let count = groupExercises.count
+            guard count > 0 else { continue }
+
+            let pickCount = min(2, count)
+            let startIndex = rotationIndex % count
+
+            for i in 0..<pickCount {
+                let index = (startIndex + i) % count
+                selected.append(groupExercises[index])
+            }
+        }
+
+        // Preserve original order
+        let selectedIds = Set(selected.map(\.id))
+        return exercises.filter { selectedIds.contains($0.id) }
+    }
+
+    /// Returns the number of training days that have passed since start of year.
+    /// If no training days are set, falls back to calendar day-of-year.
+    private func trainingDayIndex(trainingDays: [Int]?) -> Int {
+        let calendar = Calendar.current
+        let today = Date.now
+
+        guard let trainingDays, !trainingDays.isEmpty else {
+            // Fallback: use calendar day
+            return calendar.ordinality(of: .day, in: .year, for: today) ?? 1
+        }
+
+        let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: today)) ?? today
+        let dayOfYear = calendar.dateComponents([.day], from: startOfYear, to: today).day ?? 0
+
+        // Count how many training days have occurred from Jan 1 through today
+        var count = 0
+        for dayOffset in 0...dayOfYear {
+            guard let date = calendar.date(byAdding: .day, value: dayOffset, to: startOfYear) else { continue }
+            let weekday = calendar.component(.weekday, from: date) // 1=Sun...7=Sat
+            if trainingDays.contains(weekday) {
+                count += 1
+            }
+        }
+
+        return count
     }
 
     // MARK: - Phase Names

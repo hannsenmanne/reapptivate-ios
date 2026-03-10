@@ -220,7 +220,7 @@ struct DashboardView: View {
         }
 
         if let user = appState.currentUser {
-            exerciseVM?.loadExercises(for: user)
+            exerciseVM?.loadExercises(for: user, trainingDays: viewModel?.scheduleResponse?.iosWeekdays)
             exerciseVM?.updateCompletedToday(from: viewModel?.completedToday ?? [])
         }
 

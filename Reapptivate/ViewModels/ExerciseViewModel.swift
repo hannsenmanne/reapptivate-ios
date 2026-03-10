@@ -19,7 +19,7 @@ final class ExerciseViewModel {
 
     // MARK: - Loading
 
-    func loadExercises(for user: UserProfile) {
+    func loadExercises(for user: UserProfile, trainingDays: [Int]? = nil) {
         guard let proto = protocolLoader.protocolFor(
             type: user.tendinopathyType,
             aemSubtype: user.aemSubtype,
@@ -32,7 +32,8 @@ final class ExerciseViewModel {
 
         exercises = protocolLoader.exercisesForPhase(
             protocol: proto,
-            phase: user.currentPhase
+            phase: user.currentPhase,
+            trainingDays: trainingDays
         )
     }
 
