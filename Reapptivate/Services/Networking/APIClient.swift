@@ -105,10 +105,15 @@ final class APIClient {
         hasTriggeredLogout = false
     }
 
+    private var languageHeader: String {
+        UserDefaults.standard.string(forKey: "appLanguage") ?? "de"
+    }
+
     private func injectAuth(_ request: inout URLRequest) {
         if let token = tokenManager.getToken() {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+        request.setValue(languageHeader, forHTTPHeaderField: "Accept-Language")
     }
 
     private func validateResponse(_ response: URLResponse, data: Data) throws {
