@@ -144,6 +144,7 @@ struct DashboardView: View {
                 OverviewTab(
                     viewModel: viewModel,
                     exerciseVM: exerciseVM,
+                    streak: viewModel?.streak,
                     onNavigateToProgram: {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             selectedTab = .program

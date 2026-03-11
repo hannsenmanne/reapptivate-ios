@@ -5,6 +5,7 @@ struct OverviewTab: View {
     @Environment(APIClient.self) private var apiClient
     let viewModel: DashboardViewModel?
     let exerciseVM: ExerciseViewModel?
+    var streak: StreakResponse?
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
@@ -48,28 +49,34 @@ struct OverviewTab: View {
                     .cardEntryAnimation(index: 2)
             }
 
+            // Streak
+            if let s = streak, s.currentStreak > 0 || s.longestStreak > 0 {
+                StreakCard(streak: s)
+                    .cardEntryAnimation(index: 3)
+            }
+
             // Phase Status
             if let phaseStatus = viewModel?.phaseStatus {
                 PhaseStatusQuickCard(status: phaseStatus)
-                    .cardEntryAnimation(index: 3)
+                    .cardEntryAnimation(index: 4)
             }
 
             // Work Timer (LBP / Neck / Tension only)
             WorkTimerCard()
-                .cardEntryAnimation(index: 4)
+                .cardEntryAnimation(index: 5)
 
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
-                .cardEntryAnimation(index: 5)
+                .cardEntryAnimation(index: 6)
 
             // Training Schedule
             TrainingScheduleCard()
-                .cardEntryAnimation(index: 6)
+                .cardEntryAnimation(index: 7)
 
             // Compliance Calendar
             if let entries = viewModel?.recentEntries, !entries.isEmpty {
                 ComplianceCalendarCard(entries: entries)
-                    .cardEntryAnimation(index: 7)
+                    .cardEntryAnimation(index: 8)
             }
 
             // Wissen (not for shoulder impingement / frozen shoulder — micro-modules cover education)
@@ -80,7 +87,7 @@ struct OverviewTab: View {
                     isNeck: appState.isNeck,
                     isTension: appState.isTension
                 )
-                .cardEntryAnimation(index: 8)
+                .cardEntryAnimation(index: 9)
             }
 
         }
@@ -259,6 +266,66 @@ struct PhaseStatusQuickCard: View {
                 .foregroundStyle(.textSecondary)
         }
         .cardStyle()
+    }
+}
+
+// MARK: - Streak Card
+
+struct StreakCard: View {
+    let streak: StreakResponse
+
+    @ScaledMetric(relativeTo: .body) private var flameSize: CGFloat = 36
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 24))
+                .foregroundStyle(streak.currentStreak > 0 ? Color.painAmber : Color.textSecondary)
+                .frame(width: flameSize, height: flameSize)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    Text("\(streak.currentStreak)")
+                        .font(.appTitle2)
+                        .foregroundStyle(.textPrimary)
+                    Text(streak.currentStreak == 1 ? "Tag Streak" : "Tage Streak")
+                        .font(.appSubheadline)
+                        .foregroundStyle(.textSecondary)
+                }
+
+                HStack(spacing: 12) {
+                    if streak.longestStreak > 0 {
+                        HStack(spacing: 4) {
+                            Image(systemName: "trophy.fill")
+                                .font(.appCaption2)
+                                .foregroundStyle(Color.painAmber)
+                                .accessibilityHidden(true)
+                            Text("Rekord: \(streak.longestStreak)")
+                                .font(.appCaption)
+                                .foregroundStyle(.textSecondary)
+                        }
+                    }
+
+                    if streak.freezeTokens > 0 {
+                        HStack(spacing: 4) {
+                            Image(systemName: "snowflake")
+                                .font(.appCaption2)
+                                .foregroundStyle(Color.farBlue)
+                                .accessibilityHidden(true)
+                            Text("\(streak.freezeTokens) Freeze")
+                                .font(.appCaption)
+                                .foregroundStyle(.textSecondary)
+                        }
+                    }
+                }
+            }
+
+            Spacer()
+        }
+        .cardStyle()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Streak: \(streak.currentStreak) \(streak.currentStreak == 1 ? "Tag" : "Tage"), Rekord: \(streak.longestStreak)")
     }
 }
 

@@ -5,9 +5,14 @@ struct TodaysPlanCard: View {
     let totalCount: Int
     let onTap: () -> Void
 
-    private var remaining: Int { max(0, totalCount - completedCount) }
+    @ScaledMetric(relativeTo: .body) private var ringSize: CGFloat = 52
+
     private var progress: Double {
         totalCount > 0 ? Double(completedCount) / Double(totalCount) : 0
+    }
+
+    private var allDone: Bool {
+        totalCount > 0 && completedCount >= totalCount
     }
 
     var body: some View {
@@ -16,50 +21,68 @@ struct TodaysPlanCard: View {
                 // Progress ring
                 ZStack {
                     Circle()
-                        .stroke(Color.textSecondary.opacity(0.15), lineWidth: 6)
+                        .stroke(Color.textSecondary.opacity(0.15), lineWidth: 4)
                     Circle()
                         .trim(from: 0, to: progress)
-                        .stroke(Color.accent, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                        .stroke(
+                            allDone ? Color.painGreen : Color.accent,
+                            style: StrokeStyle(lineWidth: 4, lineCap: .round)
+                        )
                         .rotationEffect(.degrees(-90))
-                        .animation(.spring(duration: 0.5), value: progress)
+                        .animation(.spring(duration: 0.4), value: progress)
 
-                    Text("\(completedCount)/\(totalCount)")
-                        .font(.appCaptionBold)
-                        .foregroundStyle(.accent)
+                    if allDone {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(.painGreen)
+                    } else {
+                        Text("\(completedCount)")
+                            .font(.appSubheadlineSemibold)
+                            .foregroundStyle(.textPrimary)
+                    }
                 }
-                .frame(width: 52, height: 52)
+                .frame(width: ringSize, height: ringSize)
                 .accessibilityHidden(true)
 
-                // Text
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Heutiger Plan")
-                        .font(.appSubheadlineSemibold)
+                    Text("Heutiges Programm")
+                        .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
-                    if remaining > 0 {
-                        Text("Noch \(remaining) Übung\(remaining == 1 ? "" : "en") übrig")
-                            .font(.appCaption)
-                            .foregroundStyle(.textSecondary)
-                    } else {
-                        Text("Alle Übungen abgeschlossen!")
-                            .font(.appCaption)
+                    if allDone {
+                        Text("Alle Übungen abgeschlossen")
+                            .font(.appCaptionMedium)
                             .foregroundStyle(.painGreen)
+                    } else if totalCount > 0 {
+                        Text("\(completedCount) von \(totalCount) Übungen erledigt")
+                            .font(.appCaptionMedium)
+                            .foregroundStyle(.accent)
+                    } else {
+                        Text("Programm starten")
+                            .font(.appCaptionMedium)
+                            .foregroundStyle(.accent)
                     }
                 }
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
-                    .font(.appCaption)
-                    .foregroundStyle(.textSecondary)
-                    .accessibilityHidden(true)
+                if !allDone {
+                    Image(systemName: "chevron.right")
+                        .font(.appSubheadline)
+                        .foregroundStyle(.textSecondary)
+                        .accessibilityHidden(true)
+                }
             }
             .cardStyle()
         }
         .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Heutiger Plan")
-        .accessibilityValue("\(completedCount) von \(totalCount) Übungen abgeschlossen")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Heutiges Programm")
+        .accessibilityValue(
+            allDone
+                ? "Alle \(totalCount) Übungen abgeschlossen"
+                : "\(completedCount) von \(totalCount) Übungen erledigt"
+        )
         .accessibilityHint("Antippen, um zum Trainingsprogramm zu gelangen")
     }
 }

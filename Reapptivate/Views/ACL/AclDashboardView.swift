@@ -101,7 +101,7 @@ struct AclDashboardView: View {
 
             // Streak
             if let streak = vm.streak, streak.currentStreak > 0 || streak.longestStreak > 0 {
-                AclStreakCard(streak: streak)
+                StreakCard(streak: streak)
                     .cardEntryAnimation(index: 1)
             }
 
@@ -434,60 +434,7 @@ struct AclDashboardSkeletonView: View {
     }
 }
 
-// MARK: - Streak Card
-
-private struct AclStreakCard: View {
-    let streak: StreakResponse
-
-    @ScaledMetric(relativeTo: .body) private var flameSize: CGFloat = 36
-
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: "flame.fill")
-                .font(.system(size: 24))
-                .foregroundStyle(streak.currentStreak > 0 ? .painAmber : .textSecondary)
-                .frame(width: flameSize, height: flameSize)
-
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
-                    Text("\(streak.currentStreak)")
-                        .font(.appTitle2)
-                        .foregroundStyle(.textPrimary)
-                    Text(streak.currentStreak == 1 ? "Tag Streak" : "Tage Streak")
-                        .font(.appSubheadline)
-                        .foregroundStyle(.textSecondary)
-                }
-
-                HStack(spacing: 12) {
-                    if streak.longestStreak > 0 {
-                        HStack(spacing: 4) {
-                            Image(systemName: "trophy.fill")
-                                .font(.appCaption2)
-                                .foregroundStyle(.painAmber)
-                            Text("Rekord: \(streak.longestStreak)")
-                                .font(.appCaption)
-                                .foregroundStyle(.textSecondary)
-                        }
-                    }
-
-                    if streak.freezeTokens > 0 {
-                        HStack(spacing: 4) {
-                            Image(systemName: "snowflake")
-                                .font(.appCaption2)
-                                .foregroundStyle(.farBlue)
-                            Text("\(streak.freezeTokens) Freeze")
-                                .font(.appCaption)
-                                .foregroundStyle(.textSecondary)
-                        }
-                    }
-                }
-            }
-
-            Spacer()
-        }
-        .cardStyle()
-    }
-}
+// AclStreakCard removed — use shared StreakCard from OverviewTab.swift
 
 // MARK: - Daily Tip Card
 

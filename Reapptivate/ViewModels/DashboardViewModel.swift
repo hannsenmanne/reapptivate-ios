@@ -17,6 +17,7 @@ final class DashboardViewModel {
     var completedToday: [String] = []
     var recentEntries: [ProgressEntry] = []
     var scheduleResponse: ScheduleResponse?
+    var streak: StreakResponse?
     var isLoading = false
     var error: String?
 
@@ -54,12 +55,17 @@ final class DashboardViewModel {
             try await apiClient.request(APIEndpoints.getProgress(limit: 100))
         }
 
-        let (phase, stats, today, schedule, entries) = await (phaseResult, statsResult, todayResult, scheduleResult, entriesResult)
+        async let streakResult: StreakResponse? = loadSafely { [apiClient] in
+            try await apiClient.request(APIEndpoints.streak())
+        }
+
+        let (phase, stats, today, schedule, entries, streakResp) = await (phaseResult, statsResult, todayResult, scheduleResult, entriesResult, streakResult)
 
         phaseStatus = phase?.phaseStatus
         if let phaseData = phase?.phaseStatus {
             appState?.currentUser?.adaptivePhase = phaseData.currentPhase
         }
+        streak = streakResp
 
         // Populate ndiSeverity for neck patients from screening result
         if appState?.isNeck == true, appState?.currentUser?.ndiSeverity == nil {
