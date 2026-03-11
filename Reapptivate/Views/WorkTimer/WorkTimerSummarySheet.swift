@@ -116,12 +116,15 @@ struct WorkTimerSummarySheet: View {
     }
 
     private func formatWorkMinutes(_ minutes: Int) -> String {
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
         let hours = minutes / 60
         let mins = minutes % 60
         if hours > 0 {
-            return "\(hours) Std. \(mins) Min."
+            return isEn
+                ? "\(hours) hr\(hours == 1 ? "" : "s") \(mins) min"
+                : "\(hours) Std. \(mins) Min."
         }
-        return "\(mins) Min."
+        return isEn ? "\(mins) min" : "\(mins) Min."
     }
 }
 

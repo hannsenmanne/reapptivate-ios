@@ -202,7 +202,9 @@ struct AclProfileQuickCard: View {
                 value: "\(weeksPostSurgery)"
             )
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("\(weeksPostSurgery) Wochen nach Operation")
+            .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? "\(weeksPostSurgery) week\(weeksPostSurgery == 1 ? "" : "s") post surgery"
+                : "\(weeksPostSurgery) Wochen nach Operation")
 
             StatCard(
                 label: "Transplantat",
@@ -302,7 +304,9 @@ struct AclActiveStreamsCard: View {
                         Text(stream.nameDE ?? stream.name)
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
-                        Text("\(stream.exerciseCount ?? 0) Übungen")
+                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            ? "\(stream.exerciseCount ?? 0) exercise\((stream.exerciseCount ?? 0) == 1 ? "" : "s")"
+                            : "\(stream.exerciseCount ?? 0) Übungen")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }

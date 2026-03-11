@@ -179,7 +179,9 @@ struct SmartDayView: View {
                     Text("\(streak.current)")
                         .font(.appTitle2)
                         .foregroundStyle(.textPrimary)
-                    Text(streak.current == 1 ? "Tag Streak" : "Tage Streak")
+                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        ? "\(streak.current == 1 ? "day" : "days") streak"
+                        : (streak.current == 1 ? "Tag Streak" : "Tage Streak"))
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
@@ -201,7 +203,9 @@ struct SmartDayView: View {
         }
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Streak: \(streak.current) \(streak.current == 1 ? "Tag" : "Tage"), Rekord: \(streak.longest)")
+        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Streak: \(streak.current) \(streak.current == 1 ? "day" : "days"), record: \(streak.longest)"
+            : "Streak: \(streak.current) \(streak.current == 1 ? "Tag" : "Tage"), Rekord: \(streak.longest)")
     }
 
     private func educationSuggestionsCard(_ suggestions: [String]) -> some View {

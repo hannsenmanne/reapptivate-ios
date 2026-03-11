@@ -153,7 +153,9 @@ struct AclTodayProgramView: View {
                     Text(dayLabel)
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
-                    Text("\(vm.completedCount)/\(vm.totalCount) Übungen erledigt")
+                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        ? "\(vm.completedCount)/\(vm.totalCount) exercises completed"
+                        : "\(vm.completedCount)/\(vm.totalCount) Übungen erledigt")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -167,7 +169,9 @@ struct AclTodayProgramView: View {
                 } else {
                     let remaining = vm.totalCount - vm.completedCount
                     let minutes = remaining * 5
-                    Text("ca. \(minutes) Min.")
+                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        ? "approx. \(minutes) min"
+                        : "ca. \(minutes) Min.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -191,7 +195,9 @@ struct AclTodayProgramView: View {
             .frame(height: 4)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Fortschritt")
-            .accessibilityValue("\(vm.completedCount) von \(vm.totalCount) Übungen erledigt")
+            .accessibilityValue(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? "\(vm.completedCount) of \(vm.totalCount) exercises completed"
+                : "\(vm.completedCount) von \(vm.totalCount) Übungen erledigt")
         }
     }
 

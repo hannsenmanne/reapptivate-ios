@@ -103,14 +103,17 @@ final class WorkTimerViewModel {
     }
 
     var formattedWorkTime: String {
-        guard let startedAt = timerStartedAt else { return "0 Min." }
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        guard let startedAt = timerStartedAt else { return isEn ? "0 min" : "0 Min." }
         let elapsed = max(0, Int(Date().timeIntervalSince(startedAt)))
         let hours = elapsed / 3600
         let minutes = (elapsed % 3600) / 60
         if hours > 0 {
-            return "\(hours) Std. \(minutes) Min."
+            return isEn
+                ? "\(hours) hr\(hours == 1 ? "" : "s") \(minutes) min"
+                : "\(hours) Std. \(minutes) Min."
         }
-        return "\(minutes) Min."
+        return isEn ? "\(minutes) min" : "\(minutes) Min."
     }
 
     var adherencePercent: Double {

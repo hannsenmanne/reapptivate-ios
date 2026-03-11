@@ -77,7 +77,9 @@ struct AclStreamDetailView: View {
                         .foregroundStyle(.textSecondary)
                 }
 
-                Text("\(vm.exercises.count) Übungen")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(vm.exercises.count) exercise\(vm.exercises.count == 1 ? "" : "s")"
+                    : "\(vm.exercises.count) Übungen")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.accent)
                     .padding(.horizontal, 8)
@@ -231,7 +233,9 @@ struct AclExerciseCard: View {
         var tags: [ParameterTag] = []
 
         if let sets = exercise.sets {
-            tags.append(ParameterTag(label: "\(sets) Sätze", color: .farBlue))
+            tags.append(ParameterTag(label: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? "\(sets) set\(sets == 1 ? "" : "s")"
+                : "\(sets) Sätze", color: .farBlue))
         }
         if let reps = exercise.reps {
             tags.append(ParameterTag(label: "\(reps)x Wdh.", color: .accent))

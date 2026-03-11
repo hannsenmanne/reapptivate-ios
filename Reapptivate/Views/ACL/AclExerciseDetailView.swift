@@ -134,7 +134,9 @@ struct AclExerciseDetailView: View {
                 ParameterRow(label: "Wiederholungen", value: reps)
             }
             if let holdTime = exercise.holdTime, holdTime > 0 {
-                ParameterRow(label: "Haltezeit", value: "\(holdTime) Sek.")
+                ParameterRow(label: "Haltezeit", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(holdTime) sec"
+                    : "\(holdTime) Sek.")
             }
             if let tempo = exercise.tempo {
                 ParameterRow(label: "Tempo", value: tempo)

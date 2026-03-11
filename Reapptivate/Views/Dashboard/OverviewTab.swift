@@ -167,7 +167,9 @@ struct StatsRow: View {
 
             StatCard(
                 label: "Training seit",
-                value: "\(user.daysSinceStart) Tage"
+                value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(user.daysSinceStart) days"
+                    : "\(user.daysSinceStart) Tage"
             )
 
             StatCard(
@@ -293,7 +295,9 @@ struct StreakCard: View {
                     Text("\(streak.currentStreak)")
                         .font(.appTitle2)
                         .foregroundStyle(.textPrimary)
-                    Text(streak.currentStreak == 1 ? "Tag Streak" : "Tage Streak")
+                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        ? "\(streak.currentStreak == 1 ? "day" : "days") streak"
+                        : (streak.currentStreak == 1 ? "Tag Streak" : "Tage Streak"))
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
@@ -329,7 +333,9 @@ struct StreakCard: View {
         }
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Streak: \(streak.currentStreak) \(streak.currentStreak == 1 ? "Tag" : "Tage"), Rekord: \(streak.longestStreak)")
+        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Streak: \(streak.currentStreak) \(streak.currentStreak == 1 ? "day" : "days"), record: \(streak.longestStreak)"
+            : "Streak: \(streak.currentStreak) \(streak.currentStreak == 1 ? "Tag" : "Tage"), Rekord: \(streak.longestStreak)")
     }
 }
 

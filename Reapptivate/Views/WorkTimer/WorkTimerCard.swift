@@ -187,7 +187,9 @@ struct WorkTimerCard: View {
                     .foregroundStyle(.painGreen)
                     .font(.appCaption)
                     .accessibilityHidden(true)
-                Text("\(vm.breaksTakenToday) Pause\(vm.breaksTakenToday == 1 ? "" : "n") erledigt")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(vm.breaksTakenToday) break\(vm.breaksTakenToday == 1 ? "" : "s") completed"
+                    : "\(vm.breaksTakenToday) Pause\(vm.breaksTakenToday == 1 ? "" : "n") erledigt")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
             }

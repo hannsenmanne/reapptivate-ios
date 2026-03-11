@@ -57,7 +57,9 @@ struct PacingTemplateSelector: View {
                                             .foregroundStyle(.textPrimary)
                                         Spacer()
                                         if let baseline = activity.defaultBaseline {
-                                            Text("\(baseline) Min")
+                                            Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                                ? "\(baseline) min"
+                                                : "\(baseline) Min")
                                                 .font(.appCaption)
                                                 .foregroundStyle(.textSecondary)
                                         }
@@ -78,10 +80,14 @@ struct PacingTemplateSelector: View {
                                     RuleRow(icon: "chart.line.uptrend.xyaxis", text: "Steigerung: \(increment)% pro Woche")
                                 }
                                 if let pause = rules.mandatoryPauseMinutes, pause > 0 {
-                                    RuleRow(icon: "pause.circle.fill", text: "Obligatorische Pause: \(pause) Min")
+                                    RuleRow(icon: "pause.circle.fill", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                        ? "Mandatory break: \(pause) min"
+                                        : "Obligatorische Pause: \(pause) Min")
                                 }
                                 if let cap = rules.weeklySessionCap {
-                                    RuleRow(icon: "calendar.badge.clock", text: "Max. \(cap) Einheiten/Woche")
+                                    RuleRow(icon: "calendar.badge.clock", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                        ? "Max. \(cap) session\(cap == 1 ? "" : "s")/week"
+                                        : "Max. \(cap) Einheiten/Woche")
                                 }
                             }
                             .cardStyle()

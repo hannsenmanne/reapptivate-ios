@@ -6,6 +6,9 @@ options:
   xcodeVersion: "16.0"
   generateEmptyDirectories: true
   groupSortPosition: top
+  knownRegions:
+    - de
+    - en
 
 settings:
   base:

@@ -112,7 +112,9 @@ struct WorkTimerHistoryView: View {
             )
             StatPill(
                 label: "Serie",
-                value: "\(viewModel.currentStreak) Tag\(viewModel.currentStreak == 1 ? "" : "e")"
+                value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(viewModel.currentStreak) day\(viewModel.currentStreak == 1 ? "" : "s")"
+                    : "\(viewModel.currentStreak) Tag\(viewModel.currentStreak == 1 ? "" : "e")"
             )
             StatPill(
                 label: "Pausen",
@@ -265,7 +267,9 @@ private struct DayDetailRow: View {
                 Text(formattedDate)
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
-                Text("\(day.breaksCompleted) / \(day.breaksOffered) Pausen")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(day.breaksCompleted) / \(day.breaksOffered) breaks"
+                    : "\(day.breaksCompleted) / \(day.breaksOffered) Pausen")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }

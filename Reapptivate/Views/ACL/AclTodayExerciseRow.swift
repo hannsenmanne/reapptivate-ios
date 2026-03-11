@@ -219,7 +219,9 @@ struct AclTodayExerciseRow: View {
     private func buildParams() -> [ParamTag] {
         var tags: [ParamTag] = []
         if let sets = exercise.sets {
-            tags.append(ParamTag(label: "\(sets) Sätze", color: .farBlue))
+            tags.append(ParamTag(label: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? "\(sets) set\(sets == 1 ? "" : "s")"
+                : "\(sets) Sätze", color: .farBlue))
         }
         if let reps = exercise.reps {
             tags.append(ParamTag(label: "\(reps)x Wdh.", color: .accent))

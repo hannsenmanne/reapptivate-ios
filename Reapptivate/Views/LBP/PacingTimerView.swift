@@ -148,7 +148,9 @@ struct PacingTimerView: View {
                                     .foregroundStyle(.textPrimary)
                                 Spacer()
                                 if let quota = activity.quota {
-                                    Text("Ziel: \(quota) Min")
+                                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                        ? "Target: \(quota) min"
+                                        : "Ziel: \(quota) Min")
                                         .font(.appCaption)
                                         .foregroundStyle(.textSecondary)
                                 }
@@ -213,7 +215,9 @@ struct PacingTimerView: View {
                         .foregroundStyle(.textSecondary)
                     Spacer()
                     if let quota = selectedActivity?.quota {
-                        Text("Ziel: \(quota) Min")
+                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            ? "Target: \(quota) min"
+                            : "Ziel: \(quota) Min")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -296,7 +300,9 @@ struct PacingTimerView: View {
                 .foregroundStyle(.painAmber)
 
             if let pauseMin = viewModel.pacingPlan?.rules.mandatoryPauseMinutes {
-                Text("Mindestens \(pauseMin) Minuten Pause einhalten")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "Keep a break of at least \(pauseMin) minute\(pauseMin == 1 ? "" : "s")"
+                    : "Mindestens \(pauseMin) Minuten Pause einhalten")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }

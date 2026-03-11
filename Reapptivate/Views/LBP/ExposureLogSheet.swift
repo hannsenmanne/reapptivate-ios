@@ -239,7 +239,9 @@ struct ExposureLogSheet: View {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.down")
                         .foregroundStyle(.painGreen)
-                    Text("Angst-Reduktion: -\(fearReduction) Punkte")
+                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        ? "Fear reduction: -\(fearReduction) point\(fearReduction == 1 ? "" : "s")"
+                        : "Angst-Reduktion: -\(fearReduction) Punkte")
                         .font(.appHeadline)
                         .foregroundStyle(.painGreen)
                 }

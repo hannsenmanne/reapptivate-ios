@@ -117,7 +117,9 @@ struct CustomExerciseDetailView: View {
             ParameterRow(label: "Wiederholungen", value: "\(exercise.reps)")
 
             if let pauseSeconds = exercise.pauseSeconds, pauseSeconds > 0 {
-                ParameterRow(label: "Pause zwischen Sätzen", value: "\(pauseSeconds) Sek.")
+                ParameterRow(label: "Pause zwischen Sätzen", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(pauseSeconds) sec"
+                    : "\(pauseSeconds) Sek.")
             }
         }
         .cardStyle()

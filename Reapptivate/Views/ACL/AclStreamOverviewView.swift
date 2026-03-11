@@ -141,7 +141,9 @@ struct AclStreamCard: View {
                         .lineLimit(2)
                 }
 
-                Text("\(stream.exerciseCount ?? 0) Übungen")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(stream.exerciseCount ?? 0) exercise\((stream.exerciseCount ?? 0) == 1 ? "" : "s")"
+                    : "\(stream.exerciseCount ?? 0) Übungen")
                     .font(.appCaption2)
                     .foregroundStyle(isLocked ? .textTertiary : .accent)
             }
@@ -163,12 +165,20 @@ struct AclStreamCard: View {
     private var streamAccessibilityLabel: String {
         let name = stream.nameDE ?? stream.name
         let exerciseCount = stream.exerciseCount ?? 0
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        let exerciseWord = isEn
+            ? "\(exerciseCount) exercise\(exerciseCount == 1 ? "" : "s")"
+            : "\(exerciseCount) Übungen"
         if isLocked {
             let milestone = stream.milestone ?? stream.unlockMilestone
-            let unlockInfo = milestone.map { "Wird ab Meilenstein \($0) freigeschaltet." } ?? ""
-            return "\(name), gesperrt, \(exerciseCount) Übungen. \(unlockInfo)"
+            let unlockInfo = milestone.map {
+                isEn ? "Unlocks at milestone \($0)." : "Wird ab Meilenstein \($0) freigeschaltet."
+            } ?? ""
+            return isEn
+                ? "\(name), locked, \(exerciseWord). \(unlockInfo)"
+                : "\(name), gesperrt, \(exerciseWord). \(unlockInfo)"
         }
-        return "\(name), \(exerciseCount) Übungen"
+        return "\(name), \(exerciseWord)"
     }
 }
 

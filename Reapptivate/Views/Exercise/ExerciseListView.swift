@@ -22,7 +22,9 @@ struct ExerciseListView: View {
                     .foregroundStyle(.textSecondary)
 
                 let totalMinutes = exercises.reduce(0) { $0 + $1.exercise.estimatedDurationMinutes }
-                Text("~\(totalMinutes) Min.")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "~\(totalMinutes) min"
+                    : "~\(totalMinutes) Min.")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }

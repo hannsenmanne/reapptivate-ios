@@ -71,7 +71,9 @@ struct AclTodayProgramCard: View {
                             .font(.appCaptionMedium)
                             .foregroundStyle(.painGreen)
                     } else if totalCount > 0 {
-                        Text("\(completedCount) von \(totalCount) Übungen erledigt")
+                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            ? "\(completedCount) of \(totalCount) exercises completed"
+                            : "\(completedCount) von \(totalCount) Übungen erledigt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.accent)
                     } else {
@@ -96,8 +98,12 @@ struct AclTodayProgramCard: View {
         .accessibilityLabel("Heutiges Programm: \(todayLabel)")
         .accessibilityValue(
             allDone
-                ? "Alle \(totalCount) Übungen abgeschlossen"
-                : "\(completedCount) von \(totalCount) Übungen erledigt"
+                ? (UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "All \(totalCount) exercises completed"
+                    : "Alle \(totalCount) Übungen abgeschlossen")
+                : (UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(completedCount) of \(totalCount) exercises completed"
+                    : "\(completedCount) von \(totalCount) Übungen erledigt")
         )
         .accessibilityHint("Antippen, um das Programm zu öffnen")
         .accessibilityAddTraits(.isButton)

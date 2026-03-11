@@ -188,7 +188,9 @@ private struct BreakExerciseCard: View {
                     .foregroundStyle(.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Text("\(exercise.durationSeconds) Sek.")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(exercise.durationSeconds) sec"
+                    : "\(exercise.durationSeconds) Sek.")
                     .font(.appCaption2)
                     .foregroundStyle(.textTertiary)
             }

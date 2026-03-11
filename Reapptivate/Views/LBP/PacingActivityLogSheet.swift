@@ -147,7 +147,9 @@ struct PacingActivityLogSheet: View {
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
 
-                            Stepper("\(donePauses) Pausen", value: $donePauses, in: 0...20)
+                            Stepper(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                ? "\(donePauses) break\(donePauses == 1 ? "" : "s")"
+                                : "\(donePauses) Pausen", value: $donePauses, in: 0...20)
                                 .font(.appSubheadline)
                         }
                     }

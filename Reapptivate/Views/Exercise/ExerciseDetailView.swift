@@ -115,7 +115,9 @@ struct ExerciseDetailView: View {
             ParameterRow(label: "Wiederholungen", value: "\(exercise.exercise.reps)")
 
             if let holdTime = exercise.exercise.holdTime {
-                ParameterRow(label: "Haltezeit", value: "\(holdTime) Sek.")
+                ParameterRow(label: "Haltezeit", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "\(holdTime) sec"
+                    : "\(holdTime) Sek.")
             }
 
             if let tempo = exercise.exercise.tempo {
@@ -123,7 +125,9 @@ struct ExerciseDetailView: View {
             }
 
             ParameterRow(label: "Intensität", value: exercise.exercise.intensity)
-            ParameterRow(label: "Pause zwischen Sätzen", value: "\(exercise.exercise.restBetweenSets) Sek.")
+            ParameterRow(label: "Pause zwischen Sätzen", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? "\(exercise.exercise.restBetweenSets) sec"
+                : "\(exercise.exercise.restBetweenSets) Sek.")
         }
         .cardStyle()
     }

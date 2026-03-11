@@ -33,13 +33,19 @@ struct PacingPlanView: View {
                             RuleRow(icon: "chart.line.uptrend.xyaxis", text: "Steigerung: \(increment)% pro Woche")
                         }
                         if let pause = rules.mandatoryPauseMinutes, pause > 0 {
-                            RuleRow(icon: "pause.circle", text: "Obligatorische Pause: \(pause) Min")
+                            RuleRow(icon: "pause.circle", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                ? "Mandatory break: \(pause) min"
+                                : "Obligatorische Pause: \(pause) Min")
                         }
                         if let freq = rules.pauseFrequencyMinutes, freq > 0 {
-                            RuleRow(icon: "clock.arrow.circlepath", text: "Pause alle \(freq) Min")
+                            RuleRow(icon: "clock.arrow.circlepath", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                ? "Break every \(freq) min"
+                                : "Pause alle \(freq) Min")
                         }
                         if let cap = rules.weeklySessionCap {
-                            RuleRow(icon: "calendar", text: "Max. \(cap) Einheiten/Woche")
+                            RuleRow(icon: "calendar", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                ? "Max. \(cap) session\(cap == 1 ? "" : "s")/week"
+                                : "Max. \(cap) Einheiten/Woche")
                         }
                     }
                     .cardStyle(padding: 12)
