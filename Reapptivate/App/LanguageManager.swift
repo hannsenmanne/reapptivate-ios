@@ -17,12 +17,21 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 }
 
 @Observable @MainActor final class LanguageManager {
-    @ObservationIgnored @AppStorage("appLanguage")
-    private var _language: String = AppLanguage.german.rawValue
+    // Tracked stored property — @Observable synthesizes observation for this,
+    // so mutations trigger immediate SwiftUI view updates.
+    private var trackedLanguage: AppLanguage
 
     var language: AppLanguage {
-        get { AppLanguage(rawValue: _language) ?? .german }
-        set { _language = newValue.rawValue }
+        get { trackedLanguage }
+        set {
+            trackedLanguage = newValue
+            UserDefaults.standard.set(newValue.rawValue, forKey: "appLanguage")
+        }
+    }
+
+    init() {
+        let raw = UserDefaults.standard.string(forKey: "appLanguage") ?? AppLanguage.german.rawValue
+        trackedLanguage = AppLanguage(rawValue: raw) ?? .german
     }
 
     var isEnglish: Bool { language == .english }
