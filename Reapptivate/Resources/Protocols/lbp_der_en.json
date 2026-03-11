@@ -1,0 +1,316 @@
+{
+  "id": "lbp-nonspecific-protocol-der-v1",
+  "tendinopathy_type": "LBP_NONSPECIFIC",
+  "name": "Non-Specific Low Back Pain — DER Profile (Distress-Endurance)",
+  "description": "Evidence-based 12-week program with pacing and body awareness for Distress-Endurance Responders. Focus: Preventing overload through structured dosing.",
+  "duration_weeks": 12,
+  "frequency_per_week": 3,
+  "max_pain_level": 3,
+  "max_phase": 3,
+  "pain_rule": "Pain max. 3/10 during exercise. Stop at the first signs of fatigue — do not push through!",
+  "evidence_base": [
+    "Hasenbring et al. (2012): Avoidance-Endurance Model",
+    "Nielson et al. (2009): Adaptive Pacing",
+    "McCracken & Samuel (2007): Psychological flexibility in chronic pain"
+  ],
+  "progression_criteria": [
+    "Average pain ≤3/10",
+    "Compliance 50–80% (window!) — not >80%",
+    "Pacing strategies are being applied"
+  ],
+  "progression_rules": {
+    "regress_pain_spike": 6,
+    "regress_avg_pain": 4,
+    "hold_min_days": 14,
+    "hold_min_sessions": 4,
+    "hold_max_compliance": 80,
+    "progress_avg_pain": 3,
+    "progress_min_compliance": 50,
+    "progress_max_compliance": 80
+  },
+  "phase_education": {
+    "1": "**Phase 1: Mindful Load Management (Weeks 1–4)**\n\nYour screening indicates a distress-endurance pattern: you tend to push through despite pain. This perseverance mindset often leads to overload and setbacks.\n\n**Goal of this phase:** Learn to listen to your body and take breaks in time.\n\n**Your strategy:**\n- Breaks are part of the healing process, not weakness\n- Stop at 3/10 pain — not only when symptoms intensify\n- \"Pacing\" means: dose the load BEFORE symptoms worsen\n- Body awareness exercises help recognize early warning signs\n\n**Scientific basis:** Hasenbring et al. (2012) show that endurance behavior is associated with worse outcomes. Dosing is the key.",
+    "2": "**Phase 2: Structured Progression With Boundaries (Weeks 5–8)**\n\nYou have learned to take breaks. Now comes the challenge: increasing load while staying within healthy limits.\n\n**Goal of this phase:** Build strength WITHOUT falling back into old overload patterns.\n\n**Your strategy:**\n- Increase weight only when technique is clean AND pain remains low\n- Compliance target: 50–80% (not 100%!) — overachieving is a warning sign\n- On bad days: reducing is strength, not weakness\n- Use pacing exercises as a \"reality check\"\n\n**Scientific basis:** Nielson et al. (2009): Adaptive pacing reduces flare-ups and improves function long-term.",
+    "3": "**Phase 3: Sustainable Resilience (Weeks 9–12)**\n\nYou've gotten strong — now it's about maintaining that strength long-term without boom-bust cycles.\n\n**Goal of this phase:** Daily life integration with smart energy management.\n\n**Your strategy:**\n- Deadlifts & carries: yes. But with a plan, not impulsively.\n- Keep a load diary: too many \"good days\" in a row = caution\n- Actively build in recovery days (not only when your body breaks down)\n- Think long-term: better 80% performance over years than 100% for weeks\n\n**Scientific basis:** McCracken & Samuel (2007): Acceptance of limits (not fighting them) correlates with better quality of life."
+  },
+  "exercises": [
+    {
+      "id": "lbp-cat-camel",
+      "name": "Cat-Camel",
+      "type": "MOTOR_CONTROL",
+      "description": "Quadruped position. Alternate between rounding the back (cat) and arching (camel). Move slowly and with control.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 90,
+      "intensity": "Bodyweight",
+      "cognitive_cues": {
+        "FAR": "Your back is resilient and needs movement. This gentle mobilization is safe and causes no harm. Explore the full range of motion.",
+        "DER": "Move slowly and mindfully. At the first signs of fatigue or strain, taking a break is perfectly fine — that's not a sign of weakness.",
+        "EER": "Use your natural motivation productively. Focus on movement quality, not intensity or speed.",
+        "AR": "Perform the movement with control. Focus on a smooth transition between positions."
+      },
+      "phase": 1,
+      "phase_title": "Core Activation & Mobility",
+      "weeks_range": "Weeks 1–4",
+      "phase_goal": "Activate core stability and regain pain-free movement"
+    },
+    {
+      "id": "lbp-pelvic-tilt",
+      "name": "Pelvic Tilt",
+      "type": "MOTOR_CONTROL",
+      "description": "Supine, knees bent. Gently tilt the pelvis forward and backward. Back stays relaxed on the floor.",
+      "sets": 3,
+      "reps": 12,
+      "rest_between_sets": 60,
+      "intensity": "Bodyweight",
+      "cognitive_cues": {
+        "FAR": "This exercise shows you that you have control over your spine. Movement = healing. Pain up to 5/10 is normal and safe.",
+        "DER": "Pay close attention to muscle activity. Stop when you feel tension. Less is more — quality over quantity.",
+        "EER": "Your energy is valuable. Use it purposefully: every repetition with full attention, not mechanically.",
+        "AR": "Focus on the neutral position of your pelvis. Small, controlled movements."
+      },
+      "phase": 1,
+      "phase_title": "Core Activation & Mobility",
+      "weeks_range": "Weeks 1–4",
+      "phase_goal": "Activate core stability and regain pain-free movement"
+    },
+    {
+      "id": "lbp-dead-bug",
+      "name": "Dead Bug",
+      "type": "MOTOR_CONTROL",
+      "description": "Supine, arms up, knees at 90°. Extend the opposite leg and reach the arm overhead. Alternate sides.",
+      "sets": 3,
+      "reps": 8,
+      "hold_time": 3,
+      "rest_between_sets": 90,
+      "intensity": "Bodyweight",
+      "cognitive_cues": {
+        "FAR": "This exercise challenges your back — that's a good thing! Every repetition builds confidence that your back is stable.",
+        "DER": "If one side is harder, do fewer reps on that side. Asymmetry is okay — your body is showing what it needs.",
+        "EER": "Perfection is not the goal. Focus on clean technique rather than maximum reps. Better 6 good ones than 10 sloppy ones.",
+        "AR": "Maintain core tension throughout the movement. Keep breathing steadily."
+      },
+      "phase": 1,
+      "phase_title": "Core Activation & Mobility",
+      "weeks_range": "Weeks 1–4",
+      "phase_goal": "Activate core stability and regain pain-free movement"
+    },
+    {
+      "id": "lbp-hip-hinge",
+      "name": "Hip Hinge (Romanian Deadlift)",
+      "type": "HSR",
+      "description": "Standing, light dumbbells. Push hips back, lean upper body forward. Keep the back straight.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 120,
+      "tempo": "3-0-3",
+      "intensity": "Light dumbbells (2–8 kg), progressively increase",
+      "cognitive_cues": {
+        "FAR": "This movement is one of the safest for your back — it trains exactly the movement pattern you need in daily life. Don't be afraid to increase the weight.",
+        "DER": "Only increase weight when your technique is solid AND you feel good. Don't push on bad days — that's intelligence, not weakness.",
+        "EER": "Progression doesn't just mean more weight. Better form is also progress. Celebrate technical improvements equally.",
+        "AR": "Keep the back neutral. Movement comes from the hips, not the lower back."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Loading",
+      "weeks_range": "Weeks 5–8",
+      "phase_goal": "Build resilience and strengthen back muscles"
+    },
+    {
+      "id": "lbp-plank",
+      "name": "Plank (Forearm Support)",
+      "type": "ISOMETRIC",
+      "description": "Support on forearms and toes. Body forms a straight line. Actively engage abs and glutes.",
+      "sets": 3,
+      "reps": 1,
+      "hold_time": 30,
+      "rest_between_sets": 90,
+      "intensity": "Bodyweight, progressively increase duration",
+      "cognitive_cues": {
+        "FAR": "Tension in your back is a sign of activity, not damage. You are building strength. Hold on, even when it gets uncomfortable.",
+        "DER": "If you start shaking: stop! That's your body saying \"enough.\" Better 20s with good form than 40s with compensation.",
+        "EER": "Timing matters: use a timer. Don't tack on \"5 more seconds\" — stick to the plan.",
+        "AR": "Control your breathing. Don't hold your breath — keep breathing steadily."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Loading",
+      "weeks_range": "Weeks 5–8",
+      "phase_goal": "Build resilience and strengthen back muscles"
+    },
+    {
+      "id": "lbp-goblet-squat",
+      "name": "Goblet Squat",
+      "type": "HSR",
+      "description": "Standing, hold weight at chest level (kettlebell or dumbbell). Slowly lower into a squat and stand up with control.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 120,
+      "tempo": "3-0-3",
+      "intensity": "Light kettlebell/dumbbell (4–12 kg)",
+      "cognitive_cues": {
+        "FAR": "Squats are excellent for your back — they train the entire system. Depth is safe as long as form is good. Go deeper than you think.",
+        "DER": "Only go as deep as pain-free. On some days that will be less — accept that. Adaptation is strength.",
+        "EER": "Focus on the 3-0-3 tempo. That's your speed limiter — it prevents enthusiasm from leading to injury.",
+        "AR": "Chest up, weight on your heels. Knees track over your toes."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Loading",
+      "weeks_range": "Weeks 5–8",
+      "phase_goal": "Build resilience and strengthen back muscles"
+    },
+    {
+      "id": "lbp-bird-dog",
+      "name": "Bird Dog",
+      "type": "CONCENTRIC",
+      "description": "Quadruped position. Simultaneously extend the opposite arm and leg, hold 2 sec, then switch.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 90,
+      "intensity": "Bodyweight",
+      "cognitive_cues": {
+        "FAR": "This anti-rotation exercise shows that your back can stay stable even under load. That's functional strength.",
+        "DER": "Balance is difficult? Then reduce the range of motion. Shorter movements with control > long movements with wobbling.",
+        "EER": "Count your reps deliberately. Don't go on autopilot — every repetition deserves attention.",
+        "AR": "Hips and shoulders stay parallel to the floor. No trunk rotation."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Loading",
+      "weeks_range": "Weeks 5–8",
+      "phase_goal": "Build resilience and strengthen back muscles"
+    },
+    {
+      "id": "lbp-deadlift",
+      "name": "Deadlift",
+      "type": "HSR",
+      "description": "Standing, barbell or heavy dumbbells. Controlled lift with a straight back, hinging from the hips.",
+      "sets": 4,
+      "reps": 8,
+      "rest_between_sets": 150,
+      "tempo": "3-0-3",
+      "intensity": "60–75% 1RM, progressively increase",
+      "cognitive_cues": {
+        "FAR": "The deadlift is the king exercise for a robust back. Weight on the bar = proof that your back is strong. Increase boldly.",
+        "DER": "Form over weight. Always. When technique suffers: reduce weight. Ego has no place here — your health does.",
+        "EER": "Log your weight. Progression must be planned: max. 2.5 kg per week. Faster = risk.",
+        "AR": "Diaphragmatic breathing, brace core before lifting. Bar stays close to the body."
+      },
+      "phase": 3,
+      "phase_title": "Functional Movements",
+      "weeks_range": "Weeks 9–12",
+      "phase_goal": "Everyday loading and sport-specific preparation"
+    },
+    {
+      "id": "lbp-farmers-carry",
+      "name": "Farmer's Carry",
+      "type": "CONCENTRIC",
+      "description": "Heavy dumbbells in each hand, walk upright (20–30 m). Keep trunk stable, don't lean to the side.",
+      "sets": 3,
+      "reps": 1,
+      "hold_time": 30,
+      "rest_between_sets": 120,
+      "intensity": "Heavy dumbbells (10–20 kg each)",
+      "cognitive_cues": {
+        "FAR": "This exercise simulates everyday loading — carrying groceries, luggage. It prepares you for real life. That's functional strength.",
+        "DER": "Distance matters less than symmetric loading. Better 15 m with good form than 30 m with a crooked trunk.",
+        "EER": "Use this exercise as a test, not a competition. If you lose form after 20 m: stop. No \"just a bit more.\"",
+        "AR": "Shoulders back, eyes forward. Even steps."
+      },
+      "phase": 3,
+      "phase_title": "Functional Movements",
+      "weeks_range": "Weeks 9–12",
+      "phase_goal": "Everyday loading and sport-specific preparation"
+    },
+    {
+      "id": "lbp-split-squat",
+      "name": "Split Squat (Bulgarian Split Squat)",
+      "type": "HSR",
+      "description": "Lunge position, rear foot elevated on a bench. Slowly lower down and push up.",
+      "sets": 3,
+      "reps": 10,
+      "rest_between_sets": 120,
+      "tempo": "3-0-3",
+      "intensity": "Bodyweight, then dumbbells (5–15 kg)",
+      "cognitive_cues": {
+        "FAR": "Single-leg exercises are advanced — you're ready! Balance challenge = neurological training. Your back benefits.",
+        "DER": "One side weaker? Start with the weak side, do fewer reps there. Balance out asymmetry, don't force it.",
+        "EER": "Only add weight when you've completed 3 sessions in a row with 3x10 clean. Clear rule = protection from overenthusiasm.",
+        "AR": "Upper body upright, front knee over toes. Back knee toward the floor."
+      },
+      "phase": 3,
+      "phase_title": "Functional Movements",
+      "weeks_range": "Weeks 9–12",
+      "phase_goal": "Everyday loading and sport-specific preparation"
+    },
+    {
+      "id": "lbp-der-body-scan",
+      "name": "Body Scan (Body Awareness)",
+      "type": "BODY_AWARENESS",
+      "description": "Supine, eyes closed. Systematically \"scan\" through the body: feet, legs, pelvis, back, shoulders. Where is tension? Where is relaxation?",
+      "sets": 2,
+      "reps": 1,
+      "hold_time": 120,
+      "rest_between_sets": 60,
+      "intensity": "Pure awareness exercise, no physical load",
+      "cognitive_cues": {
+        "DER": "Goal: Recognize early warning signals BEFORE pain intensifies. You are learning to understand your body's language. This is the foundation for intelligent pacing — prevention, not reaction."
+      },
+      "phase": 1,
+      "phase_title": "Core Activation & Mobility",
+      "weeks_range": "Weeks 1–4",
+      "phase_goal": "Activate core stability and regain pain-free movement"
+    },
+    {
+      "id": "lbp-der-pacing-cycle",
+      "name": "Load-Rest Cycle",
+      "type": "PACING",
+      "description": "Sit, stand up, 1 min break. Sit, stand up, 1 min break. 5 cycles. Goal: Build in breaks BEFORE pain arrives.",
+      "sets": 5,
+      "reps": 1,
+      "rest_between_sets": 60,
+      "intensity": "Time-based, not load-based",
+      "cognitive_cues": {
+        "DER": "Practice taking breaks BEFORE pain increases. This trains a healthy loading pattern. Breaks are part of the training, not failure. This is active self-care."
+      },
+      "phase": 1,
+      "phase_title": "Core Activation & Mobility",
+      "weeks_range": "Weeks 1–4",
+      "phase_goal": "Activate core stability and regain pain-free movement"
+    },
+    {
+      "id": "lbp-der-timed-standing",
+      "name": "Timed Standing (Pacing Training)",
+      "type": "PACING",
+      "description": "Stand for 3 minutes. Use a timer! After 3 min: sit for 2 min. 4 rounds.",
+      "sets": 4,
+      "reps": 1,
+      "hold_time": 180,
+      "rest_between_sets": 120,
+      "intensity": "Time-based — do not extend, even if you still feel fine",
+      "cognitive_cues": {
+        "DER": "The hard part: stopping when you still feel fine. You are training to listen to the clock instead of your \"I can do more\" feeling. This breaks the endurance pattern."
+      },
+      "phase": 2,
+      "phase_title": "Progressive Loading",
+      "weeks_range": "Weeks 5–8",
+      "phase_goal": "Build resilience and strengthen back muscles"
+    },
+    {
+      "id": "lbp-der-symptom-awareness-walk",
+      "name": "Symptom Awareness Walk",
+      "type": "BODY_AWARENESS",
+      "description": "10-minute walk. Stop every 2 minutes: mental checklist (pain? tension? fatigue?). At 3/10 pain: turn back.",
+      "sets": 1,
+      "reps": 1,
+      "hold_time": 600,
+      "rest_between_sets": 0,
+      "intensity": "Leisurely pace, focus on body signals",
+      "cognitive_cues": {
+        "DER": "You are practicing regularly checking your body status — not just walking until you can't anymore. The 3/10 rule is your safeguard. Turning back is success, not failure."
+      },
+      "phase": 3,
+      "phase_title": "Functional Movements",
+      "weeks_range": "Weeks 9–12",
+      "phase_goal": "Everyday loading and sport-specific preparation"
+    }
+  ]
+}
