@@ -7,6 +7,7 @@ struct ReapptivateApp: App {
     @State private var appState = AppState()
     @State private var apiClient = APIClient()
     @State private var networkMonitor = NetworkMonitor()
+    @State private var languageManager = LanguageManager()
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
 
@@ -21,6 +22,8 @@ struct ReapptivateApp: App {
                 .environment(appState)
                 .environment(apiClient)
                 .environment(networkMonitor)
+                .environment(languageManager)
+                .environment(\.locale, languageManager.language.locale)
                 .environment(\.hapticsEnabled, hapticsEnabled)
                 .preferredColorScheme(appearanceMode.colorScheme)
         }
@@ -105,19 +108,24 @@ struct RootView: View {
 
 private extension ReapptivateApp {
     func registerNotificationCategories() {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "appLanguage") ?? "de") ?? .german
+        let doneLabel = lang == .english ? "Done" : "Erledigt"
+        let snoozeLabel = lang == .english ? "Later (5 min)" : "Später (5 Min.)"
+        let skipLabel = lang == .english ? "Skip" : "Überspringen"
+
         let completeAction = UNNotificationAction(
             identifier: "COMPLETE_BREAK",
-            title: "Erledigt",
+            title: doneLabel,
             options: .foreground
         )
         let snoozeAction = UNNotificationAction(
             identifier: "SNOOZE_BREAK",
-            title: "Später (5 Min.)",
+            title: snoozeLabel,
             options: []
         )
         let skipAction = UNNotificationAction(
             identifier: "SKIP_BREAK",
-            title: "Überspringen",
+            title: skipLabel,
             options: .destructive
         )
         let breakCategory = UNNotificationCategory(
