@@ -1,5 +1,9 @@
 import Foundation
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 /// Loads exercise protocols from bundled JSON resources.
 /// Protocols are bundled locally so they work offline.
 /// The JSON files are generated from the web app's mockProtocols.ts
@@ -207,70 +211,131 @@ final class ProtocolLoader: @unchecked Sendable {
     }
 
     private func tendinopathyPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Isometric"
+            case 2: return "Phase 2: Heavy-Slow Resistance"
+            case 3: return "Phase 3: Eccentric"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Isometrisch"
-        case 2: "Phase 2: Heavy-Slow Resistance"
-        case 3: "Phase 3: Exzentrisch"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Isometrisch"
+        case 2: return "Phase 2: Heavy-Slow Resistance"
+        case 3: return "Phase 3: Exzentrisch"
+        default: return "Phase \(phase)"
         }
     }
 
     private func lbpPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Stabilization"
+            case 2: return "Phase 2: Load Progression"
+            case 3: return "Phase 3: Functional Training"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Stabilisation"
-        case 2: "Phase 2: Belastungsaufbau"
-        case 3: "Phase 3: Funktionstraining"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Stabilisation"
+        case 2: return "Phase 2: Belastungsaufbau"
+        case 3: return "Phase 3: Funktionstraining"
+        default: return "Phase \(phase)"
         }
     }
 
     private func tensionPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Relaxation"
+            case 2: return "Phase 2: Mobilization"
+            case 3: return "Phase 3: Strengthening"
+            case 4: return "Phase 4: Functional Training"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Entspannung"
-        case 2: "Phase 2: Mobilisation"
-        case 3: "Phase 3: Kräftigung"
-        case 4: "Phase 4: Funktionstraining"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Entspannung"
+        case 2: return "Phase 2: Mobilisation"
+        case 3: return "Phase 3: Kräftigung"
+        case 4: return "Phase 4: Funktionstraining"
+        default: return "Phase \(phase)"
         }
     }
 
     private func shoulderPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Acute / Pain Relief"
+            case 2: return "Phase 2: Strengthening"
+            case 3: return "Phase 3: Build-up"
+            case 4: return "Phase 4: Return to Activity"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Akut / Schmerzlinderung"
-        case 2: "Phase 2: Kräftigung"
-        case 3: "Phase 3: Aufbau"
-        case 4: "Phase 4: Rückkehr zur Aktivität"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Akut / Schmerzlinderung"
+        case 2: return "Phase 2: Kräftigung"
+        case 3: return "Phase 3: Aufbau"
+        case 4: return "Phase 4: Rückkehr zur Aktivität"
+        default: return "Phase \(phase)"
         }
     }
 
     private func frozenShoulderPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Pain Management"
+            case 2: return "Phase 2: Intensive Stretching"
+            case 3: return "Phase 3: Strengthening"
+            case 4: return "Phase 4: Return & Maintenance"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Schmerzmanagement"
-        case 2: "Phase 2: Intensive Dehnung"
-        case 3: "Phase 3: Kräftigung"
-        case 4: "Phase 4: Rückkehr & Erhaltung"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Schmerzmanagement"
+        case 2: return "Phase 2: Intensive Dehnung"
+        case 3: return "Phase 3: Kräftigung"
+        case 4: return "Phase 4: Rückkehr & Erhaltung"
+        default: return "Phase \(phase)"
         }
     }
 
     private func neckPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Pain Relief"
+            case 2: return "Phase 2: Mobilization"
+            case 3: return "Phase 3: Stabilization"
+            case 4: return "Phase 4: Functional Training"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Schmerzlinderung"
-        case 2: "Phase 2: Mobilisation"
-        case 3: "Phase 3: Stabilisation"
-        case 4: "Phase 4: Funktionstraining"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Schmerzlinderung"
+        case 2: return "Phase 2: Mobilisation"
+        case 3: return "Phase 3: Stabilisation"
+        case 4: return "Phase 4: Funktionstraining"
+        default: return "Phase \(phase)"
         }
     }
 
     private func lateralAnkleSprainPhaseName(_ phase: Int) -> String {
+        if isEnglishLocale {
+            switch phase {
+            case 1: return "Phase 1: Protection & Decongestioning"
+            case 2: return "Phase 2: Early Mobilization"
+            case 3: return "Phase 3: Strengthening & Proprioception"
+            case 4: return "Phase 4: Return to Sport"
+            default: return "Phase \(phase)"
+            }
+        }
         switch phase {
-        case 1: "Phase 1: Schutz & Entstauung"
-        case 2: "Phase 2: Frühe Mobilisation"
-        case 3: "Phase 3: Kräftigung & Propriozeption"
-        case 4: "Phase 4: Return to Sport"
-        default: "Phase \(phase)"
+        case 1: return "Phase 1: Schutz & Entstauung"
+        case 2: return "Phase 2: Frühe Mobilisation"
+        case 3: return "Phase 3: Kräftigung & Propriozeption"
+        case 4: return "Phase 4: Return to Sport"
+        default: return "Phase \(phase)"
         }
     }
 }
