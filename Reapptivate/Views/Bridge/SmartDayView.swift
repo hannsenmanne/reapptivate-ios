@@ -2,6 +2,9 @@ import SwiftUI
 
 struct SmartDayView: View {
     let smartDay: SmartDayResponse?
+    let completedCount: Int
+    let totalCount: Int
+    let onNavigateToProgram: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 20) {
@@ -9,30 +12,22 @@ struct SmartDayView: View {
                 // Day Message + Insight
                 dayMessageCard(data)
 
-                // Check-In Summary
-                if let checkin = data.morningCheckin {
-                    checkinSummaryCard(checkin)
-                }
+                // Streak
+                streakCard(data.streakInfo)
 
-                // Training Day vs Rest Day
-                // Exercise order hidden — exerciseOrder contains raw IDs that can't be resolved to names here
-                // if data.isTrainingDay {
-                //     trainingDayContent(data)
-                // }
-                if !data.isTrainingDay {
-                    restDayContent(data)
+                // Heutiges Programm
+                if data.isTrainingDay && totalCount > 0 {
+                    TodaysPlanCard(
+                        completedCount: completedCount,
+                        totalCount: totalCount,
+                        onTap: { onNavigateToProgram?() }
+                    )
+                } else if !data.isTrainingDay {
+                    RestDayCard()
                 }
 
                 // Work Timer (LBP / Neck / Tension)
                 WorkTimerCard()
-
-                // Streak
-                streakCard(data.streakInfo)
-
-                // Education Suggestions — hidden until content actually exists
-                // if !data.educationSuggestions.isEmpty {
-                //     educationSuggestionsCard(data.educationSuggestions)
-                // }
 
                 // Training Schedule
                 TrainingScheduleCard()
@@ -117,40 +112,6 @@ struct SmartDayView: View {
         .cardStyle()
     }
 
-    private func checkinSummaryCard(_ checkin: MorningCheckinSummary) -> some View {
-        HStack(spacing: 16) {
-            checkinPill(label: "Schmerz", value: "\(checkin.painLevel)/10", color: Color.painColor(for: checkin.painLevel))
-
-            if let sleep = checkin.sleepQuality {
-                checkinPill(label: "Schlaf", value: "\(sleep)/5", color: .accent)
-            }
-
-            if let stiffness = checkin.stiffness {
-                checkinPill(label: "Steifheit", value: "\(stiffness)/10", color: .painAmber)
-            }
-
-            if let mood = checkin.mood {
-                let emojis = ["😫", "😕", "😐", "🙂", "😊"]
-                let emoji = mood >= 1 && mood <= 5 ? emojis[mood - 1] : "😐"
-                checkinPill(label: "Stimmung", value: emoji, color: .accent)
-            }
-
-            Spacer()
-        }
-        .cardStyle()
-    }
-
-    private func checkinPill(label: String, value: String, color: Color) -> some View {
-        VStack(spacing: 4) {
-            Text(value)
-                .font(.appHeadline)
-                .foregroundStyle(color)
-            Text(label)
-                .font(.appCaption2)
-                .foregroundStyle(.textSecondary)
-        }
-    }
-
     private func trainingDayContent(_ data: SmartDayResponse) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Empfohlene Reihenfolge")
@@ -203,29 +164,44 @@ struct SmartDayView: View {
         .cardStyle()
     }
 
+    @ScaledMetric(relativeTo: .body) private var flameSize: CGFloat = 36
+
     private func streakCard(_ streak: StreakInfo) -> some View {
         HStack(spacing: 16) {
-            VStack(spacing: 4) {
-                Text("\(streak.current)")
-                    .font(.appTitle)
-                    .foregroundStyle(.accent)
-                Text("Aktuelle Serie")
-                    .font(.appCaption)
-                    .foregroundStyle(.textSecondary)
-            }
+            Image(systemName: "flame.fill")
+                .font(.system(size: 24))
+                .foregroundStyle(streak.current > 0 ? Color.painAmber : Color.textSecondary)
+                .frame(width: flameSize, height: flameSize)
+                .accessibilityHidden(true)
 
-            VStack(spacing: 4) {
-                Text("\(streak.longest)")
-                    .font(.appTitle)
-                    .foregroundStyle(.textPrimary)
-                Text("Längste Serie")
-                    .font(.appCaption)
-                    .foregroundStyle(.textSecondary)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    Text("\(streak.current)")
+                        .font(.appTitle2)
+                        .foregroundStyle(.textPrimary)
+                    Text(streak.current == 1 ? "Tag Streak" : "Tage Streak")
+                        .font(.appSubheadline)
+                        .foregroundStyle(.textSecondary)
+                }
+
+                if streak.longest > 0 {
+                    HStack(spacing: 4) {
+                        Image(systemName: "trophy.fill")
+                            .font(.appCaption2)
+                            .foregroundStyle(Color.painAmber)
+                            .accessibilityHidden(true)
+                        Text("Rekord: \(streak.longest)")
+                            .font(.appCaption)
+                            .foregroundStyle(.textSecondary)
+                    }
+                }
             }
 
             Spacer()
         }
         .cardStyle()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Streak: \(streak.current) \(streak.current == 1 ? "Tag" : "Tage"), Rekord: \(streak.longest)")
     }
 
     private func educationSuggestionsCard(_ suggestions: [String]) -> some View {

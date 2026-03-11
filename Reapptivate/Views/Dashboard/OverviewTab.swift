@@ -9,7 +9,11 @@ struct OverviewTab: View {
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
-        SmartDayGateView {
+        SmartDayGateView(
+            completedCount: viewModel?.completedToday.count ?? 0,
+            totalCount: exerciseVM?.exercises.count ?? 0,
+            onNavigateToProgram: onNavigateToProgram
+        ) {
             overviewFallbackContent
         }
     }

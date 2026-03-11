@@ -5,9 +5,20 @@ struct SmartDayGateView<Fallback: View>: View {
     @Environment(AppState.self) private var appState
     @State private var viewModel: SmartDayViewModel?
 
+    let completedCount: Int
+    let totalCount: Int
+    let onNavigateToProgram: (() -> Void)?
     let fallback: () -> Fallback
 
-    init(@ViewBuilder fallback: @escaping () -> Fallback) {
+    init(
+        completedCount: Int = 0,
+        totalCount: Int = 0,
+        onNavigateToProgram: (() -> Void)? = nil,
+        @ViewBuilder fallback: @escaping () -> Fallback
+    ) {
+        self.completedCount = completedCount
+        self.totalCount = totalCount
+        self.onNavigateToProgram = onNavigateToProgram
         self.fallback = fallback
     }
 
@@ -15,7 +26,6 @@ struct SmartDayGateView<Fallback: View>: View {
         Group {
             if let vm = viewModel {
                 if !vm.isApiAvailable {
-                    // API not available — show existing overview content
                     fallback()
                 } else if vm.isLoading {
                     ProgressView("Tagesstatus laden...")
@@ -25,7 +35,12 @@ struct SmartDayGateView<Fallback: View>: View {
                         Task { await vm.onCheckinComplete() }
                     }
                 } else {
-                    SmartDayView(smartDay: vm.smartDayData)
+                    SmartDayView(
+                        smartDay: vm.smartDayData,
+                        completedCount: completedCount,
+                        totalCount: totalCount,
+                        onNavigateToProgram: onNavigateToProgram
+                    )
                 }
             } else {
                 ProgressView()
