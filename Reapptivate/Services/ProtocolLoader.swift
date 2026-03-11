@@ -28,11 +28,12 @@ final class ProtocolLoader: @unchecked Sendable {
         lasSeverity: LasSeverityGrade? = nil
     ) -> ExerciseProtocol? {
         let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity, fsSeverity: fsSeverity, lasSeverity: lasSeverity)
+        let cacheKey = UserDefaults.standard.string(forKey: "appLanguage") == "en" ? "\(key)_en_cache" : key
 
         lock.lock()
         defer { lock.unlock() }
 
-        if let cached = cache[key] {
+        if let cached = cache[cacheKey] {
             return cached
         }
 
@@ -41,7 +42,7 @@ final class ProtocolLoader: @unchecked Sendable {
             return nil
         }
 
-        cache[key] = proto
+        cache[cacheKey] = proto
         return proto
     }
 
@@ -187,15 +188,32 @@ final class ProtocolLoader: @unchecked Sendable {
     }
 
     private func loadProtocol(filename: String) -> ExerciseProtocol? {
-        guard let url = Bundle.main.url(forResource: filename, withExtension: "json", subdirectory: "Protocols") else {
+        let effectiveFilename = resolveFilename(filename)
+        guard let url = Bundle.main.url(forResource: effectiveFilename, withExtension: "json", subdirectory: "Protocols") else {
             // Try without subdirectory
-            guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
-                Log.general.warning("Protocol file not found: \(filename).json")
+            guard let url = Bundle.main.url(forResource: effectiveFilename, withExtension: "json") else {
+                Log.general.warning("Protocol file not found: \(effectiveFilename).json")
                 return nil
             }
             return decodeProtocol(from: url)
         }
         return decodeProtocol(from: url)
+    }
+
+    /// Resolves the effective filename based on current app language.
+    /// When English is active, tries `{filename}_en` first, falling back to the German default.
+    private func resolveFilename(_ filename: String) -> String {
+        guard UserDefaults.standard.string(forKey: "appLanguage") == "en" else { return filename }
+        let enFilename = "\(filename)_en"
+        // Check if English variant exists in Protocols subdirectory
+        if Bundle.main.url(forResource: enFilename, withExtension: "json", subdirectory: "Protocols") != nil {
+            return enFilename
+        }
+        // Check without subdirectory (XcodeGen flat bundle fallback)
+        if Bundle.main.url(forResource: enFilename, withExtension: "json") != nil {
+            return enFilename
+        }
+        return filename
     }
 
     private func decodeProtocol(from url: URL) -> ExerciseProtocol? {
