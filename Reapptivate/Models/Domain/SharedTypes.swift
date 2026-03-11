@@ -4,6 +4,11 @@
 
 import Foundation
 
+// File-private language helper — reads AppStorage backing store directly
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 // MARK: - Condition Type
 
 enum TendinopathyType: String, Codable, CaseIterable {
@@ -39,23 +44,43 @@ enum TendinopathyType: String, Codable, CaseIterable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .tennisElbow: return "Tennis Elbow"
+            case .golfersElbow: return "Golfer's Elbow"
+            case .achilles: return "Achilles Tendinopathy"
+            case .patellar: return "Patellar Tendinopathy"
+            case .rotatorCuff: return "Rotator Cuff Tendinopathy"
+            case .gluteal: return "Gluteal Tendinopathy"
+            case .proximalHamstring: return "Proximal Hamstring Tendinopathy"
+            case .plantarFascia: return "Plantar Fasciitis"
+            case .lbpNonspecific: return "Non-specific Lower Back Pain"
+            case .neckPain: return "Neck Pain"
+            case .neckShoulderTension: return "Neck & Shoulder Tension"
+            case .aclReconstruction: return "ACL Reconstruction"
+            case .shoulderImpingement: return "Shoulder Impingement"
+            case .frozenShoulder: return "Frozen Shoulder"
+            case .lateralAnkleSprain: return "Lateral Ankle Sprain"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .tennisElbow: "Tennisellenbogen"
-        case .golfersElbow: "Golferellenbogen"
-        case .achilles: "Achillessehne"
-        case .patellar: "Patellasehne"
-        case .rotatorCuff: "Rotatorenmanschette"
-        case .gluteal: "Glutealsehne"
-        case .proximalHamstring: "Proximale Hamstringsehne"
-        case .plantarFascia: "Plantarfaszie"
-        case .lbpNonspecific: "Unspez. Rückenschmerz"
-        case .neckPain: "Nackenschmerz"
-        case .neckShoulderTension: "Nacken-Schulter-Verspannung"
-        case .aclReconstruction: "Kreuzbandrekonstruktion"
-        case .shoulderImpingement: "Schulter-Impingement"
-        case .frozenShoulder: "Frozen Shoulder"
-        case .lateralAnkleSprain: "Laterale Sprunggelenksverstauchung"
-        case .unknown: "Unbekannt"
+        case .tennisElbow: return "Tennisellenbogen"
+        case .golfersElbow: return "Golferellenbogen"
+        case .achilles: return "Achillessehne"
+        case .patellar: return "Patellasehne"
+        case .rotatorCuff: return "Rotatorenmanschette"
+        case .gluteal: return "Glutealsehne"
+        case .proximalHamstring: return "Proximale Hamstringsehne"
+        case .plantarFascia: return "Plantarfaszie"
+        case .lbpNonspecific: return "Unspez. Rückenschmerz"
+        case .neckPain: return "Nackenschmerz"
+        case .neckShoulderTension: return "Nacken-Schulter-Verspannung"
+        case .aclReconstruction: return "Kreuzbandrekonstruktion"
+        case .shoulderImpingement: return "Schulter-Impingement"
+        case .frozenShoulder: return "Frozen Shoulder"
+        case .lateralAnkleSprain: return "Laterale Sprunggelenksverstauchung"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -91,18 +116,33 @@ enum ExerciseType: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .isometric: return "Isometric"
+            case .hsr: return "Heavy Slow Resistance (HSR)"
+            case .eccentric: return "Eccentric"
+            case .concentric: return "Concentric"
+            case .motorControl: return "Motor Control"
+            case .bodyAwareness: return "Body Awareness"
+            case .pacing: return "Pacing"
+            case .gradedActivity: return "Graded Activity"
+            case .relaxation: return "Relaxation"
+            case .functional: return "Functional"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .isometric: "Isometrisch"
-        case .hsr: "Heavy-Slow Resistance"
-        case .eccentric: "Exzentrisch"
-        case .concentric: "Konzentrisch"
-        case .motorControl: "Motorische Kontrolle"
-        case .bodyAwareness: "Korperwahrnehmung"
-        case .pacing: "Pacing"
-        case .gradedActivity: "Graded Activity"
-        case .relaxation: "Entspannung"
-        case .functional: "Funktionell"
-        case .unknown: "Unbekannt"
+        case .isometric: return "Isometrisch"
+        case .hsr: return "Heavy-Slow Resistance"
+        case .eccentric: return "Exzentrisch"
+        case .concentric: return "Konzentrisch"
+        case .motorControl: return "Motorische Kontrolle"
+        case .bodyAwareness: return "Korperwahrnehmung"
+        case .pacing: return "Pacing"
+        case .gradedActivity: return "Graded Activity"
+        case .relaxation: return "Entspannung"
+        case .functional: return "Funktionell"
+        case .unknown: return "Unbekannt"
         }
     }
 }
@@ -123,12 +163,21 @@ enum AdaptationDecision: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .progress: return "Progress"
+            case .hold: return "Hold"
+            case .regress: return "Regress"
+            case .initial: return "Initial"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .progress: "Aufgestiegen"
-        case .hold: "Gehalten"
-        case .regress: "Angepasst"
-        case .initial: "Start"
-        case .unknown: "Unbekannt"
+        case .progress: return "Aufgestiegen"
+        case .hold: return "Gehalten"
+        case .regress: return "Angepasst"
+        case .initial: return "Start"
+        case .unknown: return "Unbekannt"
         }
     }
 }
@@ -149,12 +198,21 @@ enum AemSubtype: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .FAR: return "Fear-Avoidance Response (FAR)"
+            case .DER: return "Disuse & Reconditioning (DER)"
+            case .EER: return "Elevated Emotion & Recovery (EER)"
+            case .AR: return "Adaptive Response (AR)"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .FAR: "Fear-Avoidance"
-        case .DER: "Distress-Endurance"
-        case .EER: "Eustress-Endurance"
-        case .AR: "Adaptiver Responder"
-        case .unknown: "Unbekannt"
+        case .FAR: return "Fear-Avoidance"
+        case .DER: return "Distress-Endurance"
+        case .EER: return "Eustress-Endurance"
+        case .AR: return "Adaptiver Responder"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -195,11 +253,19 @@ enum NdiSeverityGrade: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .LEICHT: return "Mild"
+            case .MITTEL: return "Moderate"
+            case .SCHWER: return "Severe"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .LEICHT: "Leicht"
-        case .MITTEL: "Mittel"
-        case .SCHWER: "Schwer"
-        case .unknown: "Unbekannt"
+        case .LEICHT: return "Leicht"
+        case .MITTEL: return "Mittel"
+        case .SCHWER: return "Schwer"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -226,11 +292,19 @@ enum TsiSeverityGrade: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .LEICHT: return "Mild"
+            case .MITTEL: return "Moderate"
+            case .SCHWER: return "Severe"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .LEICHT: "Leicht"
-        case .MITTEL: "Mittel"
-        case .SCHWER: "Schwer"
-        case .unknown: "Unbekannt"
+        case .LEICHT: return "Leicht"
+        case .MITTEL: return "Mittel"
+        case .SCHWER: return "Schwer"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -259,11 +333,19 @@ enum SiSeverityGrade: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .LEICHT: return "Mild"
+            case .MITTEL: return "Moderate"
+            case .SCHWER: return "Severe"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .LEICHT: "Leicht"
-        case .MITTEL: "Mittel"
-        case .SCHWER: "Schwer"
-        case .unknown: "Unbekannt"
+        case .LEICHT: return "Leicht"
+        case .MITTEL: return "Mittel"
+        case .SCHWER: return "Schwer"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -290,11 +372,19 @@ enum FsSeverityGrade: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .LEICHT: return "Mild"
+            case .MITTEL: return "Moderate"
+            case .SCHWER: return "Severe"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .LEICHT: "Leicht"
-        case .MITTEL: "Mittel"
-        case .SCHWER: "Schwer"
-        case .unknown: "Unbekannt"
+        case .LEICHT: return "Leicht"
+        case .MITTEL: return "Mittel"
+        case .SCHWER: return "Schwer"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -321,11 +411,19 @@ enum LasSeverityGrade: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .LEICHT: return "Mild"
+            case .MITTEL: return "Moderate"
+            case .SCHWER: return "Severe"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .LEICHT: "Leicht"
-        case .MITTEL: "Mittel"
-        case .SCHWER: "Schwer"
-        case .unknown: "Unbekannt"
+        case .LEICHT: return "Leicht"
+        case .MITTEL: return "Mittel"
+        case .SCHWER: return "Schwer"
+        case .unknown: return "Unbekannt"
         }
     }
 
@@ -350,11 +448,19 @@ enum SymptomResponse: String, Codable {
     }
 
     var displayName: String {
+        if isEnglishLocale {
+            switch self {
+            case .centralized: return "Centralized"
+            case .unchanged: return "Unchanged"
+            case .peripheralized: return "Peripheralized"
+            case .unknown: return "Unknown"
+            }
+        }
         switch self {
-        case .centralized: "Zentralisiert"
-        case .unchanged: "Unverändert"
-        case .peripheralized: "Peripheralisiert"
-        case .unknown: "Unbekannt"
+        case .centralized: return "Zentralisiert"
+        case .unchanged: return "Unverändert"
+        case .peripheralized: return "Peripheralisiert"
+        case .unknown: return "Unbekannt"
         }
     }
 }
