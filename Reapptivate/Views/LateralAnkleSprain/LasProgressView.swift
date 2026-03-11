@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct FsProgressView: View {
+struct LasProgressView: View {
     @Environment(APIClient.self) private var apiClient
-    @State private var history: [FsHistoryEntry] = []
+    @State private var history: [LasHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
     @State private var errorMessage: String?
@@ -14,14 +14,14 @@ struct FsProgressView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
-                Text("SPADI-Verlauf")
+                Text("CAIT-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("SPADI-Verlauf laden...")
+                ProgressView("CAIT-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -39,14 +39,14 @@ struct FsProgressView: View {
             } else {
                 // Score sparkline
                 if history.count > 1 {
-                    FsSparkline(entries: history)
+                    LasSparkline(entries: history)
                         .frame(height: 80)
                         .padding(.horizontal, 4)
                 }
 
                 // History entries
                 ForEach(history) { entry in
-                    FsHistoryRow(entry: entry)
+                    LasHistoryRow(entry: entry)
                 }
 
                 // Rescreening button
@@ -67,7 +67,7 @@ struct FsProgressView: View {
                 .sheet(isPresented: $showRescreening, onDismiss: {
                     Task { await loadHistory() }
                 }) {
-                    FsScreeningView(isRescreening: true)
+                    LasScreeningView(isRescreening: true)
                 }
             }
         }
@@ -81,19 +81,19 @@ struct FsProgressView: View {
         isLoading = true
         errorMessage = nil
         do {
-            let response: FsHistoryResponse = try await apiClient.request(APIEndpoints.fsHistory())
+            let response: LasHistoryResponse = try await apiClient.request(APIEndpoints.lasHistory())
             history = response.history
         } catch {
-            errorMessage = "SPADI-Verlauf konnte nicht geladen werden."
+            errorMessage = "CAIT-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
     }
 }
 
-// MARK: - FS History Row
+// MARK: - LAS History Row
 
-private struct FsHistoryRow: View {
-    let entry: FsHistoryEntry
+private struct LasHistoryRow: View {
+    let entry: LasHistoryEntry
     @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
 
     var body: some View {
@@ -102,14 +102,14 @@ private struct FsHistoryRow: View {
                 .fill(entry.severityGrade.map { Color.severityColor(for: $0) } ?? Color.arGray)
                 .frame(width: scoreCircleSize, height: scoreCircleSize)
                 .overlay {
-                    Text("\(Int(entry.spadiTotalScore))")
+                    Text("\(entry.caitScore)")
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
                 }
-                .accessibilityLabel("SPADI-Score \(Int(entry.spadiTotalScore))")
+                .accessibilityLabel("CAIT-Score \(entry.caitScore)")
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("SPADI: \(Int(entry.spadiTotalScore))%")
+                Text("CAIT: \(entry.caitScore)/30")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
                 Text(entry.severityLabel ?? "")
@@ -131,17 +131,17 @@ private struct FsHistoryRow: View {
     }
 }
 
-// MARK: - FS Sparkline
+// MARK: - LAS Sparkline
 
-struct FsSparkline: View {
-    let entries: [FsHistoryEntry]
+struct LasSparkline: View {
+    let entries: [LasHistoryEntry]
 
     private var scores: [Double] {
-        entries.reversed().map(\.spadiTotalScore)
+        entries.reversed().map { Double($0.caitScore) }
     }
 
-    private var severities: [FsSeverityGrade] {
-        entries.reversed().map { $0.severityGrade ?? FsSeverityGrade.from(spadiScore: $0.spadiTotalScore) }
+    private var severities: [LasSeverityGrade] {
+        entries.reversed().map { $0.severityGrade ?? LasSeverityGrade.from(caitScore: $0.caitScore) }
     }
 
     private func xPos(_ index: Int, width: CGFloat) -> CGFloat {
@@ -149,7 +149,8 @@ struct FsSparkline: View {
     }
 
     private func yPos(_ score: Double, height: CGFloat, padding: CGFloat = 6) -> CGFloat {
-        padding + (height - 2 * padding) * (1 - CGFloat(score) / 100.0)
+        // Higher CAIT score = better = higher on chart (lower y position)
+        padding + (height - 2 * padding) * (1 - score / 30.0)
     }
 
     var body: some View {
@@ -174,6 +175,6 @@ struct FsSparkline: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("SPADI-Verlaufsdiagramm")
+        .accessibilityLabel("CAIT-Verlaufsdiagramm")
     }
 }

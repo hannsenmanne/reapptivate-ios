@@ -14,7 +14,7 @@ final class SharedTypesTests: XCTestCase {
     }
 
     func testTendinopathyTypeCount() {
-        XCTAssertEqual(TendinopathyType.allCases.count, 14)
+        XCTAssertEqual(TendinopathyType.allCases.count, 15)
     }
 
     func testIsLbpOnlyForLbpNonspecific() {
@@ -123,6 +123,52 @@ final class SharedTypesTests: XCTestCase {
         }
     }
 
+    // MARK: - FsSeverityGrade
+
+    func testFsSeverityFromScore_Leicht() {
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 0), .LEICHT)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 17), .LEICHT)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 34), .LEICHT)
+    }
+
+    func testFsSeverityFromScore_Mittel() {
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 35), .MITTEL)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 47), .MITTEL)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 59), .MITTEL)
+    }
+
+    func testFsSeverityFromScore_Schwer() {
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 60), .SCHWER)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 80), .SCHWER)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 100), .SCHWER)
+    }
+
+    func testFsSeverityFromScore_EdgeCases() {
+        // Boundary at 34/35
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 34), .LEICHT)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 35), .MITTEL)
+        // Boundary at 59/60
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 59), .MITTEL)
+        XCTAssertEqual(FsSeverityGrade.from(spadiScore: 60), .SCHWER)
+    }
+
+    func testFsSeverityGradeCodable() throws {
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+
+        for grade in [FsSeverityGrade.LEICHT, .MITTEL, .SCHWER] {
+            let data = try encoder.encode(grade)
+            let decoded = try decoder.decode(FsSeverityGrade.self, from: data)
+            XCTAssertEqual(decoded, grade)
+        }
+    }
+
+    func testFsSeverityDisplayNames() {
+        XCTAssertEqual(FsSeverityGrade.LEICHT.displayName, "Leicht")
+        XCTAssertEqual(FsSeverityGrade.MITTEL.displayName, "Mittel")
+        XCTAssertEqual(FsSeverityGrade.SCHWER.displayName, "Schwer")
+    }
+
     // MARK: - AemSubtype
 
     func testAemSubtypeMaxPainLevels() {
@@ -150,5 +196,63 @@ final class SharedTypesTests: XCTestCase {
             let decoded = try decoder.decode(AdaptationDecision.self, from: data)
             XCTAssertEqual(decoded, decision)
         }
+    }
+
+    // MARK: - LasSeverityGrade
+
+    func testLasSeverityFromScore_Leicht() {
+        // CAIT >= 24 → LEICHT (good stability)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 30), .LEICHT)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 27), .LEICHT)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 24), .LEICHT)
+    }
+
+    func testLasSeverityFromScore_Mittel() {
+        // CAIT 12-23 → MITTEL (moderate instability)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 23), .MITTEL)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 17), .MITTEL)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 12), .MITTEL)
+    }
+
+    func testLasSeverityFromScore_Schwer() {
+        // CAIT <= 11 → SCHWER (chronic instability)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 11), .SCHWER)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 5), .SCHWER)
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 0), .SCHWER)
+    }
+
+    func testLasSeverityFromScore_EdgeCases() {
+        // Exact boundaries
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 24), .LEICHT, "24 should be LEICHT")
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 23), .MITTEL, "23 should be MITTEL")
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 12), .MITTEL, "12 should be MITTEL")
+        XCTAssertEqual(LasSeverityGrade.from(caitScore: 11), .SCHWER, "11 should be SCHWER")
+    }
+
+    func testLasSeverityGradeCodable() throws {
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+        for grade in [LasSeverityGrade.LEICHT, .MITTEL, .SCHWER] {
+            let data = try encoder.encode(grade)
+            let decoded = try decoder.decode(LasSeverityGrade.self, from: data)
+            XCTAssertEqual(decoded, grade)
+        }
+    }
+
+    func testLasSeverityGradeUnknownDecoding() throws {
+        let data = Data("\"INVALID\"".utf8)
+        let decoded = try JSONDecoder().decode(LasSeverityGrade.self, from: data)
+        XCTAssertEqual(decoded, .unknown)
+    }
+
+    func testLasSeverityDisplayNames() {
+        XCTAssertEqual(LasSeverityGrade.LEICHT.displayName, "Leicht")
+        XCTAssertEqual(LasSeverityGrade.MITTEL.displayName, "Mittel")
+        XCTAssertEqual(LasSeverityGrade.SCHWER.displayName, "Schwer")
+    }
+
+    func testLateralAnkleSprainIsNotTendinopathy() {
+        XCTAssertFalse(TendinopathyType.lateralAnkleSprain.isTendinopathy)
+        XCTAssertTrue(TendinopathyType.lateralAnkleSprain.isLateralAnkleSprain)
     }
 }

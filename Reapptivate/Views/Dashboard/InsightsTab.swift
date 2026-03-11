@@ -21,6 +21,9 @@ struct InsightsTab: View {
         } else if appState.isFrozenShoulder {
             // Frozen Shoulder patients: SPADI progress + focus areas
             FrozenShoulderInsightsSection()
+        } else if appState.isLateralAnkleSprain {
+            // Lateral Ankle Sprain patients: CAIT progress + focus areas
+            LateralAnkleSprainInsightsSection()
         } else if appState.isAcl {
             // ACL patients: comprehensive analytics dashboard
             AclAnalyticsView()
@@ -74,6 +77,18 @@ struct FrozenShoulderInsightsSection: View {
         VStack(spacing: 20) {
             FsProgressView()
             FrozenShoulderFocusAreasView()
+        }
+        .padding(.bottom, 32)
+    }
+}
+
+// MARK: - Lateral Ankle Sprain Insights
+
+struct LateralAnkleSprainInsightsSection: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            LasProgressView()
+            LateralAnkleSprainFocusAreasView()
         }
         .padding(.bottom, 32)
     }

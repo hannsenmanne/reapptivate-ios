@@ -168,6 +168,20 @@ struct FsFocusAreasResponse: Codable {
     let focusAreas: [FsFocusArea]
 }
 
+// MARK: - Lateral Ankle Sprain Wrappers
+
+struct LasScreeningResponse: Codable {
+    let screening: LasScreeningResult
+}
+
+struct LasHistoryResponse: Codable {
+    let history: [LasHistoryEntry]
+}
+
+struct LasFocusAreasResponse: Codable {
+    let focusAreas: [LasFocusArea]
+}
+
 // MARK: - Work Timer Wrappers
 
 struct WorkTimerSettingsResponse: Codable {

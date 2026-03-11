@@ -21,6 +21,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
     case aclReconstruction = "ACL_RECONSTRUCTION"
     case shoulderImpingement = "SHOULDER_IMPINGEMENT"
     case frozenShoulder = "FROZEN_SHOULDER"
+    case lateralAnkleSprain = "LATERAL_ANKLE_SPRAIN"
     case unknown = "UNKNOWN"
 
     /// All known cases, excluding `.unknown`.
@@ -28,7 +29,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
         [.tennisElbow, .golfersElbow, .achilles, .patellar, .rotatorCuff,
          .gluteal, .proximalHamstring, .plantarFascia, .lbpNonspecific,
          .neckPain, .neckShoulderTension, .aclReconstruction, .shoulderImpingement,
-         .frozenShoulder]
+         .frozenShoulder, .lateralAnkleSprain]
     }
 
     init(from decoder: Decoder) throws {
@@ -53,6 +54,7 @@ enum TendinopathyType: String, Codable, CaseIterable {
         case .aclReconstruction: "Kreuzbandrekonstruktion"
         case .shoulderImpingement: "Schulter-Impingement"
         case .frozenShoulder: "Frozen Shoulder"
+        case .lateralAnkleSprain: "Laterale Sprunggelenksverstauchung"
         case .unknown: "Unbekannt"
         }
     }
@@ -63,7 +65,8 @@ enum TendinopathyType: String, Codable, CaseIterable {
     var isAcl: Bool { self == .aclReconstruction }
     var isShoulder: Bool { self == .shoulderImpingement }
     var isFrozenShoulder: Bool { self == .frozenShoulder }
-    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && !isShoulder && !isFrozenShoulder && self != .unknown }
+    var isLateralAnkleSprain: Bool { self == .lateralAnkleSprain }
+    var isTendinopathy: Bool { !isLbp && !isNeck && !isTension && !isAcl && !isShoulder && !isFrozenShoulder && !isLateralAnkleSprain && self != .unknown }
 }
 
 // MARK: - Exercise Type
@@ -299,6 +302,37 @@ enum FsSeverityGrade: String, Codable {
         // SPADI 0-100. LEICHT: <=34, MITTEL: <=59, SCHWER: >59
         if spadiScore <= 34 { return .LEICHT }
         if spadiScore <= 59 { return .MITTEL }
+        return .SCHWER
+    }
+}
+
+// MARK: - LAS Severity Grade
+
+enum LasSeverityGrade: String, Codable {
+    case LEICHT
+    case MITTEL
+    case SCHWER
+    case unknown = "UNKNOWN"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = Self(rawValue: rawValue) ?? .unknown
+    }
+
+    var displayName: String {
+        switch self {
+        case .LEICHT: "Leicht"
+        case .MITTEL: "Mittel"
+        case .SCHWER: "Schwer"
+        case .unknown: "Unbekannt"
+        }
+    }
+
+    static func from(caitScore: Int) -> LasSeverityGrade {
+        // CAIT 0-30. Higher = better. LEICHT: >=24, MITTEL: 12-23, SCHWER: <=11
+        if caitScore >= 24 { return .LEICHT }
+        if caitScore >= 12 { return .MITTEL }
         return .SCHWER
     }
 }

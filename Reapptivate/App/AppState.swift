@@ -38,6 +38,10 @@ final class AppState {
         currentUser?.tendinopathyType == .frozenShoulder
     }
 
+    var isLateralAnkleSprain: Bool {
+        currentUser?.tendinopathyType == .lateralAnkleSprain
+    }
+
     var needsAemScreening: Bool {
         isLbp && currentUser?.aemScreeningCompleted != true
     }
@@ -60,6 +64,10 @@ final class AppState {
 
     var needsFsScreening: Bool {
         isFrozenShoulder && currentUser?.fsScreeningCompleted != true
+    }
+
+    var needsLasScreening: Bool {
+        isLateralAnkleSprain && currentUser?.lasScreeningCompleted != true
     }
 
     func handleLogin(user: UserProfile) {

@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct FrozenShoulderFocusAreasView: View {
+struct LateralAnkleSprainFocusAreasView: View {
     @Environment(APIClient.self) private var apiClient
-    @State private var focusAreas: [FsFocusArea] = []
+    @State private var focusAreas: [LasFocusArea] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
 
@@ -37,7 +37,7 @@ struct FrozenShoulderFocusAreasView: View {
                     .padding(.vertical, 16)
             } else {
                 ForEach(focusAreas) { area in
-                    FsFocusAreaRow(area: area)
+                    LasFocusAreaRow(area: area)
                 }
             }
         }
@@ -51,7 +51,7 @@ struct FrozenShoulderFocusAreasView: View {
         isLoading = true
         errorMessage = nil
         do {
-            let response: FsFocusAreasResponse = try await apiClient.request(APIEndpoints.fsFocusAreas())
+            let response: LasFocusAreasResponse = try await apiClient.request(APIEndpoints.lasFocusAreas())
             focusAreas = response.focusAreas
         } catch {
             errorMessage = "Schwerpunkte konnten nicht geladen werden."
@@ -60,35 +60,32 @@ struct FrozenShoulderFocusAreasView: View {
     }
 }
 
-// MARK: - FS Focus Area Row
+// MARK: - LAS Focus Area Row
 
-struct FsFocusAreaRow: View {
-    let area: FsFocusArea
+struct LasFocusAreaRow: View {
+    let area: LasFocusArea
     @ScaledMetric(relativeTo: .caption) private var areaIconSize: CGFloat = 24
 
     var areaIcon: String {
         let domain = area.domainLabel.lowercased()
         if domain.contains("schmerz") || domain.contains("pain") { return "waveform.path.ecg" }
-        if domain.contains("schulter") || domain.contains("shoulder") { return "figure.arms.open" }
-        if domain.contains("kraft") || domain.contains("strength") { return "figure.strengthtraining.traditional" }
-        if domain.contains("arbeit") || domain.contains("work") { return "briefcase" }
-        if domain.contains("freizeit") || domain.contains("recr") { return "figure.walk" }
-        if domain.contains("sport") { return "sportscourt" }
-        if domain.contains("schlaf") || domain.contains("sleep") { return "moon.fill" }
-        if domain.contains("kribbeln") || domain.contains("tingling") { return "hand.raised" }
-        if domain.contains("tragen") || domain.contains("carry") || domain.contains("heben") { return "bag" }
-        if domain.contains("haar") || domain.contains("hair") || domain.contains("anzieh") { return "comb" }
-        if domain.contains("alltag") || domain.contains("daily") { return "house" }
-        if domain.contains("beweglich") || domain.contains("rom") || domain.contains("beweg") { return "arrow.up.left.and.arrow.down.right" }
-        if domain.contains("kopf") || domain.contains("nacken") { return "figure.mind.and.body" }
-        return "figure.arms.open"
+        if domain.contains("instabil") || domain.contains("nachgeb") { return "arrow.up.and.down.and.arrow.left.and.right" }
+        if domain.contains("richtung") || domain.contains("lateral") { return "arrow.left.and.right" }
+        if domain.contains("trepp") || domain.contains("stair") { return "stairs" }
+        if domain.contains("einbein") || domain.contains("stand") { return "figure.stand" }
+        if domain.contains("hüpf") || domain.contains("sprung") || domain.contains("hop") { return "figure.jumprope" }
+        if domain.contains("spring") || domain.contains("land") { return "figure.basketball" }
+        if domain.contains("uneben") || domain.contains("gelände") || domain.contains("terrain") { return "figure.hiking" }
+        if domain.contains("gewicht") || domain.contains("verlager") || domain.contains("shift") { return "figure.walk" }
+        return "figure.walk"
     }
 
     var scoreColor: Color {
+        // CAIT is inverted: high percentage = high problem
         let pct = area.percentage
-        if pct <= 30 { return .painGreen }
-        if pct <= 60 { return .painAmber }
-        return .painRed
+        if pct >= 70 { return .painRed }
+        if pct >= 40 { return .painAmber }
+        return .painGreen
     }
 
     var body: some View {

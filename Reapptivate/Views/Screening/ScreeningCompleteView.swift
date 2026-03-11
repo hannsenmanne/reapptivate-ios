@@ -143,6 +143,7 @@ struct ScreeningCompleteView: View {
         case .aclReconstruction: return "figure.strengthtraining.functional"
         case .shoulderImpingement: return "figure.arms.open"
         case .frozenShoulder: return "figure.arms.open"
+        case .lateralAnkleSprain: return "figure.run"
         case .unknown: return "heart.text.clipboard"
         }
     }
@@ -163,6 +164,8 @@ struct ScreeningCompleteView: View {
             return "Ihr QuickDASH-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein 4-Phasen-Programm, das gezielt Ihre Schulter-Impingement-Beschwerden adressiert."
         case .frozenShoulder:
             return "Ihr SPADI-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein 4-Phasen-Programm, das gezielt Ihre Frozen Shoulder (Adhesive Capsulitis) behandelt — von sanfter Mobilisation bis zur vollen Rückkehr in Alltag und Sport."
+        case .lateralAnkleSprain:
+            return "Ihr CAIT-Screening wurde ausgewertet. Basierend auf Ihren Ergebnissen erhalten Sie ein 4-Phasen-Programm nach dem PEACE & LOVE-Protokoll — von Schutz und Entstauung über Propriozeption bis zum Return to Sport."
         default:
             return "Ihr Programm wurde basierend auf Ihrer Diagnose erstellt. Es besteht aus drei Phasen, die sich an Ihren Schmerzlevel und Fortschritt anpassen."
         }
@@ -213,6 +216,13 @@ struct ScreeningCompleteView: View {
                 "4 progressive Trainingsphasen (Mobilisation bis Rückkehr)",
                 "Mikro-Module für Frozen Shoulder",
                 "Regelmäßige SPADI-Verlaufskontrolle"
+            ]
+        case .lateralAnkleSprain:
+            return [
+                "Auf Ihren Schweregrad abgestimmte Übungen",
+                "4 progressive Trainingsphasen (PEACE & LOVE bis Return to Sport)",
+                "Mikro-Module für Sprunggelenksstabilität",
+                "Regelmäßige CAIT-Verlaufskontrolle"
             ]
         default:
             return [

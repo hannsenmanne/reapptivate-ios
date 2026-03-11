@@ -37,6 +37,18 @@ struct Exercise: Codable, Identifiable {
     let aemSubtypeSpecific: Bool?
     let visualIndicator: VisualIndicator?
 
+    func applying(setsMultiplier: Double?, repsMultiplier: Double?, holdTimeMultiplier: Double?) -> Exercise {
+        Exercise(
+            id: id, name: name, type: type, description: description,
+            sets: setsMultiplier.map { max(1, Int((Double(sets) * $0).rounded())) } ?? sets,
+            reps: repsMultiplier.map { max(1, Int((Double(reps) * $0).rounded())) } ?? reps,
+            holdTime: holdTimeMultiplier.flatMap { m in holdTime.map { max(1, Int((Double($0) * m).rounded())) } } ?? holdTime,
+            restBetweenSets: restBetweenSets, tempo: tempo, videoUrl: videoUrl, gifUrl: gifUrl,
+            intensity: intensity, cognitiveCues: cognitiveCues,
+            aemSubtypeSpecific: aemSubtypeSpecific, visualIndicator: visualIndicator
+        )
+    }
+
     var estimatedDurationMinutes: Int {
         let setDuration: Int
         if let holdTime {
@@ -103,6 +115,22 @@ struct ExerciseWithPhase: Codable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case exercise, phase, phaseTitle, weeksRange, phaseGoal
         case ndiSeverity, dosageModifier, exerciseGroup
+    }
+
+    /// Returns a copy of this exercise with the dosage modifier for the given severity key applied.
+    /// If no modifier exists for the key, returns self unchanged.
+    func applyingDosageModifier(severityKey: String) -> ExerciseWithPhase {
+        guard let multipliers = dosageModifier?[severityKey] else { return self }
+        let modified = exercise.applying(
+            setsMultiplier: multipliers.setsMultiplier,
+            repsMultiplier: multipliers.repsMultiplier,
+            holdTimeMultiplier: multipliers.holdTimeMultiplier
+        )
+        return ExerciseWithPhase(
+            exercise: modified, phase: phase, phaseTitle: phaseTitle,
+            weeksRange: weeksRange, phaseGoal: phaseGoal, ndiSeverity: ndiSeverity,
+            dosageModifier: dosageModifier, exerciseGroup: exerciseGroup
+        )
     }
 }
 

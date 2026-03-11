@@ -267,6 +267,50 @@ enum APIEndpoints {
         post("frozen-shoulder/micro-modules/\(completionId)/complete")
     }
 
+    // MARK: - Lateral Ankle Sprain Screening
+
+    static func lasConfig() -> URLRequest {
+        get("lateral-ankle-sprain/config")
+    }
+
+    static func submitLasScreening(body: LasScreeningSubmission) -> URLRequest {
+        post("lateral-ankle-sprain/screening", encodable: body)
+    }
+
+    static func lasResult() -> URLRequest {
+        get("lateral-ankle-sprain/result")
+    }
+
+    static func lasHistory() -> URLRequest {
+        get("lateral-ankle-sprain/history")
+    }
+
+    static func lasFocusAreas() -> URLRequest {
+        get("lateral-ankle-sprain/focus-areas")
+    }
+
+    static func submitLasRescreening(body: LasScreeningSubmission) -> URLRequest {
+        post("lateral-ankle-sprain/rescreening", encodable: body)
+    }
+
+    static func lasMicroModules(severity: String? = nil) -> URLRequest {
+        var query: [String: String] = [:]
+        if let severity { query["severity"] = severity }
+        return get("lateral-ankle-sprain/micro-modules", query: query)
+    }
+
+    static func lasCompletedModules() -> URLRequest {
+        get("lateral-ankle-sprain/micro-modules/completed")
+    }
+
+    static func startLasModule(key: String) -> URLRequest {
+        post("lateral-ankle-sprain/micro-modules/\(key)/start")
+    }
+
+    static func completeLasModule(completionId: String) -> URLRequest {
+        post("lateral-ankle-sprain/micro-modules/\(completionId)/complete")
+    }
+
     // MARK: - LBP Fear Hierarchy
 
     static func fearHierarchy() -> URLRequest {

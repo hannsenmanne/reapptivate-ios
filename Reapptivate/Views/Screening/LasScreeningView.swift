@@ -1,12 +1,12 @@
 import SwiftUI
 
-struct FsScreeningView: View {
+struct LasScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
 
     let isRescreening: Bool
-    @State private var viewModel: FsScreeningViewModel?
+    @State private var viewModel: LasScreeningViewModel?
     @State private var showResult = false
     @State private var selectionTrigger = false
 
@@ -15,11 +15,11 @@ struct FsScreeningView: View {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "SPADI-Fragebogen laden...")
+                        LoadingView(message: "CAIT-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
-                        FsResultView(result: result) {
-                            appState.currentUser?.fsScreeningCompleted = true
-                            appState.currentUser?.fsSeverity = result.severityGrade
+                        LasResultView(result: result) {
+                            appState.currentUser?.lasScreeningCompleted = true
+                            appState.currentUser?.lasSeverity = result.severityGrade
                             dismiss()
                         }
                     } else if let item = vm.currentItem {
@@ -38,7 +38,7 @@ struct FsScreeningView: View {
                             .padding(.horizontal, 16)
                             .padding(.top, 4)
 
-                            FsQuestionView(
+                            LasQuestionView(
                                 item: item,
                                 selectedValue: vm.responses[item.id],
                                 onSelect: { value in
@@ -83,7 +83,7 @@ struct FsScreeningView: View {
                             await vm.loadConfig()
                         }
                     } else {
-                        ErrorView(message: "SPADI-Fragebogen konnte nicht geladen werden.") {
+                        ErrorView(message: "CAIT-Fragebogen konnte nicht geladen werden.") {
                             await vm.loadConfig()
                         }
                     }
@@ -92,7 +92,7 @@ struct FsScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "SPADI-Rescreening" : "SPADI-Screening")
+            .navigationTitle(isRescreening ? "CAIT-Rescreening" : "CAIT-Screening")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -109,7 +109,7 @@ struct FsScreeningView: View {
             .conditionalHaptic(.selection, trigger: selectionTrigger)
         }
         .task {
-            let vm = FsScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
+            let vm = LasScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()
         }

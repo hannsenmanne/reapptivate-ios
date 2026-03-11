@@ -25,6 +25,8 @@ final class CachedUser {
     var siSeverity: String?
     var fsScreeningCompleted: Bool
     var fsSeverity: String?
+    var lasScreeningCompleted: Bool
+    var lasSeverity: String?
     var startDate: String
     var lastSyncedAt: Date
 
@@ -51,6 +53,8 @@ final class CachedUser {
         siSeverity: String? = nil,
         fsScreeningCompleted: Bool = false,
         fsSeverity: String? = nil,
+        lasScreeningCompleted: Bool = false,
+        lasSeverity: String? = nil,
         startDate: String,
         lastSyncedAt: Date = .now
     ) {
@@ -76,6 +80,8 @@ final class CachedUser {
         self.siSeverity = siSeverity
         self.fsScreeningCompleted = fsScreeningCompleted
         self.fsSeverity = fsSeverity
+        self.lasScreeningCompleted = lasScreeningCompleted
+        self.lasSeverity = lasSeverity
         self.startDate = startDate
         self.lastSyncedAt = lastSyncedAt
     }
@@ -102,6 +108,8 @@ final class CachedUser {
         siSeverity = profile.siSeverity?.rawValue
         fsScreeningCompleted = profile.fsScreeningCompleted ?? false
         fsSeverity = profile.fsSeverity?.rawValue
+        lasScreeningCompleted = profile.lasScreeningCompleted ?? false
+        lasSeverity = profile.lasSeverity?.rawValue
         startDate = profile.startDate
         lastSyncedAt = .now
     }

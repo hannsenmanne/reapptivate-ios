@@ -37,6 +37,10 @@ struct UserProfile: Codable, Identifiable {
     var fsScreeningCompleted: Bool?
     var fsSeverity: FsSeverityGrade?
 
+    // Lateral Ankle Sprain
+    var lasScreeningCompleted: Bool?
+    var lasSeverity: LasSeverityGrade?
+
     // Populated from phase-status endpoint, not from /me
     var adaptivePhase: Int?
     var ndiSeverity: NdiSeverityGrade?
@@ -57,7 +61,7 @@ struct UserProfile: Codable, Identifiable {
 
     var maxPhase: Int {
         if tendinopathyType.isAcl { return 5 }
-        if tendinopathyType.isNeck || tendinopathyType.isTension || tendinopathyType.isShoulder || tendinopathyType.isFrozenShoulder { return 4 }
+        if tendinopathyType.isNeck || tendinopathyType.isTension || tendinopathyType.isShoulder || tendinopathyType.isFrozenShoulder || tendinopathyType.isLateralAnkleSprain { return 4 }
         return 3
     }
 }

@@ -59,7 +59,9 @@ struct RootView: View {
                 } else if appState.needsShoulderScreening {
                     SiScreeningView(isRescreening: false, isEmbedded: true)
                 } else if appState.needsFsScreening {
-                    FsScreeningView(isRescreening: false, isEmbedded: true)
+                    FsScreeningView(isRescreening: false)
+                } else if appState.needsLasScreening {
+                    LasScreeningView(isRescreening: false)
                 } else if !hasSeenWelcome {
                     ScreeningCompleteView()
                 } else if !hasSeenWalkthrough {

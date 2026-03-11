@@ -25,17 +25,25 @@ final class ExerciseViewModel {
             aemSubtype: user.aemSubtype,
             tsiSeverity: user.tsiSeverity,
             siSeverity: user.siSeverity,
-            fsSeverity: user.fsSeverity
+            fsSeverity: user.fsSeverity,
+            lasSeverity: user.lasSeverity
         ) else {
             Log.exercise.error("No protocol found for \(user.tendinopathyType.rawValue)")
             return
         }
 
-        exercises = protocolLoader.exercisesForPhase(
+        var loaded = protocolLoader.exercisesForPhase(
             protocol: proto,
             phase: user.currentPhase,
             trainingDays: trainingDays
         )
+
+        // Apply dosage modifiers for Frozen Shoulder based on severity
+        if user.tendinopathyType.isFrozenShoulder, let severity = user.fsSeverity, severity != .unknown {
+            loaded = loaded.map { $0.applyingDosageModifier(severityKey: severity.rawValue) }
+        }
+
+        exercises = loaded
     }
 
     func updateCompletedToday(from exerciseIds: [String]) {

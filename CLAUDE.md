@@ -68,7 +68,7 @@ make test-ui
 make coverage
 ```
 
-**~148 unit tests** in `Reapptivate/Tests/ReapptivateTests/` covering Models, Services, ViewModels, and AppState. CI runs on GitHub Actions (`.github/workflows/test.yml`) on every push/PR to main.
+**~310 unit tests** in `Reapptivate/Tests/ReapptivateTests/` covering Models, Services, ViewModels, and AppState. CI runs on GitHub Actions (`.github/workflows/test.yml`) on every push/PR to main.
 
 **Makefile shortcuts:**
 - `make generate` — Generate Xcode project from project.yml
@@ -119,7 +119,7 @@ The ViewModel is always `Optional` and created once inside `.task`. **Exception:
 ### Environment Injection
 
 Three shared `@Observable` objects injected via SwiftUI environment from `ReapptivateApp`:
-- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `isTension`, `needsAemScreening`, `needsNeckScreening`, `needsTsiScreening`
+- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `isTension`, `isShoulder`, `isFrozenShoulder`, `isAcl`, `needsAemScreening`, `needsNeckScreening`, `needsTsiScreening`, `needsShoulderScreening`, `needsFsScreening`, `needsAclScreening`
 - `APIClient` — networking with auto JWT injection, 401 detection + logout callback, 1 retry on network failure
 - `NetworkMonitor` — NWPathMonitor wrapper for connectivity
 
@@ -131,20 +131,25 @@ SwiftData `ModelContainer` is configured at `WindowGroup` level (not in AppState
 RootView
 ├── LoadingView (isCheckingAuth)
 ├── LoginView (not authenticated)
-├── AemScreeningView (LBP + screening needed)
-├── NeckScreeningView (Neck + screening needed)
-├── TsiScreeningView (Tension + screening needed)
+├── AemScreeningView (LBP + needsAemScreening)
+├── NeckScreeningView (Neck + needsNeckScreening)
+├── TsiScreeningView (Tension + needsTsiScreening)
+├── AclScreeningView (ACL + needsAclScreening)
+├── SiScreeningView (Shoulder + needsShoulderScreening)
+├── FsScreeningView (FrozenShoulder + needsFsScreening)
 ├── ScreeningCompleteView (first login, after screening)
 ├── FeatureWalkthroughView (first login, after welcome)
 └── DashboardView (authenticated + screened + onboarded)
-    ├── OverviewTab — Phase status, Wissen daily card, condition info
+    ├── OverviewTab — Phase status, Wissen daily card (tendinopathy only), condition info
     ├── ProgramTab — Exercise list + LBP enhancements
-    ├── EdukationTab — Micro-modules (LBP/Neck) or Wissen cards (tendinopathy)
+    ├── EdukationTab — Micro-modules (LBP/Neck/Tension/SI/FS) or Wissen cards (tendinopathy only)
     ├── ProgressTab — Pain history, statistics
     └── InsightsTab — Analytics (LBP/Neck only)
 ```
 
 EdukationTab is always visible. InsightsTab only appears for LBP/Neck patients. Tab visibility is controlled by `DashboardTabBar.tabs` computed property (not by `DashboardViewModel.availableTabs`, which is unused).
+
+**WissenCardView / WissenAllCardsView** are only shown for tendinopathy patients. SI, FS, ACL patients do NOT show these — they use condition-specific micro-modules in EdukationTab and have no daily Wissen card in OverviewTab.
 
 ### Networking
 
@@ -181,7 +186,9 @@ Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappe
 
 `ProtocolLoader.shared` (`@unchecked Sendable` singleton with in-memory cache) loads bundled JSON from `Resources/Protocols/`. Falls back to bundle root if subdirectory not found (XcodeGen bundles files flat). Uses `convertFromSnakeCase` key decoding. Cache is never invalidated (protocol changes require app restart).
 
-Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`, `.neckShoulderTension` + `.LEICHT` → `neck_shoulder_tension_leicht.json`).
+Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`, `.neckShoulderTension` + `.LEICHT` → `neck_shoulder_tension_leicht.json`, `.shoulderImpingement` + `.LEICHT` → `shoulder_impingement_leicht.json`, `.frozenShoulder` + `.SCHWER` → `frozen_shoulder_schwer.json`).
+
+**Dosage modifier application**: `ExerciseWithPhase.dosageModifier` is a `[String: DosageMultipliers]` keyed by severity raw value. Applied at load time in `ExerciseViewModel.loadExercises()` for FS SCHWER patients via `applyingDosageModifier(severityKey:)`. For example, SCHWER applies 67% sets and 80% reps. Must call `max(1, ...)` when applying to prevent zero values.
 
 ### Content Filtering Pattern (Condition-Specific Content)
 
@@ -214,17 +221,19 @@ To prevent cross-contamination of condition-specific educational content:
 
 ## Domain Models (Models/Domain/)
 
-- `SharedTypes.swift` — All shared enums: `TendinopathyType` (10 cases), `ExerciseType`, `AdaptationDecision`, `AemSubtype`, `NdiSeverityGrade`, `SymptomResponse`
+- `SharedTypes.swift` — All shared enums: `TendinopathyType` (14 cases: achilles, patellar, tennisElbow, golfersElbow, rotatorCuff, gluteal, proximalHamstring, plantarFascia, lbpNonspecific, neckPain, neckShoulderTension, aclReconstruction, shoulderImpingement, frozenShoulder), `ExerciseType`, `AdaptationDecision`, `AemSubtype`, `NdiSeverityGrade`, `SymptomResponse`
 - `LbpTypes.swift` — Largest model file: fear hierarchies, exposure logs, pacing plans/templates/logs, plan adjustments, micro-modules, analytics types, `AnyCodable`
 - `NeckTypes.swift` — NDI screening config/results, focus areas, NDI history
 - `TensionTypes.swift` — TSI screening config/results/submission, focus areas, history, micro-modules
+- `ShoulderImpingementTypes.swift` — QuickDASH screening config/results/submission, `SiSeverityGrade` (LEICHT/MITTEL/SCHWER from QuickDASH score), focus areas, history, micro-modules
+- `FrozenShoulderTypes.swift` — SPADI screening config/results/submission, `FsSeverityGrade` (LEICHT ≤34 / MITTEL 35–59 / SCHWER ≥60), focus areas, history, micro-modules
+- `AclTypes.swift` — ACL stream/exercise models, milestone status, schedule data, KPI types. `AclStreamExercise` has custom decoder for flexible backend shapes.
 - `AemTypes.swift` — AEM screening config/results/submission
 - `AuthTypes.swift` — Login/onboarding request/response types
 - `APIResponses.swift` — All backend response wrappers (`{user:}`, `{plan:}`, `{hierarchy:}`, etc.)
-- `EducationCard.swift` — Education card model + `EducationCardLoader` singleton (loads bundled `education-cards.json`, filters by phase/condition, daily rotation via day-of-year modulo)
+- `EducationCard.swift` — Education card model + `EducationCardLoader` singleton (loads bundled `education-cards.json`, filters by phase/condition, daily rotation via day-of-year modulo). Cards with `condition == nil` are generic tendinopathy cards — SI/FS/ACL patients never see them.
 - `CustomExercise.swift` — Custom exercises added by users (displayed in ProgramTab alongside protocol exercises)
 - `UserSchedule.swift` — `ScheduleResponse` (GET response with `trainingDays` + `isTrainingDay`, JS weekday convention) and `ScheduleUpdateRequest` (PUT body, with `fromIOSWeekdays()` converter)
-- `AclTypes.swift` — ACL stream/exercise models, milestone status, schedule data, KPI types. `AclStreamExercise` has custom decoder for flexible backend shapes.
 
 ## Design System
 
@@ -294,6 +303,8 @@ Views that load data from API use a consistent pattern:
 - **LBP**: AEM subtyping → FAR (fear hierarchy + exposure), DER/EER (pacing plans + timer), AR (standard)
 - **Neck Pain**: NDI severity (LEICHT/MITTEL/SCHWER), 4-phase progression
 - **Tension**: TSI severity grading (LEICHT/MITTEL/SCHWER), 4-phase progression, micro-modules
+- **Shoulder Impingement (SI)**: QuickDASH severity grading (`SiSeverityGrade`), phase-based protocol with severity-keyed JSON files (`shoulder_impingement_{leicht|mittel|schwer}.json`), focus areas, micro-modules, SPADI-style rescreening via `SiScreeningView`
+- **Frozen Shoulder (FS)**: SPADI severity grading (`FsSeverityGrade`: LEICHT ≤34 / MITTEL 35–59 / SCHWER ≥60), phase-based protocol with severity-keyed files (`frozen_shoulder_{leicht|mittel|schwer}.json`), focus areas, micro-modules, rescreening via `FsScreeningView`. SCHWER patients get dosage-modified exercises (67% sets, 80% reps) via `DosageModifier`.
 - **ACL**: Milestone-based progression, stream-based exercise programs, weekly schedule is client-side (`AclScheduleData`), stream unlocking is backend-controlled via milestone
 ### Pain-Adaptive Phase Progression
 After every progress log, backend returns `AdaptationResult` with potential phase change (PROGRESS/HOLD/REGRESS). Frontend shows `PhaseChangeAlert` overlay.
@@ -304,6 +315,8 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 - All LBP: Micro-modules (psychoeducation) — shown in EdukationTab via `LbpMicroModulesSection`
 - Neck: Focus areas + NDI rescreening + neck micro-modules — shown in EdukationTab via `NeckMicroModulesView`
 - Tension: Focus areas + TSI rescreening + tension micro-modules — shown in EdukationTab via `TensionMicroModulesView`
+- Shoulder Impingement: Focus areas + QuickDASH rescreening + SI micro-modules — shown in EdukationTab via `SiMicroModulesView`
+- Frozen Shoulder: Focus areas + SPADI rescreening + FS micro-modules — shown in EdukationTab via `FsMicroModulesView`
 - Tendinopathy (no micro-modules): EdukationTab shows all `EducationCard`s for current phase via `WissenAllCardsView`
 
 ### Exercise Video Recording
@@ -330,6 +343,8 @@ ACL patients have a separate dashboard (`AclDashboardView`) with milestone-based
 | Neck | `/neck/*` | NDI screening, focus areas, micro-modules |
 | Tension | `/tension/*` | TSI screening, focus areas, micro-modules |
 | LBP | `/lbp-enhancements/*` | Fear hierarchy, pacing, micro-modules, analytics |
+| Shoulder Impingement | `/shoulder-impingement/*` | QuickDASH screening, focus areas, micro-modules, history |
+| Frozen Shoulder | `/frozen-shoulder/*` | SPADI screening, focus areas, micro-modules, history |
 | ACL | `/acl/*` | Streams, milestones, schedule, KPI logging |
 | Work Timer | `/work-timer/*` | Settings, exercises, break logging, summary |
 | Config | `/config/*` | Feature flags, health check |
@@ -343,6 +358,8 @@ All passwords: `Test1234!`
 - **LBP subtypes**: `FARtest@test.com`, `DERtest@test.com`, `EERtest@test.com`, `ARtest@test.com`
 - **Neck**: `NECKtest@test.com`
 - **Tension**: `TENSIONtest@test.com` (generic), or `TSIleichtTest@test.com`, `TSImittelTest@test.com`, `TSIschwerTest@test.com` (severity-specific)
+- **Shoulder Impingement**: `SIleichtTest@test.com`, `SImittelTest@test.com`, `SIschwerTest@test.com`
+- **Frozen Shoulder**: `FSleichtTest@test.com`, `FSmittelTest@test.com`, `FSschwerTest@test.com`
 - **Tendinopathies**: `ACHtest@test.com` (Achilles), `PATtest@test.com` (Patellar), `TEtest@test.com` (Tennis Elbow), `GEtest@test.com` (Golfer's Elbow), `RCtest@test.com` (Rotator Cuff), `GLUtest@test.com` (Gluteal), `PHtest@test.com` (Plantar/Heel), `PFtest@test.com` (Plantar Fasciitis)
 
 ## Companion Web App

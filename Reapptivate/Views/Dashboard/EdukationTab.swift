@@ -52,6 +52,14 @@ struct EdukationTab: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
+            } else if appState.isLateralAnkleSprain {
+                if let severity = appState.currentUser?.lasSeverity {
+                    LateralAnkleSprainMicroModulesView(severity: severity)
+                } else {
+                    ProgressView("Sprunggelenk-Module laden...")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 32)
+                }
             } else if appState.isAcl {
                 AclMicroModulesView(currentMilestone: appState.currentUser?.aclCurrentMilestone ?? 0)
             } else if let user = appState.currentUser {

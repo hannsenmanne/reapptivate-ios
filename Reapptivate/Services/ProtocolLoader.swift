@@ -20,9 +20,10 @@ final class ProtocolLoader: @unchecked Sendable {
         aemSubtype: AemSubtype? = nil,
         tsiSeverity: TsiSeverityGrade? = nil,
         siSeverity: SiSeverityGrade? = nil,
-        fsSeverity: FsSeverityGrade? = nil
+        fsSeverity: FsSeverityGrade? = nil,
+        lasSeverity: LasSeverityGrade? = nil
     ) -> ExerciseProtocol? {
-        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity, fsSeverity: fsSeverity)
+        let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity, fsSeverity: fsSeverity, lasSeverity: lasSeverity)
 
         lock.lock()
         defer { lock.unlock() }
@@ -138,6 +139,8 @@ final class ProtocolLoader: @unchecked Sendable {
             return shoulderPhaseName(phase)
         case .frozenShoulder:
             return frozenShoulderPhaseName(phase)
+        case .lateralAnkleSprain:
+            return lateralAnkleSprainPhaseName(phase)
         default:
             return tendinopathyPhaseName(phase)
         }
@@ -145,7 +148,7 @@ final class ProtocolLoader: @unchecked Sendable {
 
     // MARK: - Private
 
-    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil, siSeverity: SiSeverityGrade? = nil, fsSeverity: FsSeverityGrade? = nil) -> String {
+    private func protocolKey(for type: TendinopathyType, aemSubtype: AemSubtype?, tsiSeverity: TsiSeverityGrade? = nil, siSeverity: SiSeverityGrade? = nil, fsSeverity: FsSeverityGrade? = nil, lasSeverity: LasSeverityGrade? = nil) -> String {
         switch type {
         case .tennisElbow: return "tennis_elbow"
         case .golfersElbow: return "golfers_elbow"
@@ -169,6 +172,9 @@ final class ProtocolLoader: @unchecked Sendable {
         case .frozenShoulder:
             let grade = fsSeverity ?? .LEICHT
             return "frozen_shoulder_\(grade.rawValue.lowercased())"
+        case .lateralAnkleSprain:
+            let grade = lasSeverity ?? .LEICHT
+            return "lateral_ankle_sprain_\(grade.rawValue.lowercased())"
         case .aclReconstruction:
             return "acl_reconstruction"
         case .unknown:
@@ -254,6 +260,16 @@ final class ProtocolLoader: @unchecked Sendable {
         case 2: "Phase 2: Mobilisation"
         case 3: "Phase 3: Stabilisation"
         case 4: "Phase 4: Funktionstraining"
+        default: "Phase \(phase)"
+        }
+    }
+
+    private func lateralAnkleSprainPhaseName(_ phase: Int) -> String {
+        switch phase {
+        case 1: "Phase 1: Schutz & Entstauung"
+        case 2: "Phase 2: Frühe Mobilisation"
+        case 3: "Phase 3: Kräftigung & Propriozeption"
+        case 4: "Phase 4: Return to Sport"
         default: "Phase \(phase)"
         }
     }

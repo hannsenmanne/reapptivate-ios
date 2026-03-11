@@ -73,7 +73,7 @@ struct OverviewTab: View {
             }
 
             // Wissen (not for shoulder impingement / frozen shoulder — micro-modules cover education)
-            if let user = appState.currentUser, !appState.isShoulder, !appState.isFrozenShoulder, !appState.isAcl {
+            if let user = appState.currentUser, !appState.isShoulder, !appState.isFrozenShoulder, !appState.isAcl, !appState.isLateralAnkleSprain {
                 WissenCardView(
                     phase: user.currentPhase,
                     isLbp: appState.isLbp,

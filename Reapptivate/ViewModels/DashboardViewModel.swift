@@ -97,7 +97,24 @@ final class DashboardViewModel {
                 try await apiClient.request(APIEndpoints.fsResult())
             }
             if let result = fsResult?.screening {
-                appState?.currentUser?.fsSeverity = FsSeverityGrade.from(spadiScore: result.spadiTotalScore)
+                // Prefer backend-assigned severity; fall back to client-derived if nil/unknown
+                let backendSeverity = result.severityGrade
+                appState?.currentUser?.fsSeverity = (backendSeverity != nil && backendSeverity != .unknown)
+                    ? backendSeverity
+                    : FsSeverityGrade.from(spadiScore: result.spadiTotalScore)
+            }
+        }
+
+        // Populate lasSeverity for lateral ankle sprain patients from screening result
+        if appState?.isLateralAnkleSprain == true, appState?.currentUser?.lasSeverity == nil {
+            let lasResult: LasScreeningResponse? = await loadSafely { [apiClient] in
+                try await apiClient.request(APIEndpoints.lasResult())
+            }
+            if let result = lasResult?.screening {
+                let backendSeverity = result.severityGrade
+                appState?.currentUser?.lasSeverity = (backendSeverity != .unknown)
+                    ? backendSeverity
+                    : LasSeverityGrade.from(caitScore: result.caitScore)
             }
         }
 
