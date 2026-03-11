@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -145,6 +145,7 @@
 		7B07AA77B1EF3DED749A4B6D /* AclWeeklyKpiLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4B300F036DA69202E4A9EC /* AclWeeklyKpiLoggerView.swift */; };
 		7C49B71E3AFEBFF86F094554 /* ProgressViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A10BA479A8198FA46A1D8B /* ProgressViewModelTests.swift */; };
 		7D65269EA13450597A25B9E2 /* AclMilestoneCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C29EA17ABA32471756F915C /* AclMilestoneCelebrationView.swift */; };
+		7D836AA2540AA50CE12226A9 /* education-cards_en.json in Resources */ = {isa = PBXBuildFile; fileRef = E4A43E14B1DE05EF19C22974 /* education-cards_en.json */; };
 		7D854B6E6E6D7064E95F693B /* ExerciseQuestionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB32A7E1E6B95F7ABE71562 /* ExerciseQuestionButton.swift */; };
 		7FC941BFBF8E5AA66B8A8D6F /* LateralAnkleSprainTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6CB7472E8D1D90F36C11CA /* LateralAnkleSprainTypes.swift */; };
 		7FE7FA93E312E5AB41E160E4 /* NeckTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3F9681A21FCA3E587D0939 /* NeckTypes.swift */; };
@@ -208,6 +209,7 @@
 		C09C385A210FD50D97CD9BB4 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FB49A9C39B61A39EB2B402 /* SkeletonView.swift */; };
 		C10FA8CEF8EF58FFD8DD28F5 /* ExerciseSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F76FC19CE5EF7FE3F37C107 /* ExerciseSessionView.swift */; };
 		C311695674EFFF5CD69A7D9F /* ExerciseCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8015AE1C90D1EFCDC28B737D /* ExerciseCardView.swift */; };
+		C714E75487FB17C5EC08EB2D /* micro-modules_en.json in Resources */ = {isa = PBXBuildFile; fileRef = 91E67766317FB311903F8A59 /* micro-modules_en.json */; };
 		C8CE2D46B38E704A555BFC6A /* AclScreeningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B51A90F3F1E56BC45B839F2 /* AclScreeningView.swift */; };
 		C8E37F56D320E949F84409E8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0A2A58E7CB87854406B06B /* OnboardingView.swift */; };
 		C8F30ACBDD5205D9AE7212F0 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7946204640E8D568AD0B55 /* APIClient.swift */; };
@@ -391,7 +393,7 @@
 		4D091C40616A3407751C6238 /* AclTodayProgramCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTodayProgramCard.swift; sourceTree = "<group>"; };
 		4F45E597178D17EC528DCAB8 /* ThreadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailView.swift; sourceTree = "<group>"; };
 		4F76FC19CE5EF7FE3F37C107 /* ExerciseSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSessionView.swift; sourceTree = "<group>"; };
-		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522523B00DA8A09984ACA606 /* UserProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		52C5C9F2D2ADDB53A0EE3208 /* NdiProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NdiProgressView.swift; sourceTree = "<group>"; };
 		5359A7494A03CCE028643ABB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -454,7 +456,8 @@
 		8EE21B35C9D66F92733D103F /* PainSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainSliderView.swift; sourceTree = "<group>"; };
 		8F365DC7AA5C42834DD5A1AD /* TokenManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManagerTests.swift; sourceTree = "<group>"; };
 		91D1051695F6EC94743F3119 /* LbpTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LbpTypes.swift; sourceTree = "<group>"; };
-		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		91E67766317FB311903F8A59 /* micro-modules_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "micro-modules_en.json"; sourceTree = "<group>"; };
+		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModifiers+Design.swift"; sourceTree = "<group>"; };
 		9888D0F8D964CAB893649437 /* ShoulderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoulderTypes.swift; sourceTree = "<group>"; };
 		98C609B2EEEA0B25CCA73910 /* OverviewTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTab.swift; sourceTree = "<group>"; };
@@ -541,6 +544,7 @@
 		E1FD1910B71C0989506B7E9C /* SiScreeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiScreeningView.swift; sourceTree = "<group>"; };
 		E31D8E20BA1F8BD69D449BD2 /* AclMilestoneDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclMilestoneDetailView.swift; sourceTree = "<group>"; };
 		E4071797D795576116D28674 /* FrozenShoulderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrozenShoulderTypes.swift; sourceTree = "<group>"; };
+		E4A43E14B1DE05EF19C22974 /* education-cards_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "education-cards_en.json"; sourceTree = "<group>"; };
 		E55E0E3FEAF5E77B08154139 /* TsiProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TsiProgressView.swift; sourceTree = "<group>"; };
 		E70279B32E209B5885534BE9 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		E7E7432BD599BF7478973BD8 /* TestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFixtures.swift; sourceTree = "<group>"; };
@@ -743,7 +747,6 @@
 				39291E0E5B4D90DF900CBC46 /* Common */,
 				D53BCA9C2089E71B8917B997 /* Components */,
 				DF81E58A1C18EFB277A4EDEB /* Dashboard */,
-				6C813C3208D2C01B33E756BB /* Education */,
 				10CFA21F67F4747CD17C1A7F /* Exercise */,
 				B272FF5FBF463C0C55B5976B /* FrozenShoulder */,
 				2CF1E40A01C4D205C0C1725E /* LateralAnkleSprain */,
@@ -855,27 +858,6 @@
 			path = ACL;
 			sourceTree = "<group>";
 		};
-		692EE9A2D6F0B96366C32E45 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Sync;
-			sourceTree = "<group>";
-		};
-		6C813C3208D2C01B33E756BB /* Education */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Education;
-			sourceTree = "<group>";
-		};
-		7B5C3C56D387277EE9D8A201 /* Screening */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Screening;
-			sourceTree = "<group>";
-		};
 		7EE4963F5C53FFE4072E34DA /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -908,13 +890,6 @@
 			path = SwiftData;
 			sourceTree = "<group>";
 		};
-		9035A42A03E2925CB2E187DA /* Education */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Education;
-			sourceTree = "<group>";
-		};
 		90CB602DB3ADA2D2F45BD354 /* Bridge */ = {
 			isa = PBXGroup;
 			children = (
@@ -939,12 +914,9 @@
 		92B3F9DD721D985B22FA7F00 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A81A84736ECE7C2BFF8243BB /* Audio */,
 				CEEB8B2089B0AD04F62F7AEB /* Data */,
-				9035A42A03E2925CB2E187DA /* Education */,
 				23739A869143D07B800DC324 /* Fonts */,
 				B2C5AF603252A06322A39E8E /* Protocols */,
-				7B5C3C56D387277EE9D8A201 /* Screening */,
 				0202DFBD39213EF7AA793245 /* Assets.xcassets */,
 			);
 			name = Resources;
@@ -958,13 +930,6 @@
 			);
 			name = ReapptivateUITests;
 			path = Reapptivate/Tests/ReapptivateUITests;
-			sourceTree = "<group>";
-		};
-		A81A84736ECE7C2BFF8243BB /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Audio;
 			sourceTree = "<group>";
 		};
 		A9D1210FE30A37581441C471 /* Reapptivate */ = {
@@ -1084,7 +1049,9 @@
 			isa = PBXGroup;
 			children = (
 				A37C62531734065DA5BB4BBF /* aem-screening-config.json */,
+				E4A43E14B1DE05EF19C22974 /* education-cards_en.json */,
 				D8AEFD73DA58CDBBC9506718 /* education-cards.json */,
+				91E67766317FB311903F8A59 /* micro-modules_en.json */,
 				FC644B3483AAEF32D1E7A6F8 /* micro-modules.json */,
 				267D91718D10D56835E7F0FA /* motivational-quotes.json */,
 				0062460216C4AC460CC3B10C /* neck-daily-tips.json */,
@@ -1106,10 +1073,7 @@
 		D59DE0C5F07DE37AA9AB88C6 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				DF04653FF65DD5FE31B53DAE /* Audio */,
 				03FC3482A0FC1E19EEC153AF /* Networking */,
-				E9DF91FA2FE83ED762115AF9 /* Notifications */,
-				692EE9A2D6F0B96366C32E45 /* Sync */,
 				2D0039B45744461E924D7F19 /* AudioService.swift */,
 				18040656876AA536FE86AEAE /* ExerciseVideoStore.swift */,
 				C3567B6AB2B7907FEAD9350A /* MilestoneService.swift */,
@@ -1141,13 +1105,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		DF04653FF65DD5FE31B53DAE /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Audio;
-			sourceTree = "<group>";
-		};
 		DF81E58A1C18EFB277A4EDEB /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -1177,13 +1134,6 @@
 				94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		E9DF91FA2FE83ED762115AF9 /* Notifications */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Notifications;
 			sourceTree = "<group>";
 		};
 		F405888DC6B99159E7A74A54 /* ReapptivateTests */ = {
@@ -1340,6 +1290,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					A7AECD66B703CF0A134DD96F = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1354,6 +1305,7 @@
 			);
 			mainGroup = 085D8C9692D8AA7A0ABF3326;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1380,6 +1332,7 @@
 				1DA9CFABFC54B81E4FBD11D5 /* achilles.json in Resources */,
 				9D4C760145AEB19FE7C53F09 /* aem-screening-config.json in Resources */,
 				0099E94A5B2D515967105FA7 /* education-cards.json in Resources */,
+				7D836AA2540AA50CE12226A9 /* education-cards_en.json in Resources */,
 				912608E49E73E3219687ADC6 /* frozen_shoulder_leicht.json in Resources */,
 				5AA6FAFE2BDB45AA41D0575D /* frozen_shoulder_mittel.json in Resources */,
 				FEFAFD43874C66B8BA5DA442 /* frozen_shoulder_schwer.json in Resources */,
@@ -1393,6 +1346,7 @@
 				93F9D9033C8B395E55599D30 /* lbp_eer.json in Resources */,
 				A195FCEAB9D4B72BA3E4C89C /* lbp_far.json in Resources */,
 				E6245868C4AB67E952EC9EC9 /* micro-modules.json in Resources */,
+				C714E75487FB17C5EC08EB2D /* micro-modules_en.json in Resources */,
 				0D2A243B4F7078A7E3D48C8E /* motivational-quotes.json in Resources */,
 				1C42FBA760399EBD2BF0F299 /* neck-daily-tips.json in Resources */,
 				254C27148296B183E2333412 /* neck-screening-config.json in Resources */,
@@ -1768,7 +1722,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
@@ -1926,7 +1879,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;

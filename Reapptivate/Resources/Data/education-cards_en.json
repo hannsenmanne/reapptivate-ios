@@ -1,0 +1,225 @@
+[
+  {
+    "id": "p1-what-is-tendinopathy",
+    "phase": 1,
+    "title": "What is Tendinopathy?",
+    "body": "Your tendon has changed due to repeated loading — this is not inflammation, but a tissue adaptation response. The good news: tendons can regenerate and become stronger through targeted exercise.",
+    "icon": "biology",
+    "source": "JOSPT Clinical Practice Guidelines"
+  },
+  {
+    "id": "p1-pain-not-damage",
+    "phase": 1,
+    "title": "Pain \u2260 Damage",
+    "body": "Pain during exercise does not mean you are further damaging your tendon. As long as pain stays below 3/10, the load is safe and promotes healing. Over time, your nervous system learns to perceive loading as normal again.",
+    "icon": "pain",
+    "source": "Pain Science Research, Adriaan Louw 2023"
+  },
+  {
+    "id": "p1-why-isometric",
+    "phase": 1,
+    "title": "Why Isometric Exercises?",
+    "body": "Isometric exercises (holding without movement) are the ideal starting point: they load the tendon evenly without additional irritation from movement. This stimulates collagen production and can even provide short-term pain relief.",
+    "icon": "loading"
+  },
+  {
+    "id": "p2-tendon-adaptation",
+    "phase": 2,
+    "title": "How Tendons Adapt",
+    "body": "Tendons need 12-24 weeks to structurally remodel — significantly longer than muscles. The slow, heavy training in this phase stimulates collagen synthesis and gradually improves your tendon's load capacity.",
+    "icon": "biology",
+    "source": "Magnusson et al., Tendon Adaptation Review"
+  },
+  {
+    "id": "p2-24h-rule",
+    "phase": 2,
+    "title": "The 24-Hour Rule",
+    "body": "After training, your pain may briefly increase — this is normal. What matters is: within 24 hours, it should return to your baseline level. If not, the load was too high.",
+    "icon": "recovery",
+    "source": "Silbernagel et al., Pain Monitoring Model"
+  },
+  {
+    "id": "p2-why-slow",
+    "phase": 2,
+    "title": "Why Slow Training Works",
+    "body": "The 3-0-3 tempo (3 seconds up, 3 seconds down) maximizes time under tension. This mechanical loading is the most important stimulus for tendon adaptation — it's not the number of repetitions that counts, but the quality.",
+    "icon": "loading"
+  },
+  {
+    "id": "p3-building-resilience",
+    "phase": 3,
+    "title": "Long-Term Resilience",
+    "body": "This phase is about building resilience: eccentric exercises train your tendon under stretch and prepare it for everyday demands. Your tissue becomes not only stronger but also more elastic.",
+    "icon": "progress"
+  },
+  {
+    "id": "p3-load-management",
+    "phase": 3,
+    "title": "Managing Your Load",
+    "body": "More is not always better. Increase the load by only 10-15% per week and follow the 24-hour rule. Your body needs rest days so the tendon can rebuild between training sessions.",
+    "icon": "recovery"
+  },
+  {
+    "id": "p3-return-to-activity",
+    "phase": 3,
+    "title": "Return to Full Activity",
+    "body": "Tendinopathy does not heal on its own — but with consistent training you can return to full activity. Most patients see significant improvement after 12-16 weeks. Keep going!",
+    "icon": "progress",
+    "source": "Systematic Reviews, Malliaras et al."
+  },
+  {
+    "id": "lbp-p1-understanding-lbp",
+    "phase": 1,
+    "title": "Understanding Back Pain",
+    "body": "Non-specific low back pain is very common and in most cases not dangerous. Your back is strong and resilient — pain does not mean something is broken. Movement is the best medicine.",
+    "icon": "biology",
+    "source": "NICE Guidelines 2020",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p1-pain-neuroscience",
+    "phase": 1,
+    "title": "How Pain Works",
+    "body": "Pain is a warning signal from the brain, but in chronic back pain this system is often oversensitive. Through targeted exercise, your nervous system learns to perceive loading as normal again — not as a threat.",
+    "icon": "pain",
+    "source": "Moseley & Butler, Pain Neuroscience Education",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p1-movement-is-medicine",
+    "phase": 1,
+    "title": "Movement as Medicine",
+    "body": "Studies clearly show: exercise is the most effective treatment for back pain. The exercises in this program are safe and designed to gradually accustom your back to loading.",
+    "icon": "loading",
+    "source": "Hayden et al. 2021, Cochrane Review",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p2-progressive-loading",
+    "phase": 2,
+    "title": "Getting Progressively Stronger",
+    "body": "Your back gets stronger through progressive loading — just like a muscle. In this phase, we slowly increase the intensity. Mild discomfort during training is normal and no cause for concern.",
+    "icon": "loading",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p2-pacing",
+    "phase": 2,
+    "title": "Pacing Your Load",
+    "body": "Avoid the \"boom-bust\" pattern: doing too much on good days and then suffering for days. Stick to the training plan — consistent loading produces better results than uncontrolled spikes.",
+    "icon": "recovery",
+    "source": "Hasenbring et al., Avoidance-Endurance Model",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p2-core-stability",
+    "phase": 2,
+    "title": "Building Core Stability",
+    "body": "A strong core does not protect your back like a corset — it improves movement control. The exercises train the coordination of your abdominal, back, and gluteal muscles for safe everyday movements.",
+    "icon": "biology",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p3-functional-return",
+    "phase": 3,
+    "title": "Returning to Daily Life",
+    "body": "In this phase, you train movements you need in everyday life: lifting, carrying, bending. Your back is now significantly more resilient. Trust your progress!",
+    "icon": "progress",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p3-long-term",
+    "phase": 3,
+    "title": "Long-Term Pain Freedom",
+    "body": "Regular physical activity is the best protection against recurring back pain. Plan 2-3 training sessions per week even after the program ends. Your back will thank you.",
+    "icon": "recovery",
+    "source": "Steffens et al. 2016, Prevention of LBP",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "lbp-p3-self-efficacy",
+    "phase": 3,
+    "title": "Trusting Your Body",
+    "body": "The most important outcome of this program is not just less pain — it is the confidence that your back can handle load. You now know how to train to stay strong and pain-free.",
+    "icon": "progress",
+    "source": "O'Sullivan et al. 2018, CFT Approach",
+    "condition": "LBP_NONSPECIFIC"
+  },
+  {
+    "id": "neck-p1-understanding-neck-pain",
+    "phase": 1,
+    "title": "Understanding Neck Pain",
+    "body": "Neck pain is very common and in most cases harmless. Your cervical spine is robust and built for movement. Pain does not mean something is damaged — it is often a sign that your nervous system is reacting more sensitively than necessary.",
+    "icon": "biology",
+    "source": "Blanpied et al. 2017, JOSPT Clinical Practice Guidelines",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p1-pain-neuroscience",
+    "phase": 1,
+    "title": "Pain and the Nervous System",
+    "body": "With persistent neck pain, the pain system becomes more sensitive — it warns you even when there is no danger. Gentle movement and targeted exercise help calm this overactive system and signal to your brain that movement is safe.",
+    "icon": "pain",
+    "source": "Nijs et al. 2021, Central Sensitization in Neck Pain",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p1-gentle-mobilization",
+    "phase": 1,
+    "title": "Why Gentle Mobilization?",
+    "body": "This phase is about gently reintroducing your neck to movement. Gentle exercises improve blood flow, release muscular tension, and send positive signals to your nervous system — the first step toward pain relief.",
+    "icon": "loading",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p2-cervical-adaptation",
+    "phase": 2,
+    "title": "How the Cervical Spine Adapts",
+    "body": "Your neck muscles and surrounding structures adapt to loading. Through targeted mobilization exercises, you improve range of motion and train the deep neck muscles that are essential for stability and postural control.",
+    "icon": "biology",
+    "source": "Falla et al. 2012, Deep Cervical Flexor Training",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p2-ergonomics",
+    "phase": 2,
+    "title": "Everyday Ergonomics",
+    "body": "The best posture is the next posture — changing positions regularly is more important than the perfect sitting position. Make sure to place your screen at eye level and move your neck briefly every 30 minutes.",
+    "icon": "recovery",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p3-building-stability",
+    "phase": 3,
+    "title": "Building Stability",
+    "body": "Now we specifically strengthen the muscles that stabilize your neck. The deep cervical flexors and shoulder blade muscles work together to protect your cervical spine — especially during everyday loading and extended desk work.",
+    "icon": "loading",
+    "source": "Jull et al. 2008, Whiplash and Neck Pain",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p3-posture-strength",
+    "phase": 3,
+    "title": "Posture and Strength",
+    "body": "Good posture does not come from rigidly sitting upright, but from strong muscles that effortlessly support your neck. The exercises in this phase strengthen your entire neck and shoulder region for a natural, upright posture.",
+    "icon": "biology",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p4-return-to-activities",
+    "phase": 4,
+    "title": "Returning to Your Activities",
+    "body": "Your neck is now significantly more resilient. In this phase, you incorporate more demanding movements that prepare you for sports and daily life. Trust your progress — you have laid the foundation for long-term freedom from symptoms.",
+    "icon": "progress",
+    "condition": "NECK_PAIN"
+  },
+  {
+    "id": "neck-p4-long-term-health",
+    "phase": 4,
+    "title": "Long-Term Neck Health",
+    "body": "Regular exercise is the best protection against recurring neck pain. Plan 2-3 short training sessions per week and make sure to take regular breaks during sedentary work. Your neck will thank you!",
+    "icon": "recovery",
+    "source": "Gross et al. 2015, Cochrane Review Exercises for Neck Pain",
+    "condition": "NECK_PAIN"
+  }
+]

@@ -26,7 +26,11 @@ final class EducationCardLoader: @unchecked Sendable {
             return cache
         }
 
-        guard let url = Bundle.main.url(forResource: "education-cards", withExtension: "json"),
+        let isEnglish = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        let resourceName = isEnglish ? "education-cards_en" : "education-cards"
+        let resolvedName = Bundle.main.url(forResource: resourceName, withExtension: "json") != nil
+            ? resourceName : "education-cards"
+        guard let url = Bundle.main.url(forResource: resolvedName, withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let cards = try? JSONDecoder().decode([EducationCard].self, from: data) else {
             return []

@@ -1,0 +1,287 @@
+{
+  "version": "1.0.0",
+  "modules": [
+    {
+      "key": "expectation_test_intro",
+      "locale": "de",
+      "targetSubtypes": ["FAR"],
+      "title": "Testing Expectations: Introduction",
+      "bodyMarkdown": "**What is an Expectation Test?**\n\nWith chronic pain, we often develop beliefs about what harms us. These beliefs are not always based on facts.\n\n**The Experiment:**\n1. Before an activity: predict what will happen\n2. Perform the activity (in a controlled way)\n3. Observe the outcome\n4. Compare prediction with reality\n\n**Scientific Basis:** When we repeatedly experience that our fear predictions do not come true, our brain learns: \"This is safer than I thought.\"\n\nThis is the foundation of exposure therapy — not courage, but gathering evidence.",
+      "takeHome": "Testing expectations = collecting data about what actually happens (not what we fear)",
+      "taskType": "expectationTest",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "activity": {"type": "string"},
+          "predictionHarm": {"type": "number", "min": 0, "max": 100},
+          "predictionFear": {"type": "number", "min": 0, "max": 10}
+        }
+      }
+    },
+    {
+      "key": "how_to_build_fear_ladder",
+      "locale": "de",
+      "targetSubtypes": ["FAR"],
+      "title": "Building a Fear Hierarchy",
+      "bodyMarkdown": "**Step 1: Collect Activities**\n\nList 5-7 activities that you avoid or do with anxiety:\n- Trunk flexion\n- Heavy lifting\n- Prolonged sitting\n- Sports/specific movements\n\n**Step 2: Rate Your Fear (0-10)**\n\n0 = no fear, 10 = extreme fear\n\n**Step 3: Sort**\n\nFrom lowest to highest fear. You start with the lowest.\n\n**Step 4: Define Levels**\n\nFor each activity: light \u2192 moderate \u2192 full dose\n\n**Important:** You set the pace. Gradual progression is the key.",
+      "takeHome": "A good hierarchy has clear levels and starts with lower fear",
+      "taskType": "goalSetting",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "activities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {"type": "string"},
+                "fearRating": {"type": "number", "min": 0, "max": 10}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "distress_checkin_and_recovery",
+      "locale": "de",
+      "targetSubtypes": ["DER"],
+      "title": "Distress Check-In and Recovery",
+      "bodyMarkdown": "**Recognizing Distress (DER Profile)**\n\nSigns that you are in \"push-through-despite-distress\" mode:\n- You continue even as pain/exhaustion increases\n- Guilt when taking breaks\n- \"I have to finish this first\"\n\n**The Check:**\n\n3x daily (or every 2 hours during activity):\n1. Pain? (0-10)\n2. Fatigue? (0-10)\n3. Tension? (0-10)\n\n**Action Rule:**\n\nIf any score \u22653: **Take a break** (not \"just finish this quickly\")\n\n**Recovery Options:**\n- 5 min lying down\n- Body scan\n- Short walk (easy!)\n- Stretching\n\n**Important:** Taking a break is not weakness. It is prevention.",
+      "takeHome": "Regular check-ins + breaks at 3/10 = distress management",
+      "taskType": "distressRegulation",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "checkFrequencyHours": {"type": "number"},
+          "actionThreshold": {"type": "number", "default": 3}
+        }
+      }
+    },
+    {
+      "key": "pacing_baseline_and_caps",
+      "locale": "de",
+      "targetSubtypes": ["DER", "EER"],
+      "title": "Pacing: Baseline and Caps",
+      "bodyMarkdown": "**Step 1: Find Your Baseline**\n\nFor each activity (sitting, standing, exercise):\n- On a \"normal\" day: How long until symptoms appear?\n- That is your baseline (e.g., 20 min standing)\n\n**Step 2: Starting Quota = 80% of Baseline**\n\nIf baseline is 20 min \u2192 Start with 16 min\n\n**Why less?** Buffer for bad days.\n\n**Step 3: Set a Cap**\n\nDER profile:\n- Daily cap: Quota + max 20%\n- Weekly cap: Planned sessions (no extras)\n\n**Step 4: Progression**\n\n+10% per week, if:\n- Pain stable \u22643/10\n- No flare-ups\n\n**The hard part:** Sticking to the quota even on good days.",
+      "takeHome": "Quota = protection from boom-bust. Cap = protection from \"I can do more\"",
+      "taskType": "pacing",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "activities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {"type": "string"},
+                "baseline": {"type": "number"},
+                "startQuota": {"type": "number"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "precommitment_and_timer_caps",
+      "locale": "de",
+      "targetSubtypes": ["EER"],
+      "title": "Pre-Commitment and Timer Caps (EER)",
+      "bodyMarkdown": "**Problem (EER Profile):**\n\nYou are motivated and have positive energy — but sometimes \"today is going well\" leads to overloading tomorrow.\n\n**Solution: External Structure**\n\n**1. Pre-Commitment (Decide in Advance):**\n\nBEFORE the session, write down:\n- Exercises: Which ones?\n- Sets: How many?\n- Reps: How many?\n- Weight: How heavy?\n\n**2. Timer Caps:**\n\nFor hold exercises (plank, etc.):\n- Set timer to target time\n- When it rings: STOP immediately\n- Not \"just 5 more seconds\"\n\n**3. Rep Caps:**\n\nFor strength exercises:\n- Target e.g. 8 reps\n- At 8: Stop (even if 10 would be possible)\n\n**Why?** Your motivation is a resource. Today 80% = ready again tomorrow. Today 100% = forced rest the day after tomorrow.",
+      "takeHome": "Planning protects from impulsivity. Timers/caps = external brake against overenthusiasm",
+      "taskType": "pacing",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "useTimer": {"type": "boolean"},
+          "useRepCaps": {"type": "boolean"},
+          "preCommitmentLog": {"type": "boolean"}
+        }
+      }
+    },
+    {
+      "key": "flare_up_plan",
+      "locale": "de",
+      "targetSubtypes": ["FAR", "DER", "EER", "AR"],
+      "title": "Flare-Up Management",
+      "bodyMarkdown": "**What is a Flare-Up?**\n\nA sudden increase in pain (+2 points or more in 24-48 hours) or significantly elevated symptoms.\n\n**First 48 Hours:**\n\n1. **Don't panic** — Flare-ups are part of the process, not a setback\n2. **Reduce loading** (don't eliminate it!):\n   - Training: Repeat this week (don't stop)\n   - Exercises: Half the sets or lighter weight\n   - Daily life: Stricter pacing than usual\n\n**Pain Management:**\n- Heat or cold (whichever you prefer)\n- Light movement (walking, gentle mobility)\n- Relaxation techniques\n\n**Day 3-7:**\n\n- Pain decreasing? \u2192 Slowly return to the plan\n- Pain unchanged? \u2192 Repeat the week, contact therapist\n- Pain increasing? \u2192 Consult therapist\n\n**Learning:**\n\nWhat triggered it? Overloading? Stress? Sleep deprivation? \u2192 Adjust for the future",
+      "takeHome": "Flare-up = temporary. Deload (not stop) + management = way back",
+      "taskType": "barrierSolving",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "trigger": {"type": "string"},
+          "actionTaken": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "barriers_problem_solving",
+      "locale": "de",
+      "targetSubtypes": ["FAR", "DER", "EER", "AR"],
+      "title": "Overcoming Barriers",
+      "bodyMarkdown": "**Common Barriers to Exercise:**\n\n**1. Time:**\n- Solution: Mini-sessions (15 min instead of 45 min)\n- Or: Integrate exercise into daily life (e.g., calf raises while brushing teeth)\n\n**2. Low Motivation:**\n- Solution: \"Just 1 exercise\" rule (often it becomes more)\n- Or: Do the smallest version (1 set instead of 3)\n\n**3. Pain Higher Than Expected:**\n- Solution: Reduce range of motion (don't eliminate entirely)\n- Or: Easier exercise from an earlier phase\n\n**4. Unexpected Events (appointments, etc.):**\n- Solution: Use a flex day instead of \"giving up\"\n- Or: Split the session across 2 days\n\n**Problem-Solving Framework:**\n\n1. Name the barrier\n2. Brainstorm 3 solutions\n3. Pick the simplest and test it\n4. Next week: Did it work?\n\n**Important:** Perfection is not the goal. Consistency (even with adjustments) beats perfection.",
+      "takeHome": "No barrier is perfect. But a small adjustment > a complete stop",
+      "taskType": "barrierSolving",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "barrier": {"type": "string"},
+          "solutions": {"type": "array", "items": {"type": "string"}},
+          "chosenSolution": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_pain_science",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Pain Science: Understanding the Neck",
+      "bodyMarkdown": "**Why Does My Neck Hurt?**\n\nNeck pain is very common \u2014 over 70% of people experience it at least once in their lifetime. In most cases, there is no structural damage.\n\n**The Gate Control Model:**\n\nYour nervous system has \"gates\" in the spinal cord that filter pain signals. These gates are influenced by:\n- **Opening:** Stress, anxiety, sleep deprivation, inactivity\n- **Closing:** Movement, relaxation, good sleep, positive expectations\n\n**Important to Know:**\n\n1. Pain \u2260 damage. Your neck is strong and resilient.\n2. Imaging (MRI) often shows \"findings\" in pain-free people\n3. Movement is the best medicine \u2014 controlled loading strengthens tissue\n4. Your brain can \"upregulate\" pain during stress and anxiety\n\n**Conclusion:** Understanding how pain works is the first step toward improvement.",
+      "takeHome": "Pain = alarm signal from the nervous system, not always a sign of damage. Movement helps the tissue.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_posture_myths",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Posture Myths Debunked",
+      "bodyMarkdown": "**\"Sit up straight or you'll get neck pain!\"**\n\nWe've all heard this. But is it true?\n\n**Science Says:**\n\n1. There is no \"perfect\" posture\n2. Studies show: people with neck pain don't sit \"worse\" than pain-free people\n3. The problem is not posture \u2014 but the **duration** without change\n\n**What Actually Helps:**\n\n- **Variation** is the key: The best posture is the next posture\n- Change position every 30-45 minutes\n- Stand up, move briefly, sit down again\n- Your neck likes movement \u2014 even \"bad\" posture for a short time is OK\n\n**Ergonomics Myths:**\n\n- Your screen doesn't have to be at exact eye level\n- An \"ergonomic\" chair alone won't prevent pain\n- More important than equipment: **Regular movement breaks**\n\n**Exercise:** Sit in a deliberately \"bad\" posture for 1 minute \u2014 does anything happen? No. Your neck is robust!",
+      "takeHome": "The best posture is the next posture. Variation > perfection.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_sleep_hygiene",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Sleep and Neck Pain",
+      "bodyMarkdown": "**How Does Sleep Affect Your Neck?**\n\nPoor sleep can worsen pain \u2014 and pain disrupts sleep. A vicious cycle.\n\n**Sleeping Position:**\n\n- **Side lying** (recommended): Pillow should fill the gap between shoulder and head\n- **Back lying** (good): Flatter pillow that supports the natural curve of the cervical spine\n- **Stomach lying** (avoid): Forces rotation of the cervical spine\n\n**The Right Pillow:**\n\n- Not too high, not too flat\n- Supportive but not rigid\n- Rule of thumb: Head and cervical spine should be in line with the thoracic spine\n\n**Sleep Hygiene Tips:**\n\n1. Regular bedtime (\u00b130 minutes)\n2. 30 minutes before sleep: No screens\n3. Gentle neck rotations before falling asleep (5x per side)\n4. Room temperature: 16-18\u00b0C ideal\n5. For pain: Heat on the neck (cherry pit pillow)\n\n**Important:** You don't have to stay in one position all night. Turning over is normal and healthy!",
+      "takeHome": "Good sleep = less pain. Side lying + right pillow + routine = better nights.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_stress_management",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Stress and Neck Tension",
+      "bodyMarkdown": "**The Stress-Pain Connection:**\n\nUnder stress, we unconsciously tense our neck and shoulder muscles. Chronic stress = chronic tension = more pain.\n\n**Recognize Your Patterns:**\n\n- Do you raise your shoulders when stressed?\n- Do you clench your teeth?\n- Do you lean forward toward the screen?\n\n**Quick Relief (2-Minute Reset):**\n\n1. **Shoulder Drop:** Consciously raise shoulders toward ears \u2192 Hold 5 sec \u2192 Release and let them drop. 3x\n2. **Jaw Release:** Lips closed, teeth slightly apart, tongue on the roof of your mouth. 30 sec.\n3. **Breathing Focus:** 4 sec in, 6 sec out. 5 cycles.\n\n**Long-Term Strategies:**\n\n- Regular exercise (reduces cortisol)\n- Body scan meditation (5-10 min daily)\n- \"Stress check\" every 2 hours: Where is the tension? Consciously let go.\n\n**Scientifically proven:** Stress management significantly improves neck pain \u2014 independently of exercises.",
+      "takeHome": "Stress = muscle tension = pain. Conscious release breaks the cycle.",
+      "taskType": "distressRegulation",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "technique": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_ergonomics",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_NONSPECIFIC", "NECK_RADICULOPATHY"],
+      "title": "Practical Workplace Ergonomics",
+      "bodyMarkdown": "**Pragmatic Ergonomics (not perfectionist!):**\n\nRemember: There is no perfect posture. But you can set up your workspace so that variation becomes easier.\n\n**Screen Work:**\n\n- Screen: Arm's length away, top edge approximately at eye level\n- With 2 monitors: Main monitor directly in front of you\n- Laptop: External keyboard + elevate laptop (books, stand)\n\n**Smartphone Use:**\n\n- Hold phone at eye level (support elbows)\n- Max. 15 min at a time, then break\n- \"Text neck\" is normal \u2014 only the duration is the problem\n\n**Sit-Stand Alternation:**\n\n- Ideal: 30 min sitting \u2192 10 min standing \u2192 repeat\n- No standing desk? \u2192 Get up every 30 min, walk briefly\n\n**Micro-Breaks (30 sec):**\n\n1. Chin tucks 5x\n2. Shoulder circles 5x forward, 5x backward\n3. Look into the distance (20-20-20: every 20 min, 20 sec, 20 feet)\n\n**Don't forget:** Set timer reminders for yourself!",
+      "takeHome": "Variation > perfection. Timer reminders for micro-breaks are the most effective ergonomics tip.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_nerve_education",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Understanding Nerves: Radiculopathy Explained",
+      "bodyMarkdown": "**What Happens in Cervical Radiculopathy?**\n\nA nerve root in the neck becomes irritated or compressed. This can cause pain, tingling, or weakness in the arm.\n\n**Important:**\n\n1. **Nerves heal.** In most cases, symptoms improve within 6-12 weeks.\n2. **Surgery is rarely needed.** Only with progressive weakness or loss of function.\n3. **Movement helps.** Controlled loading promotes healing.\n\n**Understanding Nerve Sensitivity:**\n\nAn irritated nerve is more sensitive than normal. This means:\n- Activities that are normally harmless can trigger symptoms\n- This does NOT mean you are causing damage\n- Over time, the nerve becomes less sensitive\n\n**Centralization vs. Peripheralization:**\n\n- **Good:** Symptoms move toward the neck (centralization)\n- **Caution:** Symptoms move toward the fingers (peripheralization) \u2192 Adjust exercise\n\n**Your program** uses neurodynamic mobilization and progressive loading to gently accustom the nerve to movement.",
+      "takeHome": "Nerves heal themselves. Controlled movement accelerates the process. Watch for centralization.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_centralization",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Centralization as a Guide",
+      "bodyMarkdown": "**What is Centralization?**\n\nWhen your arm/hand symptoms retreat and become felt closer to the neck, this is a **positive sign** \u2014 centralization.\n\n**Why is This Important?**\n\nCentralization indicates:\n- The nerve root is being relieved\n- Your body is responding positively to the exercises\n- The direction of your program is correct\n\n**Observe:**\n\n- **Before exercise:** Where do you feel the symptoms? (Neck? Shoulder? Upper arm? Hand?)\n- **After exercise:** Are the symptoms closer to the neck? \u2192 Good!\n- **Important:** Even if neck pain briefly increases, centralization is positive\n\n**Peripheralization \u2014 Warning Sign:**\n\nIf symptoms move further into the arm/hand:\n1. Stop the exercise immediately\n2. Gentle cervical retraction (chin tuck) as a reset\n3. Next session: Less intensity\n4. Persistent: Inform therapist\n\n**In Your Progress Log:** You can indicate after each session whether symptoms centralized.",
+      "takeHome": "Centralization = your compass. Symptoms toward neck = good direction. Symptoms toward hand = stop and adjust.",
+      "taskType": "reflection",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_flare_management",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Flare Management with Radiculopathy",
+      "bodyMarkdown": "**What to Do When Symptoms Worsen?**\n\nFlare-ups are normal and not a sign of regression. With radiculopathy, symptoms can fluctuate.\n\n**Immediate Measures (0-48 hours):**\n\n1. **Stay calm.** Panic makes things worse.\n2. **Cervical retraction** (chin tuck): 10x gently, every 2 hours\n3. **Relief position:** Side lying with pillow, affected arm on top\n4. **Cold or heat** \u2014 whichever feels better (15 min)\n\n**Training During Flare-Up:**\n\n- Do NOT skip the phase, but **reduce:**\n  - 50% of repetitions\n  - No weight or less weight\n  - Only pain-free exercises\n- Neurodynamic mobilization: Sliders only (no tensioners)\n\n**Red Flags \u2014 Contact Therapist Immediately:**\n\n- Increasing weakness in hand/arm\n- Bladder/bowel dysfunction\n- Numbness worsening rapidly\n\n**After the Flare-Up:**\n\nIf symptoms stable for 48 hours: Slowly return to normal program (2-3 days to full intensity).",
+      "takeHome": "Flare-up = temporary. Reduce rather than stop. Chin tuck as first aid. Take red flags seriously.",
+      "taskType": "barrierSolving",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "trigger": {"type": "string"},
+          "actionTaken": {"type": "string"}
+        }
+      }
+    },
+    {
+      "key": "neck_return_to_activity",
+      "locale": "de",
+      "targetCondition": "NECK_PAIN",
+      "targetSubtypes": ["NECK_RADICULOPATHY"],
+      "targetRadiculopathy": true,
+      "title": "Returning to Full Activity",
+      "bodyMarkdown": "**When Can I Do Everything Again?**\n\nReturning to full activity happens gradually \u2014 not all at once.\n\n**Criteria for Return:**\n\n1. Arm symptoms significantly reduced or gone\n2. Full strength in hand and arm\n3. Pain-free head mobility in all directions\n4. Phase 4 exercises without symptom worsening\n\n**Step-by-Step Plan:**\n\n**Level 1** (Phase 3-4): Normal daily loading\n- Driving, working, light sports\n\n**Level 2** (End of Phase 4): Moderate loading\n- Running, swimming, gym training\n- Weight: 60-70% of previous level\n\n**Level 3** (2-4 weeks after Phase 4): Full loading\n- Contact sports, overhead sports\n- Full weights\n- Competition\n\n**Relapse Prevention:**\n\n- Maintain neck exercises 2-3x/week (even when pain-free)\n- Continue ergonomic habits\n- At first signs: Immediately start basic exercises (chin tuck, mobilization)\n\n**Important:** Relapses are possible and normal. You now have the tools to handle them.",
+      "takeHome": "Return in 3 levels. Prevention through maintaining basic exercises 2-3x/week. Relapses are manageable.",
+      "taskType": "goalSetting",
+      "taskSchema": {
+        "type": "object",
+        "properties": {
+          "goalActivity": {"type": "string"},
+          "targetDate": {"type": "string"}
+        }
+      }
+    }
+  ]
+}
