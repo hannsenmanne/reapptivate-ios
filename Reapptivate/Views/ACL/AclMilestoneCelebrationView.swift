@@ -1,5 +1,9 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct AclMilestoneCelebrationView: View {
     let milestone: Int
     let onDismiss: () -> Void
@@ -29,7 +33,9 @@ struct AclMilestoneCelebrationView: View {
                         .foregroundStyle(.painAmber)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Meilenstein \(milestone) erreicht!")
+                        Text(isEnglishLocale
+                            ? "Milestone \(milestone) reached!"
+                            : "Meilenstein \(milestone) erreicht!")
                             .font(.appSubheadlineSemibold)
                             .foregroundStyle(.white)
                         Text(milestoneDescription(for: milestone))
@@ -85,13 +91,23 @@ struct AclMilestoneCelebrationView: View {
     }
 
     private func milestoneDescription(for milestone: Int) -> String {
+        if isEnglishLocale {
+            switch milestone {
+            case 1: return "Early rehabilitation completed"
+            case 2: return "Building phase reached"
+            case 3: return "Functional phase reached"
+            case 4: return "Return-to-Sport phase"
+            case 5: return "Full clearance"
+            default: return "Keep going!"
+            }
+        }
         switch milestone {
-        case 1: "Frührehabilitation abgeschlossen"
-        case 2: "Aufbauphase erreicht"
-        case 3: "Funktionelle Phase erreicht"
-        case 4: "Return-to-Sport Phase"
-        case 5: "Vollständige Freigabe"
-        default: "Weiter so!"
+        case 1: return "Frührehabilitation abgeschlossen"
+        case 2: return "Aufbauphase erreicht"
+        case 3: return "Funktionelle Phase erreicht"
+        case 4: return "Return-to-Sport Phase"
+        case 5: return "Vollständige Freigabe"
+        default: return "Weiter so!"
         }
     }
 }

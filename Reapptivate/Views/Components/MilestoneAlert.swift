@@ -1,5 +1,9 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct MilestoneAlert: View {
     let milestone: Milestone
     let onDismiss: () -> Void
@@ -54,7 +58,7 @@ struct MilestoneAlert: View {
                 Button {
                     dismiss()
                 } label: {
-                    Text("Weiter")
+                    Text(isEnglishLocale ? "Continue" : "Weiter")
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(milestone.color)
                         .frame(maxWidth: .infinity)

@@ -1,26 +1,44 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct AclMilestoneTimelineView: View {
     let currentMilestone: Int
     let weeksPostSurgery: Int
 
-    private let milestones: [(id: Int, label: String, shortLabel: String, weekRange: String)] = [
-        (0, "Prä-OP", "Prä", ""),
-        (1, "Meilenstein 1", "M1", "Woche 0-6"),
-        (2, "Meilenstein 2", "M2", "Woche 7-12"),
-        (3, "Meilenstein 3", "M3", "Woche 13-24"),
-        (4, "Meilenstein 4", "M4", "Woche 25-36"),
-        (5, "Entlassung", "M5", "Ab Woche 36"),
-    ]
+    private var milestones: [(id: Int, label: String, shortLabel: String, weekRange: String)] {
+        if isEnglishLocale {
+            return [
+                (0, "Pre-OP", "Pre", ""),
+                (1, "Milestone 1", "M1", "Week 0-6"),
+                (2, "Milestone 2", "M2", "Week 7-12"),
+                (3, "Milestone 3", "M3", "Week 13-24"),
+                (4, "Milestone 4", "M4", "Week 25-36"),
+                (5, "Discharge", "M5", "From Week 36"),
+            ]
+        }
+        return [
+            (0, "Prä-OP", "Prä", ""),
+            (1, "Meilenstein 1", "M1", "Woche 0-6"),
+            (2, "Meilenstein 2", "M2", "Woche 7-12"),
+            (3, "Meilenstein 3", "M3", "Woche 13-24"),
+            (4, "Meilenstein 4", "M4", "Woche 25-36"),
+            (5, "Entlassung", "M5", "Ab Woche 36"),
+        ]
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Rehabilitations-Fortschritt")
+                    Text(isEnglishLocale ? "Rehabilitation Progress" : "Rehabilitations-Fortschritt")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
-                    Text("Woche \(weeksPostSurgery) nach OP")
+                    Text(isEnglishLocale
+                        ? "Week \(weeksPostSurgery) post surgery"
+                        : "Woche \(weeksPostSurgery) nach OP")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -98,12 +116,19 @@ struct AclMilestoneTimelineView: View {
         }
         .cardStyle()
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("Rehabilitations-Fortschritt, Woche \(weeksPostSurgery) nach OP")
+        .accessibilityLabel(isEnglishLocale
+            ? "Rehabilitation Progress, Week \(weeksPostSurgery) post surgery"
+            : "Rehabilitations-Fortschritt, Woche \(weeksPostSurgery) nach OP")
     }
 
     private func milestoneAccessibilityLabel(index: Int, isPast: Bool, isCurrent: Bool) -> String {
         let milestone = milestones[index]
-        let state = isCurrent ? "aktuell" : isPast ? "abgeschlossen" : "ausstehend"
+        let state: String
+        if isEnglishLocale {
+            state = isCurrent ? "current" : isPast ? "completed" : "pending"
+        } else {
+            state = isCurrent ? "aktuell" : isPast ? "abgeschlossen" : "ausstehend"
+        }
         let weekInfo = milestone.weekRange.isEmpty ? "" : ", \(milestone.weekRange)"
         return "\(milestone.label), \(state)\(weekInfo)"
     }

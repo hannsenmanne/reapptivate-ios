@@ -1,5 +1,9 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct AchievementsView: View {
     @Environment(AppState.self) private var appState
     @State private var milestoneService = MilestoneService()
@@ -23,7 +27,7 @@ struct AchievementsView: View {
             .padding(16)
         }
         .background(Color.appBg)
-        .navigationTitle("Erfolge")
+        .navigationTitle(isEnglishLocale ? "Achievements" : "Erfolge")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             if let user = appState.currentUser {
@@ -70,7 +74,7 @@ struct AchievementCard: View {
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
             } else {
-                Text("Gesperrt")
+                Text(isEnglishLocale ? "Locked" : "Gesperrt")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary.opacity(0.4))
             }
@@ -84,7 +88,10 @@ struct AchievementCard: View {
                 VStack {
                     HStack {
                         Spacer()
-                        ShareLink(item: "Ich habe \"\(milestone.title)\" in Reapptivate erreicht!") {
+                        ShareLink(item: isEnglishLocale
+                            ? "I achieved \"\(milestone.title)\" in Reapptivate!"
+                            : "Ich habe \"\(milestone.title)\" in Reapptivate erreicht!"
+                        ) {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)

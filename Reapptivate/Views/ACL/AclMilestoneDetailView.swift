@@ -1,5 +1,9 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct AclMilestoneDetailView: View {
     @Environment(APIClient.self) private var apiClient
 
@@ -13,7 +17,7 @@ struct AclMilestoneDetailView: View {
         ScrollView {
             VStack(spacing: 20) {
                 if isLoading {
-                    ProgressView("Meilenstein-Daten laden...")
+                    ProgressView(isEnglishLocale ? "Loading milestone data..." : "Meilenstein-Daten laden...")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 } else if let error = errorMessage {
@@ -29,7 +33,7 @@ struct AclMilestoneDetailView: View {
             .padding(16)
         }
         .background(Color.appBg)
-        .navigationTitle("Meilenstein \(milestone)")
+        .navigationTitle(isEnglishLocale ? "Milestone \(milestone)" : "Meilenstein \(milestone)")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await loadData()
@@ -41,7 +45,7 @@ struct AclMilestoneDetailView: View {
         // Status summary
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("Aktueller Meilenstein")
+                Text(isEnglishLocale ? "Current Milestone" : "Aktueller Meilenstein")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Spacer()
@@ -51,7 +55,7 @@ struct AclMilestoneDetailView: View {
             }
 
             HStack {
-                Text("Wochen post-OP")
+                Text(isEnglishLocale ? "Weeks post surgery" : "Wochen post-OP")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Spacer()
@@ -64,7 +68,7 @@ struct AclMilestoneDetailView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "info.circle.fill")
                         .foregroundStyle(.farBlue)
-                    Text("Bereit für Lab-Assessment")
+                    Text(isEnglishLocale ? "Ready for Lab Assessment" : "Bereit für Lab-Assessment")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.farBlue)
                 }
@@ -76,7 +80,7 @@ struct AclMilestoneDetailView: View {
         // Criteria list
         if let criteria = status.nextCriteria, !criteria.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Kriterien für nächsten Meilenstein")
+                Text(isEnglishLocale ? "Criteria for Next Milestone" : "Kriterien für nächsten Meilenstein")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
@@ -98,7 +102,9 @@ struct AclMilestoneDetailView: View {
             )
             milestoneStatus = status
         } catch {
-            errorMessage = "Meilenstein-Daten konnten nicht geladen werden."
+            errorMessage = isEnglishLocale
+                ? "Could not load milestone data."
+                : "Meilenstein-Daten konnten nicht geladen werden."
         }
 
         isLoading = false
