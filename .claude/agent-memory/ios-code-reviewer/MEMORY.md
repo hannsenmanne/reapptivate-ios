@@ -102,21 +102,48 @@
 - ShoulderMicroModulesView reuses TensionModuleCard (no separate card view)
 - SiScreeningView has dead refreshProfile/refreshError code (from AemScreeningView)
 - ScreeningCompleteView missing shoulder-specific conditionDescription/expectations (falls to generic default)
-- SiScreeningResult.severityGrade is String (not SiSeverityGrade) -- client derives from score, potential mismatch
+- SiScreeningResult.severityGrade uses SiSeverityGrade enum (not String) -- same pattern as FS
 - education-cards.json needs SHOULDER_IMPINGEMENT entries or Wissen views show empty
 
-## Frozen Shoulder Feature Review (2026-03-10)
-- 9 new files + 17 modified files; follows SI/Neck/Tension pattern closely
+## Frozen Shoulder Feature Review (2026-03-10, deep review)
+- 9 new files + ~12 modified files; follows SI/Neck/Tension pattern closely
 - FrozenShoulderMicroModulesView HAS targetCondition defensive filtering (good)
 - FrozenShoulderMicroModulesView reuses TensionModuleCard (same as SI)
-- FsScreeningView has unused `isEmbedded` property (consistent with SiScreeningView)
-- education-cards.json has NO FROZEN_SHOULDER entries -- WissenAllCardsView falls back to `condition == nil` (generic tendinopathy cards)
-- FsProgressView rescreening: No `onDismiss` to reload history after rescreening (same bug as SiProgressView)
-- FsSeverityGrade.from(spadiScore:) thresholds used in sparkline dot colors -- potential client/server mismatch
+- FsScreeningView does NOT have `isEmbedded` property (corrected 2026-03-11)
+- education-cards.json has NO FROZEN_SHOULDER entries -- BUT EdukationTab + OverviewTab correctly exclude WissenAllCardsView for FS
+- FsProgressView rescreening: HAS `onDismiss` to reload history (IMPROVEMENT over SiProgressView/NdiProgressView/TsiProgressView which lack it)
+- FsSeverityGrade.from(spadiScore:) thresholds: LEICHT<=34, MITTEL<=59, SCHWER>=60 -- matches spec
 - ScreeningCompleteView: frozenShoulder case properly handled with SPADI-specific copy
 - DashboardViewModel: fsSeverity population follows same pattern as SI/NDI/TSI
 - ProtocolLoader: frozenShoulder mapped to `frozen_shoulder_{severity}.json` -- all 3 files exist
 - FsScreeningResult.severityGrade uses FsSeverityGrade enum (not String) -- improvement over original SI pattern
+- **All 3 protocol JSON files have IDENTICAL exercises** -- only id/name differ. DosageModifier `SCHWER` key present but same data in all files. No severity-differentiated dosage.
+- No unit tests for FsSeverityGrade, FsHistoryEntry decoding, or FsScreeningViewModel
+- SharedTypesTests.testTendinopathyTypeCount needs update from 14 to include frozenShoulder (now 14 including it)
+- `isTendinopathy` correctly excludes frozenShoulder
+
+## Lateral Ankle Sprain (LAS) Feature Review (2026-03-11)
+- 8 new files + ~10 modified files; follows FS/SI pattern closely
+- LateralAnkleSprainMicroModulesView HAS targetCondition defensive filtering (good)
+- LateralAnkleSprainMicroModulesView reuses TensionModuleCard (same as SI/FS)
+- LasProgressView rescreening: HAS `onDismiss` to reload history (same as FsProgressView)
+- LasSeverityGrade.from(caitScore:) thresholds: LEICHT>=24, MITTEL>=12, SCHWER<12 -- inverted scale (higher=better)
+- ScreeningCompleteView: lateralAnkleSprain case properly handled with CAIT-specific copy
+- DashboardViewModel: lasSeverity population follows FS pattern (backend pref + client fallback)
+- ProtocolLoader: lateralAnkleSprain mapped to `lateral_ankle_sprain_{severity}.json` -- all 3 files exist
+- LasScreeningResult.severityGrade is NON-optional LasSeverityGrade (unlike FS which is optional)
+- **All 3 protocol JSON files have IDENTICAL exercises** -- same as FS finding, no severity differentiation
+- **No dosageModifier in any LAS protocol** -- SCHWER patients get same exercise dosage as LEICHT
+- **German typo**: "Sprunggelenksverstauching" should be "Sprunggelenksverstauchung" in displayName + all 3 JSON files
+- **No unit tests** for LasSeverityGrade, LasHistoryEntry decoding, or LasScreeningViewModel
+- `isTendinopathy` correctly excludes lateralAnkleSprain
+- SharedTypesTests.testTendinopathyTypeCount expects 15 -- correct with LAS added
+- InsightsTab: LAS gets its own section (LateralAnkleSprainInsightsSection) with CAIT history + focus areas
+- OverviewTab: LAS excluded from WissenCardView (correct -- micro-modules cover education)
+- EdukationTab: LAS branch shows LateralAnkleSprainMicroModulesView (correct)
+- SettingsView: LAS severity NOT displayed (pre-existing omission pattern -- SI/FS also missing)
+- DashboardTabBar: LAS gets Insights tab (via showInsights flag)
+- FsScreeningView does NOT have isEmbedded property (correcting earlier memory note)
 
 ## Reviewer Notes
 - SwiftUI Slider has built-in VoiceOver adjustable action

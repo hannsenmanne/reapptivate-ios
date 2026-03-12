@@ -91,7 +91,7 @@ When adding a new condition (like neckShoulderTension), update ALL of these:
 - `LoginUser` in AuthTypes.swift has optional ACL fields (decoded from backend, used transiently before /me fetch)
 - `CachedUser` SwiftData model updated with ACL fields for offline support
 - `APIResponses.swift` lives at `Models/APIResponses.swift` (not Models/Domain/)
-- `SharedTypesTests.testTendinopathyTypeCount` expects 12 (was 11 before ACL was added to enum)
+- `SharedTypesTests.testTendinopathyTypeCount` expects 15 (incremented with each new condition: ACL=12, SI=13, FS=14, LAS=15)
 - ACL Dashboard: `AclDashboardView` replaces OverviewTab, `AclStreamOverviewView` replaces ProgramTab, `AclDischargeProgressView` replaces ProgressTab for ACL patients
 - DashboardView `loadAll()` early-returns for ACL patients (they have their own data loading in each ACL view)
 - `AclGraftType.shortName` extension added in `AclDashboardView.swift` for compact stat card display
@@ -126,6 +126,17 @@ When adding a new condition (like neckShoulderTension), update ALL of these:
 - `xcodebuild test` may report "TEST FAILED" due to stale xcresult cache — `xcodegen generate` + clean build fixes it
 - ACL test fixtures in TestFixtures.swift use camelCase JSON keys (works with `convertFromSnakeCase` decoder)
 - ACL test count: 92 tests across AclTypesTests (26), AclDailyKpiViewModelTests (12), AclWeeklyKpiViewModelTests (19), AclDashboardViewModelTests (8), AclScreeningViewModelTests (24), AclStreamViewModelTests (3)
+
+## Lateral Ankle Sprain (LAS) Feature
+- LAS types in `Models/Domain/LateralAnkleSprainTypes.swift` (CAIT screening config/result, focus areas, history)
+- Screening tool: CAIT (Cumberland Ankle Instability Tool), 9 items, 0-30 score (higher = better)
+- Severity: LEICHT (>=24), MITTEL (12-23), SCHWER (<=11) — inverted scale vs SPADI
+- 4-phase protocol: Schutz & Entstauung -> Frühe Mobilisation -> Kräftigung & Propriozeption -> Return to Sport
+- Backend routes at `/api/lateral-ankle-sprain/*` — screening, rescreening, result, history, focus-areas, micro-modules
+- Views in `Views/LateralAnkleSprain/` (MicroModules, FocusAreas, ProgressView)
+- Screening views in `Views/Screening/` (LasScreeningView, LasQuestionView, LasResultView)
+- Protocol JSONs: `lateral_ankle_sprain_{leicht|mittel|schwer}.json` (all identical content, same as FS pattern)
+- Focus area percentage is inverted (lower CAIT score = more problematic = higher bar percentage)
 
 ## Missing Definitions Found & Fixed
 - `Color.textTertiary` was missing from Color+Theme.swift — added as `adaptive(light: "9CA3AF", dark: "636366")`

@@ -45,6 +45,7 @@
 		1E3B89605B4DB20C1F34EBC2 /* AclDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729A16F569658CE5F1E3624 /* AclDashboardView.swift */; };
 		1F60F93E8EDC5B9062B5F0E8 /* Outfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 17BF06A2499669BBEA54C546 /* Outfit-Medium.ttf */; };
 		21BB61D4434DCAA8001D41D9 /* AclDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D61F59D3E40B37D8F9279A /* AclDashboardViewModel.swift */; };
+		232FE1EB5FB3231855EEEC92 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE1D8A812BCB17556E4C77C /* LanguageManager.swift */; };
 		2343489144C743497C279589 /* ExerciseCompletionCelebration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A3E4253A904F6BDE9825F6 /* ExerciseCompletionCelebration.swift */; };
 		24A34D4D2ADEB2C769F681EE /* ProgramTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817F8B8AF39CB1D6870D0EF8 /* ProgramTab.swift */; };
 		2505AE1D180A02C7543A8F1C /* ProgressEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391510978626F99B56ACF4B4 /* ProgressEntry.swift */; };
@@ -108,6 +109,7 @@
 		53C4D34670D9EE06B45AEC9A /* TrainingScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A5F2CE571648B3749291E2 /* TrainingScheduleCard.swift */; };
 		54A6605C301A6467A08B8DB4 /* RatingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C52E6AF0029C1915AAF19C9 /* RatingServiceTests.swift */; };
 		54FBAAD910DFEA0ECFCE75BB /* InlineErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F4CBEE5796A50514969469 /* InlineErrorView.swift */; };
+		590EC6286BFE07BB9D41A678 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2C82A53B9EC6EA17525AB4F /* Localizable.xcstrings */; };
 		595265252A9A3024B220B920 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1966E14D61D54E483FF42850 /* LoginView.swift */; };
 		59AFCBC86DD61652E2BCF38A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B94AB4C6939224E51A895B /* AuthViewModel.swift */; };
 		5AA6FAFE2BDB45AA41D0575D /* frozen_shoulder_mittel.json in Resources */ = {isa = PBXBuildFile; fileRef = AF59ACBADE957A7D89635DCA /* frozen_shoulder_mittel.json */; };
@@ -493,6 +495,7 @@
 		B8380F317B418051C7D3AF01 /* ProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModel.swift; sourceTree = "<group>"; };
 		B87A7433EA7D195197AC7F6E /* WorkTimerTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkTimerTypes.swift; sourceTree = "<group>"; };
 		B9089F64CC75D40ACDDB4379 /* Outfit-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Bold.ttf"; sourceTree = "<group>"; };
+		BBE1D8A812BCB17556E4C77C /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		BCDDE8F9FF4410A7068295E7 /* LasProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LasProgressView.swift; sourceTree = "<group>"; };
 		BD5A892251DFEC39975E5E0C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		BD6CB7472E8D1D90F36C11CA /* LateralAnkleSprainTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LateralAnkleSprainTypes.swift; sourceTree = "<group>"; };
@@ -542,6 +545,7 @@
 		E1CDBF1B16CE6E034A77933D /* lbp_der.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lbp_der.json; sourceTree = "<group>"; };
 		E1E9791F5C5376AFD1AE1B16 /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
 		E1FD1910B71C0989506B7E9C /* SiScreeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiScreeningView.swift; sourceTree = "<group>"; };
+		E2C82A53B9EC6EA17525AB4F /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E31D8E20BA1F8BD69D449BD2 /* AclMilestoneDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclMilestoneDetailView.swift; sourceTree = "<group>"; };
 		E4071797D795576116D28674 /* FrozenShoulderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrozenShoulderTypes.swift; sourceTree = "<group>"; };
 		E4A43E14B1DE05EF19C22974 /* education-cards_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "education-cards_en.json"; sourceTree = "<group>"; };
@@ -918,6 +922,7 @@
 				23739A869143D07B800DC324 /* Fonts */,
 				B2C5AF603252A06322A39E8E /* Protocols */,
 				0202DFBD39213EF7AA793245 /* Assets.xcassets */,
+				E2C82A53B9EC6EA17525AB4F /* Localizable.xcstrings */,
 			);
 			name = Resources;
 			path = Reapptivate/Resources;
@@ -1028,6 +1033,7 @@
 			isa = PBXGroup;
 			children = (
 				CB41DB00D8491D5A671A766D /* AppState.swift */,
+				BBE1D8A812BCB17556E4C77C /* LanguageManager.swift */,
 				67A81ED8962E6CD45426EA8F /* NotificationDelegate.swift */,
 				8A6D974438EBC139A854EB6B /* ReapptivateApp.swift */,
 			);
@@ -1322,6 +1328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6625F13FD7DCBE1FACCE9FFF /* Assets.xcassets in Resources */,
+				590EC6286BFE07BB9D41A678 /* Localizable.xcstrings in Resources */,
 				F1DCED3DEBF93F66E5B9780C /* Outfit-Bold.ttf in Resources */,
 				5249434F0ACCBD123F317B26 /* Outfit-ExtraBold.ttf in Resources */,
 				F83A76928240C6B1B713BB00 /* Outfit-Light.ttf in Resources */,
@@ -1474,6 +1481,7 @@
 				54FBAAD910DFEA0ECFCE75BB /* InlineErrorView.swift in Sources */,
 				338097A8A9B095C7CCED46C0 /* InsightsTab.swift in Sources */,
 				0B545B1D2D8DD0476BF61F63 /* KeychainHelper.swift in Sources */,
+				232FE1EB5FB3231855EEEC92 /* LanguageManager.swift in Sources */,
 				0373377E872B95FDFEFC0B79 /* LasProgressView.swift in Sources */,
 				B15DC49107E6DDE034F551D2 /* LasQuestionView.swift in Sources */,
 				3388614F865473D26D3E31C0 /* LasResultView.swift in Sources */,
