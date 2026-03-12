@@ -13,6 +13,7 @@ struct SettingsView: View {
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
 
     var body: some View {
+        @Bindable var lm = languageManager
         NavigationStack {
             List {
                 // Account
@@ -114,7 +115,6 @@ struct SettingsView: View {
 
                 // Language
                 Section {
-                    @Bindable var lm = languageManager
                     Picker("Sprache", selection: $lm.language) {
                         ForEach(AppLanguage.allCases) { lang in
                             Text(lang.displayName).tag(lang)
