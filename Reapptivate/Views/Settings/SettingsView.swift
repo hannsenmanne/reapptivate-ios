@@ -124,16 +124,6 @@ struct SettingsView: View {
                 } header: {
                     Text("Sprache / Language")
                 }
-                .onChange(of: languageManager.language) { _, newLang in
-                    let doneLabel   = newLang == .english ? "Done"           : "Erledigt"
-                    let snoozeLabel = newLang == .english ? "Later (5 min)"  : "Später (5 Min.)"
-                    let skipLabel   = newLang == .english ? "Skip"           : "Überspringen"
-                    let completeAction = UNNotificationAction(identifier: "COMPLETE_BREAK", title: doneLabel, options: .foreground)
-                    let snoozeAction   = UNNotificationAction(identifier: "SNOOZE_BREAK",   title: snoozeLabel, options: [])
-                    let skipAction     = UNNotificationAction(identifier: "SKIP_BREAK",     title: skipLabel, options: .destructive)
-                    let breakCategory  = UNNotificationCategory(identifier: "WORK_TIMER_BREAK", actions: [completeAction, snoozeAction, skipAction], intentIdentifiers: [])
-                    UNUserNotificationCenter.current().setNotificationCategories([breakCategory])
-                }
 
                 // Appearance
                 Section("Darstellung") {
@@ -219,6 +209,16 @@ struct SettingsView: View {
             }
             .task {
                 await notificationService.checkStatus()
+            }
+            .onChange(of: languageManager.language) { _, newLang in
+                let doneLabel   = newLang == .english ? "Done"           : "Erledigt"
+                let snoozeLabel = newLang == .english ? "Later (5 min)"  : "Später (5 Min.)"
+                let skipLabel   = newLang == .english ? "Skip"           : "Überspringen"
+                let completeAction = UNNotificationAction(identifier: "COMPLETE_BREAK", title: doneLabel, options: .foreground)
+                let snoozeAction   = UNNotificationAction(identifier: "SNOOZE_BREAK",   title: snoozeLabel, options: [])
+                let skipAction     = UNNotificationAction(identifier: "SKIP_BREAK",     title: skipLabel, options: .destructive)
+                let breakCategory  = UNNotificationCategory(identifier: "WORK_TIMER_BREAK", actions: [completeAction, snoozeAction, skipAction], intentIdentifiers: [])
+                UNUserNotificationCenter.current().setNotificationCategories([breakCategory])
             }
             .alert("Abmelden?", isPresented: $showLogoutConfirmation) {
                 Button("Abbrechen", role: .cancel) { }
