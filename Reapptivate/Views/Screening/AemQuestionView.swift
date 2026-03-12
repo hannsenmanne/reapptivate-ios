@@ -1,11 +1,15 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct AemQuestionView: View {
     let item: AemScreeningItem
     let selectedValue: Int?
     let onSelect: (Int) -> Void
 
-    private let likertLabels = [
+    private let likertLabelsDe = [
         "Trifft gar nicht zu",
         "Trifft kaum zu",
         "Trifft etwas zu",
@@ -15,10 +19,24 @@ struct AemQuestionView: View {
         "Trifft völlig zu",
     ]
 
+    private let likertLabelsEn = [
+        "Does not apply at all",
+        "Hardly applies",
+        "Applies somewhat",
+        "Partially applies",
+        "Mostly applies",
+        "Strongly applies",
+        "Completely applies",
+    ]
+
+    private var likertLabels: [String] {
+        isEnglishLocale ? likertLabelsEn : likertLabelsDe
+    }
+
     var body: some View {
         VStack(spacing: 24) {
             // Question text
-            Text(item.textDe)
+            Text(isEnglishLocale ? item.textEn ?? item.textDe : item.textDe)
                 .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
                 .multilineTextAlignment(.center)

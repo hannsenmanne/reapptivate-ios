@@ -1,5 +1,9 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct NeckQuestionView: View {
     let item: NeckScreeningItem
     let selectedValue: Int?
@@ -8,7 +12,7 @@ struct NeckQuestionView: View {
     var body: some View {
         VStack(spacing: 24) {
             // Question text
-            Text(item.textDe)
+            Text(isEnglishLocale ? item.textEn ?? item.textDe : item.textDe)
                 .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
                 .multilineTextAlignment(.center)
@@ -32,12 +36,12 @@ struct NeckQuestionView: View {
     var yesNoOptions: some View {
         HStack(spacing: 12) {
             OptionButton(
-                label: "Ja",
+                label: isEnglishLocale ? "Yes" : "Ja",
                 isSelected: selectedValue == 1,
                 action: { onSelect(1) }
             )
             OptionButton(
-                label: "Nein",
+                label: isEnglishLocale ? "No" : "Nein",
                 isSelected: selectedValue == 0,
                 action: { onSelect(0) }
             )
@@ -59,7 +63,7 @@ struct NeckQuestionView: View {
                                 .font(.appSubheadlineSemibold.monospacedDigit())
                                 .frame(width: 28)
 
-                            Text(option.labelDe)
+                            Text(isEnglishLocale ? option.labelEn ?? option.labelDe : option.labelDe)
                                 .font(.appSubheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
 

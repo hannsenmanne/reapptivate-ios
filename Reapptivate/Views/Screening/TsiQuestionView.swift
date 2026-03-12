@@ -1,5 +1,9 @@
 import SwiftUI
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 struct TsiQuestionView: View {
     let item: TsiScreeningItem
     let selectedValue: Int?
@@ -8,7 +12,7 @@ struct TsiQuestionView: View {
     var body: some View {
         VStack(spacing: 24) {
             // Question text
-            Text(item.textDe)
+            Text(isEnglishLocale ? item.textEn ?? item.textDe : item.textDe)
                 .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
                 .multilineTextAlignment(.center)
@@ -34,7 +38,7 @@ struct TsiQuestionView: View {
                                 .font(.appSubheadlineSemibold.monospacedDigit())
                                 .frame(width: 28)
 
-                            Text(option.labelDe)
+                            Text(isEnglishLocale ? option.labelEn ?? option.labelDe : option.labelDe)
                                 .font(.appSubheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
 

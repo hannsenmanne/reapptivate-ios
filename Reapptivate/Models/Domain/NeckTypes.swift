@@ -8,12 +8,14 @@ import Foundation
 struct NeckScreeningOption: Codable {
     let value: Int
     let labelDe: String
+    let labelEn: String?
 }
 
 struct NeckScreeningItem: Codable, Identifiable {
     let id: String
     let part: String?  // "A" or "B" (added by client for flat access)
     let textDe: String
+    let textEn: String?
     let type: String?  // "yesno", "scale", "likert"
     let options: [NeckScreeningOption]?
 }
@@ -32,10 +34,10 @@ struct NeckScreeningConfig: Codable {
     // Convenience: flatten items with part tags for the VM
     var items: [NeckScreeningItem] {
         let aItems = (partA?.items ?? []).map { item in
-            NeckScreeningItem(id: item.id, part: "A", textDe: item.textDe, type: item.type, options: item.options)
+            NeckScreeningItem(id: item.id, part: "A", textDe: item.textDe, textEn: item.textEn, type: item.type, options: item.options)
         }
         let bItems = (partB?.items ?? []).map { item in
-            NeckScreeningItem(id: item.id, part: "B", textDe: item.textDe, type: item.type, options: item.options)
+            NeckScreeningItem(id: item.id, part: "B", textDe: item.textDe, textEn: item.textEn, type: item.type, options: item.options)
         }
         return aItems + bItems
     }
