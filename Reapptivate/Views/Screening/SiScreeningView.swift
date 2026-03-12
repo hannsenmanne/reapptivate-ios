@@ -4,6 +4,7 @@ struct SiScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let isRescreening: Bool
     var isEmbedded = false
@@ -12,11 +13,13 @@ struct SiScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "QuickDASH-Fragebogen laden...")
+                        LoadingView(message: isEn ? "Loading QuickDASH questionnaire..." : "QuickDASH-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         SiResultView(result: result) {
                             appState.currentUser?.siScreeningCompleted = true
@@ -32,7 +35,7 @@ struct SiScreeningView: View {
 
                             HStack {
                                 Spacer()
-                                Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
+                                Text(isEn ? "\(vm.currentItemIndex + 1) of \(vm.items.count)" : "\(vm.currentItemIndex + 1) von \(vm.items.count)")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -67,7 +70,7 @@ struct SiScreeningView: View {
                                         if vm.isSubmitting {
                                             ProgressView().tint(.white)
                                         } else {
-                                            Text("Auswertung anzeigen")
+                                            Text(isEn ? "Show results" : "Auswertung anzeigen")
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
@@ -88,7 +91,7 @@ struct SiScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "QuickDASH-Rescreening" : "QuickDASH-Screening")
+            .navigationTitle(isRescreening ? (isEn ? "QuickDASH Rescreening" : "QuickDASH-Rescreening") : (isEn ? "QuickDASH Screening" : "QuickDASH-Screening"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PacingPlanView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(spacing: 16) {
@@ -10,7 +11,7 @@ struct PacingPlanView: View {
                 Image(systemName: "timer")
                     .font(.appTitle3)
                     .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
-                Text("Pacing-Plan")
+                Text(appLanguage == "en" ? "Pacing Plan" : "Pacing-Plan")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -25,27 +26,27 @@ struct PacingPlanView: View {
                 // Rules
                 if let rules = Optional(plan.rules) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Regeln")
+                        Text(appLanguage == "en" ? "Rules" : "Regeln")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
 
                         if let increment = rules.quotaIncrementPercent {
-                            RuleRow(icon: "chart.line.uptrend.xyaxis", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            RuleRow(icon: "chart.line.uptrend.xyaxis", text: appLanguage == "en"
                                 ? "Increase: \(increment)% per week"
                                 : "Steigerung: \(increment)% pro Woche")
                         }
                         if let pause = rules.mandatoryPauseMinutes, pause > 0 {
-                            RuleRow(icon: "pause.circle", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            RuleRow(icon: "pause.circle", text: appLanguage == "en"
                                 ? "Mandatory break: \(pause) min"
                                 : "Obligatorische Pause: \(pause) Min")
                         }
                         if let freq = rules.pauseFrequencyMinutes, freq > 0 {
-                            RuleRow(icon: "clock.arrow.circlepath", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            RuleRow(icon: "clock.arrow.circlepath", text: appLanguage == "en"
                                 ? "Break every \(freq) min"
                                 : "Pause alle \(freq) Min")
                         }
                         if let cap = rules.weeklySessionCap {
-                            RuleRow(icon: "calendar", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            RuleRow(icon: "calendar", text: appLanguage == "en"
                                 ? "Max. \(cap) session\(cap == 1 ? "" : "s")/week"
                                 : "Max. \(cap) Einheiten/Woche")
                         }
@@ -57,7 +58,7 @@ struct PacingPlanView: View {
                     Image(systemName: "gauge.with.dots.needle.bottom.50percent")
                         .font(.system(size: 32))
                         .foregroundStyle(.textSecondary)
-                    Text("Noch kein Pacing-Plan")
+                    Text(appLanguage == "en" ? "No pacing plan yet" : "Noch kein Pacing-Plan")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
@@ -73,6 +74,7 @@ struct PacingPlanView: View {
 struct PacingActivityRow: View {
     let activity: TargetActivity
     let plan: PacingPlan
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         HStack(spacing: 12) {
@@ -91,11 +93,13 @@ struct PacingActivityRow: View {
                     .foregroundStyle(.textPrimary)
 
                 if plan.baselineMode {
-                    Text("Baseline-Phase")
+                    Text(appLanguage == "en" ? "Baseline Phase" : "Baseline-Phase")
                         .font(.appCaption)
                         .foregroundStyle(.painAmber)
                 } else if let quota = activity.quota {
-                    Text("Ziel: \(quota) \(activity.unit ?? "Min")")
+                    Text(appLanguage == "en"
+                        ? "Target: \(quota) \(activity.unit ?? "min")"
+                        : "Ziel: \(quota) \(activity.unit ?? "Min")")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }

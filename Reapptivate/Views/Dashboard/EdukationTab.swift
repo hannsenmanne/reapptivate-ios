@@ -4,6 +4,8 @@ struct EdukationTab: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var body: some View {
         VStack(spacing: 20) {
             if appState.isLbp, let subtype = appState.currentUser?.aemSubtype {
@@ -16,7 +18,7 @@ struct EdukationTab: View {
                 if let severity = appState.currentUser?.ndiSeverity {
                     NeckMicroModulesView(severity: severity)
                 } else {
-                    ProgressView("Nacken-Module laden...")
+                    ProgressView(appLanguage == "en" ? "Loading neck modules..." : "Nacken-Module laden...")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
@@ -28,7 +30,7 @@ struct EdukationTab: View {
                 if let severity = appState.currentUser?.tsiSeverity {
                     TensionMicroModulesView(severity: severity)
                 } else {
-                    ProgressView("Verspannungs-Module laden...")
+                    ProgressView(appLanguage == "en" ? "Loading tension modules..." : "Verspannungs-Module laden...")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
@@ -40,7 +42,7 @@ struct EdukationTab: View {
                 if let severity = appState.currentUser?.siSeverity {
                     ShoulderMicroModulesView(severity: severity)
                 } else {
-                    ProgressView("Schulter-Module laden...")
+                    ProgressView(appLanguage == "en" ? "Loading shoulder modules..." : "Schulter-Module laden...")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
@@ -48,7 +50,7 @@ struct EdukationTab: View {
                 if let severity = appState.currentUser?.fsSeverity {
                     FrozenShoulderMicroModulesView(severity: severity)
                 } else {
-                    ProgressView("Frozen Shoulder-Module laden...")
+                    ProgressView(appLanguage == "en" ? "Loading frozen shoulder modules..." : "Frozen Shoulder-Module laden...")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
@@ -56,7 +58,7 @@ struct EdukationTab: View {
                 if let severity = appState.currentUser?.lasSeverity {
                     LateralAnkleSprainMicroModulesView(severity: severity)
                 } else {
-                    ProgressView("Sprunggelenk-Module laden...")
+                    ProgressView(appLanguage == "en" ? "Loading ankle modules..." : "Sprunggelenk-Module laden...")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 32)
                 }
@@ -74,7 +76,10 @@ struct EdukationTab: View {
 
 struct LbpMicroModulesSection: View {
     @Environment(APIClient.self) private var apiClient
+    @Environment(LanguageManager.self) private var languageManager
     let subtype: AemSubtype
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var viewModel: LbpEnhancementsViewModel?
 
@@ -96,13 +101,21 @@ struct LbpMicroModulesSection: View {
                     MicroModulesList(viewModel: vm)
                 }
             } else {
-                ProgressView("Module laden...")
+                ProgressView(appLanguage == "en" ? "Loading modules..." : "Module laden...")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
             }
         }
         .task {
             if viewModel == nil {
+                let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
+                viewModel = vm
+                await vm.loadMicroModules()
+            }
+        }
+        .onChange(of: languageManager.language) { _, _ in
+            viewModel = nil
+            Task {
                 let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
                 viewModel = vm
                 await vm.loadMicroModules()
@@ -119,6 +132,7 @@ struct WissenAllCardsView: View {
     let isNeck: Bool
     var isTension: Bool = false
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @AppStorage("readEducationCardIds") private var readCardIdsData: Data = Data()
     @State private var cachedReadCardIds: Set<String> = []
 
@@ -146,11 +160,11 @@ struct WissenAllCardsView: View {
                 Image(systemName: "book.fill")
                     .font(.appTitle3)
                     .foregroundStyle(.accent)
-                Text("Wissen")
+                Text(appLanguage == "en" ? "Knowledge" : "Wissen")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
-                Text("\(readCount)/\(cards.count) gelesen")
+                Text(appLanguage == "en" ? "\(readCount)/\(cards.count) read" : "\(readCount)/\(cards.count) gelesen")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
             }
@@ -171,7 +185,7 @@ struct WissenAllCardsView: View {
             }
 
             if cards.isEmpty {
-                Text("Keine Artikel für diese Phase verfügbar")
+                Text(appLanguage == "en" ? "No articles available for this phase" : "Keine Artikel für diese Phase verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -199,6 +213,7 @@ struct WissenExpandableCard: View {
     let isRead: Bool
     let onMarkRead: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isExpanded = false
     @State private var hapticTrigger = false
 
@@ -249,7 +264,7 @@ struct WissenExpandableCard: View {
                         .lineSpacing(4)
 
                     if let source = card.source {
-                        Text("Quelle: \(source)")
+                        Text(appLanguage == "en" ? "Source: \(source)" : "Quelle: \(source)")
                             .font(.appCaption2)
                             .foregroundStyle(.textSecondary.opacity(0.7))
                     }
@@ -259,7 +274,7 @@ struct WissenExpandableCard: View {
                             onMarkRead()
                             hapticTrigger.toggle()
                         } label: {
-                            Text("Gelesen")
+                            Text(appLanguage == "en" ? "Read" : "Gelesen")
                                 .font(.appCaptionMedium)
                         }
                         .buttonStyle(.secondary)

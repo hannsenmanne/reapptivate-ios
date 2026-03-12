@@ -41,9 +41,11 @@ final class NotificationService {
 
         guard isAuthorized else { return }
 
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
         let content = UNMutableNotificationContent()
-        content.title = "Training-Erinnerung"
-        content.body = "Zeit für Ihre Übungen! Starten Sie jetzt Ihr Training."
+        content.title = isEn ? "Training Reminder" : "Training-Erinnerung"
+        content.body = isEn ? "Time for your exercises! Start your training now."
+                            : "Zeit für Ihre Übungen! Starten Sie jetzt Ihr Training."
         content.sound = .default
         content.categoryIdentifier = "TRAINING_REMINDER"
 
@@ -79,9 +81,10 @@ final class NotificationService {
     func sendTestNotification() async {
         guard isAuthorized else { return }
 
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
         let content = UNMutableNotificationContent()
-        content.title = "Test-Benachrichtigung"
-        content.body = "Ihre Benachrichtigungen funktionieren!"
+        content.title = isEn ? "Test Notification" : "Test-Benachrichtigung"
+        content.body = isEn ? "Your notifications are working!" : "Ihre Benachrichtigungen funktionieren!"
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)

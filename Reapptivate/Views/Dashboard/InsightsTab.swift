@@ -100,6 +100,8 @@ struct TendinopathyInsightsView: View {
     let viewModel: DashboardViewModel?
     let phaseVM: PhaseViewModel?
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var body: some View {
         if let viewModel, viewModel.isLoading {
             ProgressSkeletonView()
@@ -116,8 +118,8 @@ struct TendinopathyInsightsView: View {
         } else {
             EmptyStateView(
                 icon: "chart.bar.xaxis",
-                title: "Noch keine Daten",
-                message: "Analyse wird nach einigen Trainingseinheiten verfügbar."
+                title: appLanguage == "en" ? "No data yet" : "Noch keine Daten",
+                message: appLanguage == "en" ? "Analysis will be available after a few training sessions." : "Analyse wird nach einigen Trainingseinheiten verfügbar."
             )
         }
     }
@@ -129,7 +131,7 @@ struct TendinopathyInsightsView: View {
             HStack(spacing: 10) {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.accent)
-                Text("Trainings-Übersicht")
+                Text(appLanguage == "en" ? "Training Overview" : "Trainings-Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -146,19 +148,19 @@ struct TendinopathyInsightsView: View {
                 )
 
                 MetricCard(
-                    title: "Trainings",
+                    title: appLanguage == "en" ? "Sessions" : "Trainings",
                     value: "\(stats.totalSessions)",
                     color: .accent
                 )
 
                 MetricCard(
-                    title: "Schmerz Ø",
+                    title: appLanguage == "en" ? "Pain Avg" : "Schmerz Ø",
                     value: String(format: "%.1f", stats.averagePain),
                     color: stats.averagePain <= 3 ? .painGreen : stats.averagePain <= 5 ? .painAmber : .painRed
                 )
 
                 MetricCard(
-                    title: "Letzte 7 Tage",
+                    title: appLanguage == "en" ? "Last 7 days" : "Letzte 7 Tage",
                     value: "\(stats.lastSevenDays)",
                     color: .accent
                 )
@@ -173,7 +175,7 @@ struct TendinopathyInsightsView: View {
             HStack(spacing: 10) {
                 Image(systemName: "arrow.triangle.branch")
                     .foregroundStyle(.accent)
-                Text("Phasen-Bereitschaft")
+                Text(appLanguage == "en" ? "Phase Readiness" : "Phasen-Bereitschaft")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -184,16 +186,28 @@ struct TendinopathyInsightsView: View {
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
                 Spacer()
-                Text("Tag \(status.daysInPhase)")
+                Text(appLanguage == "en" ? "Day \(status.daysInPhase)" : "Tag \(status.daysInPhase)")
                     .font(.appCaptionMedium)
                     .badgeStyle(color: .accent)
             }
 
             VStack(spacing: 8) {
-                criteriaRow("Mindestdauer erreicht", met: status.progressionReadiness.minDaysMet)
-                criteriaRow("Trainingseinheiten erfüllt", met: status.progressionReadiness.minSessionsMet)
-                criteriaRow("Schmerz im Zielbereich", met: status.progressionReadiness.painCriteriaMet)
-                criteriaRow("Compliance ausreichend", met: status.progressionReadiness.complianceCriteriaMet)
+                criteriaRow(
+                    appLanguage == "en" ? "Minimum duration reached" : "Mindestdauer erreicht",
+                    met: status.progressionReadiness.minDaysMet
+                )
+                criteriaRow(
+                    appLanguage == "en" ? "Training sessions completed" : "Trainingseinheiten erfüllt",
+                    met: status.progressionReadiness.minSessionsMet
+                )
+                criteriaRow(
+                    appLanguage == "en" ? "Pain within target range" : "Schmerz im Zielbereich",
+                    met: status.progressionReadiness.painCriteriaMet
+                )
+                criteriaRow(
+                    appLanguage == "en" ? "Sufficient compliance" : "Compliance ausreichend",
+                    met: status.progressionReadiness.complianceCriteriaMet
+                )
             }
 
             Text(status.nextEvaluationHint)
@@ -223,7 +237,7 @@ struct TendinopathyInsightsView: View {
             HStack(spacing: 10) {
                 Image(systemName: "info.circle")
                     .foregroundStyle(.accent)
-                Text("Aktuelle Phase")
+                Text(appLanguage == "en" ? "Current Phase" : "Aktuelle Phase")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -238,15 +252,24 @@ struct TendinopathyInsightsView: View {
     }
 
     private func phaseDescription(for phase: Int) -> String {
+        let isEn = appLanguage == "en"
         switch phase {
         case 1:
-            return "Isometrische Übungen helfen, Schmerzen zu reduzieren und die Sehne schonend zu belasten. Ziel ist eine stabile Basis für die nächsten Phasen."
+            return isEn
+                ? "Isometric exercises help reduce pain and gently load the tendon. The goal is a stable foundation for the next phases."
+                : "Isometrische Übungen helfen, Schmerzen zu reduzieren und die Sehne schonend zu belasten. Ziel ist eine stabile Basis für die nächsten Phasen."
         case 2:
-            return "Heavy Slow Resistance fördert die Sehnenanpassung durch langsame, kontrollierte Belastung. Die Sehne wird schrittweise widerstandsfähiger."
+            return isEn
+                ? "Heavy Slow Resistance promotes tendon adaptation through slow, controlled loading. The tendon gradually becomes more resilient."
+                : "Heavy Slow Resistance fördert die Sehnenanpassung durch langsame, kontrollierte Belastung. Die Sehne wird schrittweise widerstandsfähiger."
         case 3:
-            return "Exzentrische Übungen bereiten auf die Rückkehr zur vollen Aktivität vor. Fokus liegt auf funktioneller Belastung und Belastbarkeit."
+            return isEn
+                ? "Eccentric exercises prepare for the return to full activity. The focus is on functional loading and resilience."
+                : "Exzentrische Übungen bereiten auf die Rückkehr zur vollen Aktivität vor. Fokus liegt auf funktioneller Belastung und Belastbarkeit."
         default:
-            return "Folgen Sie Ihrem Trainingsplan und achten Sie auf die Schmerzentwicklung."
+            return isEn
+                ? "Follow your training plan and monitor your pain progression."
+                : "Folgen Sie Ihrem Trainingsplan und achten Sie auf die Schmerzentwicklung."
         }
     }
 }

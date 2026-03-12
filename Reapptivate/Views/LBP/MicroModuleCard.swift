@@ -6,6 +6,7 @@ struct MicroModuleCard: View {
     let isMarking: Bool
     let onMarkRead: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isExpanded = false
 
     var moduleIcon: String {
@@ -42,7 +43,7 @@ struct MicroModuleCard: View {
                     Spacer()
 
                     if isCompleted {
-                        Text("Abgeschlossen")
+                        Text(appLanguage == "en" ? "Completed" : "Abgeschlossen")
                             .font(.appCaption2)
                             .foregroundStyle(.painGreen)
                             .padding(.horizontal, 8)
@@ -79,7 +80,7 @@ struct MicroModuleCard: View {
                                 .font(.appSubheadline)
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Kernbotschaft")
+                                Text(appLanguage == "en" ? "Key takeaway" : "Kernbotschaft")
                                     .font(.appCaptionBold)
                                     .foregroundStyle(.textPrimary)
                                 Text(takeHome)
@@ -97,12 +98,12 @@ struct MicroModuleCard: View {
                         } label: {
                             HStack(spacing: 6) {
                                 if isMarking {
-                                    ProgressView("Modul laden...")
+                                    ProgressView(appLanguage == "en" ? "Loading module..." : "Modul laden...")
                                         .controlSize(.small)
                                         .tint(.white)
                                 } else {
                                     Image(systemName: "checkmark")
-                                    Text("Gelesen")
+                                    Text(appLanguage == "en" ? "Read" : "Gelesen")
                                 }
                             }
                             .font(.appSubheadlineMedium)

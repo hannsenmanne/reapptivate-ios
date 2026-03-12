@@ -27,6 +27,8 @@ final class LbpEnhancementsViewModel {
     var errorMessage: String?
     var successMessage: String?
 
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
+
     init(apiClient: APIClient, subtype: AemSubtype) {
         self.apiClient = apiClient
         self.subtype = subtype
@@ -74,10 +76,10 @@ final class LbpEnhancementsViewModel {
             let request = FearHierarchyCreateRequest(items: items)
             let response: FearHierarchyResponse = try await apiClient.request(APIEndpoints.createFearHierarchy(body: request))
             fearHierarchy = response.hierarchy
-            successMessage = "Hierarchie gespeichert"
+            successMessage = isEn ? "Hierarchy saved" : "Hierarchie gespeichert"
             return true
         } catch {
-            errorMessage = "Hierarchie konnte nicht gespeichert werden."
+            errorMessage = isEn ? "Could not save hierarchy." : "Hierarchie konnte nicht gespeichert werden."
             return false
         }
     }
@@ -86,10 +88,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: ExposureLogResponse = try await apiClient.request(APIEndpoints.logExposure(itemId: itemId, body: request))
             exposureLogs[itemId, default: []].append(response.log)
-            successMessage = "Exposition protokolliert"
+            successMessage = isEn ? "Exposure logged" : "Exposition protokolliert"
             return true
         } catch {
-            errorMessage = "Exposition konnte nicht gespeichert werden."
+            errorMessage = isEn ? "Could not save exposure." : "Exposition konnte nicht gespeichert werden."
             return false
         }
     }
@@ -120,7 +122,7 @@ final class LbpEnhancementsViewModel {
             let response: PacingTemplateResponse = try await apiClient.request(APIEndpoints.pacingTemplate(subtype: subtype.rawValue))
             pacingTemplate = response.template
         } catch {
-            errorMessage = "Vorlage konnte nicht geladen werden."
+            errorMessage = isEn ? "Could not load template." : "Vorlage konnte nicht geladen werden."
         }
     }
 
@@ -128,10 +130,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.createPacingPlanFromTemplate())
             pacingPlan = response.plan
-            successMessage = "Pacing-Plan aktiviert"
+            successMessage = isEn ? "Pacing plan activated" : "Pacing-Plan aktiviert"
             return true
         } catch {
-            errorMessage = "Plan konnte nicht aktiviert werden."
+            errorMessage = isEn ? "Could not activate plan." : "Plan konnte nicht aktiviert werden."
             return false
         }
     }
@@ -140,10 +142,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.startBaseline())
             pacingPlan = response.plan
-            successMessage = "Baseline-Phase gestartet"
+            successMessage = isEn ? "Baseline phase started" : "Baseline-Phase gestartet"
             return true
         } catch {
-            errorMessage = "Baseline konnte nicht gestartet werden."
+            errorMessage = isEn ? "Could not start baseline." : "Baseline konnte nicht gestartet werden."
             return false
         }
     }
@@ -157,10 +159,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.logBaseline(body: body))
             pacingPlan = response.plan
-            successMessage = "Baseline-Aktivität protokolliert"
+            successMessage = isEn ? "Baseline activity logged" : "Baseline-Aktivität protokolliert"
             return true
         } catch {
-            errorMessage = "Aktivität konnte nicht gespeichert werden."
+            errorMessage = isEn ? "Could not save activity." : "Aktivität konnte nicht gespeichert werden."
             return false
         }
     }
@@ -169,10 +171,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.calculateBaseline())
             pacingPlan = response.plan
-            successMessage = "Quoten berechnet"
+            successMessage = isEn ? "Quotas calculated" : "Quoten berechnet"
             return true
         } catch {
-            errorMessage = "Berechnung fehlgeschlagen."
+            errorMessage = isEn ? "Calculation failed." : "Berechnung fehlgeschlagen."
             return false
         }
     }
@@ -181,10 +183,10 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingLogFullResponse = try await apiClient.request(APIEndpoints.logPacing(body: request))
             pacingLogs.insert(response.log, at: 0)
-            successMessage = "Aktivität protokolliert"
+            successMessage = isEn ? "Activity logged" : "Aktivität protokolliert"
             return true
         } catch {
-            errorMessage = "Aktivität konnte nicht gespeichert werden."
+            errorMessage = isEn ? "Could not save activity." : "Aktivität konnte nicht gespeichert werden."
             return false
         }
     }
@@ -212,11 +214,11 @@ final class LbpEnhancementsViewModel {
         do {
             let response: PacingPlanResponse = try await apiClient.request(APIEndpoints.applyProgression())
             pacingPlan = response.plan
-            successMessage = "Quoten angepasst"
+            successMessage = isEn ? "Quotas adjusted" : "Quoten angepasst"
             quotaSuggestion = nil
             return true
         } catch {
-            errorMessage = "Anpassung fehlgeschlagen."
+            errorMessage = isEn ? "Adjustment failed." : "Anpassung fehlgeschlagen."
             return false
         }
     }
@@ -250,7 +252,7 @@ final class LbpEnhancementsViewModel {
 
             completedModuleKeys = Set(loadedCompleted.completedModules ?? [])
         } catch {
-            errorMessage = "Module konnten nicht geladen werden."
+            errorMessage = isEn ? "Could not load modules." : "Module konnten nicht geladen werden."
             Log.api.error("Failed to load micro-modules: \(error.localizedDescription)")
         }
     }
@@ -264,7 +266,7 @@ final class LbpEnhancementsViewModel {
             completedModuleKeys.insert(key)
             return true
         } catch {
-            errorMessage = "Modul konnte nicht als gelesen markiert werden."
+            errorMessage = isEn ? "Could not mark module as read." : "Modul konnte nicht als gelesen markiert werden."
             return false
         }
     }

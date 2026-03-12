@@ -5,6 +5,7 @@ struct PhaseChangeAlert: View {
     let phaseName: String
     let onDismiss: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isVisible = false
     @State private var confettiTrigger = false
     @State private var hapticTrigger = false
@@ -35,7 +36,9 @@ struct PhaseChangeAlert: View {
                         .foregroundStyle(isProgress ? .painGreen : .painAmber)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(isProgress ? "Phase aufgestiegen!" : "Phase angepasst")
+                        Text(isProgress
+                            ? (appLanguage == "en" ? "Phase progressed!" : "Phase aufgestiegen!")
+                            : (appLanguage == "en" ? "Phase adjusted" : "Phase angepasst"))
                             .font(.appSubheadlineSemibold)
                             .foregroundStyle(.white)
                         Text(phaseName)

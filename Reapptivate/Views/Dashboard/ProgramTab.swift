@@ -7,6 +7,7 @@ struct ProgramTab: View {
 
     @State private var activeSheet: ExerciseSheet?
     @State private var pendingSheet: ExerciseSheet?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     enum ExerciseSheet: Identifiable, Equatable {
         case progressLog(ExerciseWithPhase)
@@ -58,13 +59,15 @@ struct ProgramTab: View {
             if let exerciseVM, !exerciseVM.exercises.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Übungsprogramm")
+                        Text(appLanguage == "en" ? "Exercise Program" : "Übungsprogramm")
                             .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
 
                         Spacer()
 
-                        Text("\(exerciseVM.completedCount)/\(exerciseVM.totalCount) erledigt")
+                        Text(appLanguage == "en"
+                            ? "\(exerciseVM.completedCount)/\(exerciseVM.totalCount) done"
+                            : "\(exerciseVM.completedCount)/\(exerciseVM.totalCount) erledigt")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -83,8 +86,8 @@ struct ProgramTab: View {
             } else {
                 EmptyStateView(
                     icon: "figure.strengthtraining.traditional",
-                    title: "Kein Programm",
-                    message: "Ihr Übungsprogramm wird geladen..."
+                    title: appLanguage == "en" ? "No Program" : "Kein Programm",
+                    message: appLanguage == "en" ? "Your exercise program is loading..." : "Ihr Übungsprogramm wird geladen..."
                 )
             }
 
@@ -93,10 +96,10 @@ struct ProgramTab: View {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Zusätzliche Übungen")
+                            Text(appLanguage == "en" ? "Additional Exercises" : "Zusätzliche Übungen")
                                 .font(.appHeadline)
                                 .foregroundStyle(.textPrimary)
-                            Text("Vom Therapeuten")
+                            Text(appLanguage == "en" ? "From therapist" : "Vom Therapeuten")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
@@ -153,7 +156,7 @@ struct ProgramTab: View {
                     )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Fertig") { activeSheet = nil }
+                            Button(appLanguage == "en" ? "Done" : "Fertig") { activeSheet = nil }
                         }
                     }
                 }
@@ -178,7 +181,7 @@ struct ProgramTab: View {
                     )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Fertig") { activeSheet = nil }
+                            Button(appLanguage == "en" ? "Done" : "Fertig") { activeSheet = nil }
                         }
                     }
                 }
@@ -203,6 +206,7 @@ struct ProgramTab: View {
 
 struct AemProfileQuickCard: View {
     let subtype: AemSubtype
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         HStack(spacing: 12) {
@@ -216,7 +220,7 @@ struct AemProfileQuickCard: View {
                 }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("AEM-Profil")
+                Text(appLanguage == "en" ? "AEM Profile" : "AEM-Profil")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Text(subtype.displayName)
@@ -250,6 +254,7 @@ struct AemProfileQuickCard: View {
 
 struct NdiProfileQuickCard: View {
     let severity: NdiSeverityGrade
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         HStack(spacing: 12) {
@@ -263,7 +268,7 @@ struct NdiProfileQuickCard: View {
                 }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("NDI-Schweregrad")
+                Text(appLanguage == "en" ? "NDI Severity" : "NDI-Schweregrad")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Text(severity.displayName)
@@ -281,6 +286,7 @@ struct TendinopathyProfileQuickCard: View {
     let tendinopathyType: TendinopathyType
     let currentPhase: Int
     let maxPhase: Int
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         HStack(spacing: 12) {
@@ -294,7 +300,7 @@ struct TendinopathyProfileQuickCard: View {
                 }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("Diagnose")
+                Text(appLanguage == "en" ? "Diagnosis" : "Diagnose")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Text(tendinopathyType.displayName)

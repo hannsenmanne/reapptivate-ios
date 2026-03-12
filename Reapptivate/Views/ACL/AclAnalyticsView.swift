@@ -4,6 +4,7 @@ import Charts
 struct AclAnalyticsView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var analytics: AclAnalytics?
     @State private var isLoading = true
@@ -12,7 +13,7 @@ struct AclAnalyticsView: View {
     var body: some View {
         VStack(spacing: 20) {
             if isLoading {
-                ProgressView("Analyse laden...")
+                ProgressView(appLanguage == "en" ? "Loading analytics..." : "Analyse laden...")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 32)
             } else if let error = errorMessage {
@@ -65,8 +66,8 @@ struct AclAnalyticsView: View {
             } else {
                 EmptyStateView(
                     icon: "chart.bar.xaxis",
-                    title: "Noch keine Daten",
-                    message: "Analyse wird nach einigen KPI-Einträgen verfügbar."
+                    title: appLanguage == "en" ? "No data yet" : "Noch keine Daten",
+                    message: appLanguage == "en" ? "Analytics will be available after a few KPI entries." : "Analyse wird nach einigen KPI-Einträgen verfügbar."
                 )
             }
         }
@@ -82,7 +83,7 @@ struct AclAnalyticsView: View {
         do {
             analytics = try await apiClient.request(APIEndpoints.aclAnalytics())
         } catch {
-            errorMessage = "Analyse konnte nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load analytics." : "Analyse konnte nicht geladen werden."
         }
         isLoading = false
     }
@@ -92,12 +93,12 @@ struct AclAnalyticsView: View {
     private func summaryHeader(_ data: AclAnalytics) -> some View {
         HStack(spacing: 12) {
             MetricCard(
-                title: "Meilenstein",
+                title: appLanguage == "en" ? "Milestone" : "Meilenstein",
                 value: "\(data.currentMilestone)",
                 color: .accent
             )
             MetricCard(
-                title: "Wochen post-OP",
+                title: appLanguage == "en" ? "Weeks post-op" : "Wochen post-OP",
                 value: "\(data.weeksPostSurgery)",
                 color: .farBlue
             )
@@ -107,7 +108,7 @@ struct AclAnalyticsView: View {
     // MARK: - Pain Chart
 
     private func painChart(_ data: [AclPainTrendPoint]) -> some View {
-        chartCard(title: "Schmerzentwicklung", icon: "waveform.path.ecg") {
+        chartCard(title: appLanguage == "en" ? "Pain Trend" : "Schmerzentwicklung", icon: "waveform.path.ecg") {
             Chart(data) { point in
                 if let date = parseDateOnly(point.date) {
                     LineMark(
@@ -134,24 +135,24 @@ struct AclAnalyticsView: View {
     // MARK: - ROM Chart
 
     private func romChart(_ data: [AclRomTrendPoint]) -> some View {
-        chartCard(title: "Beweglichkeit", icon: "arrow.up.and.down") {
+        chartCard(title: appLanguage == "en" ? "Range of Motion" : "Beweglichkeit", icon: "arrow.up.and.down") {
             Chart {
                 ForEach(data) { point in
                     if let date = parseDateOnly(point.date) {
                         if let flexion = point.flexion {
                             LineMark(
-                                x: .value("Datum", date),
-                                y: .value("Grad", flexion),
-                                series: .value("Typ", "Flexion")
+                                x: .value(appLanguage == "en" ? "Date" : "Datum", date),
+                                y: .value(appLanguage == "en" ? "Degrees" : "Grad", flexion),
+                                series: .value(appLanguage == "en" ? "Type" : "Typ", appLanguage == "en" ? "Flexion" : "Flexion")
                             )
                             .foregroundStyle(Color.accent)
                             .interpolationMethod(.catmullRom)
                         }
                         if let extDeficit = point.extensionDeficit {
                             LineMark(
-                                x: .value("Datum", date),
-                                y: .value("Grad", extDeficit),
-                                series: .value("Typ", "Ext.-Defizit")
+                                x: .value(appLanguage == "en" ? "Date" : "Datum", date),
+                                y: .value(appLanguage == "en" ? "Degrees" : "Grad", extDeficit),
+                                series: .value(appLanguage == "en" ? "Type" : "Typ", appLanguage == "en" ? "Ext. deficit" : "Ext.-Defizit")
                             )
                             .foregroundStyle(Color.painAmber)
                             .interpolationMethod(.catmullRom)
@@ -160,8 +161,8 @@ struct AclAnalyticsView: View {
                 }
             }
             .chartForegroundStyleScale([
-                "Flexion": Color.accent,
-                "Ext.-Defizit": Color.painAmber
+                (appLanguage == "en" ? "Flexion" : "Flexion"): Color.accent,
+                (appLanguage == "en" ? "Ext. deficit" : "Ext.-Defizit"): Color.painAmber
             ])
             .chartYAxisLabel("Grad")
             .frame(height: 180)
@@ -172,7 +173,7 @@ struct AclAnalyticsView: View {
 
     private func swellingChart(_ data: [AclSwellingTrendPoint]) -> some View {
         let filtered = data.filter { $0.swellingGrade != nil }
-        return chartCard(title: "Schwellung", icon: "drop.fill") {
+        return chartCard(title: appLanguage == "en" ? "Swelling" : "Schwellung", icon: "drop.fill") {
             Chart(filtered) { point in
                 if let date = parseDateOnly(point.date), let grade = point.swellingGrade {
                     LineMark(
@@ -220,11 +221,11 @@ struct AclAnalyticsView: View {
                 }
 
                 // Target line at 85%
-                RuleMark(y: .value("Ziel", 85))
+                RuleMark(y: .value(appLanguage == "en" ? "Target" : "Ziel", 85))
                     .foregroundStyle(Color.painGreen.opacity(0.6))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
                     .annotation(position: .top, alignment: .trailing) {
-                        Text("Ziel: 85")
+                        Text(appLanguage == "en" ? "Target: 85" : "Ziel: 85")
                             .font(.appCaption2)
                             .foregroundStyle(.painGreen)
                     }
@@ -238,7 +239,7 @@ struct AclAnalyticsView: View {
     // MARK: - Tampa Chart
 
     private func tampaChart(_ data: [AclScoreTrendPoint]) -> some View {
-        chartCard(title: "Tampa-Skala", icon: "brain.head.profile") {
+        chartCard(title: appLanguage == "en" ? "Tampa Scale" : "Tampa-Skala", icon: "brain.head.profile") {
             Chart {
                 ForEach(data) { point in
                     if let date = parseDateOnly(point.weekDate), let score = point.score {
@@ -259,11 +260,11 @@ struct AclAnalyticsView: View {
                 }
 
                 // Warning line at 37
-                RuleMark(y: .value("Warnung", 37))
+                RuleMark(y: .value(appLanguage == "en" ? "Warning" : "Warnung", 37))
                     .foregroundStyle(Color.painRed.opacity(0.6))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
                     .annotation(position: .top, alignment: .trailing) {
-                        Text("Warnung: 37")
+                        Text(appLanguage == "en" ? "Warning: 37" : "Warnung: 37")
                             .font(.appCaption2)
                             .foregroundStyle(.painRed)
                     }
@@ -277,7 +278,7 @@ struct AclAnalyticsView: View {
     // MARK: - Thigh Circumference Chart
 
     private func thighCircChart(_ data: [AclThighCircTrendPoint]) -> some View {
-        chartCard(title: "Oberschenkelumfang", icon: "ruler") {
+        chartCard(title: appLanguage == "en" ? "Thigh Circumference" : "Oberschenkelumfang", icon: "ruler") {
             Chart {
                 ForEach(data) { point in
                     if let date = parseDateOnly(point.weekDate) {
@@ -324,7 +325,7 @@ struct AclAnalyticsView: View {
         guard !bars.isEmpty else { return AnyView(EmptyView()) }
 
         return AnyView(
-            chartCard(title: "Kraft-LSI (Meilenstein \(latest.milestone))", icon: "figure.strengthtraining.traditional") {
+            chartCard(title: appLanguage == "en" ? "Strength LSI (Milestone \(latest.milestone))" : "Kraft-LSI (Meilenstein \(latest.milestone))", icon: "figure.strengthtraining.traditional") {
                 Chart(bars, id: \.0) { item in
                     BarMark(
                         x: .value("Muskelgruppe", item.0),
@@ -370,7 +371,7 @@ struct AclAnalyticsView: View {
         }
         .cardStyle()
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("Diagramm: \(title)")
+        .accessibilityLabel(appLanguage == "en" ? "Chart: \(title)" : "Diagramm: \(title)")
     }
 
     // MARK: - Helpers

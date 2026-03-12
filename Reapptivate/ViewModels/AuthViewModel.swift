@@ -27,6 +27,8 @@ final class AuthViewModel {
     private let apiClient: APIClient
     private let tokenManager: TokenManager
 
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
+
     init(apiClient: APIClient, tokenManager: TokenManager = .shared) {
         self.apiClient = apiClient
         self.tokenManager = tokenManager
@@ -36,7 +38,7 @@ final class AuthViewModel {
 
     func login(appState: AppState) async {
         guard !email.isEmpty, !password.isEmpty else {
-            errorMessage = "Bitte geben Sie E-Mail und Passwort ein."
+            errorMessage = isEn ? "Please enter email and password." : "Bitte geben Sie E-Mail und Passwort ein."
             return
         }
 
@@ -60,14 +62,14 @@ final class AuthViewModel {
         } catch let error as APIError {
             switch error {
             case .unauthorized:
-                errorMessage = "E-Mail oder Passwort ist falsch."
+                errorMessage = isEn ? "Incorrect email or password." : "E-Mail oder Passwort ist falsch."
             case .networkError:
-                errorMessage = "Keine Verbindung zum Server. Bitte überprüfen Sie Ihre Internetverbindung."
+                errorMessage = isEn ? "No connection to the server. Please check your internet connection." : "Keine Verbindung zum Server. Bitte überprüfen Sie Ihre Internetverbindung."
             default:
                 errorMessage = error.localizedDescription
             }
         } catch {
-            errorMessage = "Ein unerwarteter Fehler ist aufgetreten."
+            errorMessage = isEn ? "An unexpected error occurred." : "Ein unerwarteter Fehler ist aufgetreten."
         }
 
         isLoading = false
@@ -121,7 +123,7 @@ final class AuthViewModel {
 
     func validateInvitationToken() async {
         guard !invitationToken.isEmpty else {
-            errorMessage = "Bitte geben Sie einen Einladungscode ein."
+            errorMessage = isEn ? "Please enter an invitation code." : "Bitte geben Sie einen Einladungscode ein."
             return
         }
 
@@ -139,12 +141,12 @@ final class AuthViewModel {
         } catch let error as APIError {
             switch error {
             case .notFound:
-                errorMessage = "Ungultiger Einladungscode."
+                errorMessage = isEn ? "Invalid invitation code." : "Ungültiger Einladungscode."
             default:
                 errorMessage = error.localizedDescription
             }
         } catch {
-            errorMessage = "Fehler bei der Validierung."
+            errorMessage = isEn ? "Validation error." : "Fehler bei der Validierung."
         }
 
         isValidatingToken = false
@@ -162,11 +164,11 @@ final class AuthViewModel {
 
     func completeOnboarding(appState: AppState) async {
         guard onboardingPasswordValid else {
-            errorMessage = "Passwort muss mindestens 8 Zeichen lang sein."
+            errorMessage = isEn ? "Password must be at least 8 characters." : "Passwort muss mindestens 8 Zeichen lang sein."
             return
         }
         guard onboardingPasswordsMatch else {
-            errorMessage = "Passwörter stimmen nicht überein."
+            errorMessage = isEn ? "Passwords do not match." : "Passwörter stimmen nicht überein."
             return
         }
 
@@ -196,7 +198,7 @@ final class AuthViewModel {
         } catch let error as APIError {
             errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Registrierung fehlgeschlagen."
+            errorMessage = isEn ? "Registration failed." : "Registrierung fehlgeschlagen."
         }
 
         isOnboarding = false

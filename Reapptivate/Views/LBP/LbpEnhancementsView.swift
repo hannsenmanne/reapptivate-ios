@@ -2,7 +2,10 @@ import SwiftUI
 
 struct LbpEnhancementsView: View {
     @Environment(APIClient.self) private var apiClient
+    @Environment(LanguageManager.self) private var languageManager
     let subtype: AemSubtype
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var viewModel: LbpEnhancementsViewModel?
     @State private var showHierarchyBuilder = false
@@ -13,7 +16,7 @@ struct LbpEnhancementsView: View {
         Group {
             if let vm = viewModel {
                 if vm.isLoading {
-                    LoadingView(message: "LBP-Daten laden...")
+                    LoadingView(message: appLanguage == "en" ? "Loading LBP data..." : "LBP-Daten laden...")
                 } else {
                     content(vm)
                 }
@@ -23,6 +26,14 @@ struct LbpEnhancementsView: View {
         }
         .task {
             if viewModel == nil {
+                let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
+                viewModel = vm
+                await vm.loadData()
+            }
+        }
+        .onChange(of: languageManager.language) { _, _ in
+            viewModel = nil
+            Task {
                 let vm = LbpEnhancementsViewModel(apiClient: apiClient, subtype: subtype)
                 viewModel = vm
                 await vm.loadData()
@@ -84,7 +95,9 @@ struct LbpEnhancementsView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: vm.fearHierarchy != nil ? "pencil" : "plus.circle.fill")
-                Text(vm.fearHierarchy != nil ? "Hierarchie bearbeiten" : "Hierarchie erstellen")
+                Text(vm.fearHierarchy != nil
+                    ? (appLanguage == "en" ? "Edit hierarchy" : "Hierarchie bearbeiten")
+                    : (appLanguage == "en" ? "Create hierarchy" : "Hierarchie erstellen"))
             }
             .font(.appSubheadlineMedium)
             .foregroundStyle(.farBlue)
@@ -120,7 +133,7 @@ struct LbpEnhancementsView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "plus.circle.fill")
-                        Text("Aktivität protokollieren")
+                        Text(appLanguage == "en" ? "Log activity" : "Aktivität protokollieren")
                     }
                     .font(.appBodySemibold)
                     .foregroundStyle(.white)
@@ -146,10 +159,10 @@ struct LbpEnhancementsView: View {
                     Image(systemName: "gauge.with.dots.needle.bottom.50percent")
                         .font(.system(size: 36))
                         .foregroundStyle(Color.subtypeColor(for: subtype))
-                    Text("Noch kein Pacing-Plan")
+                    Text(appLanguage == "en" ? "No pacing plan yet" : "Noch kein Pacing-Plan")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
-                    Text("Aktivieren Sie einen auf Ihr Profil zugeschnittenen Plan.")
+                    Text(appLanguage == "en" ? "Activate a plan tailored to your profile." : "Aktivieren Sie einen auf Ihr Profil zugeschnittenen Plan.")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                         .multilineTextAlignment(.center)
@@ -160,7 +173,7 @@ struct LbpEnhancementsView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "sparkles")
-                        Text("Plan aktivieren")
+                        Text(appLanguage == "en" ? "Activate plan" : "Plan aktivieren")
                     }
                     .font(.appBodySemibold)
                     .foregroundStyle(.white)
@@ -186,13 +199,15 @@ struct LbpEnhancementsView: View {
                 Image(systemName: "chart.bar.fill")
                     .font(.appTitle3)
                     .foregroundStyle(.arGray)
-                Text("Adaptive Übersicht")
+                Text(appLanguage == "en" ? "Adaptive Overview" : "Adaptive Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
-            Text("Als Adaptive Responder haben Sie ein ausgeglichenes Bewältigungsmuster. Ihr Programm folgt der Standard-Progression.")
+            Text(appLanguage == "en"
+                ? "As an Adaptive Responder, you have a balanced coping pattern. Your program follows standard progression."
+                : "Als Adaptive Responder haben Sie ein ausgeglichenes Bewältigungsmuster. Ihr Programm folgt der Standard-Progression.")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }

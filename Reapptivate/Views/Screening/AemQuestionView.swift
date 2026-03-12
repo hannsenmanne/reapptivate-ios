@@ -9,6 +9,8 @@ struct AemQuestionView: View {
     let selectedValue: Int?
     let onSelect: (Int) -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     private let likertLabelsDe = [
         "Trifft gar nicht zu",
         "Trifft kaum zu",

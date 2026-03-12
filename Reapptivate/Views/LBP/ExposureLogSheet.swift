@@ -4,6 +4,7 @@ struct ExposureLogSheet: View {
     let item: FearHierarchyItem
     @Bindable var viewModel: LbpEnhancementsViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     enum ExposureStep: Int, CaseIterable {
         case prepare, post, complete
@@ -56,7 +57,9 @@ struct ExposureLogSheet: View {
                         Button {
                             handleAction()
                         } label: {
-                            Text(step == .prepare ? "Aktivität durchführen" : "Speichern")
+                            Text(step == .prepare
+                            ? (appLanguage == "en" ? "Perform activity" : "Aktivität durchführen")
+                            : (appLanguage == "en" ? "Save" : "Speichern"))
                                 .font(.appBodySemibold)
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
@@ -70,11 +73,11 @@ struct ExposureLogSheet: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle("Verhaltensexperiment")
+            .navigationTitle(appLanguage == "en" ? "Behavioral Experiment" : "Verhaltensexperiment")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Schliessen") { dismiss() }
+                    Button(appLanguage == "en" ? "Close" : "Schliessen") { dismiss() }
                 }
             }
             .conditionalHaptic(.impact(weight: .light), trigger: stepAdvanceTrigger)
@@ -94,7 +97,7 @@ struct ExposureLogSheet: View {
                     Text(item.label)
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
-                    Text("Ursprüngliche Angst: \(item.fearRating0To10)/10")
+                    Text(appLanguage == "en" ? "Original fear: \(item.fearRating0To10)/10" : "Ursprüngliche Angst: \(item.fearRating0To10)/10")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -104,7 +107,7 @@ struct ExposureLogSheet: View {
 
             // Pre-fear rating
             VStack(alignment: .leading, spacing: 8) {
-                Text("Aktuelle Angst jetzt")
+                Text(appLanguage == "en" ? "Current fear now" : "Aktuelle Angst jetzt")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -118,11 +121,11 @@ struct ExposureLogSheet: View {
                 }
 
                 HStack {
-                    Text("Keine Angst")
+                    Text(appLanguage == "en" ? "No fear" : "Keine Angst")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Spacer()
-                    Text("Maximale Angst")
+                    Text(appLanguage == "en" ? "Maximum fear" : "Maximale Angst")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
@@ -130,7 +133,7 @@ struct ExposureLogSheet: View {
 
             // Pre-pain rating
             VStack(alignment: .leading, spacing: 8) {
-                Text("Aktueller Schmerz jetzt")
+                Text(appLanguage == "en" ? "Current pain now" : "Aktueller Schmerz jetzt")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -144,11 +147,11 @@ struct ExposureLogSheet: View {
                 }
 
                 HStack {
-                    Text("Kein Schmerz")
+                    Text(appLanguage == "en" ? "No pain" : "Kein Schmerz")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Spacer()
-                    Text("Maximaler Schmerz")
+                    Text(appLanguage == "en" ? "Maximum pain" : "Maximaler Schmerz")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
@@ -159,7 +162,7 @@ struct ExposureLogSheet: View {
                 Image(systemName: "hand.thumbsup.fill")
                     .font(.appTitle2)
                     .foregroundStyle(.painGreen)
-                Text("Bereit? Versuchen Sie jetzt die Aktivität durchzuführen.")
+                Text(appLanguage == "en" ? "Ready? Try performing the activity now." : "Bereit? Versuchen Sie jetzt die Aktivität durchzuführen.")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .multilineTextAlignment(.center)
@@ -175,7 +178,7 @@ struct ExposureLogSheet: View {
         VStack(spacing: 20) {
             // Post-fear rating
             VStack(alignment: .leading, spacing: 8) {
-                Text("Angst NACHHER")
+                Text(appLanguage == "en" ? "Fear AFTER" : "Angst NACHHER")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -191,7 +194,7 @@ struct ExposureLogSheet: View {
 
             // Post-pain
             VStack(alignment: .leading, spacing: 8) {
-                Text("Schmerz NACHHER")
+                Text(appLanguage == "en" ? "Pain AFTER" : "Schmerz NACHHER")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -207,7 +210,7 @@ struct ExposureLogSheet: View {
 
             // Notes
             VStack(alignment: .leading, spacing: 6) {
-                Text("Notizen (optional)")
+                Text(appLanguage == "en" ? "Notes (optional)" : "Notizen (optional)")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -231,7 +234,7 @@ struct ExposureLogSheet: View {
                 .foregroundStyle(.painGreen)
                 .accessibilityHidden(true)
 
-            Text("Super gemacht!")
+            Text(appLanguage == "en" ? "Well done!" : "Super gemacht!")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
@@ -239,7 +242,7 @@ struct ExposureLogSheet: View {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.down")
                         .foregroundStyle(.painGreen)
-                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    Text(appLanguage == "en"
                         ? "Fear reduction: -\(fearReduction) point\(fearReduction == 1 ? "" : "s")"
                         : "Angst-Reduktion: -\(fearReduction) Punkte")
                         .font(.appHeadline)
@@ -251,7 +254,9 @@ struct ExposureLogSheet: View {
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
             }
 
-            Text("Jede Exposition hilft Ihrem Gehirn zu lernen, dass diese Aktivität sicher ist.")
+            Text(appLanguage == "en"
+                ? "Each exposure helps your brain learn that this activity is safe."
+                : "Jede Exposition hilft Ihrem Gehirn zu lernen, dass diese Aktivität sicher ist.")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -259,7 +264,7 @@ struct ExposureLogSheet: View {
             Button {
                 dismiss()
             } label: {
-                Text("Fertig")
+                Text(appLanguage == "en" ? "Done" : "Fertig")
                     .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)

@@ -4,39 +4,60 @@ struct DataPrivacyView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var showDeleteConfirmation = false
     @State private var showExportInfo = false
     @State private var isDeleting = false
     @State private var deleteError: String?
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         List {
             // What data is stored
-            Section("Gespeicherte Daten") {
-                DataRow(icon: "person.fill", title: "Profildaten", detail: "Name, E-Mail, Diagnose")
-                DataRow(icon: "chart.bar.fill", title: "Trainingsdaten", detail: "Übungen, Schmerzverlauf, Fortschritt")
-                DataRow(icon: "calendar", title: "Zeitplan", detail: "Trainingstage, Erinnerungen")
-                DataRow(icon: "key.fill", title: "Authentifizierung", detail: "JWT-Token im Keychain")
+            Section(isEn ? "Stored Data" : "Gespeicherte Daten") {
+                DataRow(
+                    icon: "person.fill",
+                    title: isEn ? "Profile Data" : "Profildaten",
+                    detail: isEn ? "Name, email, diagnosis" : "Name, E-Mail, Diagnose"
+                )
+                DataRow(
+                    icon: "chart.bar.fill",
+                    title: isEn ? "Training Data" : "Trainingsdaten",
+                    detail: isEn ? "Exercises, pain history, progress" : "Übungen, Schmerzverlauf, Fortschritt"
+                )
+                DataRow(
+                    icon: "calendar",
+                    title: isEn ? "Schedule" : "Zeitplan",
+                    detail: isEn ? "Training days, reminders" : "Trainingstage, Erinnerungen"
+                )
+                DataRow(
+                    icon: "key.fill",
+                    title: isEn ? "Authentication" : "Authentifizierung",
+                    detail: isEn ? "JWT token in Keychain" : "JWT-Token im Keychain"
+                )
             }
 
             // Usage explanation
-            Section("Datenverwendung") {
+            Section(isEn ? "Data Usage" : "Datenverwendung") {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Ihre Daten werden ausschliesslich zur Bereitstellung und Verbesserung Ihres Trainingsprogramms verwendet. Es findet keine Weitergabe an Dritte statt.")
+                    Text(isEn
+                        ? "Your data is used exclusively to provide and improve your training program. No data is shared with third parties."
+                        : "Ihre Daten werden ausschliesslich zur Bereitstellung und Verbesserung Ihres Trainingsprogramms verwendet. Es findet keine Weitergabe an Dritte statt.")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
             }
 
             // Data export
-            Section("Datenexport") {
+            Section(isEn ? "Data Export" : "Datenexport") {
                 Button {
                     showExportInfo = true
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "square.and.arrow.up")
                             .foregroundStyle(.accent)
-                        Text("Daten exportieren (JSON)")
+                        Text(isEn ? "Export Data (JSON)" : "Daten exportieren (JSON)")
                             .foregroundStyle(.textPrimary)
                     }
                 }
@@ -53,31 +74,37 @@ struct DataPrivacyView: View {
                         } else {
                             Image(systemName: "trash.fill")
                         }
-                        Text("Konto und Daten löschen")
+                        Text(isEn ? "Delete Account & Data" : "Konto und Daten löschen")
                     }
                 }
                 .disabled(isDeleting)
             } footer: {
-                Text("Diese Aktion ist unwiderruflich. Alle Ihre Daten werden permanent gelöscht.")
+                Text(isEn
+                    ? "This action is irreversible. All your data will be permanently deleted."
+                    : "Diese Aktion ist unwiderruflich. Alle Ihre Daten werden permanent gelöscht.")
                     .font(.appCaption2)
             }
         }
-        .navigationTitle("Datenschutz")
+        .navigationTitle(isEn ? "Data Privacy" : "Datenschutz")
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Daten exportieren", isPresented: $showExportInfo) {
+        .alert(isEn ? "Export Data" : "Daten exportieren", isPresented: $showExportInfo) {
             Button("OK") { }
         } message: {
-            Text("Die Exportfunktion wird in einem zukünftigen Update verfügbar sein.")
+            Text(isEn
+                ? "The export feature will be available in a future update."
+                : "Die Exportfunktion wird in einem zukünftigen Update verfügbar sein.")
         }
-        .alert("Konto löschen?", isPresented: $showDeleteConfirmation) {
-            Button("Abbrechen", role: .cancel) { }
-            Button("Endgültig löschen", role: .destructive) {
+        .alert(isEn ? "Delete Account?" : "Konto löschen?", isPresented: $showDeleteConfirmation) {
+            Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) { }
+            Button(isEn ? "Delete Permanently" : "Endgültig löschen", role: .destructive) {
                 Task { await deleteAccount() }
             }
         } message: {
-            Text("Alle Ihre Daten werden unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.")
+            Text(isEn
+                ? "All your data will be permanently deleted. This action cannot be undone."
+                : "Alle Ihre Daten werden unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.")
         }
-        .alert("Fehler", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
+        .alert(isEn ? "Error" : "Fehler", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
             Button("OK") { }
         } message: {
             Text(deleteError ?? "")
@@ -87,6 +114,7 @@ struct DataPrivacyView: View {
 
 extension DataPrivacyView {
     private func deleteAccount() async {
+        let isEn = appLanguage == "en"
         isDeleting = true
         defer { isDeleting = false }
 
@@ -94,7 +122,9 @@ extension DataPrivacyView {
             try await apiClient.requestVoid(APIEndpoints.deleteAccount())
             appState.performLogout(apiClient: apiClient)
         } catch {
-            deleteError = "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+            deleteError = isEn
+                ? "Account could not be deleted. Please try again."
+                : "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
         }
     }
 }

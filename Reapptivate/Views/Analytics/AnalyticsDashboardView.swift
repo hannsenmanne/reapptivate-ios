@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AnalyticsDashboardView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let subtype: AemSubtype
 
     @State private var summary: AnalyticsSummary?
@@ -50,8 +51,8 @@ struct AnalyticsDashboardView: View {
                 } else {
                     EmptyStateView(
                         icon: "chart.bar.xaxis",
-                        title: "Noch keine Daten",
-                        message: "Analytics werden nach einigen Trainingseinheiten verfügbar."
+                        title: appLanguage == "en" ? "No Data Yet" : "Noch keine Daten",
+                        message: appLanguage == "en" ? "Analytics will become available after a few training sessions." : "Analytics werden nach einigen Trainingseinheiten verfügbar."
                     )
                 }
             }
@@ -70,7 +71,7 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.farBlue)
-                Text("30-Tage Übersicht")
+                Text(appLanguage == "en" ? "30-Day Overview" : "30-Tage Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -81,13 +82,13 @@ struct AnalyticsDashboardView: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 MetricCard(
-                    title: "Compliance",
+                    title: appLanguage == "en" ? "Compliance" : "Compliance",
                     value: "\(Int(summary.complianceRate))%",
                     color: summary.complianceRate >= 66 ? .painGreen : .painAmber
                 )
 
                 MetricCard(
-                    title: "Anpassungen",
+                    title: appLanguage == "en" ? "Adjustments" : "Anpassungen",
                     value: "\(summary.appliedAdjustments)/\(summary.totalAdjustments)",
                     color: .farBlue
                 )
@@ -96,7 +97,7 @@ struct AnalyticsDashboardView: View {
             // Pain trend sparkline
             if !summary.painTrend.isEmpty {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Schmerztrend")
+                    Text(appLanguage == "en" ? "Pain Trend" : "Schmerztrend")
                         .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
 
@@ -115,7 +116,7 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "target")
                     .foregroundStyle(.farBlue)
-                Text("Expositions-Analyse")
+                Text(appLanguage == "en" ? "Exposure Analysis" : "Expositions-Analyse")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -126,13 +127,13 @@ struct AnalyticsDashboardView: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 MetricCard(
-                    title: "Expositionen",
+                    title: appLanguage == "en" ? "Exposures" : "Expositionen",
                     value: "\(analytics.totalExposures)",
                     color: .farBlue
                 )
 
                 MetricCard(
-                    title: "Angst-Reduktion",
+                    title: appLanguage == "en" ? "Fear Reduction" : "Angst-Reduktion",
                     value: String(format: "%.1f", analytics.fearReduction),
                     color: analytics.fearReduction > 0 ? .painGreen : .textSecondary
                 )
@@ -141,7 +142,7 @@ struct AnalyticsDashboardView: View {
             // Fear trend
             HStack(spacing: 16) {
                 VStack(spacing: 4) {
-                    Text("Frühe Exp.")
+                    Text(appLanguage == "en" ? "Early exp." : "Frühe Exp.")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Text(String(format: "%.1f", analytics.earlyAvgFear))
@@ -153,7 +154,7 @@ struct AnalyticsDashboardView: View {
                     .foregroundStyle(.painGreen)
 
                 VStack(spacing: 4) {
-                    Text("Späte Exp.")
+                    Text(appLanguage == "en" ? "Late exp." : "Späte Exp.")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                     Text(String(format: "%.1f", analytics.lateAvgFear))
@@ -168,7 +169,7 @@ struct AnalyticsDashboardView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.painAmber)
-                    Text("Vermeidungsverhalten erkannt. Versuchen Sie, auch hohe Angst-Items zu bearbeiten.")
+                    Text(appLanguage == "en" ? "Avoidance behavior detected. Try to also work on high-fear items." : "Vermeidungsverhalten erkannt. Versuchen Sie, auch hohe Angst-Items zu bearbeiten.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -184,7 +185,7 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "gauge.with.dots.needle.bottom.50percent")
                     .foregroundStyle(Color.subtypeColor(for: subtype))
-                Text("Pacing-Analyse")
+                Text(appLanguage == "en" ? "Pacing Analysis" : "Pacing-Analyse")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -195,13 +196,13 @@ struct AnalyticsDashboardView: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 MetricCard(
-                    title: "Überschreitungsrate",
+                    title: appLanguage == "en" ? "Breach Rate" : "Überschreitungsrate",
                     value: "\(Int(analytics.breachRate))%",
                     color: analytics.breachRate <= 20 ? .painGreen : .painAmber
                 )
 
                 MetricCard(
-                    title: "Pausen-Adhärenz",
+                    title: appLanguage == "en" ? "Pause Adherence" : "Pausen-Adhärenz",
                     value: "\(Int(analytics.pauseAdherence))%",
                     color: analytics.pauseAdherence >= 80 ? .painGreen : .painAmber
                 )
@@ -210,7 +211,7 @@ struct AnalyticsDashboardView: View {
             // Weekly volume
             if !analytics.weeklySessionVolume.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Wochentliches Volumen")
+                    Text(appLanguage == "en" ? "Weekly Volume" : "Wochentliches Volumen")
                         .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
 
@@ -229,13 +230,13 @@ struct AnalyticsDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.arGray)
-                Text("Ausgeglichene Übersicht")
+                Text(appLanguage == "en" ? "Balanced Overview" : "Ausgeglichene Übersicht")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
-            Text("Als Adaptive Responder zeigen Sie ein ausgeglichenes Belastungsmuster. Halten Sie Ihre aktuelle Routine bei.")
+            Text(appLanguage == "en" ? "As an Adaptive Responder, you show a balanced load pattern. Keep up your current routine." : "Als Adaptive Responder zeigen Sie ein ausgeglichenes Belastungsmuster. Halten Sie Ihre aktuelle Routine bei.")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }
@@ -246,7 +247,7 @@ struct AnalyticsDashboardView: View {
 
     private func triggerSection(_ fires: [TriggerFireCount]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Ausgelöste Regeln")
+            Text(appLanguage == "en" ? "Triggered Rules" : "Ausgelöste Regeln")
                 .font(.appSubheadlineMedium)
                 .foregroundStyle(.textPrimary)
 
@@ -283,17 +284,17 @@ struct AnalyticsDashboardView: View {
             }
         } catch {
             summary = nil
-            errorMessage = "Analytics konnten nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load analytics." : "Analytics konnten nicht geladen werden."
         }
         isLoading = false
     }
 
     private func ruleDisplayName(_ ruleId: String) -> String {
         switch ruleId {
-        case "FLARE_RULE": return "Schmerz-Schub"
-        case "LOW_ADHERENCE_RULE": return "Niedrige Adhärenz"
-        case "OVERDOING_RULE_DER": return "Überbelastung"
-        case "FEAR_STUCK_RULE": return "Vermeidung"
+        case "FLARE_RULE": return appLanguage == "en" ? "Pain Flare" : "Schmerz-Schub"
+        case "LOW_ADHERENCE_RULE": return appLanguage == "en" ? "Low Adherence" : "Niedrige Adhärenz"
+        case "OVERDOING_RULE_DER": return appLanguage == "en" ? "Overexertion" : "Überbelastung"
+        case "FEAR_STUCK_RULE": return appLanguage == "en" ? "Avoidance" : "Vermeidung"
         default: return ruleId
         }
     }

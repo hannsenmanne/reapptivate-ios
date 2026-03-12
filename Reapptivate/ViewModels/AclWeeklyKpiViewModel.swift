@@ -20,6 +20,7 @@ final class AclWeeklyKpiViewModel {
     var isLoadingHistory = false
 
     private let apiClient: APIClient
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
 
     init(apiClient: APIClient) {
         self.apiClient = apiClient
@@ -51,16 +52,16 @@ final class AclWeeklyKpiViewModel {
 
     var validationError: String? {
         if let score = ikdcScore, (score < 0 || score > 100) {
-            return "IKDC-Score muss zwischen 0 und 100 liegen."
+            return isEn ? "IKDC score must be between 0 and 100." : "IKDC-Score muss zwischen 0 und 100 liegen."
         }
         if let score = tampaScore, (score < 11 || score > 44) {
-            return "Tampa-Score muss zwischen 11 und 44 liegen."
+            return isEn ? "Tampa score must be between 11 and 44." : "Tampa-Score muss zwischen 11 und 44 liegen."
         }
         if let circ = thighCirc5cm, (circ < 20 || circ > 80) {
-            return "Oberschenkelumfang 5 cm muss zwischen 20 und 80 cm liegen."
+            return isEn ? "Thigh circumference 5 cm must be between 20 and 80 cm." : "Oberschenkelumfang 5 cm muss zwischen 20 und 80 cm liegen."
         }
         if let circ = thighCirc10cm, (circ < 20 || circ > 80) {
-            return "Oberschenkelumfang 10 cm muss zwischen 20 und 80 cm liegen."
+            return isEn ? "Thigh circumference 10 cm must be between 20 and 80 cm." : "Oberschenkelumfang 10 cm muss zwischen 20 und 80 cm liegen."
         }
         return nil
     }
@@ -78,7 +79,7 @@ final class AclWeeklyKpiViewModel {
 
     func submit() async -> Bool {
         guard hasAnyValue else {
-            errorMessage = "Bitte mindestens ein Feld ausfüllen."
+            errorMessage = isEn ? "Please fill in at least one field." : "Bitte mindestens ein Feld ausfüllen."
             return false
         }
 
@@ -111,7 +112,7 @@ final class AclWeeklyKpiViewModel {
             isSubmitting = false
             return false
         } catch {
-            errorMessage = "Speichern fehlgeschlagen."
+            errorMessage = isEn ? "Save failed." : "Speichern fehlgeschlagen."
             isSubmitting = false
             return false
         }
@@ -131,7 +132,7 @@ final class AclWeeklyKpiViewModel {
                 .sorted { $0.weekDate > $1.weekDate }
             isLoadingHistory = false
         } catch {
-            errorMessage = "Wochen-KPIs konnten nicht geladen werden."
+            errorMessage = isEn ? "Could not load weekly KPIs." : "Wochen-KPIs konnten nicht geladen werden."
             isLoadingHistory = false
         }
     }

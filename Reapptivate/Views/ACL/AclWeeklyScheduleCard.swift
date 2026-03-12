@@ -3,8 +3,13 @@ import SwiftUI
 struct AclWeeklyScheduleCard: View {
     let weeksPostSurgery: Int
     let onStartTodayProgram: ([String]) -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
-    private let dayLabels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    private var dayLabels: [String] {
+        appLanguage == "en"
+            ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            : ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    }
 
     private var block: AclScheduleData.ScheduleBlock? {
         AclScheduleData.block(forWeek: weeksPostSurgery)
@@ -25,10 +30,10 @@ struct AclWeeklyScheduleCard: View {
                         .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Wochenrhythmus")
+                        Text(appLanguage == "en" ? "Weekly Rhythm" : "Wochenrhythmus")
                             .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
-                        Text("Woche \(weeksPostSurgery): \(block.title)")
+                        Text(appLanguage == "en" ? "Week \(weeksPostSurgery): \(block.title)" : "Woche \(weeksPostSurgery): \(block.title)")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -101,20 +106,20 @@ struct AclWeeklyScheduleCard: View {
                         HStack(spacing: 8) {
                             Image(systemName: "play.fill")
                                 .font(.appCaption)
-                            Text("Heutiges Programm starten")
+                            Text(appLanguage == "en" ? "Start today's program" : "Heutiges Programm starten")
                                 .font(.appSubheadlineMedium)
                         }
                         .frame(maxWidth: .infinity)
                         .frame(height: 44)
                     }
                     .buttonStyle(.accentFilled)
-                    .accessibilityLabel("Heutiges Trainingsprogramm starten")
+                    .accessibilityLabel(appLanguage == "en" ? "Start today's training program" : "Heutiges Trainingsprogramm starten")
                     .accessibilityHint(today.label)
                 }
             }
             .cardStyle()
             .accessibilityElement(children: .contain)
-            .accessibilityLabel("Wochenrhythmus, Woche \(weeksPostSurgery)")
+            .accessibilityLabel(appLanguage == "en" ? "Weekly rhythm, week \(weeksPostSurgery)" : "Wochenrhythmus, Woche \(weeksPostSurgery)")
         }
     }
 }

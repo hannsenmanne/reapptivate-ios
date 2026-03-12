@@ -8,6 +8,7 @@ struct AclMilestoneCelebrationView: View {
     let milestone: Int
     let onDismiss: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isVisible = false
     @State private var confettiTrigger = false
 

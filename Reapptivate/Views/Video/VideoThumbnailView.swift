@@ -3,6 +3,9 @@ import SwiftUI
 struct VideoThumbnailView: View {
     let urlString: String
     @State private var isExpanded = false
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     private var source: VideoSource {
         VideoSource.detect(urlString)
@@ -23,7 +26,7 @@ struct VideoThumbnailView: View {
             }
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Video abspielen")
+        .accessibilityLabel(isEn ? "Play video" : "Video abspielen")
         .sheet(isPresented: $isExpanded) {
             ExerciseVideoPlayer(urlString: urlString, title: nil)
         }

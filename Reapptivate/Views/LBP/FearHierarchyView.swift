@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FearHierarchyView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var showExposureLog = false
     @State private var selectedItem: FearHierarchyItem?
     @State private var expandedItemId: String?
@@ -13,7 +14,7 @@ struct FearHierarchyView: View {
                 Image(systemName: "target")
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
-                Text("Angst-Hierarchie")
+                Text(appLanguage == "en" ? "Fear Hierarchy" : "Angst-Hierarchie")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -46,7 +47,7 @@ struct FearHierarchyView: View {
                     Image(systemName: "list.bullet.rectangle")
                         .font(.system(size: 32))
                         .foregroundStyle(.textSecondary)
-                    Text("Noch keine Hierarchie erstellt")
+                    Text(appLanguage == "en" ? "No hierarchy created yet" : "Noch keine Hierarchie erstellt")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
@@ -74,6 +75,8 @@ struct FearHierarchyItemCard: View {
     let onTap: () -> Void
     let onLogExposure: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var fearColor: Color {
         if item.fearRating0To10 <= 3 { return .painGreen }
         if item.fearRating0To10 <= 6 { return .painAmber }
@@ -99,12 +102,12 @@ struct FearHierarchyItemCard: View {
                             .foregroundStyle(.textPrimary)
 
                         HStack(spacing: 8) {
-                            Text("Angst: \(item.fearRating0To10)/10")
+                            Text(appLanguage == "en" ? "Fear: \(item.fearRating0To10)/10" : "Angst: \(item.fearRating0To10)/10")
                                 .font(.appCaption)
                                 .foregroundStyle(fearColor)
 
                             if exposureCount > 0 {
-                                Text("\(exposureCount) Exp.")
+                                Text(appLanguage == "en" ? "\(exposureCount) exp." : "\(exposureCount) Exp.")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -134,7 +137,7 @@ struct FearHierarchyItemCard: View {
                     Button(action: onLogExposure) {
                         HStack(spacing: 6) {
                             Image(systemName: "plus.circle.fill")
-                            Text("Exposition protokollieren")
+                            Text(appLanguage == "en" ? "Log exposure" : "Exposition protokollieren")
                         }
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.white)
@@ -157,11 +160,12 @@ struct FearHierarchyItemCard: View {
 
 struct FearRatingBar: View {
     let rating: Int
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text("Angst-Level")
+                Text(appLanguage == "en" ? "Fear Level" : "Angst-Level")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                 Spacer()

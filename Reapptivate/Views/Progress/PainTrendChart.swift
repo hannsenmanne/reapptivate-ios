@@ -3,6 +3,9 @@ import Charts
 
 struct PainTrendChart: View {
     let painLevels: [StatsResponse.RecentPain]
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     private var chartData: [PainTrendDataPoint] {
         painLevels.compactMap { entry in
@@ -18,7 +21,7 @@ struct PainTrendChart: View {
             HStack(spacing: 8) {
                 Image(systemName: "chart.xyaxis.line")
                     .foregroundStyle(.accent)
-                Text("Schmerzentwicklung")
+                Text(isEn ? "Pain trend" : "Schmerzentwicklung")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -27,15 +30,15 @@ struct PainTrendChart: View {
             if chartData.count >= 2 {
                 Chart(chartData) { point in
                     LineMark(
-                        x: .value("Datum", point.date),
-                        y: .value("Schmerz", point.pain)
+                        x: .value(isEn ? "Date" : "Datum", point.date),
+                        y: .value(isEn ? "Pain" : "Schmerz", point.pain)
                     )
                     .interpolationMethod(.catmullRom)
                     .foregroundStyle(Color.accent)
 
                     AreaMark(
-                        x: .value("Datum", point.date),
-                        y: .value("Schmerz", point.pain)
+                        x: .value(isEn ? "Date" : "Datum", point.date),
+                        y: .value(isEn ? "Pain" : "Schmerz", point.pain)
                     )
                     .interpolationMethod(.catmullRom)
                     .foregroundStyle(
@@ -47,8 +50,8 @@ struct PainTrendChart: View {
                     )
 
                     PointMark(
-                        x: .value("Datum", point.date),
-                        y: .value("Schmerz", point.pain)
+                        x: .value(isEn ? "Date" : "Datum", point.date),
+                        y: .value(isEn ? "Pain" : "Schmerz", point.pain)
                     )
                     .foregroundStyle(Color.accent)
                     .symbolSize(24)
@@ -78,7 +81,7 @@ struct PainTrendChart: View {
                 }
                 .frame(height: 200)
             } else {
-                Text("Noch nicht genügend Daten für den Trend")
+                Text(isEn ? "Not enough data for a trend yet" : "Noch nicht genügend Daten für den Trend")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)

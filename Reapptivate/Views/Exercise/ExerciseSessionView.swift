@@ -21,6 +21,7 @@ struct ExerciseSessionView: View {
     @State private var restSkippedTrigger = false
     @State private var showCelebration = false
     @AppStorage("hasCompletedFirstExercise") private var hasCompletedFirstExercise = false
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var showFirstGuide = false
     @State private var timerCancellable: Cancellable?
 
@@ -42,13 +43,15 @@ struct ExerciseSessionView: View {
                     }
                 }
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel("Satz \(currentSet) von \(totalSets)")
+                .accessibilityLabel(appLanguage == "en" ? "Set \(currentSet) of \(totalSets)" : "Satz \(currentSet) von \(totalSets)")
 
                 Spacer()
 
                 // Timer Display
                 VStack(spacing: 16) {
-                    Text(isResting ? "Pause" : "Satz \(currentSet)/\(totalSets)")
+                    Text(isResting
+                        ? (appLanguage == "en" ? "Rest" : "Pause")
+                        : (appLanguage == "en" ? "Set \(currentSet)/\(totalSets)" : "Satz \(currentSet)/\(totalSets)"))
                         .font(.appTitle3)
                         .foregroundStyle(.textSecondary)
 
@@ -60,7 +63,7 @@ struct ExerciseSessionView: View {
                             .font(.system(size: 72, weight: .bold, design: .rounded))
                             .foregroundStyle(isResting ? .textSecondary : .accent)
                             .contentTransition(.numericText())
-                            .accessibilityLabel("\(remaining) Sekunden verbleibend")
+                            .accessibilityLabel(appLanguage == "en" ? "\(remaining) seconds remaining" : "\(remaining) Sekunden verbleibend")
 
                         // Progress ring
                         ZStack {
@@ -79,7 +82,7 @@ struct ExerciseSessionView: View {
                             .font(.system(size: 72, weight: .bold, design: .rounded))
                             .foregroundStyle(.accent)
 
-                        Text("Wiederholungen")
+                        Text(appLanguage == "en" ? "Repetitions" : "Wiederholungen")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
 
@@ -106,7 +109,7 @@ struct ExerciseSessionView: View {
                                 stopTimer()
                                 completeSet()
                             } label: {
-                                Label("Satz beenden", systemImage: "stop.fill")
+                                Label(appLanguage == "en" ? "End set" : "Satz beenden", systemImage: "stop.fill")
                                     .font(.appBodySemibold)
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 48)
@@ -117,7 +120,7 @@ struct ExerciseSessionView: View {
                             Button {
                                 startHold()
                             } label: {
-                                Label("Halten starten", systemImage: "play.fill")
+                                Label(appLanguage == "en" ? "Start hold" : "Halten starten", systemImage: "play.fill")
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 48)
                             }
@@ -129,7 +132,7 @@ struct ExerciseSessionView: View {
                             isResting = false
                             restSkippedTrigger.toggle()
                         } label: {
-                            Label("Pause überspringen", systemImage: "forward.fill")
+                            Label(appLanguage == "en" ? "Skip rest" : "Pause überspringen", systemImage: "forward.fill")
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
                         }
@@ -139,7 +142,9 @@ struct ExerciseSessionView: View {
                         Button {
                             completeSet()
                         } label: {
-                            Label(currentSet == totalSets ? "Letzter Satz fertig" : "Satz fertig",
+                            Label(currentSet == totalSets
+                                  ? (appLanguage == "en" ? "Last set done" : "Letzter Satz fertig")
+                                  : (appLanguage == "en" ? "Set done" : "Satz fertig"),
                                   systemImage: "checkmark.circle.fill")
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 48)
@@ -154,7 +159,7 @@ struct ExerciseSessionView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
+                    Button(appLanguage == "en" ? "Cancel" : "Abbrechen") {
                         stopTimer()
                         dismiss()
                     }

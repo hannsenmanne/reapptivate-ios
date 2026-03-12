@@ -7,6 +7,7 @@ struct AclTodayProgramCard: View {
     let totalCount: Int
     let isRestDay: Bool
     let onTap: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @ScaledMetric(relativeTo: .body) private var ringSize: CGFloat = 52
 
@@ -57,7 +58,7 @@ struct AclTodayProgramCard: View {
                 .frame(width: ringSize, height: ringSize)
                 .accessibilityHidden(true)
 
-                let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                let isEn = appLanguage == "en"
                 VStack(alignment: .leading, spacing: 4) {
                     Text(isEn ? "Today's Program" : "Heutiges Programm")
                         .font(.appHeadline)
@@ -96,19 +97,19 @@ struct AclTodayProgramCard: View {
         .buttonStyle(.plain)
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityLabel(appLanguage == "en"
             ? "Today's Program: \(todayLabel)"
             : "Heutiges Programm: \(todayLabel)")
         .accessibilityValue(
             allDone
-                ? (UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? (appLanguage == "en"
                     ? "All \(totalCount) exercises completed"
                     : "Alle \(totalCount) Übungen abgeschlossen")
-                : (UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                : (appLanguage == "en"
                     ? "\(completedCount) of \(totalCount) exercises completed"
                     : "\(completedCount) von \(totalCount) Übungen erledigt")
         )
-        .accessibilityHint(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityHint(appLanguage == "en"
             ? "Tap to open the program"
             : "Antippen, um das Programm zu öffnen")
         .accessibilityAddTraits(.isButton)
@@ -125,13 +126,13 @@ struct AclTodayProgramCard: View {
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "Today's Program"
                     : "Heutiges Programm")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "Rest day — enjoy recovery"
                     : "Ruhetag — Erholung genießen")
                     .font(.appCaption)
@@ -142,7 +143,7 @@ struct AclTodayProgramCard: View {
         }
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityLabel(appLanguage == "en"
             ? "Today's Program: Rest day"
             : "Heutiges Programm: Ruhetag")
     }

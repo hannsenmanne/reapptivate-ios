@@ -3,6 +3,7 @@ import SwiftUI
 struct NeckProfileView: View {
     let severity: NdiSeverityGrade
     let neckSubtype: NeckSubtype?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(spacing: 12) {
@@ -18,7 +19,7 @@ struct NeckProfileView: View {
                     }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("NDI-Schweregrad")
+                    Text(appLanguage == "en" ? "NDI Severity" : "NDI-Schweregrad")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Text(severity.displayName)
@@ -43,7 +44,7 @@ struct NeckProfileView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
-                    Text("Radiculopathie — angepasstes Programm")
+                    Text(appLanguage == "en" ? "Radiculopathy — adapted program" : "Radiculopathie — angepasstes Programm")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -68,20 +69,26 @@ struct NeckProfileView: View {
 
     var severityLabel: String {
         switch severity {
-        case .LEICHT: return "Mild"
-        case .MITTEL: return "Moderat"
-        case .SCHWER, .unknown: return "Schwer"
+        case .LEICHT: return appLanguage == "en" ? "Mild" : "Mild"
+        case .MITTEL: return appLanguage == "en" ? "Moderate" : "Moderat"
+        case .SCHWER, .unknown: return appLanguage == "en" ? "Severe" : "Schwer"
         }
     }
 
     var severityDescription: String {
         switch severity {
         case .LEICHT:
-            "Leichte Einschränkung. Standard-Übungsprogression mit allen Intensitätsstufen."
+            appLanguage == "en"
+                ? "Mild impairment. Standard exercise progression with all intensity levels."
+                : "Leichte Einschränkung. Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
-            "Moderate Einschränkung. Angepasste Übungen mit langsamerer Steigerung."
+            appLanguage == "en"
+                ? "Moderate impairment. Adapted exercises with slower progression."
+                : "Moderate Einschränkung. Angepasste Übungen mit langsamerer Steigerung."
         case .SCHWER, .unknown:
-            "Deutliche Einschränkung. Sanfter Beginn mit verlängerten Phasen und reduzierter Belastung."
+            appLanguage == "en"
+                ? "Significant impairment. Gentle start with extended phases and reduced load."
+                : "Deutliche Einschränkung. Sanfter Beginn mit verlängerten Phasen und reduzierter Belastung."
         }
     }
 }

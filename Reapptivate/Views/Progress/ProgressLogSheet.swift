@@ -10,6 +10,7 @@ struct ProgressLogSheet: View {
     let showSymptomResponse: Bool
     let onSuccess: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var painLevel = 0
     @State private var setsCompleted: Int
     @State private var repsCompleted: Int
@@ -35,6 +36,8 @@ struct ProgressLogSheet: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
@@ -54,7 +57,7 @@ struct ProgressLogSheet: View {
                     // Sets & Reps
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Sätze")
+                            Text(isEn ? "Sets" : "Sätze")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $setsCompleted, in: 0...20) {
@@ -65,7 +68,7 @@ struct ProgressLogSheet: View {
                         .frame(maxWidth: .infinity)
 
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Wiederholungen")
+                            Text(isEn ? "Repetitions" : "Wiederholungen")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $repsCompleted, in: 0...50) {
@@ -83,10 +86,10 @@ struct ProgressLogSheet: View {
 
                     // Notes
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Notizen (optional)")
+                        Text(isEn ? "Notes (optional)" : "Notizen (optional)")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
-                        TextField("Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
+                        TextField(isEn ? "How did you feel?" : "Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
                             .inputFieldStyle()
                             .lineLimit(3...5)
                     }
@@ -106,7 +109,7 @@ struct ProgressLogSheet: View {
                             if isSubmitting {
                                 ProgressView().tint(.white)
                             } else {
-                                Text("Training speichern")
+                                Text(isEn ? "Save workout" : "Training speichern")
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -118,15 +121,15 @@ struct ProgressLogSheet: View {
                 .padding(20)
             }
             .background(Color.appBg)
-            .navigationTitle("Fortschritt")
+            .navigationTitle(isEn ? "Progress" : "Fortschritt")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(isEn ? "Cancel" : "Abbrechen") { dismiss() }
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button("Fertig") {
+                    Button(isEn ? "Done" : "Fertig") {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                     .font(.appSubheadlineMedium)
@@ -136,7 +139,7 @@ struct ProgressLogSheet: View {
         }
         .overlay {
             if showSuccess {
-                SuccessBanner(message: "Training erfolgreich gespeichert!")
+                SuccessBanner(message: isEn ? "Workout saved successfully!" : "Training erfolgreich gespeichert!")
             }
         }
         .overlay {
@@ -183,7 +186,8 @@ struct ProgressLogSheet: View {
         } catch let error as APIError {
             errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Speichern fehlgeschlagen."
+            let isEn = appLanguage == "en"
+            errorMessage = isEn ? "Failed to save." : "Speichern fehlgeschlagen."
         }
 
         isSubmitting = false
@@ -222,9 +226,13 @@ struct PhaseChangeOverlay: View {
     let result: AdaptationResult
     let onDismiss: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var isProgress: Bool { result.decision == .progress }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ZStack {
             Color.black.opacity(0.5)
                 .ignoresSafeArea()
@@ -234,11 +242,11 @@ struct PhaseChangeOverlay: View {
                     .font(.system(size: 56))
                     .foregroundStyle(isProgress ? .painGreen : .painAmber)
 
-                Text(isProgress ? "Aufgestiegen!" : "Phase angepasst")
+                Text(isProgress ? (isEn ? "Promoted!" : "Aufgestiegen!") : (isEn ? "Phase adjusted" : "Phase angepasst"))
                     .font(.appTitle)
                     .foregroundStyle(.white)
 
-                Text("Phase \(result.previousPhase) → Phase \(result.currentPhase)")
+                Text(isEn ? "Phase \(result.previousPhase) → Phase \(result.currentPhase)" : "Phase \(result.previousPhase) → Phase \(result.currentPhase)")
                     .font(.appTitle3)
                     .foregroundStyle(.white.opacity(0.8))
 
@@ -248,7 +256,7 @@ struct PhaseChangeOverlay: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
 
-                Button("Weiter") {
+                Button(isEn ? "Continue" : "Weiter") {
                     onDismiss()
                 }
                 .buttonStyle(.borderedProminent)

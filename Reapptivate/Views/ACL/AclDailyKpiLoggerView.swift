@@ -3,6 +3,7 @@ import SwiftUI
 struct AclDailyKpiLoggerView: View {
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let onSuccess: () -> Void
 
@@ -17,15 +18,15 @@ struct AclDailyKpiLoggerView: View {
                 if let viewModel {
                     formContent(viewModel)
                 } else {
-                    ProgressView("Laden...")
+                    ProgressView(appLanguage == "en" ? "Loading..." : "Laden...")
                 }
             }
             .background(Color.appBg)
-            .navigationTitle("Tägliche KPIs")
+            .navigationTitle(appLanguage == "en" ? "Daily KPIs" : "Tägliche KPIs")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
+                    Button(appLanguage == "en" ? "Cancel" : "Abbrechen") {
                         if let vm = viewModel, vm.hasUnsavedChanges {
                             showDiscardConfirmation = true
                         } else {
@@ -35,7 +36,7 @@ struct AclDailyKpiLoggerView: View {
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button("Fertig") {
+                    Button(appLanguage == "en" ? "Done" : "Fertig") {
                         UIApplication.shared.sendAction(
                             #selector(UIResponder.resignFirstResponder),
                             to: nil, from: nil, for: nil
@@ -52,15 +53,15 @@ struct AclDailyKpiLoggerView: View {
         }
         .overlay {
             if showSuccess {
-                SuccessBanner(message: "Tägliche KPIs gespeichert!")
+                SuccessBanner(message: appLanguage == "en" ? "Daily KPIs saved!" : "Tägliche KPIs gespeichert!")
             }
         }
         .conditionalHaptic(.success, trigger: submitSuccessTrigger)
-        .confirmationDialog("Änderungen verwerfen?", isPresented: $showDiscardConfirmation, titleVisibility: .visible) {
-            Button("Verwerfen", role: .destructive) { dismiss() }
-            Button("Weiter bearbeiten", role: .cancel) {}
+        .confirmationDialog(appLanguage == "en" ? "Discard changes?" : "Änderungen verwerfen?", isPresented: $showDiscardConfirmation, titleVisibility: .visible) {
+            Button(appLanguage == "en" ? "Discard" : "Verwerfen", role: .destructive) { dismiss() }
+            Button(appLanguage == "en" ? "Continue editing" : "Weiter bearbeiten", role: .cancel) {}
         } message: {
-            Text("Ihre eingegebenen KPIs wurden noch nicht gespeichert.")
+            Text(appLanguage == "en" ? "Your entered KPIs have not been saved yet." : "Ihre eingegebenen KPIs wurden noch nicht gespeichert.")
         }
     }
 

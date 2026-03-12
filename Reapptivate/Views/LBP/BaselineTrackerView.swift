@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BaselineTrackerView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var selectedActivityKey: String?
     @State private var duration: Int = 15
     @State private var painLevel: Double = 3
@@ -16,7 +17,7 @@ struct BaselineTrackerView: View {
                     Image(systemName: "chart.bar.doc.horizontal")
                         .font(.appTitle3)
                         .foregroundStyle(.farBlue)
-                    Text("Baseline-Tracking Phase")
+                    Text(appLanguage == "en" ? "Baseline Tracking Phase" : "Baseline-Tracking Phase")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
                     Spacer()
@@ -26,7 +27,7 @@ struct BaselineTrackerView: View {
                 let days = viewModel.baselineDaysLogged
                 VStack(spacing: 6) {
                     HStack {
-                        Text("Fortschritt: \(days)/5 Tage")
+                        Text(appLanguage == "en" ? "Progress: \(days)/5 days" : "Fortschritt: \(days)/5 Tage")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
@@ -52,7 +53,7 @@ struct BaselineTrackerView: View {
 
             // Logging form
             VStack(alignment: .leading, spacing: 16) {
-                Text("Aktivität loggen")
+                Text(appLanguage == "en" ? "Log Activity" : "Aktivität loggen")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -82,7 +83,7 @@ struct BaselineTrackerView: View {
 
                 // Duration
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Dauer (Minuten)")
+                    Text(appLanguage == "en" ? "Duration (minutes)" : "Dauer (Minuten)")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
 
@@ -115,7 +116,7 @@ struct BaselineTrackerView: View {
                 // Pain level
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text("Schmerzniveau")
+                        Text(appLanguage == "en" ? "Pain Level" : "Schmerzniveau")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                         Spacer()
@@ -136,7 +137,7 @@ struct BaselineTrackerView: View {
                         if isSubmitting {
                             ProgressView().tint(.white)
                         } else {
-                            Text("Aktivität loggen")
+                            Text(appLanguage == "en" ? "Log Activity" : "Aktivität loggen")
                         }
                     }
                     .font(.appSubheadlineSemibold)
@@ -153,7 +154,7 @@ struct BaselineTrackerView: View {
             // Logged entries
             if let logs = viewModel.pacingPlan?.baselineLogs, !logs.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Protokollierte Aktivitäten")
+                    Text(appLanguage == "en" ? "Logged Activities" : "Protokollierte Aktivitäten")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
@@ -172,12 +173,12 @@ struct BaselineTrackerView: View {
                                         .font(.appCaption)
                                         .foregroundStyle(.textPrimary)
                                     Spacer()
-                                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                    Text(appLanguage == "en"
                                         ? "\(log.duration) min"
                                         : "\(log.duration) Min")
                                         .font(.appCaption.monospacedDigit())
                                         .foregroundStyle(.textSecondary)
-                                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                    Text(appLanguage == "en"
                                         ? "Pain: \(log.painLevel)"
                                         : "Schmerz: \(log.painLevel)")
                                         .font(.appCaption)
@@ -203,7 +204,7 @@ struct BaselineTrackerView: View {
                             ProgressView().tint(.white)
                         } else {
                             Image(systemName: "function")
-                            Text("Baseline berechnen & Quoten setzen")
+                            Text(appLanguage == "en" ? "Calculate baseline & set quotas" : "Baseline berechnen & Quoten setzen")
                         }
                     }
                     .font(.appBodySemibold)

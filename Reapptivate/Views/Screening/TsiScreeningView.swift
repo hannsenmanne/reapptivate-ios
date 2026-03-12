@@ -4,6 +4,7 @@ struct TsiScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let isRescreening: Bool
     var isEmbedded = false
@@ -12,11 +13,13 @@ struct TsiScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "TSI-Fragebogen laden...")
+                        LoadingView(message: isEn ? "Loading TSI questionnaire..." : "TSI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         TsiResultView(result: result) {
                             // Update AppState immediately - screening was successfully submitted
@@ -34,7 +37,7 @@ struct TsiScreeningView: View {
 
                             HStack {
                                 Spacer()
-                                Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
+                                Text(isEn ? "\(vm.currentItemIndex + 1) of \(vm.items.count)" : "\(vm.currentItemIndex + 1) von \(vm.items.count)")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -71,7 +74,7 @@ struct TsiScreeningView: View {
                                         if vm.isSubmitting {
                                             ProgressView().tint(.white)
                                         } else {
-                                            Text("Auswertung anzeigen")
+                                            Text(isEn ? "Show results" : "Auswertung anzeigen")
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
@@ -92,7 +95,7 @@ struct TsiScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "TSI-Rescreening" : "TSI-Screening")
+            .navigationTitle(isRescreening ? (isEn ? "TSI Rescreening" : "TSI-Rescreening") : (isEn ? "TSI Screening" : "TSI-Screening"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -107,14 +110,14 @@ struct TsiScreeningView: View {
             }
             .interactiveDismissDisabled()
             .conditionalHaptic(.selection, trigger: selectionTrigger)
-            .alert("Fehler", isPresented: Binding(
+            .alert(isEn ? "Error" : "Fehler", isPresented: Binding(
                 get: { refreshError != nil },
                 set: { if !$0 { refreshError = nil } }
             )) {
-                Button("Erneut versuchen") {
+                Button(isEn ? "Try again" : "Erneut versuchen") {
                     Task { await refreshProfile() }
                 }
-                Button("Abbrechen", role: .cancel) {
+                Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) {
                     refreshError = nil
                 }
             } message: {
@@ -135,7 +138,7 @@ struct TsiScreeningView: View {
             let response: UserResponse = try await apiClient.request(APIEndpoints.me())
             appState.handleLogin(user: response.user)
         } catch {
-            refreshError = "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+            refreshError = appLanguage == "en" ? "Could not update profile. Please try again." : "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
         }
     }
 }

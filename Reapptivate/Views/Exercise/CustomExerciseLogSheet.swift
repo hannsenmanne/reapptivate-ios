@@ -12,6 +12,7 @@ struct CustomExerciseLogSheet: View {
     @State private var setsCompleted: Int
     @State private var repsCompleted: Int
     @State private var notes = ""
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isSubmitting = false
     @State private var errorMessage: String?
     @State private var showSuccess = false
@@ -24,6 +25,8 @@ struct CustomExerciseLogSheet: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
@@ -32,7 +35,7 @@ struct CustomExerciseLogSheet: View {
                         Text(exercise.name)
                             .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
-                        Text("Therapeuten-Übung")
+                        Text(isEn ? "Therapist exercise" : "Therapeuten-Übung")
                             .font(.appCaption)
                             .foregroundStyle(.blue)
                     }
@@ -43,7 +46,7 @@ struct CustomExerciseLogSheet: View {
                     // Sets & Reps
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Sätze")
+                            Text(isEn ? "Sets" : "Sätze")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $setsCompleted, in: 0...20) {
@@ -54,7 +57,7 @@ struct CustomExerciseLogSheet: View {
                         .frame(maxWidth: .infinity)
 
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Wiederholungen")
+                            Text(isEn ? "Repetitions" : "Wiederholungen")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                             Stepper(value: $repsCompleted, in: 0...50) {
@@ -67,10 +70,10 @@ struct CustomExerciseLogSheet: View {
 
                     // Notes
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Notizen (optional)")
+                        Text(isEn ? "Notes (optional)" : "Notizen (optional)")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
-                        TextField("Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
+                        TextField(isEn ? "How did you feel?" : "Wie haben Sie sich gefühlt?", text: $notes, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(3...5)
                     }
@@ -90,7 +93,7 @@ struct CustomExerciseLogSheet: View {
                             if isSubmitting {
                                 ProgressView().tint(.white)
                             } else {
-                                Text("Training speichern")
+                                Text(isEn ? "Save workout" : "Training speichern")
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -102,15 +105,15 @@ struct CustomExerciseLogSheet: View {
                 .padding(20)
             }
             .background(Color.appBg)
-            .navigationTitle("Fortschritt")
+            .navigationTitle(isEn ? "Progress" : "Fortschritt")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(isEn ? "Cancel" : "Abbrechen") { dismiss() }
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button("Fertig") {
+                    Button(isEn ? "Done" : "Fertig") {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                     .font(.appSubheadlineMedium)
@@ -120,7 +123,7 @@ struct CustomExerciseLogSheet: View {
         }
         .overlay {
             if showSuccess {
-                SuccessBanner(message: "Training erfolgreich gespeichert!")
+                SuccessBanner(message: isEn ? "Workout saved successfully!" : "Training erfolgreich gespeichert!")
             }
         }
     }
@@ -150,7 +153,7 @@ struct CustomExerciseLogSheet: View {
         } catch let error as APIError {
             errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Speichern fehlgeschlagen."
+            errorMessage = appLanguage == "en" ? "Failed to save." : "Speichern fehlgeschlagen."
         }
 
         isSubmitting = false

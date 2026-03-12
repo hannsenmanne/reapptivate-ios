@@ -2,18 +2,21 @@ import SwiftUI
 
 struct ThreadListView: View {
     let viewModel: MessagingViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var showNewMessageSheet = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 0) {
             if viewModel.isLoading && viewModel.threads.isEmpty {
-                ProgressView("Nachrichten laden...")
+                ProgressView(isEn ? "Loading messages..." : "Nachrichten laden...")
                     .frame(maxWidth: .infinity, minHeight: 200)
             } else if viewModel.threads.isEmpty {
                 EmptyStateView(
                     icon: "message",
-                    title: "Keine Nachrichten",
-                    message: "Starte eine Konversation mit deinem Therapeuten."
+                    title: isEn ? "No Messages" : "Keine Nachrichten",
+                    message: isEn ? "Start a conversation with your therapist." : "Starte eine Konversation mit deinem Therapeuten."
                 )
                 .padding(.top, 40)
             } else {
@@ -45,7 +48,7 @@ struct ThreadListView: View {
                     Image(systemName: "square.and.pencil")
                         .font(.appBody)
                 }
-                .accessibilityLabel("Neue Nachricht")
+                .accessibilityLabel(isEn ? "New Message" : "Neue Nachricht")
             }
         }
         .sheet(isPresented: $showNewMessageSheet) {
@@ -61,8 +64,11 @@ struct ThreadListView: View {
 
 private struct ThreadRow: View {
     let thread: ClinicalThread
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         HStack(spacing: 12) {
             // Type Icon
             Image(systemName: thread.threadTypeIcon)
@@ -93,12 +99,12 @@ private struct ThreadRow: View {
                 }
 
                 HStack(spacing: 8) {
-                    Text(thread.threadTypeLabel)
+                    Text(threadTypeLabel(isEn: isEn))
                         .font(.appCaption2)
                         .foregroundStyle(threadColor)
 
                     if thread.isResolved {
-                        Text("Gelöst")
+                        Text(isEn ? "Resolved" : "Gelöst")
                             .font(.appCaption2)
                             .foregroundStyle(.painGreen)
                     }
@@ -118,6 +124,16 @@ private struct ThreadRow: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
+    }
+
+    private func threadTypeLabel(isEn: Bool) -> String {
+        switch thread.threadType {
+        case "flag_concern": return isEn ? "Concern" : "Bedenken"
+        case "exercise_question": return isEn ? "Question" : "Frage"
+        case "progress_share": return isEn ? "Progress" : "Fortschritt"
+        case "free_text": return isEn ? "Message" : "Nachricht"
+        default: return thread.threadType
+        }
     }
 
     private var threadColor: Color {
@@ -144,9 +160,12 @@ private struct ThreadRow: View {
 private struct NewMessageSheet: View {
     let viewModel: MessagingViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var showConcernFlow = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             List {
                 Button {
@@ -154,10 +173,10 @@ private struct NewMessageSheet: View {
                 } label: {
                     Label {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Bedenken melden")
+                            Text(isEn ? "Report Concern" : "Bedenken melden")
                                 .font(.appBody)
                                 .foregroundStyle(.textPrimary)
-                            Text("Schmerzen, Schwellung oder Unsicherheit")
+                            Text(isEn ? "Pain, swelling, or uncertainty" : "Schmerzen, Schwellung oder Unsicherheit")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
@@ -171,7 +190,7 @@ private struct NewMessageSheet: View {
                     Task {
                         let request = CreateThreadRequest(
                             threadType: "progress_share",
-                            subject: "Fortschritt teilen",
+                            subject: isEn ? "Share Progress" : "Fortschritt teilen",
                             message: "",
                             context: nil
                         )
@@ -182,10 +201,10 @@ private struct NewMessageSheet: View {
                 } label: {
                     Label {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Fortschritt teilen")
+                            Text(isEn ? "Share Progress" : "Fortschritt teilen")
                                 .font(.appBody)
                                 .foregroundStyle(.textPrimary)
-                            Text("Positive Entwicklung mitteilen")
+                            Text(isEn ? "Share a positive development" : "Positive Entwicklung mitteilen")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
@@ -199,7 +218,7 @@ private struct NewMessageSheet: View {
                     Task {
                         let request = CreateThreadRequest(
                             threadType: "free_text",
-                            subject: "Nachricht",
+                            subject: isEn ? "Message" : "Nachricht",
                             message: "",
                             context: nil
                         )
@@ -210,10 +229,10 @@ private struct NewMessageSheet: View {
                 } label: {
                     Label {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Freitext")
+                            Text(isEn ? "Free Text" : "Freitext")
                                 .font(.appBody)
                                 .foregroundStyle(.textPrimary)
-                            Text("Allgemeine Nachricht senden")
+                            Text(isEn ? "Send a general message" : "Allgemeine Nachricht senden")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
@@ -223,11 +242,11 @@ private struct NewMessageSheet: View {
                     }
                 }
             }
-            .navigationTitle("Neue Nachricht")
+            .navigationTitle(isEn ? "New Message" : "Neue Nachricht")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(isEn ? "Cancel" : "Abbrechen") { dismiss() }
                 }
             }
             .sheet(isPresented: $showConcernFlow) {

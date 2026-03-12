@@ -9,6 +9,7 @@ struct ExerciseCardView: View {
 
     @ScaledMetric(relativeTo: .body) private var thumbnailSize: CGFloat = 56
     @State private var videoThumbnail: UIImage?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     private let videoStore = ExerciseVideoStore.shared
 
@@ -66,14 +67,14 @@ struct ExerciseCardView: View {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.painGreen)
                         .font(.appTitle2)
-                        .accessibilityLabel("Abgeschlossen")
+                        .accessibilityLabel(appLanguage == "en" ? "Completed" : "Abgeschlossen")
                 } else {
                     HStack(spacing: 6) {
                         if videoThumbnail == nil, exercise.exercise.videoUrl != nil {
                             Image(systemName: "play.rectangle.fill")
                                 .foregroundStyle(.textSecondary)
                                 .font(.appCaption)
-                                .accessibilityLabel("Video verfügbar")
+                                .accessibilityLabel(appLanguage == "en" ? "Video available" : "Video verfügbar")
                         }
                         Image(systemName: "play.circle.fill")
                             .foregroundStyle(.accent)
@@ -117,10 +118,11 @@ struct ExerciseCardView: View {
     }
 
     private var exerciseSummary: String {
+        let isEn = appLanguage == "en"
         var parts: [String] = []
         parts.append("\(exercise.exercise.sets) × \(exercise.exercise.reps)")
         if let holdTime = exercise.exercise.holdTime {
-            parts.append("\(holdTime)s halten")
+            parts.append(isEn ? "\(holdTime)s hold" : "\(holdTime)s halten")
         }
         parts.append(exercise.exercise.type.displayName)
         return parts.joined(separator: " · ")
@@ -179,13 +181,15 @@ struct CognitiveCueBadge: View {
 
 struct ExerciseParameterPills: View {
     let exercise: Exercise
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
         FlowLayout(spacing: 6) {
             ParameterPill(label: "\(exercise.sets) x \(exercise.reps)", icon: "repeat")
 
             if let holdTime = exercise.holdTime {
-                ParameterPill(label: "\(holdTime)s halten", icon: "timer")
+                ParameterPill(label: isEn ? "\(holdTime)s hold" : "\(holdTime)s halten", icon: "timer")
             }
 
             if let tempo = exercise.tempo {
@@ -194,7 +198,7 @@ struct ExerciseParameterPills: View {
 
             ParameterPill(label: exercise.intensity, icon: "flame")
 
-            ParameterPill(label: "\(exercise.restBetweenSets)s Pause", icon: "pause.circle")
+            ParameterPill(label: isEn ? "\(exercise.restBetweenSets)s rest" : "\(exercise.restBetweenSets)s Pause", icon: "pause.circle")
         }
     }
 }

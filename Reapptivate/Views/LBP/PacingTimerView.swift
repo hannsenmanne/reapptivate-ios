@@ -4,6 +4,7 @@ import Combine
 struct PacingTimerView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     enum TimerState {
         case idle, active, paused, onBreak, completed
@@ -49,7 +50,7 @@ struct PacingTimerView: View {
                     .font(.appTitle3)
                     .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
                     .accessibilityHidden(true)
-                Text("Aktivitäts-Timer")
+                Text(appLanguage == "en" ? "Activity Timer" : "Aktivitäts-Timer")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -67,13 +68,15 @@ struct PacingTimerView: View {
             }
         }
         .conditionalHaptic(.selection, trigger: activitySelectionTrigger)
-        .alert("Ziel erreicht!", isPresented: $showLogPrompt) {
-            Button("Aktivität loggen") {
+        .alert(appLanguage == "en" ? "Target reached!" : "Ziel erreicht!", isPresented: $showLogPrompt) {
+            Button(appLanguage == "en" ? "Log activity" : "Aktivität loggen") {
                 completeTimer()
             }
-            Button("Weiter trainieren", role: .cancel) {}
+            Button(appLanguage == "en" ? "Continue training" : "Weiter trainieren", role: .cancel) {}
         } message: {
-            Text("Sie haben Ihre Quota erreicht. Möchten Sie die Aktivität jetzt abschließen?")
+            Text(appLanguage == "en"
+                ? "You have reached your quota. Would you like to finish the activity now?"
+                : "Sie haben Ihre Quota erreicht. Möchten Sie die Aktivität jetzt abschließen?")
         }
         .onAppear {
             timerCancellable = timerPublisher
@@ -131,7 +134,7 @@ struct PacingTimerView: View {
         VStack(spacing: 16) {
             if let activities = viewModel.pacingPlan?.targetActivities {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Aktivität auswählen")
+                    Text(appLanguage == "en" ? "Select activity" : "Aktivität auswählen")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
@@ -148,7 +151,7 @@ struct PacingTimerView: View {
                                     .foregroundStyle(.textPrimary)
                                 Spacer()
                                 if let quota = activity.quota {
-                                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                    Text(appLanguage == "en"
                                         ? "Target: \(quota) min"
                                         : "Ziel: \(quota) Min")
                                         .font(.appCaption)
@@ -170,7 +173,7 @@ struct PacingTimerView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "play.fill")
-                            Text("Timer starten")
+                            Text(appLanguage == "en" ? "Start timer" : "Timer starten")
                         }
                         .font(.appBodySemibold)
                         .foregroundStyle(.white)
@@ -215,7 +218,7 @@ struct PacingTimerView: View {
                         .foregroundStyle(.textSecondary)
                     Spacer()
                     if let quota = selectedActivity?.quota {
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(appLanguage == "en"
                             ? "Target: \(quota) min"
                             : "Ziel: \(quota) Min")
                             .font(.appCaption)
@@ -229,7 +232,7 @@ struct PacingTimerView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.painAmber)
-                    Text("Fast fertig! Bereiten Sie sich auf eine Pause vor.")
+                    Text(appLanguage == "en" ? "Almost done! Prepare for a break." : "Fast fertig! Bereiten Sie sich auf eine Pause vor.")
                         .font(.appCaption)
                         .foregroundStyle(.textPrimary)
                 }
@@ -252,12 +255,14 @@ struct PacingTimerView: View {
                         .background(Color.textSecondary)
                         .clipShape(Circle())
                 }
-                .accessibilityLabel(timerState == .paused ? "Fortsetzen" : "Pausieren")
+                .accessibilityLabel(timerState == .paused
+                    ? (appLanguage == "en" ? "Resume" : "Fortsetzen")
+                    : (appLanguage == "en" ? "Pause" : "Pausieren"))
 
                 Button {
                     completeTimer()
                 } label: {
-                    Text("Fertig")
+                    Text(appLanguage == "en" ? "Done" : "Fertig")
                         .font(.appBodySemibold)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -269,10 +274,12 @@ struct PacingTimerView: View {
 
             // Pacing tips
             VStack(alignment: .leading, spacing: 4) {
-                Text("Pacing-Tipps")
+                Text(appLanguage == "en" ? "Pacing Tips" : "Pacing-Tipps")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
-                Text("Halten Sie sich an Ihre Quota. Es ist besser, etwas unter dem Ziel zu bleiben als darüber.")
+                Text(appLanguage == "en"
+                    ? "Stick to your quota. It is better to stay slightly below the target than above it."
+                    : "Halten Sie sich an Ihre Quota. Es ist besser, etwas unter dem Ziel zu bleiben als darüber.")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -291,7 +298,7 @@ struct PacingTimerView: View {
                 .foregroundStyle(.painAmber)
                 .accessibilityHidden(true)
 
-            Text("Pausenzeit!")
+            Text(appLanguage == "en" ? "Break time!" : "Pausenzeit!")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
@@ -300,7 +307,7 @@ struct PacingTimerView: View {
                 .foregroundStyle(.painAmber)
 
             if let pauseMin = viewModel.pacingPlan?.rules.mandatoryPauseMinutes {
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "Keep a break of at least \(pauseMin) minute\(pauseMin == 1 ? "" : "s")"
                     : "Mindestens \(pauseMin) Minuten Pause einhalten")
                     .font(.appCaption)
@@ -310,7 +317,7 @@ struct PacingTimerView: View {
             Button {
                 endBreak()
             } label: {
-                Text("Pause beenden")
+                Text(appLanguage == "en" ? "End break" : "Pause beenden")
                     .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -340,18 +347,18 @@ struct PacingTimerView: View {
                 .foregroundStyle(.painGreen)
                 .accessibilityHidden(true)
 
-            Text("Abgeschlossen!")
+            Text(appLanguage == "en" ? "Completed!" : "Abgeschlossen!")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            Text("Gesamtzeit: \(timeString(elapsedSeconds))")
+            Text(appLanguage == "en" ? "Total time: \(timeString(elapsedSeconds))" : "Gesamtzeit: \(timeString(elapsedSeconds))")
                 .font(.appHeadline.monospacedDigit())
                 .foregroundStyle(.textSecondary)
 
             Button {
                 resetTimer()
             } label: {
-                Text("Neuen Timer starten")
+                Text(appLanguage == "en" ? "Start new timer" : "Neuen Timer starten")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
                     .frame(maxWidth: .infinity)

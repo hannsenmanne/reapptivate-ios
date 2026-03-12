@@ -9,10 +9,27 @@ private let germanLongFormatter: DateFormatter = {
     return f
 }()
 
+private let englishLongFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.locale = Locale(identifier: "en_US")
+    f.dateStyle = .long
+    f.timeStyle = .none
+    f.timeZone = .current
+    return f
+}()
+
 private let germanShortFormatter: DateFormatter = {
     let f = DateFormatter()
     f.locale = Locale(identifier: "de_DE")
     f.dateFormat = "d. MMM"
+    f.timeZone = .current
+    return f
+}()
+
+private let englishShortFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.locale = Locale(identifier: "en_US")
+    f.dateFormat = "MMM d"
     f.timeZone = .current
     return f
 }()
@@ -32,10 +49,24 @@ extension Date {
         germanLongFormatter.string(from: self)
     }
 
+    /// Formats date with long style, language-aware
+    /// German: "15. Januar 2024" / English: "January 15, 2024"
+    var formattedLocalizedLong: String {
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        return isEn ? englishLongFormatter.string(from: self) : germanLongFormatter.string(from: self)
+    }
+
     /// Formats date in German locale with abbreviated month, user's current timezone
     /// Example: "15. Jan"
     var formattedShortGerman: String {
         germanShortFormatter.string(from: self)
+    }
+
+    /// Formats date with abbreviated month, language-aware
+    /// German: "15. Jan" / English: "Jan 15"
+    var formattedShortLocalized: String {
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        return isEn ? englishShortFormatter.string(from: self) : germanShortFormatter.string(from: self)
     }
 
     /// Converts date to ISO8601 string in UTC timezone

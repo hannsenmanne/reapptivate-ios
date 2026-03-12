@@ -49,6 +49,7 @@ final class WorkTimerViewModel {
     private let apiClient: APIClient
     private var workTimer: Timer?
     private var breakTimer: Timer?
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
 
     private static let udKeyIsRunning = "workTimer_isRunning"
     private static let udKeyStartedAt = "workTimer_startedAt"
@@ -224,7 +225,7 @@ final class WorkTimerViewModel {
             settings = response.settings
             applySettings(response.settings)
         } catch {
-            errorMessage = "Einstellungen konnten nicht gespeichert werden."
+            errorMessage = isEn ? "Could not save settings." : "Einstellungen konnten nicht gespeichert werden."
             Log.api.error("Failed to save work timer settings: \(error.localizedDescription)")
         }
     }
@@ -572,8 +573,8 @@ final class WorkTimerViewModel {
         guard let nextBreak = nextBreakAt else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Zeit für eine Pause!"
-        content.body = "Machen Sie eine kurze Bewegungspause für Ihren Rücken und Nacken."
+        content.title = isEn ? "Time for a break!" : "Zeit für eine Pause!"
+        content.body = isEn ? "Take a short movement break for your back and neck." : "Machen Sie eine kurze Bewegungspause für Ihren Rücken und Nacken."
         content.sound = .default
         content.categoryIdentifier = "WORK_TIMER_BREAK"
 

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LoginView: View {
     @Environment(AppState.self) private var appState
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var viewModel: AuthViewModel
 
     @FocusState private var focusedField: Field?
@@ -15,6 +16,7 @@ struct LoginView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
         NavigationStack {
             ScrollView {
                 VStack(spacing: 32) {
@@ -32,7 +34,7 @@ struct LoginView: View {
                                 .foregroundStyle(.textPrimary)
                         }
 
-                        Text("Evidenzbasierte Physiotherapie")
+                        Text(isEn ? "Evidence-based physiotherapy" : "Evidenzbasierte Physiotherapie")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
@@ -41,11 +43,11 @@ struct LoginView: View {
                     // Login Form
                     VStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("E-Mail")
+                            Text(isEn ? "Email" : "E-Mail")
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textSecondary)
 
-                            TextField("ihre@email.de", text: $viewModel.email)
+                            TextField(isEn ? "your@email.com" : "ihre@email.de", text: $viewModel.email)
                                 .inputFieldStyle()
                                 .textContentType(.emailAddress)
                                 .keyboardType(.emailAddress)
@@ -57,11 +59,11 @@ struct LoginView: View {
                         }
 
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Passwort")
+                            Text(isEn ? "Password" : "Passwort")
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textSecondary)
 
-                            SecureField("Passwort", text: $viewModel.password)
+                            SecureField(isEn ? "Password" : "Passwort", text: $viewModel.password)
                                 .inputFieldStyle()
                                 .textContentType(.password)
                                 .focused($focusedField, equals: .password)
@@ -85,7 +87,7 @@ struct LoginView: View {
                                 ProgressView()
                                     .tint(.white)
                             } else {
-                                Text("Anmelden")
+                                Text(isEn ? "Sign in" : "Anmelden")
                             }
                         }
                         .buttonStyle(.primary)
@@ -96,7 +98,7 @@ struct LoginView: View {
                     // Divider
                     HStack {
                         Rectangle().frame(height: 1).foregroundStyle(.gray200)
-                        Text("oder")
+                        Text(isEn ? "or" : "oder")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                         Rectangle().frame(height: 1).foregroundStyle(.gray200)
@@ -105,7 +107,7 @@ struct LoginView: View {
 
                     // Onboarding Option
                     VStack(spacing: 12) {
-                        Text("Haben Sie einen Einladungscode?")
+                        Text(isEn ? "Do you have an invitation code?" : "Haben Sie einen Einladungscode?")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
 
@@ -113,14 +115,14 @@ struct LoginView: View {
                             Button {
                                 viewModel.showQRScanner = true
                             } label: {
-                                Label("QR-Code scannen", systemImage: "qrcode.viewfinder")
+                                Label(isEn ? "Scan QR code" : "QR-Code scannen", systemImage: "qrcode.viewfinder")
                             }
                             .buttonStyle(.secondary)
 
                             NavigationLink {
                                 TokenEntryView(viewModel: viewModel)
                             } label: {
-                                Label("Code eingeben", systemImage: "keyboard")
+                                Label(isEn ? "Enter code" : "Code eingeben", systemImage: "keyboard")
                                     .font(.appSubheadlineMedium)
                                     .foregroundStyle(.textPrimary)
                                     .padding(.horizontal, 16)
@@ -152,19 +154,21 @@ struct LoginView: View {
 
 struct TokenEntryView: View {
     @Bindable var viewModel: AuthViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
         VStack(spacing: 24) {
-            Text("Einladungscode eingeben")
+            Text(isEn ? "Enter invitation code" : "Einladungscode eingeben")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            Text("Geben Sie den Code ein, den Sie von Ihrem Therapeuten erhalten haben.")
+            Text(isEn ? "Enter the code you received from your therapist." : "Geben Sie den Code ein, den Sie von Ihrem Therapeuten erhalten haben.")
                 .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
 
-            TextField("Einladungscode", text: $viewModel.invitationToken)
+            TextField(isEn ? "Invitation code" : "Einladungscode", text: $viewModel.invitationToken)
                 .inputFieldStyle()
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
@@ -181,7 +185,7 @@ struct TokenEntryView: View {
                 if viewModel.isValidatingToken {
                     ProgressView().tint(.white)
                 } else {
-                    Text("Weiter")
+                    Text(isEn ? "Continue" : "Weiter")
                 }
             }
             .buttonStyle(.primary)

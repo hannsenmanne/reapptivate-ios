@@ -7,6 +7,7 @@ struct FlagConcernSheet: View {
     var onComplete: (() -> Void)?
 
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var step = 1
     @State private var selectedCategory: String?
     @State private var selectedSeverity: String?
@@ -15,6 +16,8 @@ struct FlagConcernSheet: View {
     @State private var hapticTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             VStack(spacing: 24) {
                 // Step Indicator
@@ -22,11 +25,11 @@ struct FlagConcernSheet: View {
 
                 switch step {
                 case 1:
-                    categoryStep
+                    categoryStep(isEn: isEn)
                 case 2:
-                    severityStep
+                    severityStep(isEn: isEn)
                 case 3:
-                    descriptionStep
+                    descriptionStep(isEn: isEn)
                 default:
                     EmptyView()
                 }
@@ -35,11 +38,13 @@ struct FlagConcernSheet: View {
             }
             .padding(16)
             .background(Color.appBg)
-            .navigationTitle(exerciseName != nil ? "Frage zu Übung" : "Bedenken melden")
+            .navigationTitle(exerciseName != nil
+                ? (isEn ? "Exercise Question" : "Frage zu Übung")
+                : (isEn ? "Report Concern" : "Bedenken melden"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(isEn ? "Cancel" : "Abbrechen") { dismiss() }
                 }
             }
             .sensoryFeedback(.selection, trigger: step)
@@ -61,13 +66,13 @@ struct FlagConcernSheet: View {
 
     // MARK: - Step 1: Category
 
-    private var categoryStep: some View {
+    private func categoryStep(isEn: Bool) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Was bereitet dir Sorgen?")
+            Text(isEn ? "What concerns you?" : "Was bereitet dir Sorgen?")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            ForEach(categories, id: \.key) { category in
+            ForEach(categoryOptions(isEn: isEn), id: \.key) { category in
                 Button {
                     selectedCategory = category.key
                     withAnimation { step = 2 }
@@ -102,13 +107,13 @@ struct FlagConcernSheet: View {
 
     // MARK: - Step 2: Severity
 
-    private var severityStep: some View {
+    private func severityStep(isEn: Bool) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Wie stark ist es?")
+            Text(isEn ? "How severe is it?" : "Wie stark ist es?")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            ForEach(severities, id: \.key) { severity in
+            ForEach(severityOptions(isEn: isEn), id: \.key) { severity in
                 Button {
                     selectedSeverity = severity.key
                     withAnimation { step = 3 }
@@ -136,7 +141,7 @@ struct FlagConcernSheet: View {
             Button {
                 withAnimation { step = 1 }
             } label: {
-                Text("Zurück")
+                Text(isEn ? "Back" : "Zurück")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
             }
@@ -145,15 +150,19 @@ struct FlagConcernSheet: View {
 
     // MARK: - Step 3: Description
 
-    private var descriptionStep: some View {
+    private func descriptionStep(isEn: Bool) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Beschreibe dein Anliegen")
+            Text(isEn ? "Describe your concern" : "Beschreibe dein Anliegen")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            TextField("Was genau ist passiert? Wann tritt es auf?", text: $description, axis: .vertical)
-                .lineLimit(4...8)
-                .inputFieldStyle()
+            TextField(
+                isEn ? "What exactly happened? When does it occur?" : "Was genau ist passiert? Wann tritt es auf?",
+                text: $description,
+                axis: .vertical
+            )
+            .lineLimit(4...8)
+            .inputFieldStyle()
 
             Button {
                 Task { await submitConcern() }
@@ -163,7 +172,7 @@ struct FlagConcernSheet: View {
                         ProgressView()
                             .tint(.white)
                     }
-                    Text("Absenden")
+                    Text(isEn ? "Submit" : "Absenden")
                         .font(.appHeadline)
                 }
                 .frame(maxWidth: .infinity)
@@ -175,7 +184,7 @@ struct FlagConcernSheet: View {
             Button {
                 withAnimation { step = 2 }
             } label: {
-                Text("Zurück")
+                Text(isEn ? "Back" : "Zurück")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
             }
@@ -185,10 +194,13 @@ struct FlagConcernSheet: View {
     // MARK: - Submit
 
     private func submitConcern() async {
+        let isEn = appLanguage == "en"
         isSubmitting = true
 
         let threadType = exerciseId != nil ? "exercise_question" : "flag_concern"
-        let subject = exerciseName != nil ? "Frage zu: \(exerciseName!)" : categoryLabel
+        let subject = exerciseName != nil
+            ? (isEn ? "Question about: \(exerciseName!)" : "Frage zu: \(exerciseName!)")
+            : categoryLabel
 
         let context = ThreadContext(
             category: selectedCategory,
@@ -215,7 +227,8 @@ struct FlagConcernSheet: View {
     }
 
     private var categoryLabel: String {
-        categories.first { $0.key == selectedCategory }?.label ?? "Bedenken"
+        let isEn = appLanguage == "en"
+        return categoryOptions(isEn: isEn).first { $0.key == selectedCategory }?.label ?? (isEn ? "Concern" : "Bedenken")
     }
 
     // MARK: - Data
@@ -234,16 +247,20 @@ struct FlagConcernSheet: View {
         let color: Color
     }
 
-    private let categories: [CategoryOption] = [
-        .init(key: "pain", label: "Schmerzen", description: "Neue oder verstärkte Schmerzen", icon: "bolt.fill", color: .painRed),
-        .init(key: "swelling", label: "Schwellung", description: "Sichtbare Schwellung oder Erwärmung", icon: "drop.fill", color: .farBlue),
-        .init(key: "stiffness", label: "Steifheit", description: "Eingeschränkte Beweglichkeit", icon: "figure.walk", color: .painAmber),
-        .init(key: "uncertainty", label: "Unsicherheit", description: "Unsicher bei einer Übung oder Symptom", icon: "questionmark.circle.fill", color: .textSecondary),
-    ]
+    private func categoryOptions(isEn: Bool) -> [CategoryOption] {
+        [
+            .init(key: "pain", label: isEn ? "Pain" : "Schmerzen", description: isEn ? "New or increased pain" : "Neue oder verstärkte Schmerzen", icon: "bolt.fill", color: .painRed),
+            .init(key: "swelling", label: isEn ? "Swelling" : "Schwellung", description: isEn ? "Visible swelling or warmth" : "Sichtbare Schwellung oder Erwärmung", icon: "drop.fill", color: .farBlue),
+            .init(key: "stiffness", label: isEn ? "Stiffness" : "Steifheit", description: isEn ? "Limited range of motion" : "Eingeschränkte Beweglichkeit", icon: "figure.walk", color: .painAmber),
+            .init(key: "uncertainty", label: isEn ? "Uncertainty" : "Unsicherheit", description: isEn ? "Unsure about an exercise or symptom" : "Unsicher bei einer Übung oder Symptom", icon: "questionmark.circle.fill", color: .textSecondary),
+        ]
+    }
 
-    private let severities: [SeverityOption] = [
-        .init(key: "low", label: "Leicht", color: .painGreen),
-        .init(key: "medium", label: "Mittel", color: .painAmber),
-        .init(key: "high", label: "Stark", color: .painRed),
-    ]
+    private func severityOptions(isEn: Bool) -> [SeverityOption] {
+        [
+            .init(key: "low", label: isEn ? "Mild" : "Leicht", color: .painGreen),
+            .init(key: "medium", label: isEn ? "Moderate" : "Mittel", color: .painAmber),
+            .init(key: "high", label: isEn ? "Severe" : "Stark", color: .painRed),
+        ]
+    }
 }

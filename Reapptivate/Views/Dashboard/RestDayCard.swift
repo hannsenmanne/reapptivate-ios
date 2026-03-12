@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RestDayCard: View {
     @ScaledMetric(relativeTo: .body) private var iconSize: CGFloat = 44
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         HStack(spacing: 14) {
@@ -16,11 +17,13 @@ struct RestDayCard: View {
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Ruhetag")
+                Text(appLanguage == "en" ? "Rest Day" : "Ruhetag")
                     .font(.appSubheadlineSemibold)
                     .foregroundStyle(.textPrimary)
 
-                Text("Heute ist Ihr Ruhetag. Erholung ist ein wichtiger Teil Ihrer Rehabilitation.")
+                Text(appLanguage == "en"
+                    ? "Today is your rest day. Recovery is an important part of your rehabilitation."
+                    : "Heute ist Ihr Ruhetag. Erholung ist ein wichtiger Teil Ihrer Rehabilitation.")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -28,6 +31,8 @@ struct RestDayCard: View {
         }
         .cardStyle()
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Ruhetag: Heute ist Ihr Ruhetag. Erholung ist ein wichtiger Teil Ihrer Rehabilitation.")
+        .accessibilityLabel(appLanguage == "en"
+            ? "Rest Day: Today is your rest day. Recovery is an important part of your rehabilitation."
+            : "Ruhetag: Heute ist Ihr Ruhetag. Erholung ist ein wichtiger Teil Ihrer Rehabilitation.")
     }
 }

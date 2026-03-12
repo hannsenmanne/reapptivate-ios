@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SiResultView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let result: SiScreeningResult
     let onContinue: () -> Void
 
@@ -9,6 +10,8 @@ struct SiResultView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ScrollView {
             VStack(spacing: 24) {
                 // Score display
@@ -38,7 +41,7 @@ struct SiResultView: View {
 
                 // Severity description
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ihre Einstufung")
+                    Text(isEn ? "Your Classification" : "Ihre Einstufung")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
@@ -53,7 +56,7 @@ struct SiResultView: View {
                 Button {
                     onContinue()
                 } label: {
-                    Text("Weiter zum Dashboard")
+                    Text(isEn ? "Continue to Dashboard" : "Weiter zum Dashboard")
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
@@ -65,13 +68,14 @@ struct SiResultView: View {
     }
 
     var severityDescription: String {
+        let isEn = appLanguage == "en"
         switch severity {
         case .LEICHT:
-            "Leichte Einschränkung. Ihr Programm startet in Phase 2 mit aktivem Kraftaufbau und neuromuskulärer Kontrolle."
+            return isEn ? "Mild limitation. Your program starts in Phase 2 with active strengthening and neuromuscular control." : "Leichte Einschränkung. Ihr Programm startet in Phase 2 mit aktivem Kraftaufbau und neuromuskulärer Kontrolle."
         case .MITTEL:
-            "Moderate Einschränkung. Ihr Programm beginnt in Phase 1 mit sanfter Mobilisation und Schmerzlinderung."
+            return isEn ? "Moderate limitation. Your program begins in Phase 1 with gentle mobilization and pain relief." : "Moderate Einschränkung. Ihr Programm beginnt in Phase 1 mit sanfter Mobilisation und Schmerzlinderung."
         case .SCHWER, .unknown:
-            "Deutliche Einschränkung. Ihr Programm beginnt sanft in Phase 1 mit reduzierter Belastung und verlängerten Erholungsphasen."
+            return isEn ? "Significant limitation. Your program starts gently in Phase 1 with reduced load and extended recovery phases." : "Deutliche Einschränkung. Ihr Programm beginnt sanft in Phase 1 mit reduzierter Belastung und verlängerten Erholungsphasen."
         }
     }
 }

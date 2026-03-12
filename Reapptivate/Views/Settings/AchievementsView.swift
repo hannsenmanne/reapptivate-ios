@@ -6,6 +6,7 @@ private var isEnglishLocale: Bool {
 
 struct AchievementsView: View {
     @Environment(AppState.self) private var appState
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var milestoneService = MilestoneService()
 
     private let columns = [
@@ -41,6 +42,7 @@ struct AchievementCard: View {
     let milestone: Milestone
     let isEarned: Bool
     let earnedDate: Date?
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .title) private var iconSize: CGFloat = 40
 
     var body: some View {

@@ -4,6 +4,7 @@ struct FsScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let isRescreening: Bool
     @State private var viewModel: FsScreeningViewModel?
@@ -11,11 +12,13 @@ struct FsScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "SPADI-Fragebogen laden...")
+                        LoadingView(message: isEn ? "Loading SPADI questionnaire..." : "SPADI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         FsResultView(result: result) {
                             appState.currentUser?.fsScreeningCompleted = true
@@ -31,7 +34,7 @@ struct FsScreeningView: View {
 
                             HStack {
                                 Spacer()
-                                Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
+                                Text(isEn ? "\(vm.currentItemIndex + 1) of \(vm.items.count)" : "\(vm.currentItemIndex + 1) von \(vm.items.count)")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -66,7 +69,7 @@ struct FsScreeningView: View {
                                         if vm.isSubmitting {
                                             ProgressView().tint(.white)
                                         } else {
-                                            Text("Auswertung anzeigen")
+                                            Text(isEn ? "Show results" : "Auswertung anzeigen")
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
@@ -83,7 +86,7 @@ struct FsScreeningView: View {
                             await vm.loadConfig()
                         }
                     } else {
-                        ErrorView(message: "SPADI-Fragebogen konnte nicht geladen werden.") {
+                        ErrorView(message: isEn ? "Could not load SPADI questionnaire." : "SPADI-Fragebogen konnte nicht geladen werden.") {
                             await vm.loadConfig()
                         }
                     }
@@ -92,7 +95,7 @@ struct FsScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "SPADI-Rescreening" : "SPADI-Screening")
+            .navigationTitle(isRescreening ? (isEn ? "SPADI Rescreening" : "SPADI-Rescreening") : (isEn ? "SPADI Screening" : "SPADI-Screening"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

@@ -3,6 +3,7 @@ import SwiftUI
 struct AclStreamDetailView: View {
     @Environment(APIClient.self) private var apiClient
     @Environment(AppState.self) private var appState
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let streamId: String
 
@@ -77,7 +78,7 @@ struct AclStreamDetailView: View {
                         .foregroundStyle(.textSecondary)
                 }
 
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "\(vm.exercises.count) exercise\(vm.exercises.count == 1 ? "" : "s")"
                     : "\(vm.exercises.count) Übungen")
                     .font(.appCaptionMedium)
@@ -113,6 +114,7 @@ struct AclExerciseCard: View {
     let index: Int
     let userGraftType: String?
     let userConcomitantInjuries: Set<String>
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -233,7 +235,7 @@ struct AclExerciseCard: View {
         var tags: [ParameterTag] = []
 
         if let sets = exercise.sets {
-            tags.append(ParameterTag(label: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            tags.append(ParameterTag(label: appLanguage == "en"
                 ? "\(sets) set\(sets == 1 ? "" : "s")"
                 : "\(sets) Sätze", color: .farBlue))
         }

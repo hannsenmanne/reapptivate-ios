@@ -2,15 +2,19 @@ import SwiftUI
 
 struct SymptomResponsePicker: View {
     @Binding var selection: SymptomResponse?
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(alignment: .leading, spacing: 12) {
-            Text("Symptomreaktion")
+            Text(isEn ? "Symptom response" : "Symptomreaktion")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
-            Text("Wie haben sich Ihre Symptome während der Übung verändert?")
+            Text(isEn ? "How did your symptoms change during the exercise?" : "Wie haben sich Ihre Symptome während der Übung verändert?")
                 .font(.appCaption)
                 .foregroundStyle(.textSecondary)
 
@@ -19,7 +23,7 @@ struct SymptomResponsePicker: View {
                     response: .centralized,
                     isSelected: selection == .centralized,
                     icon: "arrow.up.to.line",
-                    description: "Symptome haben sich zentralisiert (näher zur Wirbelsäule)"
+                    description: isEn ? "Symptoms centralized (moved closer to the spine)" : "Symptome haben sich zentralisiert (näher zur Wirbelsäule)"
                 ) {
                     selection = .centralized
                     selectionTrigger.toggle()
@@ -29,7 +33,7 @@ struct SymptomResponsePicker: View {
                     response: .unchanged,
                     isSelected: selection == .unchanged,
                     icon: "equal",
-                    description: "Symptome sind unverändert geblieben"
+                    description: isEn ? "Symptoms remained unchanged" : "Symptome sind unverändert geblieben"
                 ) {
                     selection = .unchanged
                     selectionTrigger.toggle()
@@ -39,7 +43,7 @@ struct SymptomResponsePicker: View {
                     response: .peripheralized,
                     isSelected: selection == .peripheralized,
                     icon: "arrow.down.to.line",
-                    description: "Symptome haben sich peripheralisiert (weiter in den Arm)"
+                    description: isEn ? "Symptoms peripheralized (spread further into the arm)" : "Symptome haben sich peripheralisiert (weiter in den Arm)"
                 ) {
                     selection = .peripheralized
                     selectionTrigger.toggle()

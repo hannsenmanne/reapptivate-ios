@@ -2,6 +2,7 @@ import SwiftUI
 
 struct QuotaProgressionView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isApplying = false
 
     var body: some View {
@@ -10,7 +11,7 @@ struct QuotaProgressionView: View {
                 Image(systemName: "chart.line.uptrend.xyaxis")
                     .font(.appTitle3)
                     .foregroundStyle(.painGreen)
-                Text("Quoten-Steigerung")
+                Text(appLanguage == "en" ? "Quota Progression" : "Quoten-Steigerung")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -28,7 +29,7 @@ struct QuotaProgressionView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Steigerung prufen")
+                        Text(appLanguage == "en" ? "Check progression" : "Steigerung prufen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
@@ -50,7 +51,7 @@ struct QuotaProgressionView: View {
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundStyle(.painGreen)
-                Text("Steigerung empfohlen!")
+                Text(appLanguage == "en" ? "Progression recommended!" : "Steigerung empfohlen!")
                     .font(.appSubheadlineSemibold)
                     .foregroundStyle(.painGreen)
             }
@@ -75,7 +76,7 @@ struct QuotaProgressionView: View {
                                 Text("\(suggested)")
                                     .font(.appCaptionBold.monospacedDigit())
                                     .foregroundStyle(.painGreen)
-                                Text("Min")
+                                Text(appLanguage == "en" ? "min" : "Min")
                                     .font(.appCaption2)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -88,7 +89,7 @@ struct QuotaProgressionView: View {
             }
 
             if let increment = suggestion.incrementPercent {
-                Text("+\(increment)% Steigerung")
+                Text(appLanguage == "en" ? "+\(increment)% increase" : "+\(increment)% Steigerung")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -101,7 +102,7 @@ struct QuotaProgressionView: View {
                     if isApplying {
                         ProgressView().tint(.white)
                     } else {
-                        Text("Steigerung anwenden")
+                        Text(appLanguage == "en" ? "Apply progression" : "Steigerung anwenden")
                     }
                 }
                 .font(.appSubheadlineSemibold)
@@ -126,7 +127,7 @@ struct QuotaProgressionView: View {
             HStack(spacing: 8) {
                 Image(systemName: "clock")
                     .foregroundStyle(.textSecondary)
-                Text("Noch nicht bereit")
+                Text(appLanguage == "en" ? "Not ready yet" : "Noch nicht bereit")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
             }

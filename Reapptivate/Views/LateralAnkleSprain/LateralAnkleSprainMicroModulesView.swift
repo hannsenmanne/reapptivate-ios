@@ -2,7 +2,10 @@ import SwiftUI
 
 struct LateralAnkleSprainMicroModulesView: View {
     @Environment(APIClient.self) private var apiClient
+    @Environment(LanguageManager.self) private var languageManager
     let severity: LasSeverityGrade
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var modules: [MicroModule] = []
     @State private var completedKeys: Set<String> = []
@@ -24,7 +27,7 @@ struct LateralAnkleSprainMicroModulesView: View {
                     .font(.appTitle3)
                     .foregroundStyle(Color.severityColor(for: severity))
                     .accessibilityHidden(true)
-                Text("Sprunggelenk-Wissen")
+                Text(appLanguage == "en" ? "Ankle Knowledge" : "Sprunggelenk-Wissen")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -34,7 +37,7 @@ struct LateralAnkleSprainMicroModulesView: View {
             if !modules.isEmpty {
                 VStack(spacing: 6) {
                     HStack {
-                        Text("Fortschritt")
+                        Text(appLanguage == "en" ? "Progress" : "Fortschritt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
@@ -44,8 +47,8 @@ struct LateralAnkleSprainMicroModulesView: View {
                     }
                     ProgressView(value: Double(completedCount), total: max(1, Double(modules.count)))
                         .tint(Color.severityColor(for: severity))
-                        .accessibilityLabel("Modulfortschritt")
-                        .accessibilityValue("\(completedCount) von \(modules.count) abgeschlossen")
+                        .accessibilityLabel(appLanguage == "en" ? "Module progress" : "Modulfortschritt")
+                        .accessibilityValue(appLanguage == "en" ? "\(completedCount) of \(modules.count) completed" : "\(completedCount) von \(modules.count) abgeschlossen")
                 }
                 .padding(12)
                 .background(Color.severityColor(for: severity).opacity(0.06))
@@ -63,7 +66,7 @@ struct LateralAnkleSprainMicroModulesView: View {
             }
 
             if isLoading {
-                ProgressView("Sprunggelenk-Module laden...")
+                ProgressView(appLanguage == "en" ? "Loading ankle modules..." : "Sprunggelenk-Module laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -74,7 +77,7 @@ struct LateralAnkleSprainMicroModulesView: View {
                     }
                 )
             } else if modules.isEmpty {
-                Text("Keine Module verfügbar")
+                Text(appLanguage == "en" ? "No modules available" : "Keine Module verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -93,6 +96,11 @@ struct LateralAnkleSprainMicroModulesView: View {
         .task {
             await loadModules()
         }
+        .onChange(of: languageManager.language) { _, _ in
+            modules = []
+            completedKeys = []
+            Task { await loadModules() }
+        }
     }
 
     private func loadModules() async {
@@ -110,7 +118,7 @@ struct LateralAnkleSprainMicroModulesView: View {
             }
             completedKeys = Set(loadedCompleted.completedModules ?? [])
         } catch {
-            errorMessage = "Module konnten nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load modules." : "Module konnten nicht geladen werden."
         }
         isLoading = false
     }
@@ -124,7 +132,7 @@ struct LateralAnkleSprainMicroModulesView: View {
             completedKeys.insert(key)
             markReadTrigger.toggle()
         } catch {
-            markReadError = "Fehler beim Speichern. Bitte erneut versuchen."
+            markReadError = appLanguage == "en" ? "Error saving. Please try again." : "Fehler beim Speichern. Bitte erneut versuchen."
         }
         markingKey = nil
     }

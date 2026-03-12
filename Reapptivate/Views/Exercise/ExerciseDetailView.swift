@@ -14,6 +14,7 @@ struct ExerciseDetailView: View {
     @State private var showLibrary = false
     @State private var hapticTrigger = false
     @State private var errorMessage: String?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         ScrollView {
@@ -55,10 +56,10 @@ struct ExerciseDetailView: View {
         .background(Color.appBg)
         .navigationBarTitleDisplayMode(.inline)
         .task { loadSavedVideo() }
-        .confirmationDialog("Video hinzufügen", isPresented: $showVideoSourcePicker) {
-            Button("Video aufnehmen") { showCamera = true }
-            Button("Aus Mediathek wählen") { showLibrary = true }
-            Button("Abbrechen", role: .cancel) {}
+        .confirmationDialog(appLanguage == "en" ? "Add Video" : "Video hinzufügen", isPresented: $showVideoSourcePicker) {
+            Button(appLanguage == "en" ? "Record Video" : "Video aufnehmen") { showCamera = true }
+            Button(appLanguage == "en" ? "Choose from Library" : "Aus Mediathek wählen") { showLibrary = true }
+            Button(appLanguage == "en" ? "Cancel" : "Abbrechen", role: .cancel) {}
         }
         .fullScreenCover(isPresented: $showCamera) {
             VideoCaptureView(onVideoRecorded: { url in Task { await saveVideo(from: url) } })
@@ -97,7 +98,7 @@ struct ExerciseDetailView: View {
         Button {
             showVideoSourcePicker = true
         } label: {
-            Label("Video aufnehmen", systemImage: "video.badge.plus")
+            Label(appLanguage == "en" ? "Record Video" : "Video aufnehmen", systemImage: "video.badge.plus")
                 .font(.appSubheadlineMedium)
                 .foregroundStyle(.accent)
                 .frame(maxWidth: .infinity)
@@ -111,7 +112,7 @@ struct ExerciseDetailView: View {
 
     private var parametersCard: some View {
         VStack(spacing: 12) {
-            let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            let isEn = appLanguage == "en"
             ParameterRow(label: isEn ? "Sets" : "Sätze", value: "\(exercise.exercise.sets)")
             ParameterRow(label: isEn ? "Reps" : "Wiederholungen", value: "\(exercise.exercise.reps)")
 

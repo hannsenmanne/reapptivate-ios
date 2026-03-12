@@ -2,15 +2,18 @@ import SwiftUI
 
 struct PhaseTimelineView: View {
     let records: [PhaseAdaptationRecord]
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Phasen-Verlauf")
+            Text(isEn ? "Phase history" : "Phasen-Verlauf")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
             if records.isEmpty {
-                Text("Noch keine Phasenentscheidungen.")
+                Text(isEn ? "No phase decisions yet." : "Noch keine Phasenentscheidungen.")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity)
@@ -32,6 +35,9 @@ struct PhaseTimelineView: View {
 struct TimelineEntryView: View {
     let record: PhaseAdaptationRecord
     let isLast: Bool
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var color: Color {
         switch record.decision {
@@ -93,7 +99,7 @@ struct TimelineEntryView: View {
                     .foregroundStyle(.textSecondary)
 
                 if let date = record.decidedAtDate {
-                    Text(date.formattedShortGerman)
+                    Text(date.formattedShortLocalized)
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary.opacity(0.7))
                 }
@@ -101,7 +107,7 @@ struct TimelineEntryView: View {
                 // Metrics
                 HStack(spacing: 12) {
                     if let pain = record.avgPainLevel {
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(appLanguage == "en"
                             ? "Pain: \(String(format: "%.1f", pain))"
                             : "Schmerz: \(String(format: "%.1f", pain))")
                             .font(.appCaption2)

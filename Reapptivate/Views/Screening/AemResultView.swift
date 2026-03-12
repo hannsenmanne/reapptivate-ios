@@ -1,10 +1,13 @@
 import SwiftUI
 
 struct AemResultView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let result: AemScreeningResult
     let onContinue: () -> Void
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ScrollView {
             VStack(spacing: 24) {
                 // Subtype badge
@@ -32,7 +35,7 @@ struct AemResultView: View {
 
                 // Subscale scores
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ihre Ergebnisse")
+                    Text(isEn ? "Your Results" : "Ihre Ergebnisse")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
@@ -46,7 +49,7 @@ struct AemResultView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
-                    Text("Ihr Schmerzgrenzwert: max. \(result.subtype.maxPainLevel)/10 während des Trainings")
+                    Text(isEn ? "Your pain threshold: max. \(result.subtype.maxPainLevel)/10 during training" : "Ihr Schmerzgrenzwert: max. \(result.subtype.maxPainLevel)/10 während des Trainings")
                         .font(.appSubheadline)
                         .foregroundStyle(.textPrimary)
                 }
@@ -56,7 +59,7 @@ struct AemResultView: View {
                 Button {
                     onContinue()
                 } label: {
-                    Text("Weiter zum Dashboard")
+                    Text(isEn ? "Continue to Dashboard" : "Weiter zum Dashboard")
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
@@ -78,15 +81,16 @@ struct AemResultView: View {
     }
 
     var subtypeDescription: String {
+        let isEn = appLanguage == "en"
         switch result.subtype {
         case .FAR:
-            "Sie neigen dazu, Bewegung aus Angst vor Schmerzen zu vermeiden. Ihr Programm enthält schrittweise Exposition."
+            return isEn ? "You tend to avoid movement due to fear of pain. Your program includes gradual exposure." : "Sie neigen dazu, Bewegung aus Angst vor Schmerzen zu vermeiden. Ihr Programm enthält schrittweise Exposition."
         case .DER:
-            "Sie neigen dazu, trotz Belastung weiterzumachen. Ihr Programm betont Pacing und geplante Pausen."
+            return isEn ? "You tend to push through despite strain. Your program emphasizes pacing and planned breaks." : "Sie neigen dazu, trotz Belastung weiterzumachen. Ihr Programm betont Pacing und geplante Pausen."
         case .EER:
-            "Sie sind hoch motiviert und neigen zu Überbelastung. Ihr Programm fokussiert auf Qualität statt Quantität."
+            return isEn ? "You are highly motivated and tend to overexert. Your program focuses on quality over quantity." : "Sie sind hoch motiviert und neigen zu Überbelastung. Ihr Programm fokussiert auf Qualität statt Quantität."
         case .AR, .unknown:
-            "Sie haben ein ausgewogenes Belastungsprofil. Ihr Programm folgt dem Standardprotokoll."
+            return isEn ? "You have a balanced load profile. Your program follows the standard protocol." : "Sie haben ein ausgewogenes Belastungsprofil. Ihr Programm folgt dem Standardprotokoll."
         }
     }
 }

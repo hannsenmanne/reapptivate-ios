@@ -2,7 +2,10 @@ import SwiftUI
 
 struct AclMicroModulesView: View {
     @Environment(APIClient.self) private var apiClient
+    @Environment(LanguageManager.self) private var languageManager
     let currentMilestone: Int
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var modules: [AclMicroModule] = []
     @State private var completedKeys: Set<String> = []
@@ -24,7 +27,7 @@ struct AclMicroModulesView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
-                Text("Wissen & Psychoedukation")
+                Text(appLanguage == "en" ? "Knowledge & Psychoeducation" : "Wissen & Psychoedukation")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -34,7 +37,7 @@ struct AclMicroModulesView: View {
             if !modules.isEmpty {
                 VStack(spacing: 6) {
                     HStack {
-                        Text("Fortschritt")
+                        Text(appLanguage == "en" ? "Progress" : "Fortschritt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
@@ -44,8 +47,8 @@ struct AclMicroModulesView: View {
                     }
                     ProgressView(value: Double(completedCount), total: max(1, Double(modules.count)))
                         .tint(Color.accent)
-                        .accessibilityLabel("Modulfortschritt")
-                        .accessibilityValue("\(completedCount) von \(modules.count) abgeschlossen")
+                        .accessibilityLabel(appLanguage == "en" ? "Module progress" : "Modulfortschritt")
+                        .accessibilityValue(appLanguage == "en" ? "\(completedCount) of \(modules.count) completed" : "\(completedCount) von \(modules.count) abgeschlossen")
                 }
                 .padding(12)
                 .background(Color.accent.opacity(0.06))
@@ -63,7 +66,7 @@ struct AclMicroModulesView: View {
             }
 
             if isLoading {
-                ProgressView("ACL-Module laden...")
+                ProgressView(appLanguage == "en" ? "Loading ACL modules..." : "ACL-Module laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -74,7 +77,7 @@ struct AclMicroModulesView: View {
                     }
                 )
             } else if modules.isEmpty {
-                Text("Keine Module verfügbar")
+                Text(appLanguage == "en" ? "No modules available" : "Keine Module verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -93,6 +96,11 @@ struct AclMicroModulesView: View {
         .task {
             await loadModules()
         }
+        .onChange(of: languageManager.language) { _, _ in
+            modules = []
+            completedKeys = []
+            Task { await loadModules() }
+        }
     }
 
     private func loadModules() async {
@@ -109,7 +117,7 @@ struct AclMicroModulesView: View {
             let completions = loadedCompleted.completedModules ?? loadedCompleted.completions ?? []
             completedKeys = Set(completions)
         } catch {
-            errorMessage = "Module konnten nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load modules." : "Module konnten nicht geladen werden."
         }
         isLoading = false
     }
@@ -123,7 +131,7 @@ struct AclMicroModulesView: View {
             completedKeys.insert(key)
             markReadTrigger.toggle()
         } catch {
-            markReadError = "Fehler beim Speichern. Bitte erneut versuchen."
+            markReadError = appLanguage == "en" ? "Error saving. Please try again." : "Fehler beim Speichern. Bitte erneut versuchen."
         }
         markingKey = nil
     }
@@ -137,6 +145,7 @@ struct AclModuleCard: View {
     let isMarking: Bool
     let onMarkRead: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .body) private var moduleIconSize: CGFloat = 28
     @State private var isExpanded = false
 
@@ -167,7 +176,7 @@ struct AclModuleCard: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.painGreen)
                             .font(.appCaption)
-                            .accessibilityLabel("Abgeschlossen")
+                            .accessibilityLabel(appLanguage == "en" ? "Completed" : "Abgeschlossen")
                     }
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
@@ -210,7 +219,7 @@ struct AclModuleCard: View {
                                     ProgressView().controlSize(.small).tint(.white)
                                 } else {
                                     Image(systemName: "checkmark")
-                                    Text("Gelesen")
+                                    Text(appLanguage == "en" ? "Read" : "Gelesen")
                                 }
                             }
                             .font(.outfit(.semibold, size: 12))

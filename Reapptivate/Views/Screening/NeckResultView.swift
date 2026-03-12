@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct NeckResultView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let result: NeckScreeningResult
     let onContinue: () -> Void
 
@@ -9,6 +10,8 @@ struct NeckResultView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ScrollView {
             VStack(spacing: 24) {
                 // Score display
@@ -38,7 +41,7 @@ struct NeckResultView: View {
 
                 // Severity description
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ihre Einstufung")
+                    Text(isEn ? "Your Classification" : "Ihre Einstufung")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
@@ -58,7 +61,7 @@ struct NeckResultView: View {
                     HStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
                             .foregroundStyle(.painAmber)
-                        Text("Radiculopathie erkannt. Ihr Übungsprogramm ist entsprechend angepasst.")
+                        Text(isEn ? "Radiculopathy detected. Your exercise program has been adjusted accordingly." : "Radiculopathie erkannt. Ihr Übungsprogramm ist entsprechend angepasst.")
                             .font(.appSubheadline)
                             .foregroundStyle(.textPrimary)
                     }
@@ -69,7 +72,7 @@ struct NeckResultView: View {
                 Button {
                     onContinue()
                 } label: {
-                    Text("Weiter zum Dashboard")
+                    Text(isEn ? "Continue to Dashboard" : "Weiter zum Dashboard")
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
@@ -81,13 +84,14 @@ struct NeckResultView: View {
     }
 
     var severityDescription: String {
+        let isEn = appLanguage == "en"
         switch severity {
         case .LEICHT:
-            "Leichte Einschränkung. Ihr Programm folgt der Standard-Übungsprogression mit allen Intensitätsstufen."
+            return isEn ? "Mild limitation. Your program follows the standard exercise progression with all intensity levels." : "Leichte Einschränkung. Ihr Programm folgt der Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
-            "Moderate Einschränkung. Ihr Programm enthält angepasste Übungen mit langsamerer Steigerung."
+            return isEn ? "Moderate limitation. Your program includes adapted exercises with slower progression." : "Moderate Einschränkung. Ihr Programm enthält angepasste Übungen mit langsamerer Steigerung."
         case .SCHWER, .unknown:
-            "Deutliche Einschränkung. Ihr Programm beginnt sanft mit verlängerten Phasen und reduzierter Belastung."
+            return isEn ? "Significant limitation. Your program starts gently with extended phases and reduced load." : "Deutliche Einschränkung. Ihr Programm beginnt sanft mit verlängerten Phasen und reduzierter Belastung."
         }
     }
 }

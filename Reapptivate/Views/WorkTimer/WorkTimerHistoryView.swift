@@ -3,8 +3,11 @@ import SwiftUI
 struct WorkTimerHistoryView: View {
     @Bindable var viewModel: WorkTimerViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var isLoading = true
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         NavigationStack {
@@ -24,10 +27,10 @@ struct WorkTimerHistoryView: View {
                 .padding(.vertical, 20)
             }
             .background(Color.appBg)
-            .navigationTitle("Wochenverlauf")
+            .navigationTitle(isEn ? "Weekly overview" : "Wochenverlauf")
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaInset(edge: .bottom) {
-                Button("Schlie\u{00DF}en") {
+                Button(isEn ? "Close" : "Schlie\u{00DF}en") {
                     dismiss()
                 }
                 .buttonStyle(.primary)
@@ -48,7 +51,7 @@ struct WorkTimerHistoryView: View {
     private var loadingSection: some View {
         VStack(spacing: 12) {
             Spacer().frame(height: 40)
-            ProgressView("Verlauf laden...")
+            ProgressView(isEn ? "Loading history..." : "Verlauf laden...")
                 .font(.appSubheadline)
             Spacer().frame(height: 40)
         }
@@ -64,10 +67,10 @@ struct WorkTimerHistoryView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(.textSecondary)
                 .accessibilityHidden(true)
-            Text("Noch keine Daten vorhanden")
+            Text(isEn ? "No data yet" : "Noch keine Daten vorhanden")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
-            Text("Starten Sie Ihren Arbeits-Timer, um Ihren Wochenverlauf zu sehen.")
+            Text(isEn ? "Start your work timer to see your weekly overview." : "Starten Sie Ihren Arbeits-Timer, um Ihren Wochenverlauf zu sehen.")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -80,7 +83,7 @@ struct WorkTimerHistoryView: View {
 
     private var barChartSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Letzte 7 Tage")
+            Text(isEn ? "Last 7 days" : "Letzte 7 Tage")
                 .font(.appSubheadlineSemibold)
                 .foregroundStyle(.textPrimary)
 
@@ -107,17 +110,17 @@ struct WorkTimerHistoryView: View {
     private var statsRow: some View {
         HStack(spacing: 10) {
             StatPill(
-                label: "\u{00D8} Adh\u{00E4}renz",
+                label: isEn ? "\u{00D8} Adherence" : "\u{00D8} Adh\u{00E4}renz",
                 value: "\(Int(viewModel.weeklyAdherence))%"
             )
             StatPill(
-                label: "Serie",
-                value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                label: isEn ? "Streak" : "Serie",
+                value: isEn
                     ? "\(viewModel.currentStreak) day\(viewModel.currentStreak == 1 ? "" : "s")"
                     : "\(viewModel.currentStreak) Tag\(viewModel.currentStreak == 1 ? "" : "e")"
             )
             StatPill(
-                label: "Pausen",
+                label: isEn ? "Breaks" : "Pausen",
                 value: "\(totalBreaksCompleted)"
             )
         }
@@ -127,7 +130,7 @@ struct WorkTimerHistoryView: View {
 
     private var dayDetailList: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Details")
+            Text(isEn ? "Details" : "Details")
                 .font(.appSubheadlineSemibold)
                 .foregroundStyle(.textPrimary)
 
@@ -159,10 +162,21 @@ private struct BarColumn: View {
     let day: WorkTimerDaySummary
     let barWidth: CGFloat
     let maxHeight: CGFloat
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
-    private static let shortDayFormatter: DateFormatter = {
+    private var isEn: Bool { appLanguage == "en" }
+
+    private static let shortDayFormatterDE: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "de_DE")
+        f.timeZone = TimeZone(secondsFromGMT: 0)
+        f.dateFormat = "EE"
+        return f
+    }()
+
+    private static let shortDayFormatterEN: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US")
         f.timeZone = TimeZone(secondsFromGMT: 0)
         f.dateFormat = "EE"
         return f
@@ -184,7 +198,8 @@ private struct BarColumn: View {
         guard let date = DateFormatters.dateOnly.date(from: day.date) else {
             return "?"
         }
-        let label = Self.shortDayFormatter.string(from: date)
+        let formatter = isEn ? Self.shortDayFormatterEN : Self.shortDayFormatterDE
+        let label = formatter.string(from: date)
         return label.replacingOccurrences(of: ".", with: "")
     }
 
@@ -204,7 +219,9 @@ private struct BarColumn: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(dayLabel): \(Int(day.adherencePercent)) Prozent Adh\u{00E4}renz")
+        .accessibilityLabel(isEn
+            ? "\(dayLabel): \(Int(day.adherencePercent)) percent adherence"
+            : "\(dayLabel): \(Int(day.adherencePercent)) Prozent Adh\u{00E4}renz")
     }
 }
 
@@ -238,8 +255,11 @@ private struct StatPill: View {
 
 private struct DayDetailRow: View {
     let day: WorkTimerDaySummary
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
-    private static let detailDateFormatter: DateFormatter = {
+    private var isEn: Bool { appLanguage == "en" }
+
+    private static let detailDateFormatterDE: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "de_DE")
         f.timeZone = TimeZone(secondsFromGMT: 0)
@@ -247,11 +267,20 @@ private struct DayDetailRow: View {
         return f
     }()
 
+    private static let detailDateFormatterEN: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US")
+        f.timeZone = TimeZone(secondsFromGMT: 0)
+        f.dateFormat = "EE, MMM d"
+        return f
+    }()
+
     private var formattedDate: String {
         guard let date = DateFormatters.dateOnly.date(from: day.date) else {
             return day.date
         }
-        return Self.detailDateFormatter.string(from: date)
+        let formatter = isEn ? Self.detailDateFormatterEN : Self.detailDateFormatterDE
+        return formatter.string(from: date)
     }
 
     private var adherenceColor: Color {
@@ -267,7 +296,7 @@ private struct DayDetailRow: View {
                 Text(formattedDate)
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(isEn
                     ? "\(day.breaksCompleted) / \(day.breaksOffered) breaks"
                     : "\(day.breaksCompleted) / \(day.breaksOffered) Pausen")
                     .font(.appCaption)

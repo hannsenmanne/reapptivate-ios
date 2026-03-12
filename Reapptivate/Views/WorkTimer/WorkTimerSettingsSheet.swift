@@ -3,61 +3,64 @@ import SwiftUI
 struct WorkTimerSettingsSheet: View {
     @Bindable var viewModel: WorkTimerViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isSaving = false
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
                     DatePicker(
-                        "Startzeit",
+                        isEn ? "Start time" : "Startzeit",
                         selection: $viewModel.startTime,
                         displayedComponents: .hourAndMinute
                     )
 
                     DatePicker(
-                        "Endzeit",
+                        isEn ? "End time" : "Endzeit",
                         selection: $viewModel.endTime,
                         displayedComponents: .hourAndMinute
                     )
                 } header: {
-                    Text("Arbeitszeit")
+                    Text(isEn ? "Working hours" : "Arbeitszeit")
                 }
 
                 Section {
-                    Picker("Intervall", selection: $viewModel.breakIntervalMinutes) {
-                        Text("30 Min.").tag(30)
-                        Text("45 Min.").tag(45)
-                        Text("60 Min.").tag(60)
+                    Picker(isEn ? "Interval" : "Intervall", selection: $viewModel.breakIntervalMinutes) {
+                        Text(isEn ? "30 min" : "30 Min.").tag(30)
+                        Text(isEn ? "45 min" : "45 Min.").tag(45)
+                        Text(isEn ? "60 min" : "60 Min.").tag(60)
                     }
                     .pickerStyle(.segmented)
                 } header: {
-                    Text("Pausenintervall")
+                    Text(isEn ? "Break interval" : "Pausenintervall")
                 } footer: {
-                    Text("Wie oft Sie an eine Bewegungspause erinnert werden.")
+                    Text(isEn ? "How often you are reminded to take a movement break." : "Wie oft Sie an eine Bewegungspause erinnert werden.")
                 }
 
                 Section {
-                    Picker("Dauer", selection: $viewModel.breakDurationMinutes) {
-                        Text("1 Min.").tag(1)
-                        Text("2 Min.").tag(2)
-                        Text("3 Min.").tag(3)
-                        Text("5 Min.").tag(5)
+                    Picker(isEn ? "Duration" : "Dauer", selection: $viewModel.breakDurationMinutes) {
+                        Text(isEn ? "1 min" : "1 Min.").tag(1)
+                        Text(isEn ? "2 min" : "2 Min.").tag(2)
+                        Text(isEn ? "3 min" : "3 Min.").tag(3)
+                        Text(isEn ? "5 min" : "5 Min.").tag(5)
                     }
                     .pickerStyle(.segmented)
                 } header: {
-                    Text("Pausendauer")
+                    Text(isEn ? "Break duration" : "Pausendauer")
                 } footer: {
-                    Text("Wie lange jede Bewegungspause dauert.")
+                    Text(isEn ? "How long each movement break lasts." : "Wie lange jede Bewegungspause dauert.")
                 }
 
                 Section {
-                    Toggle("Automatisch starten", isOn: Binding(
+                    Toggle(isEn ? "Auto-start" : "Automatisch starten", isOn: Binding(
                         get: { viewModel.autoStartEnabled },
                         set: { viewModel.autoStartEnabled = $0 }
                     ))
                 } footer: {
-                    Text("Timer startet automatisch innerhalb der Arbeitszeit.")
+                    Text(isEn ? "Timer starts automatically during working hours." : "Timer startet automatisch innerhalb der Arbeitszeit.")
                 }
 
                 if let error = viewModel.errorMessage {
@@ -68,14 +71,14 @@ struct WorkTimerSettingsSheet: View {
                     }
                 }
             }
-            .navigationTitle("Timer-Einstellungen")
+            .navigationTitle(isEn ? "Timer settings" : "Timer-Einstellungen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(isEn ? "Cancel" : "Abbrechen") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Speichern") {
+                    Button(isEn ? "Save" : "Speichern") {
                         isSaving = true
                         Task {
                             await viewModel.saveSettings()

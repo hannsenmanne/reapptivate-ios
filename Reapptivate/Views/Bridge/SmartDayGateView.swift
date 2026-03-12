@@ -3,7 +3,11 @@ import SwiftUI
 struct SmartDayGateView<Fallback: View>: View {
     @Environment(APIClient.self) private var apiClient
     @Environment(AppState.self) private var appState
+    @Environment(LanguageManager.self) private var languageManager
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var viewModel: SmartDayViewModel?
+
+    private var isEn: Bool { appLanguage == "en" }
 
     let completedCount: Int
     let totalCount: Int
@@ -28,7 +32,7 @@ struct SmartDayGateView<Fallback: View>: View {
                 if !vm.isApiAvailable {
                     fallback()
                 } else if vm.isLoading {
-                    ProgressView("Tagesstatus laden...")
+                    ProgressView(isEn ? "Loading day status..." : "Tagesstatus laden...")
                         .frame(maxWidth: .infinity, minHeight: 200)
                 } else if !vm.hasCheckedIn {
                     MorningCheckinView {
@@ -49,6 +53,14 @@ struct SmartDayGateView<Fallback: View>: View {
         }
         .task {
             if viewModel == nil {
+                let vm = SmartDayViewModel(apiClient: apiClient, appState: appState)
+                viewModel = vm
+                await vm.checkTodayStatus()
+            }
+        }
+        .onChange(of: languageManager.language) { _, _ in
+            viewModel = nil
+            Task {
                 let vm = SmartDayViewModel(apiClient: apiClient, appState: appState)
                 viewModel = vm
                 await vm.checkTodayStatus()

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AclDischargeProgressView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var progress: AclDischargeProgress?
     @State private var isLoading = true
@@ -10,7 +11,7 @@ struct AclDischargeProgressView: View {
     var body: some View {
         VStack(spacing: 20) {
             if isLoading {
-                ProgressView("Entlassungsdaten laden...")
+                ProgressView(appLanguage == "en" ? "Loading discharge data..." : "Entlassungsdaten laden...")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 32)
             } else if let error = errorMessage {
@@ -24,8 +25,8 @@ struct AclDischargeProgressView: View {
             } else {
                 EmptyStateView(
                     icon: "target",
-                    title: "Noch keine Daten",
-                    message: "Entlassungskriterien werden ab Meilenstein 4 angezeigt."
+                    title: appLanguage == "en" ? "No Data Yet" : "Noch keine Daten",
+                    message: appLanguage == "en" ? "Discharge criteria will be shown from milestone 4." : "Entlassungskriterien werden ab Meilenstein 4 angezeigt."
                 )
             }
         }
@@ -45,10 +46,10 @@ struct AclDischargeProgressView: View {
                         .font(.appTitle3)
                         .foregroundStyle(.textSecondary)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Entlassungskriterien")
+                        Text(appLanguage == "en" ? "Discharge Criteria" : "Entlassungskriterien")
                             .font(.appHeadline)
                             .foregroundStyle(.textPrimary)
-                        Text("Fortschritt zur Return-to-Sport Freigabe")
+                        Text(appLanguage == "en" ? "Progress towards return-to-sport clearance" : "Fortschritt zur Return-to-Sport Freigabe")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -77,20 +78,20 @@ struct AclDischargeProgressView: View {
             }
             .frame(height: 6)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Gesamtfortschritt")
-            .accessibilityValue("\(progress.overallPercent) Prozent, \(progress.metCount) von \(progress.totalCount) Kriterien erfüllt")
+            .accessibilityLabel(appLanguage == "en" ? "Overall progress" : "Gesamtfortschritt")
+            .accessibilityValue(appLanguage == "en" ? "\(progress.overallPercent) percent, \(progress.metCount) of \(progress.totalCount) criteria met" : "\(progress.overallPercent) Prozent, \(progress.metCount) von \(progress.totalCount) Kriterien erfüllt")
 
             if progress.metCount == progress.totalCount && progress.totalCount > 0 {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.painGreen)
-                    Text("Alle Kriterien erfüllt -- Entlassung möglich")
+                    Text(appLanguage == "en" ? "All criteria met -- discharge possible" : "Alle Kriterien erfüllt -- Entlassung möglich")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.painGreen)
                 }
                 .padding(.top, 4)
             } else {
-                Text("\(progress.metCount) von \(progress.totalCount) Kriterien erfüllt")
+                Text(appLanguage == "en" ? "\(progress.metCount) of \(progress.totalCount) criteria met" : "\(progress.metCount) von \(progress.totalCount) Kriterien erfüllt")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -121,7 +122,7 @@ struct AclDischargeProgressView: View {
             )
             progress = result
         } catch {
-            errorMessage = "Entlassungsdaten konnten nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load discharge data." : "Entlassungsdaten konnten nicht geladen werden."
         }
 
         isLoading = false
@@ -132,6 +133,7 @@ struct AclDischargeProgressView: View {
 
 struct DischargeCriterionCard: View {
     let criterion: AclDischargeCriterion
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     private var isMet: Bool { criterion.met == true }
 
@@ -215,16 +217,22 @@ struct DischargeCriterionCard: View {
             .frame(height: 4)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(criterionAccessibilityLabel)
-            .accessibilityValue("\(Int(progressPercent * 100)) Prozent")
+            .accessibilityValue(appLanguage == "en" ? "\(Int(progressPercent * 100)) percent" : "\(Int(progressPercent * 100)) Prozent")
         }
         .cardStyle()
     }
 
     private var criterionAccessibilityLabel: String {
         let name = criterion.test ?? criterion.category ?? criterion.id
-        let status = isMet ? "erfüllt" : "nicht erfüllt"
+        let status: String
+        if appLanguage == "en" {
+            status = isMet ? "met" : "not met"
+        } else {
+            status = isMet ? "erfüllt" : "nicht erfüllt"
+        }
         if let current = criterion.currentValue, let threshold = criterion.threshold {
-            return "\(name), \(status), \(Int(current)) von \(Int(threshold))\(criterion.unit ?? "")"
+            let connector = appLanguage == "en" ? "of" : "von"
+            return "\(name), \(status), \(Int(current)) \(connector) \(Int(threshold))\(criterion.unit ?? "")"
         }
         return "\(name), \(status)"
     }

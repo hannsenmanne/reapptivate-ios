@@ -3,6 +3,7 @@ import SwiftUI
 struct PacingTemplateSelector: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isActivating = false
 
     var body: some View {
@@ -15,12 +16,14 @@ struct PacingTemplateSelector: View {
                             .font(.system(size: 36))
                             .foregroundStyle(Color.subtypeColor(for: viewModel.subtype))
 
-                        Text("Ihr Pacing-Plan wird vorbereitet")
+                        Text(appLanguage == "en" ? "Your pacing plan is being prepared" : "Ihr Pacing-Plan wird vorbereitet")
                             .font(.appTitle3)
                             .foregroundStyle(.textPrimary)
                             .multilineTextAlignment(.center)
 
-                        Text("Basierend auf Ihrem \(viewModel.subtype.displayName)-Profil")
+                        Text(appLanguage == "en"
+                            ? "Based on your \(viewModel.subtype.displayName) profile"
+                            : "Basierend auf Ihrem \(viewModel.subtype.displayName)-Profil")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
@@ -42,7 +45,7 @@ struct PacingTemplateSelector: View {
                     if let template = viewModel.pacingTemplate {
                         // Activities
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Enthaltene Aktivitäten")
+                            Text(appLanguage == "en" ? "Included Activities" : "Enthaltene Aktivitäten")
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
 
@@ -57,7 +60,7 @@ struct PacingTemplateSelector: View {
                                             .foregroundStyle(.textPrimary)
                                         Spacer()
                                         if let baseline = activity.defaultBaseline {
-                                            Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                            Text(appLanguage == "en"
                                                 ? "\(baseline) min"
                                                 : "\(baseline) Min")
                                                 .font(.appCaption)
@@ -72,22 +75,22 @@ struct PacingTemplateSelector: View {
                         // Rules
                         if let rules = template.rules {
                             VStack(alignment: .leading, spacing: 12) {
-                                Text("Regeln & Sicherheitsmechanismen")
+                                Text(appLanguage == "en" ? "Rules & Safety Mechanisms" : "Regeln & Sicherheitsmechanismen")
                                     .font(.appSubheadlineMedium)
                                     .foregroundStyle(.textPrimary)
 
                                 if let increment = rules.quotaIncrementPercent {
-                                    RuleRow(icon: "chart.line.uptrend.xyaxis", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                    RuleRow(icon: "chart.line.uptrend.xyaxis", text: appLanguage == "en"
                                         ? "Increase: \(increment)% per week"
                                         : "Steigerung: \(increment)% pro Woche")
                                 }
                                 if let pause = rules.mandatoryPauseMinutes, pause > 0 {
-                                    RuleRow(icon: "pause.circle.fill", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                    RuleRow(icon: "pause.circle.fill", text: appLanguage == "en"
                                         ? "Mandatory break: \(pause) min"
                                         : "Obligatorische Pause: \(pause) Min")
                                 }
                                 if let cap = rules.weeklySessionCap {
-                                    RuleRow(icon: "calendar.badge.clock", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                    RuleRow(icon: "calendar.badge.clock", text: appLanguage == "en"
                                         ? "Max. \(cap) session\(cap == 1 ? "" : "s")/week"
                                         : "Max. \(cap) Einheiten/Woche")
                                 }
@@ -95,7 +98,7 @@ struct PacingTemplateSelector: View {
                             .cardStyle()
                         }
                     } else {
-                        ProgressView("Vorlage laden...")
+                        ProgressView(appLanguage == "en" ? "Loading template..." : "Vorlage laden...")
                             .padding()
                     }
 
@@ -109,7 +112,7 @@ struct PacingTemplateSelector: View {
                                     ProgressView().tint(.white)
                                 } else {
                                     Image(systemName: "sparkles")
-                                    Text("Plan aktivieren")
+                                    Text(appLanguage == "en" ? "Activate plan" : "Plan aktivieren")
                                 }
                             }
                             .font(.appBodySemibold)
@@ -125,11 +128,11 @@ struct PacingTemplateSelector: View {
                 .padding(24)
             }
             .background(Color.appBg)
-            .navigationTitle("Pacing-Plan")
+            .navigationTitle(appLanguage == "en" ? "Pacing Plan" : "Pacing-Plan")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(appLanguage == "en" ? "Cancel" : "Abbrechen") { dismiss() }
                 }
             }
             .task {

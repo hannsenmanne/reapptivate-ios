@@ -4,7 +4,11 @@ struct PhaseStatusCard: View {
     let status: AdaptivePhaseStatus
     let maxPhase: Int
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack {
@@ -13,7 +17,7 @@ struct PhaseStatusCard: View {
                         .font(.appTitle3)
                         .foregroundStyle(.textPrimary)
 
-                    Text("Tag \(status.daysInPhase) in dieser Phase")
+                    Text(isEn ? "Day \(status.daysInPhase) in this phase" : "Tag \(status.daysInPhase) in dieser Phase")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -25,22 +29,22 @@ struct PhaseStatusCard: View {
 
             // Stats Row
             HStack(spacing: 16) {
-                MiniStat(label: "Schmerz", value: String(format: "%.1f", status.currentPainAvg), color: Color.painColor(for: Int(status.currentPainAvg)))
-                MiniStat(label: "Compliance", value: "\(Int(status.currentCompliance))%", color: status.currentCompliance >= 66 ? .painGreen : .painAmber)
-                MiniStat(label: "Trainings", value: "\(status.sessionsInPhase)", color: .textPrimary)
+                MiniStat(label: isEn ? "Pain" : "Schmerz", value: String(format: "%.1f", status.currentPainAvg), color: Color.painColor(for: Int(status.currentPainAvg)))
+                MiniStat(label: isEn ? "Compliance" : "Compliance", value: "\(Int(status.currentCompliance))%", color: status.currentCompliance >= 66 ? .painGreen : .painAmber)
+                MiniStat(label: isEn ? "Sessions" : "Trainings", value: "\(status.sessionsInPhase)", color: .textPrimary)
             }
 
             // Readiness Checklist
             VStack(spacing: 8) {
-                Text("Fortschritts-Bereitschaft")
+                Text(isEn ? "Progression readiness" : "Fortschritts-Bereitschaft")
                     .font(.appCaptionMedium)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                ReadinessRow(label: "Mindestzeit in Phase", met: status.progressionReadiness.minDaysMet)
-                ReadinessRow(label: "Mindesttrainings", met: status.progressionReadiness.minSessionsMet)
-                ReadinessRow(label: "Schmerzkriterien", met: status.progressionReadiness.painCriteriaMet)
-                ReadinessRow(label: "Compliance-Kriterien", met: status.progressionReadiness.complianceCriteriaMet)
+                ReadinessRow(label: isEn ? "Minimum time in phase" : "Mindestzeit in Phase", met: status.progressionReadiness.minDaysMet, isEn: isEn)
+                ReadinessRow(label: isEn ? "Minimum sessions" : "Mindesttrainings", met: status.progressionReadiness.minSessionsMet, isEn: isEn)
+                ReadinessRow(label: isEn ? "Pain criteria" : "Schmerzkriterien", met: status.progressionReadiness.painCriteriaMet, isEn: isEn)
+                ReadinessRow(label: isEn ? "Compliance criteria" : "Compliance-Kriterien", met: status.progressionReadiness.complianceCriteriaMet, isEn: isEn)
             }
 
             // Progress bar
@@ -52,8 +56,8 @@ struct PhaseStatusCard: View {
                 }
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Fortschritt")
-            .accessibilityValue("\(status.progressionReadiness.criteriaMetCount) von 4 Kriterien erfüllt")
+            .accessibilityLabel(isEn ? "Progress" : "Fortschritt")
+            .accessibilityValue(isEn ? "\(status.progressionReadiness.criteriaMetCount) of 4 criteria met" : "\(status.progressionReadiness.criteriaMetCount) von 4 Kriterien erfüllt")
 
             // Hint
             Text(status.nextEvaluationHint)
@@ -87,6 +91,7 @@ struct MiniStat: View {
 struct ReadinessRow: View {
     let label: String
     let met: Bool
+    var isEn: Bool = false
 
     var body: some View {
         HStack(spacing: 8) {
@@ -101,6 +106,6 @@ struct ReadinessRow: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(label)
-        .accessibilityValue(met ? "Erfüllt" : "Noch nicht erfüllt")
+        .accessibilityValue(met ? (isEn ? "Met" : "Erfüllt") : (isEn ? "Not yet met" : "Noch nicht erfüllt"))
     }
 }

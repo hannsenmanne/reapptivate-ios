@@ -2,41 +2,46 @@ import SwiftUI
 
 struct FeatureWalkthroughView: View {
     @AppStorage("hasSeenWalkthrough") private var hasSeenWalkthrough = false
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var currentPage = 0
 
-    private let pages: [WalkthroughPage] = [
-        WalkthroughPage(
-            icon: "chart.bar.fill",
-            iconColor: .accent,
-            title: "Ihr Dashboard",
-            description: "Sehen Sie Ihren Fortschritt auf einen Blick -- Trainingsserie, Phase und Statistiken."
-        ),
-        WalkthroughPage(
-            icon: "figure.strengthtraining.traditional",
-            iconColor: .farBlue,
-            title: "Übungsprogramm",
-            description: "Individuell angepasste Übungen mit Timer, Satz-Tracking und Schmerzprotokoll."
-        ),
-        WalkthroughPage(
-            icon: "book.fill",
-            iconColor: .painAmber,
-            title: "Edukation",
-            description: "Lernen Sie mehr über Ihre Beschwerden mit täglichen Wissenskarten und Mikro-Modulen."
-        ),
-        WalkthroughPage(
-            icon: "chart.line.uptrend.xyaxis",
-            iconColor: .painGreen,
-            title: "Fortschritt verfolgen",
-            description: "Verfolgen Sie Ihre Schmerzentwicklung, Compliance und Phasen-Progression."
-        )
-    ]
+    private var pages: [WalkthroughPage] {
+        let isEn = appLanguage == "en"
+        return [
+            WalkthroughPage(
+                icon: "chart.bar.fill",
+                iconColor: .accent,
+                title: isEn ? "Your Dashboard" : "Ihr Dashboard",
+                description: isEn ? "See your progress at a glance — training streak, phase, and statistics." : "Sehen Sie Ihren Fortschritt auf einen Blick -- Trainingsserie, Phase und Statistiken."
+            ),
+            WalkthroughPage(
+                icon: "figure.strengthtraining.traditional",
+                iconColor: .farBlue,
+                title: isEn ? "Exercise program" : "Übungsprogramm",
+                description: isEn ? "Individually tailored exercises with timer, set tracking, and pain logging." : "Individuell angepasste Übungen mit Timer, Satz-Tracking und Schmerzprotokoll."
+            ),
+            WalkthroughPage(
+                icon: "book.fill",
+                iconColor: .painAmber,
+                title: isEn ? "Education" : "Edukation",
+                description: isEn ? "Learn more about your condition with daily knowledge cards and micro-modules." : "Lernen Sie mehr über Ihre Beschwerden mit täglichen Wissenskarten und Mikro-Modulen."
+            ),
+            WalkthroughPage(
+                icon: "chart.line.uptrend.xyaxis",
+                iconColor: .painGreen,
+                title: isEn ? "Track progress" : "Fortschritt verfolgen",
+                description: isEn ? "Track your pain development, compliance, and phase progression." : "Verfolgen Sie Ihre Schmerzentwicklung, Compliance und Phasen-Progression."
+            )
+        ]
+    }
 
     var body: some View {
+        let isEn = appLanguage == "en"
         VStack(spacing: 0) {
             // Skip button
             HStack {
                 Spacer()
-                Button("Überspringen") {
+                Button(isEn ? "Skip" : "Überspringen") {
                     hasSeenWalkthrough = true
                 }
                 .font(.appSubheadlineMedium)
@@ -97,7 +102,7 @@ struct FeatureWalkthroughView: View {
                     hasSeenWalkthrough = true
                 }
             } label: {
-                Text(currentPage < pages.count - 1 ? "Weiter" : "Los geht's")
+                Text(currentPage < pages.count - 1 ? (isEn ? "Next" : "Weiter") : (isEn ? "Let's go!" : "Los geht's"))
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
             }

@@ -5,6 +5,7 @@ struct WissenCardView: View {
     let isLbp: Bool
     let isNeck: Bool
     let isTension: Bool
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     init(phase: Int, isLbp: Bool, isNeck: Bool = false, isTension: Bool = false) {
         self.phase = phase
@@ -42,7 +43,7 @@ struct WissenCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
                             .accessibilityHidden(true)
 
-                        Text("WISSEN")
+                        Text(appLanguage == "en" ? "KNOWLEDGE" : "WISSEN")
                             .font(.appCaption2)
                             .tracking(1.2)
                             .foregroundStyle(.textSecondary)
@@ -58,7 +59,7 @@ struct WissenCardView: View {
                                 .frame(width: i == activeIndex ? 14 : 5, height: 3)
                         }
                     }
-                    .accessibilityLabel("Karte \(activeIndex + 1) von \(phaseCards.count)")
+                    .accessibilityLabel(appLanguage == "en" ? "Card \(activeIndex + 1) of \(phaseCards.count)" : "Karte \(activeIndex + 1) von \(phaseCards.count)")
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -86,7 +87,7 @@ struct WissenCardView: View {
                             .lineSpacing(3)
 
                         if let source = card.source {
-                            Text("Quelle: \(source)")
+                            Text(appLanguage == "en" ? "Source: \(source)" : "Quelle: \(source)")
                                 .font(.appCaption2)
                                 .foregroundStyle(.textSecondary.opacity(0.7))
                                 .padding(.top, 2)

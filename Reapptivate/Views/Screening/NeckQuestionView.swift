@@ -9,6 +9,8 @@ struct NeckQuestionView: View {
     let selectedValue: Int?
     let onSelect: (Int) -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var body: some View {
         VStack(spacing: 24) {
             // Question text

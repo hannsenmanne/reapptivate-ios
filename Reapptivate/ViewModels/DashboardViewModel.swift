@@ -7,6 +7,18 @@ enum DashboardTab: String, CaseIterable {
     case progress = "Fortschritt"
     case insights = "Analyse"
     case messages = "Nachrichten"
+
+    var displayName: String {
+        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        switch self {
+        case .overview: return isEn ? "Overview" : "Übersicht"
+        case .program: return isEn ? "Program" : "Programm"
+        case .edukation: return isEn ? "Education" : "Edukation"
+        case .progress: return isEn ? "Progress" : "Fortschritt"
+        case .insights: return isEn ? "Insights" : "Analyse"
+        case .messages: return isEn ? "Messages" : "Nachrichten"
+        }
+    }
 }
 
 @Observable

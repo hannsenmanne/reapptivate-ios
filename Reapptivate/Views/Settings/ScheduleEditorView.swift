@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ScheduleEditorView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @AppStorage("reminderTimeHour") private var savedHour: Int = 9
     @AppStorage("reminderTimeMinute") private var savedMinute: Int = 0
@@ -13,15 +14,18 @@ struct ScheduleEditorView: View {
     @State private var showSaved = false
     @State private var showError = false
 
-    private let dayNames = [
-        (2, "Montag"), (3, "Dienstag"), (4, "Mittwoch"),
-        (5, "Donnerstag"), (6, "Freitag"), (7, "Samstag"), (1, "Sonntag")
-    ]
-
     var body: some View {
+        let isEn = appLanguage == "en"
+
+        let dayNames: [(Int, String)] = isEn
+            ? [(2, "Monday"), (3, "Tuesday"), (4, "Wednesday"),
+               (5, "Thursday"), (6, "Friday"), (7, "Saturday"), (1, "Sunday")]
+            : [(2, "Montag"), (3, "Dienstag"), (4, "Mittwoch"),
+               (5, "Donnerstag"), (6, "Freitag"), (7, "Samstag"), (1, "Sonntag")]
+
         List {
             // Day selection
-            Section("Trainingstage") {
+            Section(isEn ? "Training Days" : "Trainingstage") {
                 ForEach(dayNames, id: \.0) { dayNum, dayName in
                     Button {
                         if selectedDays.contains(dayNum) {
@@ -44,8 +48,8 @@ struct ScheduleEditorView: View {
             }
 
             // Time
-            Section("Erinnerungszeit") {
-                DatePicker("Uhrzeit", selection: $reminderTime, displayedComponents: .hourAndMinute)
+            Section(isEn ? "Reminder Time" : "Erinnerungszeit") {
+                DatePicker(isEn ? "Time" : "Uhrzeit", selection: $reminderTime, displayedComponents: .hourAndMinute)
             }
 
             // Validation message
@@ -54,7 +58,7 @@ struct ScheduleEditorView: View {
                     HStack {
                         Image(systemName: "info.circle")
                             .foregroundStyle(.textSecondary)
-                        Text("Wählen Sie mindestens einen Trainingstag aus.")
+                        Text(isEn ? "Please select at least one training day." : "Wählen Sie mindestens einen Trainingstag aus.")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -69,15 +73,15 @@ struct ScheduleEditorView: View {
                     HStack {
                         Spacer()
                         if isSaving {
-                            ProgressView("Speichern...")
+                            ProgressView(isEn ? "Saving..." : "Speichern...")
                         } else if showSaved {
-                            Label("Gespeichert", systemImage: "checkmark")
+                            Label(isEn ? "Saved" : "Gespeichert", systemImage: "checkmark")
                                 .foregroundStyle(.painGreen)
                         } else if showError {
-                            Label("Fehlgeschlagen", systemImage: "exclamationmark.triangle")
+                            Label(isEn ? "Failed" : "Fehlgeschlagen", systemImage: "exclamationmark.triangle")
                                 .foregroundStyle(.painRed)
                         } else {
-                            Text("Speichern")
+                            Text(isEn ? "Save" : "Speichern")
                         }
                         Spacer()
                     }
@@ -85,7 +89,7 @@ struct ScheduleEditorView: View {
                 .disabled(isSaving || selectedDays.isEmpty)
             }
         }
-        .navigationTitle("Trainingsplan")
+        .navigationTitle(isEn ? "Training Schedule" : "Trainingsplan")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             // Restore persisted reminder time

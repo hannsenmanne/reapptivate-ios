@@ -5,6 +5,7 @@ struct SmartDayView: View {
     let completedCount: Int
     let totalCount: Int
     let onNavigateToProgram: (() -> Void)?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(spacing: 20) {
@@ -34,8 +35,8 @@ struct SmartDayView: View {
             } else {
                 EmptyStateView(
                     icon: "sun.max",
-                    title: "Tagesplan wird geladen",
-                    message: "Ihr personalisierter Tagesplan wird erstellt."
+                    title: appLanguage == "en" ? "Loading daily plan" : "Tagesplan wird geladen",
+                    message: appLanguage == "en" ? "Your personalized daily plan is being created." : "Ihr personalisierter Tagesplan wird erstellt."
                 )
             }
         }
@@ -52,7 +53,9 @@ struct SmartDayView: View {
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
 
-                Text(data.isTrainingDay ? "Trainingstag" : "Ruhetag")
+                Text(data.isTrainingDay
+                    ? (appLanguage == "en" ? "Training Day" : "Trainingstag")
+                    : (appLanguage == "en" ? "Rest Day" : "Ruhetag"))
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
@@ -80,7 +83,7 @@ struct SmartDayView: View {
                         Text("\(acl.weeksPostSurgery)")
                             .font(.appTitle2)
                             .foregroundStyle(.accent)
-                        Text("Wochen post-OP")
+                        Text(appLanguage == "en" ? "Weeks post-op" : "Wochen post-OP")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -89,7 +92,7 @@ struct SmartDayView: View {
                         Text("M\(acl.currentMilestone)")
                             .font(.appTitle2)
                             .foregroundStyle(.accent)
-                        Text("Meilenstein")
+                        Text(appLanguage == "en" ? "Milestone" : "Meilenstein")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -114,12 +117,12 @@ struct SmartDayView: View {
 
     private func trainingDayContent(_ data: SmartDayResponse) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Empfohlene Reihenfolge")
+            Text(appLanguage == "en" ? "Recommended Order" : "Empfohlene Reihenfolge")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
             if data.exerciseOrder.isEmpty {
-                Text("Keine Übungen für heute geplant.")
+                Text(appLanguage == "en" ? "No exercises planned for today." : "Keine Übungen für heute geplant.")
                     .font(.appBody)
                     .foregroundStyle(.textSecondary)
             } else {
@@ -151,11 +154,13 @@ struct SmartDayView: View {
                 .foregroundStyle(.accent)
                 .accessibilityHidden(true)
 
-            Text("Erholungstag")
+            Text(appLanguage == "en" ? "Recovery Day" : "Erholungstag")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
-            Text("Heute ist ein guter Tag zur Erholung. Nutze die Zeit für leichte Bewegung oder Entspannung.")
+            Text(appLanguage == "en"
+                ? "Today is a good day for recovery. Use the time for light movement or relaxation."
+                : "Heute ist ein guter Tag zur Erholung. Nutze die Zeit für leichte Bewegung oder Entspannung.")
                 .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -179,7 +184,7 @@ struct SmartDayView: View {
                     Text("\(streak.current)")
                         .font(.appTitle2)
                         .foregroundStyle(.textPrimary)
-                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    Text(appLanguage == "en"
                         ? "\(streak.current == 1 ? "day" : "days") streak"
                         : (streak.current == 1 ? "Tag Streak" : "Tage Streak"))
                         .font(.appSubheadline)
@@ -192,7 +197,7 @@ struct SmartDayView: View {
                             .font(.appCaption2)
                             .foregroundStyle(Color.painAmber)
                             .accessibilityHidden(true)
-                        Text("Rekord: \(streak.longest)")
+                        Text(appLanguage == "en" ? "Record: \(streak.longest)" : "Rekord: \(streak.longest)")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -203,7 +208,7 @@ struct SmartDayView: View {
         }
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityLabel(appLanguage == "en"
             ? "Streak: \(streak.current) \(streak.current == 1 ? "day" : "days"), record: \(streak.longest)"
             : "Streak: \(streak.current) \(streak.current == 1 ? "Tag" : "Tage"), Rekord: \(streak.longest)")
     }
@@ -214,7 +219,7 @@ struct SmartDayView: View {
                 Image(systemName: "lightbulb.fill")
                     .foregroundStyle(.yellow)
                     .accessibilityHidden(true)
-                Text("Empfohlene Lektüre")
+                Text(appLanguage == "en" ? "Recommended Reading" : "Empfohlene Lektüre")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
             }
@@ -234,16 +239,23 @@ struct SmartDayView: View {
     }
 
     private func educationSuggestionTitle(for id: String) -> String {
+        let isEn = appLanguage == "en"
         // Phase intro patterns: phase_1_intro, phase_2_intro, phase_3_intro
         if let match = id.wholeMatch(of: /phase_(\d+)_intro/) {
-            return "Einführung in Phase \(match.1)"
+            return isEn ? "Introduction to Phase \(match.1)" : "Einführung in Phase \(match.1)"
         }
 
-        let titles: [String: String] = [
-            "motivation_adherence": "Motivation & Durchhalten",
-            "exposure_principles": "Prinzipien der Exposition",
-            "pacing_strategies": "Pacing-Strategien",
-        ]
+        let titles: [String: String] = isEn
+            ? [
+                "motivation_adherence": "Motivation & Adherence",
+                "exposure_principles": "Exposure Principles",
+                "pacing_strategies": "Pacing Strategies",
+            ]
+            : [
+                "motivation_adherence": "Motivation & Durchhalten",
+                "exposure_principles": "Prinzipien der Exposition",
+                "pacing_strategies": "Pacing-Strategien",
+            ]
 
         return titles[id] ?? id.replacingOccurrences(of: "_", with: " ").capitalized
     }

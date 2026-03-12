@@ -2,7 +2,10 @@ import SwiftUI
 
 struct NeckMicroModulesView: View {
     @Environment(APIClient.self) private var apiClient
+    @Environment(LanguageManager.self) private var languageManager
     let severity: NdiSeverityGrade
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var modules: [MicroModule] = []
     @State private var completedKeys: Set<String> = []
@@ -24,7 +27,7 @@ struct NeckMicroModulesView: View {
                     .font(.appTitle3)
                     .foregroundStyle(Color.severityColor(for: severity))
                     .accessibilityHidden(true)
-                Text("Nacken-Wissen")
+                Text(appLanguage == "en" ? "Neck Knowledge" : "Nacken-Wissen")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -34,7 +37,7 @@ struct NeckMicroModulesView: View {
             if !modules.isEmpty {
                 VStack(spacing: 6) {
                     HStack {
-                        Text("Fortschritt")
+                        Text(appLanguage == "en" ? "Progress" : "Fortschritt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
@@ -44,8 +47,8 @@ struct NeckMicroModulesView: View {
                     }
                     ProgressView(value: Double(completedCount), total: max(1, Double(modules.count)))
                         .tint(Color.severityColor(for: severity))
-                        .accessibilityLabel("Modulfortschritt")
-                        .accessibilityValue("\(completedCount) von \(modules.count) abgeschlossen")
+                        .accessibilityLabel(appLanguage == "en" ? "Module progress" : "Modulfortschritt")
+                        .accessibilityValue(appLanguage == "en" ? "\(completedCount) of \(modules.count) completed" : "\(completedCount) von \(modules.count) abgeschlossen")
                 }
                 .padding(12)
                 .background(Color.severityColor(for: severity).opacity(0.06))
@@ -63,7 +66,7 @@ struct NeckMicroModulesView: View {
             }
 
             if isLoading {
-                ProgressView("Nacken-Module laden...")
+                ProgressView(appLanguage == "en" ? "Loading neck modules..." : "Nacken-Module laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -74,7 +77,7 @@ struct NeckMicroModulesView: View {
                     }
                 )
             } else if modules.isEmpty {
-                Text("Keine Module verfügbar")
+                Text(appLanguage == "en" ? "No modules available" : "Keine Module verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -92,6 +95,11 @@ struct NeckMicroModulesView: View {
         .conditionalHaptic(.success, trigger: markReadTrigger)
         .task {
             await loadModules()
+        }
+        .onChange(of: languageManager.language) { _, _ in
+            modules = []
+            completedKeys = []
+            Task { await loadModules() }
         }
     }
 
@@ -111,7 +119,7 @@ struct NeckMicroModulesView: View {
             }
             completedKeys = Set(loadedCompleted.completedModules ?? [])
         } catch {
-            errorMessage = "Module konnten nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load modules." : "Module konnten nicht geladen werden."
         }
         isLoading = false
     }
@@ -125,7 +133,7 @@ struct NeckMicroModulesView: View {
             completedKeys.insert(key)
             markReadTrigger.toggle()
         } catch {
-            markReadError = "Fehler beim Speichern. Bitte erneut versuchen."
+            markReadError = appLanguage == "en" ? "Error saving. Please try again." : "Fehler beim Speichern. Bitte erneut versuchen."
         }
         markingKey = nil
     }
@@ -139,6 +147,7 @@ struct NeckModuleCard: View {
     let isMarking: Bool
     let onMarkRead: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isExpanded = false
 
     var body: some View {
@@ -168,7 +177,7 @@ struct NeckModuleCard: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.painGreen)
                             .font(.appCaption)
-                            .accessibilityLabel("Abgeschlossen")
+                            .accessibilityLabel(appLanguage == "en" ? "Completed" : "Abgeschlossen")
                     }
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
@@ -211,7 +220,7 @@ struct NeckModuleCard: View {
                                     ProgressView().controlSize(.small).tint(.white)
                                 } else {
                                     Image(systemName: "checkmark")
-                                    Text("Gelesen")
+                                    Text(appLanguage == "en" ? "Read" : "Gelesen")
                                 }
                             }
                             .font(.outfit(.semibold, size: 12))

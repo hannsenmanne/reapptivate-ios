@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NdiProgressView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var history: [NdiHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
@@ -18,14 +19,14 @@ struct NdiProgressView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                     .accessibilityHidden(true)
-                Text("NDI-Verlauf")
+                Text(appLanguage == "en" ? "NDI Progress" : "NDI-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("NDI-Verlauf laden...")
+                ProgressView(appLanguage == "en" ? "Loading NDI progress..." : "NDI-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -36,7 +37,7 @@ struct NdiProgressView: View {
                     }
                 )
             } else if history.isEmpty {
-                Text("Noch keine Screening-Daten")
+                Text(appLanguage == "en" ? "No screening data yet" : "Noch keine Screening-Daten")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -59,7 +60,7 @@ struct NdiProgressView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Rescreening durchführen")
+                        Text(appLanguage == "en" ? "Perform rescreening" : "Rescreening durchführen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
@@ -86,7 +87,7 @@ struct NdiProgressView: View {
             let response: NeckHistoryResponse = try await apiClient.request(APIEndpoints.neckHistory())
             history = response.history
         } catch {
-            errorMessage = "NDI-Verlauf konnte nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load NDI progress." : "NDI-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
     }
@@ -96,6 +97,7 @@ struct NdiProgressView: View {
 
 private struct NdiHistoryRow: View {
     let entry: NdiHistoryEntry
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
 
     var body: some View {
@@ -109,7 +111,7 @@ private struct NdiHistoryRow: View {
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
                 }
-                .accessibilityLabel("NDI-Score \(entry.ndiScore)")
+                .accessibilityLabel(appLanguage == "en" ? "NDI score \(entry.ndiScore)" : "NDI-Score \(entry.ndiScore)")
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("NDI: \(entry.ndiScore)/50")
@@ -123,7 +125,7 @@ private struct NdiHistoryRow: View {
             Spacer()
 
             if let date = entry.createdAtDate {
-                Text(date.formattedGerman)
+                Text(date.formattedLocalizedLong)
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -176,6 +178,6 @@ struct NdiSparkline: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("NDI-Verlaufsdiagramm")
+        .accessibilityLabel("NDI progress chart")
     }
 }

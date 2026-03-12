@@ -24,6 +24,7 @@ final class AclDailyKpiViewModel {
     var isLoadingHistory = false
 
     private let apiClient: APIClient
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
 
     init(apiClient: APIClient) {
         self.apiClient = apiClient
@@ -49,7 +50,7 @@ final class AclDailyKpiViewModel {
 
     func submit() async -> Bool {
         guard isValid else {
-            errorMessage = "Bitte überprüfen Sie Ihre Eingaben."
+            errorMessage = isEn ? "Please check your entries." : "Bitte überprüfen Sie Ihre Eingaben."
             return false
         }
 
@@ -81,7 +82,7 @@ final class AclDailyKpiViewModel {
             isSubmitting = false
             return false
         } catch {
-            errorMessage = "Speichern fehlgeschlagen."
+            errorMessage = isEn ? "Save failed." : "Speichern fehlgeschlagen."
             isSubmitting = false
             return false
         }
@@ -101,7 +102,7 @@ final class AclDailyKpiViewModel {
                 .sorted { $0.date > $1.date }
             isLoadingHistory = false
         } catch {
-            errorMessage = "Tages-KPIs konnten nicht geladen werden."
+            errorMessage = isEn ? "Could not load daily KPIs." : "Tages-KPIs konnten nicht geladen werden."
             isLoadingHistory = false
         }
     }

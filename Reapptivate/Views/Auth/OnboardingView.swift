@@ -2,6 +2,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(AppState.self) private var appState
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @Bindable var viewModel: AuthViewModel
 
     @FocusState private var focusedField: Field?
@@ -11,16 +12,17 @@ struct OnboardingView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
         ScrollView {
             VStack(spacing: 24) {
                 // Header
                 VStack(spacing: 8) {
-                    Text("Konto erstellen")
+                    Text(isEn ? "Create account" : "Konto erstellen")
                         .font(.appTitle)
                         .foregroundStyle(.textPrimary)
 
                     if let details = viewModel.invitationDetails {
-                        Text("Willkommen, \(details.patientName)!")
+                        Text(isEn ? "Welcome, \(details.patientName)!" : "Willkommen, \(details.patientName)!")
                             .font(.appBody)
                             .foregroundStyle(.textSecondary)
 
@@ -36,8 +38,8 @@ struct OnboardingView: View {
                 // Form
                 VStack(spacing: 16) {
                     // Email
-                    FormField(label: "E-Mail") {
-                        TextField("ihre@email.de", text: $viewModel.onboardingEmail)
+                    FormField(label: isEn ? "Email" : "E-Mail") {
+                        TextField(isEn ? "your@email.com" : "ihre@email.de", text: $viewModel.onboardingEmail)
                             .inputFieldStyle()
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
@@ -49,8 +51,8 @@ struct OnboardingView: View {
                     }
 
                     // Password
-                    FormField(label: "Passwort", hint: "Mindestens 8 Zeichen") {
-                        SecureField("Passwort", text: $viewModel.onboardingPassword)
+                    FormField(label: isEn ? "Password" : "Passwort", hint: isEn ? "At least 8 characters" : "Mindestens 8 Zeichen") {
+                        SecureField(isEn ? "Password" : "Passwort", text: $viewModel.onboardingPassword)
                             .inputFieldStyle()
                             .textContentType(.newPassword)
                             .focused($focusedField, equals: .password)
@@ -59,8 +61,8 @@ struct OnboardingView: View {
                     }
 
                     // Confirm Password
-                    FormField(label: "Passwort bestätigen") {
-                        SecureField("Passwort bestätigen", text: $viewModel.onboardingPasswordConfirm)
+                    FormField(label: isEn ? "Confirm password" : "Passwort bestätigen") {
+                        SecureField(isEn ? "Confirm password" : "Passwort bestätigen", text: $viewModel.onboardingPasswordConfirm)
                             .inputFieldStyle()
                             .textContentType(.newPassword)
                             .focused($focusedField, equals: .confirm)
@@ -69,14 +71,14 @@ struct OnboardingView: View {
                     }
 
                     if !viewModel.onboardingPassword.isEmpty && !viewModel.onboardingPasswordConfirm.isEmpty && !viewModel.onboardingPasswordsMatch {
-                        Text("Passwörter stimmen nicht überein")
+                        Text(isEn ? "Passwords do not match" : "Passwörter stimmen nicht überein")
                             .font(.appCaption)
                             .foregroundStyle(.painRed)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
                     // Phone (optional)
-                    FormField(label: "Telefon (optional)") {
+                    FormField(label: isEn ? "Phone (optional)" : "Telefon (optional)") {
                         TextField("+49...", text: $viewModel.onboardingPhone)
                             .inputFieldStyle()
                             .textContentType(.telephoneNumber)
@@ -85,7 +87,7 @@ struct OnboardingView: View {
                             .toolbar {
                                 ToolbarItemGroup(placement: .keyboard) {
                                     Spacer()
-                                    Button("Fertig") {
+                                    Button(isEn ? "Done" : "Fertig") {
                                         focusedField = nil
                                     }
                                     .font(.appSubheadlineMedium)
@@ -95,15 +97,15 @@ struct OnboardingView: View {
                     }
 
                     // Start Date
-                    FormField(label: "Trainingsstart") {
+                    FormField(label: isEn ? "Training start" : "Trainingsstart") {
                         DatePicker(
-                            "Startdatum",
+                            isEn ? "Start date" : "Startdatum",
                             selection: $viewModel.onboardingStartDate,
                             displayedComponents: .date
                         )
                         .datePickerStyle(.compact)
                         .labelsHidden()
-                        .environment(\.locale, Locale(identifier: "de_DE"))
+                        .environment(\.locale, Locale(identifier: isEn ? "en_US" : "de_DE"))
                     }
                 }
 
@@ -123,7 +125,7 @@ struct OnboardingView: View {
                         if viewModel.isOnboarding {
                             ProgressView().tint(.white)
                         } else {
-                            Text("Registrieren")
+                            Text(isEn ? "Register" : "Registrieren")
                         }
                     }
                     .frame(maxWidth: .infinity)

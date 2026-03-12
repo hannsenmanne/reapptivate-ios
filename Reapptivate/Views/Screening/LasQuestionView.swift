@@ -9,6 +9,8 @@ struct LasQuestionView: View {
     let selectedValue: Int?
     let onSelect: (Int) -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var body: some View {
         VStack(spacing: 24) {
             Text(isEnglishLocale ? item.textEn ?? item.textDe : item.textDe)

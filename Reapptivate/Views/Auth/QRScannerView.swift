@@ -3,12 +3,14 @@ import SwiftUI
 
 struct QRScannerView: View {
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let onCodeScanned: (String) -> Void
 
     @State private var cameraPermissionGranted = false
     @State private var showPermissionDenied = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
         NavigationStack {
             ZStack {
                 if cameraPermissionGranted {
@@ -26,7 +28,7 @@ struct QRScannerView: View {
                             .stroke(Color.white, lineWidth: 3)
                             .frame(width: 250, height: 250)
 
-                        Text("QR-Code in den Rahmen halten")
+                        Text(isEn ? "Hold QR code in the frame" : "QR-Code in den Rahmen halten")
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.white)
                             .padding(.top, 16)
@@ -39,16 +41,16 @@ struct QRScannerView: View {
                             .font(.system(size: 48))
                             .foregroundStyle(.textSecondary)
 
-                        Text("Kamerazugriff erforderlich")
+                        Text(isEn ? "Camera access required" : "Kamerazugriff erforderlich")
                             .font(.appTitle3)
 
-                        Text("Bitte erlauben Sie den Kamerazugriff in den Einstellungen, um QR-Codes zu scannen.")
+                        Text(isEn ? "Please allow camera access in Settings to scan QR codes." : "Bitte erlauben Sie den Kamerazugriff in den Einstellungen, um QR-Codes zu scannen.")
                             .font(.appBody)
                             .foregroundStyle(.textSecondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 32)
 
-                        Button("Einstellungen öffnen") {
+                        Button(isEn ? "Open Settings" : "Einstellungen öffnen") {
                             if let url = URL(string: UIApplication.openSettingsURLString) {
                                 UIApplication.shared.open(url)
                             }
@@ -57,15 +59,15 @@ struct QRScannerView: View {
                         .padding(.horizontal, 24)
                     }
                 } else {
-                    ProgressView("Kamera wird geladen...")
+                    ProgressView(isEn ? "Loading camera..." : "Kamera wird geladen...")
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(isEn ? "Cancel" : "Abbrechen") { dismiss() }
                 }
             }
-            .navigationTitle("QR-Code scannen")
+            .navigationTitle(isEn ? "Scan QR code" : "QR-Code scannen")
             .navigationBarTitleDisplayMode(.inline)
         }
         .task {

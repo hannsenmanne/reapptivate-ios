@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AboutView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
     }
@@ -10,6 +12,8 @@ struct AboutView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ScrollView {
             VStack(spacing: 20) {
                 // Brand
@@ -34,11 +38,13 @@ struct AboutView: View {
 
                 // Description
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Über die App")
+                    Text(isEn ? "About the App" : "Über die App")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
-                    Text("Reapptivate ist eine evidenzbasierte Physiotherapie-App, die individuelle Trainingsprogramme für verschiedene muskuloskelettale Beschwerden bietet. Die App passt sich adaptiv an Ihren Fortschritt und Schmerzlevel an.")
+                    Text(isEn
+                        ? "Reapptivate is an evidence-based physiotherapy app that provides individualized training programs for various musculoskeletal conditions. The app adapts to your progress and pain level."
+                        : "Reapptivate ist eine evidenzbasierte Physiotherapie-App, die individuelle Trainingsprogramme für verschiedene muskuloskelettale Beschwerden bietet. Die App passt sich adaptiv an Ihren Fortschritt und Schmerzlevel an.")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }
@@ -47,27 +53,27 @@ struct AboutView: View {
 
                 // Credits
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Entwicklung")
+                    Text(isEn ? "Development" : "Entwicklung")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
-                    CreditRow(icon: "person.fill", label: "Konzept & Entwicklung", value: "Marc Toschew")
-                    CreditRow(icon: "stethoscope", label: "Fachliche Beratung", value: "Physiotherapie-Team")
-                    CreditRow(icon: "graduationcap.fill", label: "Evidenzbasis", value: "Aktuelle Leitlinien")
+                    CreditRow(icon: "person.fill", label: isEn ? "Concept & Development" : "Konzept & Entwicklung", value: "Marc Toschew")
+                    CreditRow(icon: "stethoscope", label: isEn ? "Clinical Advisor" : "Fachliche Beratung", value: isEn ? "Physiotherapy Team" : "Physiotherapie-Team")
+                    CreditRow(icon: "graduationcap.fill", label: isEn ? "Evidence Base" : "Evidenzbasis", value: isEn ? "Current Guidelines" : "Aktuelle Leitlinien")
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .cardStyle()
 
                 // Technology
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Technologie")
+                    Text(isEn ? "Technology" : "Technologie")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
                     TechRow(label: "Platform", value: "iOS 17+")
                     TechRow(label: "Framework", value: "SwiftUI")
-                    TechRow(label: "Sprache", value: "Swift 6.0")
-                    TechRow(label: "Architektur", value: "MVVM + @Observable")
+                    TechRow(label: isEn ? "Language" : "Sprache", value: "Swift 6.0")
+                    TechRow(label: isEn ? "Architecture" : "Architektur", value: "MVVM + @Observable")
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .cardStyle()
@@ -75,7 +81,7 @@ struct AboutView: View {
             .padding(16)
         }
         .background(Color.appBg)
-        .navigationTitle("Über die App")
+        .navigationTitle(isEn ? "About the App" : "Über die App")
         .navigationBarTitleDisplayMode(.inline)
     }
 

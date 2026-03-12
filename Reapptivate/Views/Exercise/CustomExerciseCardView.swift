@@ -6,8 +6,11 @@ struct CustomExerciseCardView: View {
     let isCompleted: Bool
     let onTap: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .body) private var thumbnailSize: CGFloat = 56
     @State private var videoThumbnail: UIImage?
+
+    private var isEn: Bool { appLanguage == "en" }
 
     private let videoStore = ExerciseVideoStore.shared
 
@@ -55,7 +58,7 @@ struct CustomExerciseCardView: View {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.painGreen)
                         .font(.appTitle2)
-                        .accessibilityLabel("Abgeschlossen")
+                        .accessibilityLabel(isEn ? "Completed" : "Abgeschlossen")
                 } else {
                     Image(systemName: "play.circle.fill")
                         .foregroundStyle(.blue)
@@ -100,9 +103,9 @@ struct CustomExerciseCardView: View {
         var parts: [String] = []
         parts.append("\(exercise.sets) × \(exercise.reps)")
         if let pauseSeconds = exercise.pauseSeconds, pauseSeconds > 0 {
-            parts.append("\(pauseSeconds)s Pause")
+            parts.append(isEn ? "\(pauseSeconds)s Rest" : "\(pauseSeconds)s Pause")
         }
-        parts.append("Therapeuten-Übung")
+        parts.append(isEn ? "Therapist Exercise" : "Therapeuten-Übung")
         return parts.joined(separator: " · ")
     }
 }

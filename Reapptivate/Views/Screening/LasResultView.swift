@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct LasResultView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let result: LasScreeningResult
     let onContinue: () -> Void
 
@@ -9,6 +10,8 @@ struct LasResultView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ScrollView {
             VStack(spacing: 24) {
                 // Score display
@@ -38,7 +41,7 @@ struct LasResultView: View {
 
                 // Severity description
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ihre Einstufung")
+                    Text(isEn ? "Your Classification" : "Ihre Einstufung")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
@@ -53,7 +56,7 @@ struct LasResultView: View {
                 Button {
                     onContinue()
                 } label: {
-                    Text("Weiter zum Dashboard")
+                    Text(isEn ? "Continue to Dashboard" : "Weiter zum Dashboard")
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
@@ -65,13 +68,14 @@ struct LasResultView: View {
     }
 
     var severityDescription: String {
+        let isEn = appLanguage == "en"
         switch severity {
         case .LEICHT:
-            "Gute Sprunggelenksstabilität (CAIT \u{2265}24). Ihr Programm startet direkt in Phase 2 mit früher Mobilisation und Kräftigung."
+            return isEn ? "Good ankle stability (CAIT \u{2265}24). Your program starts directly in Phase 2 with early mobilization and strengthening." : "Gute Sprunggelenksstabilität (CAIT \u{2265}24). Ihr Programm startet direkt in Phase 2 mit früher Mobilisation und Kräftigung."
         case .MITTEL:
-            "Mäßige Instabilität (CAIT 12-23). Ihr Programm beginnt in Phase 1 mit Schutz, Entstauung und schmerzfreier Mobilisation."
+            return isEn ? "Moderate instability (CAIT 12-23). Your program begins in Phase 1 with protection, reduction of swelling, and pain-free mobilization." : "Mäßige Instabilität (CAIT 12-23). Ihr Programm beginnt in Phase 1 mit Schutz, Entstauung und schmerzfreier Mobilisation."
         case .SCHWER, .unknown:
-            "Chronische Instabilität (CAIT \u{2264}11). Ihr Programm beginnt sehr sanft in Phase 1 nach dem PEACE & LOVE-Protokoll."
+            return isEn ? "Chronic instability (CAIT \u{2264}11). Your program starts very gently in Phase 1 following the PEACE & LOVE protocol." : "Chronische Instabilität (CAIT \u{2264}11). Ihr Programm beginnt sehr sanft in Phase 1 nach dem PEACE & LOVE-Protokoll."
         }
     }
 }

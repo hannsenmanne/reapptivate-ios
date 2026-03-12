@@ -4,6 +4,7 @@ struct PainSliderView: View {
     @Binding var painLevel: Int
     let maxPainLevel: Int
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var thumbScale: CGFloat = 1.0
     @State private var numberScale: CGFloat = 1.0
     @State private var dragHapticTrigger = false
@@ -11,9 +12,11 @@ struct PainSliderView: View {
     @State private var numberAnimationTask: Task<Void, Never>?
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 16) {
             // Threshold indicator
-            Text("Für Ihr Profil empfohlen: max. \(maxPainLevel)/10")
+            Text(isEn ? "Recommended for your profile: max. \(maxPainLevel)/10" : "Für Ihr Profil empfohlen: max. \(maxPainLevel)/10")
                 .font(.appCaption)
                 .foregroundStyle(.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -109,26 +112,26 @@ struct PainSliderView: View {
 
             // Scale labels
             HStack {
-                Text("0 (kein Schmerz)")
+                Text(isEn ? "0 (no pain)" : "0 (kein Schmerz)")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                 Spacer()
-                Text("10 (stärkster)")
+                Text(isEn ? "10 (worst)" : "10 (stärkster)")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
             }
 
             // Feedback text
-            Text(feedbackText)
+            Text(feedbackText(isEn: isEn))
                 .font(.appSubheadlineMedium)
                 .foregroundStyle(painColor)
                 .frame(maxWidth: .infinity, alignment: .center)
         }
         .conditionalHaptic(.impact(weight: .light), trigger: dragHapticTrigger)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Schmerzskala")
-        .accessibilityValue("\(painLevel) von 10")
-        .accessibilityHint("Wischen Sie nach oben oder unten, um den Wert zu ändern")
+        .accessibilityLabel(isEn ? "Pain scale" : "Schmerzskala")
+        .accessibilityValue(isEn ? "\(painLevel) of 10" : "\(painLevel) von 10")
+        .accessibilityHint(isEn ? "Swipe up or down to change the value" : "Wischen Sie nach oben oder unten, um den Wert zu ändern")
         .accessibilityAdjustableAction { direction in
             switch direction {
             case .increment:
@@ -145,13 +148,13 @@ struct PainSliderView: View {
         Color.painColor(for: painLevel, maxPainLevel: maxPainLevel)
     }
 
-    var feedbackText: String {
+    func feedbackText(isEn: Bool) -> String {
         if painLevel <= maxPainLevel {
-            "Im empfohlenen Bereich"
+            isEn ? "Within recommended range" : "Im empfohlenen Bereich"
         } else if painLevel <= maxPainLevel + 1 {
-            "Leicht über Empfehlung"
+            isEn ? "Slightly above recommendation" : "Leicht über Empfehlung"
         } else {
-            "Deutlich über Empfehlung — bitte aufpassen"
+            isEn ? "Significantly above recommendation — please be careful" : "Deutlich über Empfehlung — bitte aufpassen"
         }
     }
 }

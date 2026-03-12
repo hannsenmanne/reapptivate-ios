@@ -12,6 +12,7 @@ struct AclTodayProgramView: View {
     @State private var viewModel: AclTodayProgramViewModel?
     @State private var completionHaptic = false
     @State private var selectedExercise: AclStreamExercise?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         NavigationStack {
@@ -29,11 +30,11 @@ struct AclTodayProgramView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle("Heutiges Programm")
+            .navigationTitle(appLanguage == "en" ? "Today's Program" : "Heutiges Programm")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Fertig") {
+                    Button(appLanguage == "en" ? "Done" : "Fertig") {
                         onComplete()
                         dismiss()
                     }
@@ -59,7 +60,7 @@ struct AclTodayProgramView: View {
                 )
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Fertig") { selectedExercise = nil }
+                        Button(appLanguage == "en" ? "Done" : "Fertig") { selectedExercise = nil }
                     }
                 }
             }
@@ -153,7 +154,7 @@ struct AclTodayProgramView: View {
                     Text(dayLabel)
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
-                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    Text(appLanguage == "en"
                         ? "\(vm.completedCount)/\(vm.totalCount) exercises completed"
                         : "\(vm.completedCount)/\(vm.totalCount) Übungen erledigt")
                         .font(.appCaption)
@@ -169,7 +170,7 @@ struct AclTodayProgramView: View {
                 } else {
                     let remaining = vm.totalCount - vm.completedCount
                     let minutes = remaining * 5
-                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    Text(appLanguage == "en"
                         ? "approx. \(minutes) min"
                         : "ca. \(minutes) Min.")
                         .font(.appCaption)
@@ -195,7 +196,7 @@ struct AclTodayProgramView: View {
             .frame(height: 4)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Fortschritt")
-            .accessibilityValue(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            .accessibilityValue(appLanguage == "en"
                 ? "\(vm.completedCount) of \(vm.totalCount) exercises completed"
                 : "\(vm.completedCount) von \(vm.totalCount) Übungen erledigt")
         }

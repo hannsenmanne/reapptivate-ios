@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct FsResultView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let result: FsScreeningResult
     let onContinue: () -> Void
 
@@ -9,6 +10,8 @@ struct FsResultView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ScrollView {
             VStack(spacing: 24) {
                 // Score display
@@ -38,7 +41,7 @@ struct FsResultView: View {
 
                 // Severity description
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ihre Einstufung")
+                    Text(isEn ? "Your Classification" : "Ihre Einstufung")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
@@ -53,7 +56,7 @@ struct FsResultView: View {
                 Button {
                     onContinue()
                 } label: {
-                    Text("Weiter zum Dashboard")
+                    Text(isEn ? "Continue to Dashboard" : "Weiter zum Dashboard")
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }
@@ -65,13 +68,14 @@ struct FsResultView: View {
     }
 
     var severityDescription: String {
+        let isEn = appLanguage == "en"
         switch severity {
         case .LEICHT:
-            "Leichte Einschränkung (Auftauphase). Ihr Programm startet in Phase 2 mit intensiver Kapsel-Dehnung und Bewegungsumfang-Erweiterung."
+            return isEn ? "Mild limitation (thawing phase). Your program starts in Phase 2 with intensive capsule stretching and range-of-motion expansion." : "Leichte Einschränkung (Auftauphase). Ihr Programm startet in Phase 2 mit intensiver Kapsel-Dehnung und Bewegungsumfang-Erweiterung."
         case .MITTEL:
-            "Moderate Einschränkung (Eingefroren-Phase). Ihr Programm beginnt in Phase 1 mit sanfter Mobilisation und Schmerzmanagement."
+            return isEn ? "Moderate limitation (frozen phase). Your program begins in Phase 1 with gentle mobilization and pain management." : "Moderate Einschränkung (Eingefroren-Phase). Ihr Programm beginnt in Phase 1 mit sanfter Mobilisation und Schmerzmanagement."
         case .SCHWER, .unknown:
-            "Deutliche Einschränkung (Einfrierphase). Ihr Programm beginnt sehr sanft in Phase 1 mit reduzierter Belastung und verlängerten Erholungsphasen."
+            return isEn ? "Significant limitation (freezing phase). Your program starts very gently in Phase 1 with reduced load and extended recovery phases." : "Deutliche Einschränkung (Einfrierphase). Ihr Programm beginnt sehr sanft in Phase 1 mit reduzierter Belastung und verlängerten Erholungsphasen."
         }
     }
 }

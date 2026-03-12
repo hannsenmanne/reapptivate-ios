@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TsiProgressView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var history: [TsiHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
@@ -18,14 +19,14 @@ struct TsiProgressView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                     .accessibilityHidden(true)
-                Text("TSI-Verlauf")
+                Text(appLanguage == "en" ? "TSI Progress" : "TSI-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("TSI-Verlauf laden...")
+                ProgressView(appLanguage == "en" ? "Loading TSI progress..." : "TSI-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -36,7 +37,7 @@ struct TsiProgressView: View {
                     }
                 )
             } else if history.isEmpty {
-                Text("Noch keine Screening-Daten")
+                Text(appLanguage == "en" ? "No screening data yet" : "Noch keine Screening-Daten")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -59,7 +60,7 @@ struct TsiProgressView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Rescreening durchführen")
+                        Text(appLanguage == "en" ? "Perform rescreening" : "Rescreening durchführen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
@@ -86,7 +87,7 @@ struct TsiProgressView: View {
             let response: TsiHistoryResponse = try await apiClient.request(APIEndpoints.tensionHistory())
             history = response.history
         } catch {
-            errorMessage = "TSI-Verlauf konnte nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load TSI progress." : "TSI-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
     }
@@ -96,6 +97,7 @@ struct TsiProgressView: View {
 
 private struct TsiHistoryRow: View {
     let entry: TsiHistoryEntry
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
 
     var body: some View {
@@ -109,7 +111,7 @@ private struct TsiHistoryRow: View {
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
                 }
-                .accessibilityLabel("TSI-Score \(entry.tsiScore)")
+                .accessibilityLabel(appLanguage == "en" ? "TSI score \(entry.tsiScore)" : "TSI-Score \(entry.tsiScore)")
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("TSI: \(entry.tsiScore)/50")
@@ -123,7 +125,7 @@ private struct TsiHistoryRow: View {
             Spacer()
 
             if let date = entry.createdAtDate {
-                Text(date.formattedGerman)
+                Text(date.formattedLocalizedLong)
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -176,6 +178,6 @@ struct TsiSparkline: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("TSI-Verlaufsdiagramm")
+        .accessibilityLabel("TSI progress chart")
     }
 }

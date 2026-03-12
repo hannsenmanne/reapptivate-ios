@@ -4,6 +4,7 @@ struct DashboardView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(LanguageManager.self) private var languageManager
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var viewModel: DashboardViewModel?
     @State private var exerciseVM: ExerciseViewModel?
     @State private var phaseVM: PhaseViewModel?
@@ -15,6 +16,8 @@ struct DashboardView: View {
     @State private var activeMilestone: Milestone?
     @State private var ratingService = RatingService()
     @Environment(\.scenePhase) private var scenePhase
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         NavigationStack {
@@ -71,7 +74,7 @@ struct DashboardView: View {
                             Image(systemName: "gearshape")
                                 .font(.appBody)
                         }
-                        .accessibilityLabel("Einstellungen")
+                        .accessibilityLabel(isEn ? "Settings" : "Einstellungen")
 
                         Menu {
                             if let user = appState.currentUser {
@@ -79,14 +82,14 @@ struct DashboardView: View {
                                 Text(user.tendinopathyType.displayName)
                                 Divider()
                             }
-                            Button("Abmelden", role: .destructive) {
+                            Button(isEn ? "Log out" : "Abmelden", role: .destructive) {
                                 showLogoutConfirmation = true
                             }
                         } label: {
                             Image(systemName: "person.circle")
                                 .font(.appTitle3)
                         }
-                        .accessibilityLabel("Profil und Abmelden")
+                        .accessibilityLabel(isEn ? "Profile and log out" : "Profil und Abmelden")
                     }
                 }
             }
@@ -102,17 +105,24 @@ struct DashboardView: View {
                 SettingsView()
                     .environment(languageManager)
             }
-            .alert("Abmelden?", isPresented: $showLogoutConfirmation) {
-                Button("Abbrechen", role: .cancel) { }
-                Button("Abmelden", role: .destructive) {
+            .alert(isEn ? "Log out?" : "Abmelden?", isPresented: $showLogoutConfirmation) {
+                Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) { }
+                Button(isEn ? "Log out" : "Abmelden", role: .destructive) {
                     appState.performLogout(apiClient: apiClient)
                 }
             } message: {
-                Text("Sie werden ausgeloggt und müssen sich erneut anmelden.")
+                Text(isEn ? "You will be logged out and need to sign in again." : "Sie werden ausgeloggt und müssen sich erneut anmelden.")
             }
         }
         .task {
             await loadAll()
+        }
+        .onChange(of: languageManager.language) { _, _ in
+            // Reset data ViewModels so they reload with the new language
+            viewModel = nil
+            exerciseVM = nil
+            phaseVM = nil
+            Task { await loadAll() }
         }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
@@ -182,7 +192,7 @@ struct DashboardView: View {
             if let messagingVM {
                 MessagesTab(viewModel: messagingVM)
             } else {
-                ProgressView("Nachrichten laden...")
+                ProgressView(isEn ? "Loading messages..." : "Nachrichten laden...")
                     .frame(maxWidth: .infinity, minHeight: 200)
             }
         }
@@ -288,7 +298,7 @@ struct DashboardTabBar: View {
                     } label: {
                         VStack(spacing: 8) {
                             HStack(spacing: 4) {
-                                Text(tab.rawValue.uppercased())
+                                Text(tab.displayName.uppercased())
                                     .font(.appCaptionMedium)
                                     .tracking(0.8)
                                     .foregroundStyle(selectedTab == tab ? .textPrimary : .textSecondary)

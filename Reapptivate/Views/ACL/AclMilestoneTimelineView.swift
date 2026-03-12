@@ -8,6 +8,8 @@ struct AclMilestoneTimelineView: View {
     let currentMilestone: Int
     let weeksPostSurgery: Int
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     private var milestones: [(id: Int, label: String, shortLabel: String, weekRange: String)] {
         if isEnglishLocale {
             return [

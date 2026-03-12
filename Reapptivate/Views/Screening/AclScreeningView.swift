@@ -4,6 +4,7 @@ struct AclScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let isEmbedded: Bool
 
@@ -12,18 +13,20 @@ struct AclScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "Screening wird geladen...")
+                        LoadingView(message: isEn ? "Loading screening..." : "Screening wird geladen...")
                     } else if showResult, vm.result != nil {
                         AclScreeningCompleteView {
                             appState.currentUser?.aclScreeningCompleted = true
                             dismiss()
                         }
                     } else if let step = vm.currentStep {
-                        aclStepView(step: step, vm: vm)
+                        aclStepView(step: step, vm: vm, isEn: isEn)
                     } else if let error = vm.errorMessage {
                         ErrorView(message: error) {
                             await vm.loadConfig()
@@ -34,7 +37,7 @@ struct AclScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle("Kreuzband-Screening")
+            .navigationTitle(isEn ? "ACL Screening" : "Kreuzband-Screening")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -60,7 +63,7 @@ struct AclScreeningView: View {
     // MARK: - Step View (main layout)
 
     @ViewBuilder
-    private func aclStepView(step: AclScreeningStep, vm: AclScreeningViewModel) -> some View {
+    private func aclStepView(step: AclScreeningStep, vm: AclScreeningViewModel, isEn: Bool) -> some View {
         VStack(spacing: 0) {
             ProgressView(value: vm.progress)
                 .tint(.accent)
@@ -69,7 +72,9 @@ struct AclScreeningView: View {
 
             HStack {
                 Spacer()
-                Text("Schritt \(vm.currentStepIndex + 1) von \(vm.steps.count)")
+                Text(isEn
+                    ? "Step \(vm.currentStepIndex + 1) of \(vm.steps.count)"
+                    : "Schritt \(vm.currentStepIndex + 1) von \(vm.steps.count)")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -107,10 +112,13 @@ private struct AclStepContentView: View {
     let step: AclScreeningStep
     let vm: AclScreeningViewModel
     @Binding var selectionTrigger: Bool
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(alignment: .leading, spacing: 16) {
-            Text(step.labelDE)
+            Text(isEn ? step.label : step.labelDE)
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
@@ -142,13 +150,15 @@ private struct AclStepContentView: View {
 
 private struct AclDateStepView: View {
     let vm: AclScreeningViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
         let fiveYearsAgo = Calendar.current.date(byAdding: .year, value: -5, to: Date()) ?? Date()
         let twoYearsAhead = Calendar.current.date(byAdding: .year, value: 2, to: Date()) ?? Date()
 
         DatePicker(
-            "Operationsdatum",
+            isEn ? "Surgery Date" : "Operationsdatum",
             selection: Binding(
                 get: { vm.surgeryDate },
                 set: { vm.setSurgeryDate($0) }
@@ -158,7 +168,7 @@ private struct AclDateStepView: View {
         )
         .datePickerStyle(.graphical)
         .tint(.accent)
-        .environment(\.locale, Locale(identifier: "de_DE"))
+        .environment(\.locale, Locale(identifier: isEn ? "en_US" : "de_DE"))
     }
 }
 
@@ -198,12 +208,15 @@ private struct AclRadioOptionRow: View {
     let option: AclScreeningStepOption
     let isSelected: Bool
     let onSelect: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         Button(action: onSelect) {
             HStack(spacing: 14) {
                 radioIndicator
-                optionLabels
+                optionLabels(isEn: isEn)
                 Spacer()
             }
             .padding(16)
@@ -224,9 +237,9 @@ private struct AclRadioOptionRow: View {
             .frame(width: 24, height: 24)
     }
 
-    private var optionLabels: some View {
+    private func optionLabels(isEn: Bool) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(option.labelDE)
+            Text(isEn ? option.label : option.labelDE)
                 .font(.appBody)
                 .foregroundStyle(.textPrimary)
 
@@ -255,8 +268,11 @@ private struct AclCheckboxStepView: View {
     let step: AclScreeningStep
     let vm: AclScreeningViewModel
     @Binding var selectionTrigger: Bool
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 12) {
             ForEach(step.options ?? [], id: \.value) { option in
                 let isSelected = vm.concomitantInjuries.contains(option.value)
@@ -273,7 +289,9 @@ private struct AclCheckboxStepView: View {
                 )
             }
 
-            Text("Mehrfachauswahl möglich. Wählen Sie \"Keine\", wenn keine Begleitverletzungen vorliegen.")
+            Text(isEn
+                ? "Multiple selection possible. Select \"None\" if there are no concomitant injuries."
+                : "Mehrfachauswahl möglich. Wählen Sie \"Keine\", wenn keine Begleitverletzungen vorliegen.")
                 .font(.appCaption)
                 .foregroundStyle(.textSecondary)
                 .padding(.top, 4)
@@ -286,12 +304,15 @@ private struct AclCheckboxOptionRow: View {
     let isSelected: Bool
     let isDisabled: Bool
     let onToggle: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         Button(action: onToggle) {
             HStack(alignment: .top, spacing: 14) {
                 checkboxIndicator
-                optionLabels
+                optionLabels(isEn: isEn)
                 Spacer()
             }
             .padding(16)
@@ -321,14 +342,14 @@ private struct AclCheckboxOptionRow: View {
             .frame(width: 24, height: 24)
     }
 
-    private var optionLabels: some View {
+    private func optionLabels(isEn: Bool) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(option.labelDE)
+            Text(isEn ? option.label : option.labelDE)
                 .font(.appBody)
                 .foregroundStyle(.textPrimary)
 
             if let precaution = option.precaution, isSelected {
-                Text("Hinweis: \(precaution)")
+                Text("\(isEn ? "Note" : "Hinweis"): \(precaution)")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -351,8 +372,11 @@ private struct AclCheckboxOptionRow: View {
 private struct AclTextStepView: View {
     let step: AclScreeningStep
     let vm: AclScreeningViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(alignment: .leading, spacing: 8) {
             TextField(
                 step.placeholder ?? "",
@@ -364,7 +388,7 @@ private struct AclTextStepView: View {
             .inputFieldStyle()
 
             if step.required != true {
-                Text("Optional")
+                Text(isEn ? "Optional" : "Optional")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -377,15 +401,18 @@ private struct AclTextStepView: View {
 private struct AclBottomBarView: View {
     let vm: AclScreeningViewModel
     @Binding var showResult: Bool
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 0) {
             Divider()
 
             if vm.isOnLastStep && vm.canSubmit {
-                submitButton
+                submitButton(isEn: isEn)
             } else if !vm.isOnLastStep {
-                forwardButton
+                forwardButton(isEn: isEn)
             }
 
             if let error = vm.errorMessage, vm.config != nil {
@@ -398,7 +425,7 @@ private struct AclBottomBarView: View {
         }
     }
 
-    private var submitButton: some View {
+    private func submitButton(isEn: Bool) -> some View {
         Button {
             Task {
                 if await vm.submit() {
@@ -410,7 +437,7 @@ private struct AclBottomBarView: View {
                 if vm.isSubmitting {
                     ProgressView().tint(.white)
                 } else {
-                    Text("Screening abschliessen")
+                    Text(isEn ? "Complete Screening" : "Screening abschliessen")
                 }
             }
             .frame(maxWidth: .infinity)
@@ -423,13 +450,13 @@ private struct AclBottomBarView: View {
     }
 
     @ViewBuilder
-    private var forwardButton: some View {
+    private func forwardButton(isEn: Bool) -> some View {
         let stepType = vm.currentStep?.type ?? ""
         if stepType == "date" || stepType == "checkbox" || stepType == "text" {
             Button {
                 vm.goForward()
             } label: {
-                Text("Weiter")
+                Text(isEn ? "Continue" : "Weiter")
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
             }
@@ -445,8 +472,11 @@ private struct AclBottomBarView: View {
 
 private struct AclScreeningCompleteView: View {
     let onContinue: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 24) {
             Spacer()
 
@@ -459,11 +489,13 @@ private struct AclScreeningCompleteView: View {
                         .foregroundStyle(.accent)
                 }
 
-            Text("Screening abgeschlossen!")
+            Text(isEn ? "Screening Complete!" : "Screening abgeschlossen!")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            Text("Ihre Angaben wurden erfolgreich gespeichert. Ihr individuelles Rehabilitationsprogramm wird jetzt erstellt.")
+            Text(isEn
+                ? "Your information has been saved successfully. Your individualized rehabilitation program is being created now."
+                : "Ihre Angaben wurden erfolgreich gespeichert. Ihr individuelles Rehabilitationsprogramm wird jetzt erstellt.")
                 .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -472,7 +504,7 @@ private struct AclScreeningCompleteView: View {
             Button {
                 onContinue()
             } label: {
-                Text("Weiter")
+                Text(isEn ? "Continue" : "Weiter")
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
             }

@@ -2,6 +2,9 @@ import SwiftUI
 
 struct MotivationalQuoteCard: View {
     let quote: MotivationalQuote
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -18,6 +21,8 @@ struct MotivationalQuoteCard: View {
         }
         .cardStyle()
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Motivationszitat: \(quote.text)")
+        .accessibilityLabel(isEn
+            ? "Motivational quote: \(quote.text)"
+            : "Motivationszitat: \(quote.text)")
     }
 }

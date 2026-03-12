@@ -4,6 +4,7 @@ struct AemScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     var isEmbedded = false
 
     @State private var viewModel: AemScreeningViewModel?
@@ -11,11 +12,13 @@ struct AemScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "Fragebogen laden...")
+                        LoadingView(message: isEn ? "Loading questionnaire..." : "Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         AemResultView(result: result) {
                             // Update AppState immediately - screening was successfully submitted
@@ -32,7 +35,7 @@ struct AemScreeningView: View {
                                 .padding(.horizontal, 16)
                                 .padding(.top, 8)
 
-                            Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
+                            Text("\(vm.currentItemIndex + 1) \(isEn ? "of" : "von") \(vm.items.count)")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                                 .padding(.top, 4)
@@ -67,7 +70,7 @@ struct AemScreeningView: View {
                                         if vm.isSubmitting {
                                             ProgressView().tint(.white)
                                         } else {
-                                            Text("Auswertung anzeigen")
+                                            Text(isEn ? "Show Results" : "Auswertung anzeigen")
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
@@ -88,7 +91,7 @@ struct AemScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle("AEM-Screening")
+            .navigationTitle(appLanguage == "en" ? "AEM Screening" : "AEM-Screening")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -103,14 +106,14 @@ struct AemScreeningView: View {
             }
             .interactiveDismissDisabled()
             .conditionalHaptic(.selection, trigger: selectionTrigger)
-            .alert("Fehler", isPresented: Binding(
+            .alert(isEn ? "Error" : "Fehler", isPresented: Binding(
                 get: { refreshError != nil },
                 set: { if !$0 { refreshError = nil } }
             )) {
-                Button("Erneut versuchen") {
+                Button(isEn ? "Try Again" : "Erneut versuchen") {
                     Task { await refreshProfile() }
                 }
-                Button("Abbrechen", role: .cancel) {
+                Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) {
                     refreshError = nil
                 }
             } message: {
@@ -127,11 +130,14 @@ struct AemScreeningView: View {
     @State private var refreshError: String?
 
     private func refreshProfile() async {
+        let isEn = appLanguage == "en"
         do {
             let response: UserResponse = try await apiClient.request(APIEndpoints.me())
             appState.handleLogin(user: response.user)
         } catch {
-            refreshError = "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+            refreshError = isEn
+                ? "Profile could not be updated. Please try again."
+                : "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
         }
     }
 }

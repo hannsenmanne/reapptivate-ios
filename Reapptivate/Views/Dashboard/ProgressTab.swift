@@ -4,6 +4,9 @@ import Charts
 struct ProgressTab: View {
     let viewModel: DashboardViewModel?
     let phaseVM: PhaseViewModel?
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -14,8 +17,10 @@ struct ProgressTab: View {
             } else {
                 EmptyStateView(
                     icon: "chart.line.uptrend.xyaxis",
-                    title: "Noch keine Daten",
-                    message: "Schliessen Sie Ihr erstes Training ab, um Ihren Fortschritt hier zu sehen."
+                    title: isEn ? "No data yet" : "Noch keine Daten",
+                    message: isEn
+                        ? "Complete your first workout to see your progress here."
+                        : "Schliessen Sie Ihr erstes Training ab, um Ihren Fortschritt hier zu sehen."
                 )
             }
 
@@ -43,6 +48,9 @@ struct ProgressTab: View {
 
 struct ProgressStatsGrid: View {
     let stats: ProgressStats
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         LazyVGrid(columns: [
@@ -50,13 +58,13 @@ struct ProgressStatsGrid: View {
             GridItem(.flexible()),
         ], spacing: 12) {
             ProgressStatCard(
-                label: "Trainings gesamt",
+                label: isEn ? "Total workouts" : "Trainings gesamt",
                 value: "\(stats.totalSessions)",
                 icon: "figure.strengthtraining.traditional"
             )
 
             ProgressStatCard(
-                label: "Letzte 7 Tage",
+                label: isEn ? "Last 7 days" : "Letzte 7 Tage",
                 value: "\(stats.lastSevenDays)",
                 icon: "calendar"
             )
@@ -69,7 +77,7 @@ struct ProgressStatsGrid: View {
             )
 
             ProgressStatCard(
-                label: "Schmerz",
+                label: isEn ? "Pain" : "Schmerz",
                 value: String(format: "%.1f/10", stats.averagePain),
                 icon: "waveform.path.ecg",
                 valueColor: painColor(for: stats.averagePain)

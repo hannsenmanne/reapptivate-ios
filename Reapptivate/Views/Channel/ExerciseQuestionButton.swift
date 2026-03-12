@@ -5,6 +5,7 @@ struct ExerciseQuestionButton: View {
     let exerciseName: String
     @Environment(APIClient.self) private var apiClient
     @Environment(AppState.self) private var appState
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var showConcernSheet = false
     @State private var messagingVM: MessagingViewModel?
 
@@ -15,7 +16,7 @@ struct ExerciseQuestionButton: View {
             HStack(spacing: 6) {
                 Image(systemName: "questionmark.circle")
                     .font(.appCaption)
-                Text("Frage stellen")
+                Text(appLanguage == "en" ? "Ask a question" : "Frage stellen")
                     .font(.appCaptionMedium)
             }
             .foregroundStyle(.accent)
@@ -25,7 +26,7 @@ struct ExerciseQuestionButton: View {
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Frage zu \(exerciseName) stellen")
+        .accessibilityLabel(appLanguage == "en" ? "Ask a question about \(exerciseName)" : "Frage zu \(exerciseName) stellen")
         .sheet(isPresented: $showConcernSheet) {
             if let vm = messagingVM {
                 FlagConcernSheet(

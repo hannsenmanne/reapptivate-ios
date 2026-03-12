@@ -2,30 +2,36 @@ import SwiftUI
 
 struct FirstExerciseGuide: View {
     @AppStorage("hasCompletedFirstExercise") private var hasCompleted = false
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var step = 0
     @State private var stepTrigger = false
 
     let onDismiss: () -> Void
 
-    private let steps = [
-        GuideStep(
-            title: "Satz-Fortschritt",
-            description: "Die Leiste oben zeigt Ihren Fortschritt durch die Sätze. Grün = abgeschlossen.",
-            icon: "chart.bar.fill"
-        ),
-        GuideStep(
-            title: "Satz abschliessen",
-            description: "Tippen Sie auf den Button, um einen Satz als erledigt zu markieren.",
-            icon: "checkmark.circle.fill"
-        ),
-        GuideStep(
-            title: "Schmerz protokollieren",
-            description: "Nach dem letzten Satz erfassen Sie Ihren Schmerz und speichern das Training.",
-            icon: "waveform.path.ecg"
-        )
-    ]
+    private var steps: [GuideStep] {
+        let isEn = appLanguage == "en"
+        return [
+            GuideStep(
+                title: isEn ? "Set progress" : "Satz-Fortschritt",
+                description: isEn ? "The bar at the top shows your progress through the sets. Green = completed." : "Die Leiste oben zeigt Ihren Fortschritt durch die Sätze. Grün = abgeschlossen.",
+                icon: "chart.bar.fill"
+            ),
+            GuideStep(
+                title: isEn ? "Complete a set" : "Satz abschliessen",
+                description: isEn ? "Tap the button to mark a set as completed." : "Tippen Sie auf den Button, um einen Satz als erledigt zu markieren.",
+                icon: "checkmark.circle.fill"
+            ),
+            GuideStep(
+                title: isEn ? "Log pain" : "Schmerz protokollieren",
+                description: isEn ? "After the last set, record your pain level and save the workout." : "Nach dem letzten Satz erfassen Sie Ihren Schmerz und speichern das Training.",
+                icon: "waveform.path.ecg"
+            ),
+        ]
+    }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         ZStack {
             Color.black.opacity(0.7)
                 .ignoresSafeArea()
@@ -71,7 +77,7 @@ struct FirstExerciseGuide: View {
                         onDismiss()
                     }
                 } label: {
-                    Text(step < steps.count - 1 ? "Weiter" : "Verstanden")
+                    Text(step < steps.count - 1 ? (isEn ? "Next" : "Weiter") : (isEn ? "Got it" : "Verstanden"))
                         .font(.appBodySemibold)
                         .foregroundStyle(Color(red: 0.1, green: 0.1, blue: 0.1))
                         .frame(maxWidth: .infinity)

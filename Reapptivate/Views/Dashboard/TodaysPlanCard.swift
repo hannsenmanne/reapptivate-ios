@@ -4,6 +4,7 @@ struct TodaysPlanCard: View {
     let completedCount: Int
     let totalCount: Int
     let onTap: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @ScaledMetric(relativeTo: .body) private var ringSize: CGFloat = 52
 
@@ -45,26 +46,26 @@ struct TodaysPlanCard: View {
                 .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    Text(appLanguage == "en"
                         ? "Today's Program"
                         : "Heutiges Programm")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
                     if allDone {
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(appLanguage == "en"
                             ? "All exercises completed"
                             : "Alle Übungen abgeschlossen")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.painGreen)
                     } else if totalCount > 0 {
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(appLanguage == "en"
                             ? "\(completedCount) of \(totalCount) exercises completed"
                             : "\(completedCount) von \(totalCount) Übungen erledigt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.accent)
                     } else {
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(appLanguage == "en"
                             ? "Start program"
                             : "Programm starten")
                             .font(.appCaptionMedium)
@@ -85,19 +86,19 @@ struct TodaysPlanCard: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityLabel(appLanguage == "en"
             ? "Today's Program"
             : "Heutiges Programm")
         .accessibilityValue(
             allDone
-                ? (UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ? (appLanguage == "en"
                     ? "All \(totalCount) exercises completed"
                     : "Alle \(totalCount) Übungen abgeschlossen")
-                : (UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                : (appLanguage == "en"
                     ? "\(completedCount) of \(totalCount) exercises completed"
                     : "\(completedCount) von \(totalCount) Übungen erledigt")
         )
-        .accessibilityHint(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityHint(appLanguage == "en"
             ? "Tap to go to the training program"
             : "Antippen, um zum Trainingsprogramm zu gelangen")
     }

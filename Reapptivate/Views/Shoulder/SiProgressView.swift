@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SiProgressView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var history: [SiHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
@@ -14,14 +15,14 @@ struct SiProgressView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                     .accessibilityHidden(true)
-                Text("QuickDASH-Verlauf")
+                Text(appLanguage == "en" ? "QuickDASH Progress" : "QuickDASH-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("QuickDASH-Verlauf laden...")
+                ProgressView(appLanguage == "en" ? "Loading QuickDASH progress..." : "QuickDASH-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -32,7 +33,7 @@ struct SiProgressView: View {
                     }
                 )
             } else if history.isEmpty {
-                Text("Noch keine Screening-Daten")
+                Text(appLanguage == "en" ? "No screening data yet" : "Noch keine Screening-Daten")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -55,7 +56,7 @@ struct SiProgressView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Rescreening durchführen")
+                        Text(appLanguage == "en" ? "Perform rescreening" : "Rescreening durchführen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
@@ -82,7 +83,7 @@ struct SiProgressView: View {
             let response: SiHistoryResponse = try await apiClient.request(APIEndpoints.siHistory())
             history = response.history
         } catch {
-            errorMessage = "QuickDASH-Verlauf konnte nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load QuickDASH progress." : "QuickDASH-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
     }
@@ -92,6 +93,7 @@ struct SiProgressView: View {
 
 private struct SiHistoryRow: View {
     let entry: SiHistoryEntry
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
 
     var body: some View {
@@ -104,7 +106,7 @@ private struct SiHistoryRow: View {
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
                 }
-                .accessibilityLabel("QuickDASH-Score \(Int(entry.quickDashScore))")
+                .accessibilityLabel(appLanguage == "en" ? "QuickDASH score \(Int(entry.quickDashScore))" : "QuickDASH-Score \(Int(entry.quickDashScore))")
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("QuickDASH: \(Int(entry.quickDashScore))%")
@@ -118,7 +120,7 @@ private struct SiHistoryRow: View {
             Spacer()
 
             if let date = entry.createdAtDate {
-                Text(date.formattedGerman)
+                Text(date.formattedLocalizedLong)
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -171,6 +173,6 @@ struct SiSparkline: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("QuickDASH-Verlaufsdiagramm")
+        .accessibilityLabel("QuickDASH progress chart")
     }
 }

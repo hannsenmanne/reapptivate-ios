@@ -4,6 +4,7 @@ struct WorkTimerCard: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var viewModel: WorkTimerViewModel?
     @State private var hapticStart = false
@@ -63,12 +64,14 @@ struct WorkTimerCard: View {
         }
     }
 
+    private var isEn: Bool { appLanguage == "en" }
+
     // MARK: - Loading
 
     private var loadingView: some View {
         HStack(spacing: 12) {
             ProgressView()
-            Text("Arbeits-Timer laden...")
+            Text(isEn ? "Loading work timer..." : "Arbeits-Timer laden...")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }
@@ -86,7 +89,7 @@ struct WorkTimerCard: View {
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
 
-                Text("Arbeits-Timer")
+                Text(isEn ? "Work Timer" : "Arbeits-Timer")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
@@ -99,10 +102,10 @@ struct WorkTimerCard: View {
                         .font(.appBody)
                         .foregroundStyle(.textSecondary)
                 }
-                .accessibilityLabel("Einstellungen")
+                .accessibilityLabel(isEn ? "Settings" : "Einstellungen")
             }
 
-            Text("Regelmäßige Pausen für weniger Beschwerden")
+            Text(isEn ? "Regular breaks for fewer symptoms" : "Regelmäßige Pausen für weniger Beschwerden")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
 
@@ -112,7 +115,7 @@ struct WorkTimerCard: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "play.fill")
-                    Text("Arbeitstag starten")
+                    Text(isEn ? "Start workday" : "Arbeitstag starten")
                 }
             }
             .buttonStyle(.accentFilled)
@@ -136,7 +139,7 @@ struct WorkTimerCard: View {
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
 
-                Text("Arbeits-Timer")
+                Text(isEn ? "Work Timer" : "Arbeits-Timer")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
@@ -149,7 +152,7 @@ struct WorkTimerCard: View {
                         .font(.appBody)
                         .foregroundStyle(.textSecondary)
                 }
-                .accessibilityLabel("Wochenverlauf")
+                .accessibilityLabel(isEn ? "Weekly overview" : "Wochenverlauf")
 
                 Text(vm.formattedWorkTime)
                     .font(.appCaptionMedium)
@@ -173,12 +176,14 @@ struct WorkTimerCard: View {
                     Text(vm.formattedTimeUntilBreak)
                         .font(.system(size: 20, weight: .bold, design: .monospaced))
                         .foregroundStyle(.textPrimary)
-                    Text("bis zur Pause")
+                    Text(isEn ? "until break" : "bis zur Pause")
                         .font(.appCaption2)
                         .foregroundStyle(.textSecondary)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Nächste Pause in \(vm.formattedTimeUntilBreak)")
+                .accessibilityLabel(isEn
+                    ? "Next break in \(vm.formattedTimeUntilBreak)"
+                    : "Nächste Pause in \(vm.formattedTimeUntilBreak)")
             }
 
             // Break count badge
@@ -187,7 +192,7 @@ struct WorkTimerCard: View {
                     .foregroundStyle(.painGreen)
                     .font(.appCaption)
                     .accessibilityHidden(true)
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(isEn
                     ? "\(vm.breaksTakenToday) break\(vm.breaksTakenToday == 1 ? "" : "s") completed"
                     : "\(vm.breaksTakenToday) Pause\(vm.breaksTakenToday == 1 ? "" : "n") erledigt")
                     .font(.appCaptionMedium)
@@ -201,7 +206,7 @@ struct WorkTimerCard: View {
             Button {
                 Task { await vm.stopWorkday() }
             } label: {
-                Text("Arbeitstag beenden")
+                Text(isEn ? "End workday" : "Arbeitstag beenden")
             }
             .buttonStyle(.secondary)
         }

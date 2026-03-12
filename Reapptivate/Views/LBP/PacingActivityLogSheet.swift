@@ -3,6 +3,7 @@ import SwiftUI
 struct PacingActivityLogSheet: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var selectedActivityKey: String?
     @State private var doneQuota: Int = 0
@@ -27,9 +28,9 @@ struct PacingActivityLogSheet: View {
     }
 
     var complianceLabel: String {
-        if compliancePercentage <= 90 { return "Gut dosiert" }
-        if compliancePercentage <= 110 { return "Im Zielbereich" }
-        return "Über der Quote"
+        if compliancePercentage <= 90 { return appLanguage == "en" ? "Well dosed" : "Gut dosiert" }
+        if compliancePercentage <= 110 { return appLanguage == "en" ? "On target" : "Im Zielbereich" }
+        return appLanguage == "en" ? "Over quota" : "Über der Quote"
     }
 
     private var hasUnsavedChanges: Bool {
@@ -54,7 +55,7 @@ struct PacingActivityLogSheet: View {
             VStack(spacing: 20) {
                 // Activity selection
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Welche Aktivität haben Sie gemacht?")
+                    Text(appLanguage == "en" ? "Which activity did you do?" : "Welche Aktivität haben Sie gemacht?")
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.textPrimary)
 
@@ -77,7 +78,9 @@ struct PacingActivityLogSheet: View {
                                     Spacer()
 
                                     if let quota = activity.quota {
-                                        Text("Ziel: \(quota) \(activity.unit ?? "Min")")
+                                        Text(appLanguage == "en"
+                                            ? "Target: \(quota) \(activity.unit ?? "min")"
+                                            : "Ziel: \(quota) \(activity.unit ?? "Min")")
                                             .font(.appCaption)
                                             .foregroundStyle(.textSecondary)
                                     }
@@ -98,7 +101,9 @@ struct PacingActivityLogSheet: View {
                 // Duration input
                 if let activity = selectedActivity {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Dauer (\(activity.unit ?? "Min"))")
+                        Text(appLanguage == "en"
+                            ? "Duration (\(activity.unit ?? "min"))"
+                            : "Dauer (\(activity.unit ?? "Min"))")
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
 
@@ -143,11 +148,11 @@ struct PacingActivityLogSheet: View {
                     // Pauses (if mandatory)
                     if let pauseMinutes = viewModel.pacingPlan?.rules.mandatoryPauseMinutes, pauseMinutes > 0 {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Anzahl Pausen")
+                            Text(appLanguage == "en" ? "Number of breaks" : "Anzahl Pausen")
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textPrimary)
 
-                            Stepper(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            Stepper(appLanguage == "en"
                                 ? "\(donePauses) break\(donePauses == 1 ? "" : "s")"
                                 : "\(donePauses) Pausen", value: $donePauses, in: 0...20)
                                 .font(.appSubheadline)
@@ -156,7 +161,7 @@ struct PacingActivityLogSheet: View {
 
                     // Notes
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Notizen (optional)")
+                        Text(appLanguage == "en" ? "Notes (optional)" : "Notizen (optional)")
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
 
@@ -173,7 +178,9 @@ struct PacingActivityLogSheet: View {
                     HStack(spacing: 10) {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.farBlue)
-                        Text("Pacing-Prinzip: Besser unter der Quote bleiben als darüber.")
+                        Text(appLanguage == "en"
+                            ? "Pacing principle: Better to stay below the quota than above it."
+                            : "Pacing-Prinzip: Besser unter der Quote bleiben als darüber.")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -189,7 +196,7 @@ struct PacingActivityLogSheet: View {
                             if isSubmitting {
                                 ProgressView().tint(.white)
                             } else {
-                                Text("Aktivität protokollieren")
+                                Text(appLanguage == "en" ? "Log activity" : "Aktivität protokollieren")
                             }
                         }
                         .font(.appBodySemibold)
@@ -205,11 +212,11 @@ struct PacingActivityLogSheet: View {
             .padding(24)
         }
         .background(Color.appBg)
-        .navigationTitle("Aktivität protokollieren")
+        .navigationTitle(appLanguage == "en" ? "Log Activity" : "Aktivität protokollieren")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Abbrechen") { dismiss() }
+                Button(appLanguage == "en" ? "Cancel" : "Abbrechen") { dismiss() }
             }
         }
     }
@@ -224,7 +231,7 @@ struct PacingActivityLogSheet: View {
                 .font(.system(size: 56))
                 .foregroundStyle(.painGreen)
 
-            Text("Erfolgreich gespeichert!")
+            Text(appLanguage == "en" ? "Saved successfully!" : "Erfolgreich gespeichert!")
                 .font(.appTitle3)
                 .foregroundStyle(.textPrimary)
 
@@ -232,7 +239,9 @@ struct PacingActivityLogSheet: View {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.painAmber)
-                    Text("Quote überschritten. Versuchen Sie beim nächsten Mal etwas kürzere Einheiten.")
+                    Text(appLanguage == "en"
+                        ? "Quota exceeded. Try shorter sessions next time."
+                        : "Quote überschritten. Versuchen Sie beim nächsten Mal etwas kürzere Einheiten.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -245,7 +254,7 @@ struct PacingActivityLogSheet: View {
             Button {
                 dismiss()
             } label: {
-                Text("Fertig")
+                Text(appLanguage == "en" ? "Done" : "Fertig")
                     .font(.appBodySemibold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)

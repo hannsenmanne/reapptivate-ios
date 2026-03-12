@@ -5,6 +5,7 @@ struct MorningCheckinView: View {
     @Environment(AppState.self) private var appState
     @State private var viewModel: MorningCheckinViewModel?
     @State private var hapticTrigger = false
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let onComplete: () -> Void
 
@@ -22,7 +23,7 @@ struct MorningCheckinView: View {
                         .font(.appTitle)
                         .foregroundStyle(.textPrimary)
 
-                    Text("Wie geht es Ihnen heute?")
+                    Text(appLanguage == "en" ? "How are you feeling today?" : "Wie geht es Ihnen heute?")
                         .font(.appBody)
                         .foregroundStyle(.textSecondary)
                 }
@@ -60,7 +61,7 @@ struct MorningCheckinView: View {
                                 ProgressView()
                                     .tint(.white)
                             }
-                            Text("Check-In abschließen")
+                            Text(appLanguage == "en" ? "Complete Check-In" : "Check-In abschließen")
                                 .font(.appHeadline)
                         }
                         .frame(maxWidth: .infinity)
@@ -87,9 +88,10 @@ struct MorningCheckinView: View {
     // MARK: - Sections
 
     private func painSection(_ vm: MorningCheckinViewModel) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        let isEn = appLanguage == "en"
+        return VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Schmerzniveau")
+                Text(isEn ? "Pain Level" : "Schmerzniveau")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Text("*")
@@ -126,7 +128,7 @@ struct MorningCheckinView: View {
 
     private func sleepSection(_ vm: MorningCheckinViewModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Schlafqualität")
+            Text(appLanguage == "en" ? "Sleep Quality" : "Schlafqualität")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
@@ -139,7 +141,7 @@ struct MorningCheckinView: View {
                             .font(.appTitle2)
                             .foregroundStyle((vm.sleepQuality ?? 0) >= star ? .yellow : .textSecondary.opacity(0.4))
                     }
-                    .accessibilityLabel("\(star) Sterne")
+                    .accessibilityLabel(appLanguage == "en" ? "\(star) stars" : "\(star) Sterne")
                     .accessibilityAddTraits((vm.sleepQuality ?? 0) >= star ? .isSelected : [])
                 }
                 Spacer()
@@ -150,7 +152,7 @@ struct MorningCheckinView: View {
 
     private func stiffnessSection(_ vm: MorningCheckinViewModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Steifheit")
+            Text(appLanguage == "en" ? "Stiffness" : "Steifheit")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
@@ -186,7 +188,7 @@ struct MorningCheckinView: View {
 
     private func moodSection(_ vm: MorningCheckinViewModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Stimmung")
+            Text(appLanguage == "en" ? "Mood" : "Stimmung")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
@@ -213,11 +215,11 @@ struct MorningCheckinView: View {
 
     private func notesSection(_ vm: MorningCheckinViewModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Notizen")
+            Text(appLanguage == "en" ? "Notes" : "Notizen")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
-            TextField("Wie fühlen Sie sich heute?", text: Binding(
+            TextField(appLanguage == "en" ? "How are you feeling today?" : "Wie fühlen Sie sich heute?", text: Binding(
                 get: { vm.notes },
                 set: { vm.notes = $0 }
             ), axis: .vertical)
@@ -241,13 +243,14 @@ struct MorningCheckinView: View {
     // MARK: - Constants
 
     private var timeBasedGreeting: String {
+        let isEn = appLanguage == "en"
         let hour = Calendar.current.component(.hour, from: Date())
         if hour < 12 {
-            return "Guten Morgen!"
+            return isEn ? "Good Morning!" : "Guten Morgen!"
         } else if hour < 18 {
-            return "Guten Tag!"
+            return isEn ? "Good Afternoon!" : "Guten Tag!"
         } else {
-            return "Guten Abend!"
+            return isEn ? "Good Evening!" : "Guten Abend!"
         }
     }
 
@@ -263,5 +266,9 @@ struct MorningCheckinView: View {
     }
 
     private let moodEmojis = ["😫", "😕", "😐", "🙂", "😊"]
-    private let moodLabels = ["Sehr schlecht", "Schlecht", "Neutral", "Gut", "Sehr gut"]
+    private var moodLabels: [String] {
+        appLanguage == "en"
+            ? ["Very bad", "Bad", "Neutral", "Good", "Very good"]
+            : ["Sehr schlecht", "Schlecht", "Neutral", "Gut", "Sehr gut"]
+    }
 }

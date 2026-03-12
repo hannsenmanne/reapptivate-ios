@@ -6,6 +6,7 @@ private var isEnglishLocale: Bool {
 
 struct AclMilestoneDetailView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let milestone: Int
 

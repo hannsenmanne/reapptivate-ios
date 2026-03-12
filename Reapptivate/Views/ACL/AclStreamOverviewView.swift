@@ -101,6 +101,7 @@ struct AclStreamOverviewView: View {
 struct AclStreamCard: View {
     let stream: AclStream
     let isLocked: Bool
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @ScaledMetric(relativeTo: .body) private var iconContainerSize: CGFloat = 40
 
@@ -141,7 +142,7 @@ struct AclStreamCard: View {
                         .lineLimit(2)
                 }
 
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "\(stream.exerciseCount ?? 0) exercise\((stream.exerciseCount ?? 0) == 1 ? "" : "s")"
                     : "\(stream.exerciseCount ?? 0) Übungen")
                     .font(.appCaption2)
@@ -165,7 +166,7 @@ struct AclStreamCard: View {
     private var streamAccessibilityLabel: String {
         let name = stream.nameDE ?? stream.name
         let exerciseCount = stream.exerciseCount ?? 0
-        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        let isEn = appLanguage == "en"
         let exerciseWord = isEn
             ? "\(exerciseCount) exercise\(exerciseCount == 1 ? "" : "s")"
             : "\(exerciseCount) Übungen"

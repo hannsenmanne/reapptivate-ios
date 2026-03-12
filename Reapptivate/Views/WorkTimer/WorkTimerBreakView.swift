@@ -3,10 +3,13 @@ import SwiftUI
 struct WorkTimerBreakView: View {
     @Bindable var viewModel: WorkTimerViewModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .title) private var ringSize: CGFloat = 100
     @State private var completeTrigger = false
     @State private var isLogging = false
     @State private var autoCompleted = false
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         NavigationStack {
@@ -19,11 +22,13 @@ struct WorkTimerBreakView: View {
                             .foregroundStyle(.accent)
                             .accessibilityHidden(true)
 
-                        Text(viewModel.isMicroBreak ? "Kurze Bewegungspause" : "Bewegungspause!")
+                        Text(isEn
+                            ? (viewModel.isMicroBreak ? "Quick movement break" : "Movement break!")
+                            : (viewModel.isMicroBreak ? "Kurze Bewegungspause" : "Bewegungspause!"))
                             .font(.appTitle2)
                             .foregroundStyle(.textPrimary)
 
-                        Text("Pause \(viewModel.currentBreakNumber)")
+                        Text(isEn ? "Break \(viewModel.currentBreakNumber)" : "Pause \(viewModel.currentBreakNumber)")
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.textSecondary)
                     }
@@ -49,12 +54,14 @@ struct WorkTimerBreakView: View {
                             .foregroundStyle(.textPrimary)
                     }
                     .accessibilityElement()
-                    .accessibilityLabel("Verbleibende Pausenzeit: \(viewModel.formattedBreakTimeRemaining)")
+                    .accessibilityLabel(isEn
+                        ? "Break time remaining: \(viewModel.formattedBreakTimeRemaining)"
+                        : "Verbleibende Pausenzeit: \(viewModel.formattedBreakTimeRemaining)")
 
                     // Exercise cards
                     if !viewModel.breakExercises.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Übungen")
+                            Text(isEn ? "Exercises" : "Übungen")
                                 .font(.appHeadline)
                                 .foregroundStyle(.textPrimary)
 
@@ -81,7 +88,7 @@ struct WorkTimerBreakView: View {
                         } label: {
                             HStack(spacing: 8) {
                                 Image(systemName: "checkmark")
-                                Text("Pause abgeschlossen")
+                                Text(isEn ? "Break completed" : "Pause abgeschlossen")
                             }
                         }
                         .buttonStyle(.accentFilled)
@@ -93,14 +100,16 @@ struct WorkTimerBreakView: View {
                         } label: {
                             HStack(spacing: 8) {
                                 Image(systemName: "clock.arrow.circlepath")
-                                Text("Später (5 Min.)")
+                                Text(isEn ? "Later (5 min)" : "Später (5 Min.)")
                             }
                         }
                         .buttonStyle(.secondary)
                         .disabled(!viewModel.canSnooze || isLogging)
 
                         if viewModel.canSnooze {
-                            Text("Noch \(2 - viewModel.snoozesUsed)\u{d7} verschiebbar")
+                            Text(isEn
+                                ? "\(2 - viewModel.snoozesUsed)\u{d7} snooze\(2 - viewModel.snoozesUsed == 1 ? "" : "s") remaining"
+                                : "Noch \(2 - viewModel.snoozesUsed)\u{d7} verschiebbar")
                                 .font(.appCaption)
                                 .foregroundStyle(.textTertiary)
                         }
@@ -113,7 +122,7 @@ struct WorkTimerBreakView: View {
                                 dismiss()
                             }
                         } label: {
-                            Text("Überspringen")
+                            Text(isEn ? "Skip" : "Überspringen")
                                 .font(.appSubheadlineMedium)
                                 .foregroundStyle(.textSecondary)
                         }
@@ -124,7 +133,7 @@ struct WorkTimerBreakView: View {
                                 isLogging = false
                                 dismiss()
                             } label: {
-                                Text("Schließen")
+                                Text(isEn ? "Close" : "Schließen")
                                     .font(.appCaption)
                                     .foregroundStyle(.textTertiary)
                             }
@@ -157,6 +166,7 @@ struct WorkTimerBreakView: View {
 
 private struct BreakExerciseCard: View {
     let exercise: WorkTimerBreakExercise
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     private var categoryIcon: String {
         switch exercise.category {
@@ -188,7 +198,7 @@ private struct BreakExerciseCard: View {
                     .foregroundStyle(.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "\(exercise.durationSeconds) sec"
                     : "\(exercise.durationSeconds) Sek.")
                     .font(.appCaption2)

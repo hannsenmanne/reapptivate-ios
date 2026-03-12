@@ -1,5 +1,9 @@
 import Foundation
 
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+
 enum APIError: LocalizedError {
     case unauthorized
     case forbidden
@@ -12,29 +16,38 @@ enum APIError: LocalizedError {
     case decodingError(Error)
 
     var errorDescription: String? {
+        let isEn = isEnglishLocale
         switch self {
         case .unauthorized:
-            "Nicht autorisiert. Bitte melden Sie sich erneut an."
+            return isEn ? "Unauthorized. Please sign in again."
+                        : "Nicht autorisiert. Bitte melden Sie sich erneut an."
         case .forbidden:
-            "Zugriff verweigert."
+            return isEn ? "Access denied."
+                        : "Zugriff verweigert."
         case .notFound:
-            "Die angeforderte Ressource wurde nicht gefunden."
+            return isEn ? "The requested resource was not found."
+                        : "Die angeforderte Ressource wurde nicht gefunden."
         case .badRequest(let message):
-            message
+            return message
         case .conflict(let message):
-            message
+            return message
         case .rateLimited(let retryAfter):
             if let seconds = retryAfter {
-                "Zu viele Anfragen. Bitte warten Sie \(seconds) Sekunden."
+                return isEn ? "Too many requests. Please wait \(seconds) seconds."
+                            : "Zu viele Anfragen. Bitte warten Sie \(seconds) Sekunden."
             } else {
-                "Zu viele Anfragen. Bitte warten Sie einen Moment."
+                return isEn ? "Too many requests. Please wait a moment."
+                            : "Zu viele Anfragen. Bitte warten Sie einen Moment."
             }
         case .serverError(let code):
-            "Serverfehler (\(code)). Bitte versuchen Sie es später erneut."
+            return isEn ? "Server error (\(code)). Please try again later."
+                        : "Serverfehler (\(code)). Bitte versuchen Sie es später erneut."
         case .networkError:
-            "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung."
+            return isEn ? "Network error. Please check your connection."
+                        : "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung."
         case .decodingError:
-            "Daten konnten nicht verarbeitet werden."
+            return isEn ? "Data could not be processed."
+                        : "Daten konnten nicht verarbeitet werden."
         }
     }
 }
@@ -46,6 +59,6 @@ struct APIErrorResponse: Codable {
     let message: String?
 
     var displayMessage: String {
-        message ?? error ?? "Unbekannter Fehler"
+        message ?? error ?? (isEnglishLocale ? "Unknown error" : "Unbekannter Fehler")
     }
 }

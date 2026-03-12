@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FsProgressView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var history: [FsHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
@@ -14,14 +15,14 @@ struct FsProgressView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
-                Text("SPADI-Verlauf")
+                Text(appLanguage == "en" ? "SPADI Progress" : "SPADI-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("SPADI-Verlauf laden...")
+                ProgressView(appLanguage == "en" ? "Loading SPADI progress..." : "SPADI-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -32,7 +33,7 @@ struct FsProgressView: View {
                     }
                 )
             } else if history.isEmpty {
-                Text("Noch keine Screening-Daten")
+                Text(appLanguage == "en" ? "No screening data yet" : "Noch keine Screening-Daten")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -55,7 +56,7 @@ struct FsProgressView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Rescreening durchführen")
+                        Text(appLanguage == "en" ? "Perform rescreening" : "Rescreening durchführen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
@@ -84,7 +85,7 @@ struct FsProgressView: View {
             let response: FsHistoryResponse = try await apiClient.request(APIEndpoints.fsHistory())
             history = response.history
         } catch {
-            errorMessage = "SPADI-Verlauf konnte nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load SPADI progress." : "SPADI-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
     }
@@ -94,6 +95,7 @@ struct FsProgressView: View {
 
 private struct FsHistoryRow: View {
     let entry: FsHistoryEntry
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
 
     var body: some View {
@@ -106,7 +108,7 @@ private struct FsHistoryRow: View {
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
                 }
-                .accessibilityLabel("SPADI-Score \(Int(entry.spadiTotalScore))")
+                .accessibilityLabel(appLanguage == "en" ? "SPADI score \(Int(entry.spadiTotalScore))" : "SPADI-Score \(Int(entry.spadiTotalScore))")
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("SPADI: \(Int(entry.spadiTotalScore))%")
@@ -120,7 +122,7 @@ private struct FsHistoryRow: View {
             Spacer()
 
             if let date = entry.createdAtDate {
-                Text(date.formattedGerman)
+                Text(date.formattedLocalizedLong)
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -174,6 +176,6 @@ struct FsSparkline: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("SPADI-Verlaufsdiagramm")
+        .accessibilityLabel("SPADI progress chart")
     }
 }

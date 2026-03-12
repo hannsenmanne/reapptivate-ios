@@ -103,7 +103,10 @@ struct OverviewTab: View {
 
 struct ExerciseLinkCard: View {
     let onTap: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .body) private var iconContainerSize: CGFloat = 44
+
+    private var isEn: Bool { appLanguage == "en" }
 
     var body: some View {
         Button(action: onTap) {
@@ -118,10 +121,10 @@ struct ExerciseLinkCard: View {
                     }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Übungsprogramm")
+                    Text(isEn ? "Exercise program" : "Übungsprogramm")
                         .font(.appSubheadlineSemibold)
                         .foregroundStyle(.textPrimary)
-                    Text("Übungen anzeigen und protokollieren")
+                    Text(isEn ? "View and log exercises" : "Übungen anzeigen und protokollieren")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -144,10 +147,13 @@ struct StatsRow: View {
     let user: UserProfile
     let phaseStatus: AdaptivePhaseStatus?
     let stats: ProgressStats?
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     private var diagnosisDisplay: (String, String?) {
         if user.tendinopathyType == .neckShoulderTension {
-            return ("Nacken & Schulter", "Verspannung")
+            return isEn ? ("Neck & Shoulder", "Tension") : ("Nacken & Schulter", "Verspannung")
         }
         return (user.tendinopathyType.displayName, nil)
     }
@@ -159,21 +165,21 @@ struct StatsRow: View {
             GridItem(.flexible()),
         ], spacing: 12) {
             StatCard(
-                label: "Diagnose",
+                label: isEn ? "Diagnosis" : "Diagnose",
                 value: diagnosisDisplay.0,
                 secondLine: diagnosisDisplay.1,
                 isCompact: true
             )
 
             StatCard(
-                label: "Training seit",
-                value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                label: isEn ? "Training since" : "Training seit",
+                value: isEn
                     ? "\(user.daysSinceStart) days"
                     : "\(user.daysSinceStart) Tage"
             )
 
             StatCard(
-                label: "Phase",
+                label: isEn ? "Phase" : "Phase",
                 value: "\(user.currentPhase)/\(user.maxPhase)"
             )
         }
@@ -220,17 +226,21 @@ struct StatCard: View {
 // MARK: - Welcome Card
 
 struct WelcomeCard: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
+
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "figure.run")
                 .font(.system(size: 32))
                 .foregroundStyle(.accent)
 
-            Text("Willkommen bei Reapptivate!")
+            Text(isEn ? "Welcome to Reapptivate!" : "Willkommen bei Reapptivate!")
                 .font(.appHeadline)
                 .foregroundStyle(.textPrimary)
 
-            Text("Starten Sie Ihr erstes Training, um Ihren Fortschritt zu verfolgen.")
+            Text(isEn ? "Start your first workout to track your progress." : "Starten Sie Ihr erstes Training, um Ihren Fortschritt zu verfolgen.")
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -279,6 +289,9 @@ struct PhaseStatusQuickCard: View {
 
 struct StreakCard: View {
     let streak: StreakResponse
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     @ScaledMetric(relativeTo: .body) private var flameSize: CGFloat = 36
 
@@ -295,7 +308,7 @@ struct StreakCard: View {
                     Text("\(streak.currentStreak)")
                         .font(.appTitle2)
                         .foregroundStyle(.textPrimary)
-                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    Text(isEn
                         ? "\(streak.currentStreak == 1 ? "day" : "days") streak"
                         : (streak.currentStreak == 1 ? "Tag Streak" : "Tage Streak"))
                         .font(.appSubheadline)
@@ -309,7 +322,7 @@ struct StreakCard: View {
                                 .font(.appCaption2)
                                 .foregroundStyle(Color.painAmber)
                                 .accessibilityHidden(true)
-                            Text("Rekord: \(streak.longestStreak)")
+                            Text(isEn ? "Record: \(streak.longestStreak)" : "Rekord: \(streak.longestStreak)")
                                 .font(.appCaption)
                                 .foregroundStyle(.textSecondary)
                         }
@@ -333,7 +346,7 @@ struct StreakCard: View {
         }
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        .accessibilityLabel(isEn
             ? "Streak: \(streak.currentStreak) \(streak.currentStreak == 1 ? "day" : "days"), record: \(streak.longestStreak)"
             : "Streak: \(streak.currentStreak) \(streak.currentStreak == 1 ? "Tag" : "Tage"), Rekord: \(streak.longestStreak)")
     }

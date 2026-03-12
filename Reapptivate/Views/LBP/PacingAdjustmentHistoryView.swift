@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PacingAdjustmentHistoryView: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(spacing: 12) {
@@ -9,7 +10,7 @@ struct PacingAdjustmentHistoryView: View {
                 Image(systemName: "arrow.triangle.branch")
                     .font(.appTitle3)
                     .foregroundStyle(.painAmber)
-                Text("Plan-Anpassungen")
+                Text(appLanguage == "en" ? "Plan Adjustments" : "Plan-Anpassungen")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -17,10 +18,12 @@ struct PacingAdjustmentHistoryView: View {
 
             if viewModel.planAdjustments.isEmpty {
                 VStack(spacing: 8) {
-                    Text("Keine Anpassungen")
+                    Text(appLanguage == "en" ? "No adjustments" : "Keine Anpassungen")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
-                    Text("Automatische Anpassungen werden hier angezeigt, wenn Trigger-Regeln aktiviert werden.")
+                    Text(appLanguage == "en"
+                        ? "Automatic adjustments will appear here when trigger rules are activated."
+                        : "Automatische Anpassungen werden hier angezeigt, wenn Trigger-Regeln aktiviert werden.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                         .multilineTextAlignment(.center)
@@ -42,13 +45,14 @@ struct PacingAdjustmentHistoryView: View {
 
 struct AdjustmentRow: View {
     let adjustment: PlanAdjustment
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var ruleDisplayName: String {
         switch adjustment.ruleId {
-        case "FLARE_RULE": return "Schmerz-Schub"
-        case "LOW_ADHERENCE_RULE": return "Niedrige Adhärenz"
-        case "OVERDOING_RULE_DER": return "Überbelastung"
-        case "FEAR_STUCK_RULE": return "Vermeidung erkannt"
+        case "FLARE_RULE": return appLanguage == "en" ? "Pain Flare" : "Schmerz-Schub"
+        case "LOW_ADHERENCE_RULE": return appLanguage == "en" ? "Low Adherence" : "Niedrige Adhärenz"
+        case "OVERDOING_RULE_DER": return appLanguage == "en" ? "Overexertion" : "Überbelastung"
+        case "FEAR_STUCK_RULE": return appLanguage == "en" ? "Avoidance Detected" : "Vermeidung erkannt"
         default: return adjustment.ruleId
         }
     }
@@ -89,7 +93,7 @@ struct AdjustmentRow: View {
                         .foregroundStyle(.textPrimary)
 
                     if adjustment.applied {
-                        Text("Angewandt")
+                        Text(appLanguage == "en" ? "Applied" : "Angewandt")
                             .font(.appCaption2)
                             .foregroundStyle(.painGreen)
                             .padding(.horizontal, 6)

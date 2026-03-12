@@ -21,6 +21,7 @@ final class AclTodayProgramViewModel {
 
     private let apiClient: APIClient
     private let streamIds: [String]
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
 
     init(apiClient: APIClient, streamIds: [String],
          userGraftType: String?, userConcomitantInjuries: Set<String>) {
@@ -84,7 +85,7 @@ final class AclTodayProgramViewModel {
         }
 
         if streamGroups.isEmpty {
-            errorMessage = "Keine freigeschalteten Streams für heute."
+            errorMessage = isEn ? "No unlocked streams for today." : "Keine freigeschalteten Streams für heute."
         }
 
         isLoading = false

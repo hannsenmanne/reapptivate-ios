@@ -3,6 +3,7 @@ import SwiftUI
 struct AclKpiHistoryView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var selectedTab = 0
     @State private var dailyVM: AclDailyKpiViewModel?
@@ -12,10 +13,10 @@ struct AclKpiHistoryView: View {
     var body: some View {
         VStack(spacing: 16) {
             // Segmented Control
-            Picker("KPI-Kategorie", selection: $selectedTab) {
-                Text("Täglich").tag(0)
-                Text("Wöchentlich").tag(1)
-                Text("Labor").tag(2)
+            Picker(appLanguage == "en" ? "KPI Category" : "KPI-Kategorie", selection: $selectedTab) {
+                Text(appLanguage == "en" ? "Daily" : "Täglich").tag(0)
+                Text(appLanguage == "en" ? "Weekly" : "Wöchentlich").tag(1)
+                Text(appLanguage == "en" ? "Lab" : "Labor").tag(2)
             }
             .pickerStyle(.segmented)
 
@@ -49,7 +50,7 @@ struct AclKpiHistoryView: View {
     private var dailyTabContent: some View {
         if let vm = dailyVM {
             if vm.isLoadingHistory {
-                ProgressView("Lade Tages-KPIs...")
+                ProgressView(appLanguage == "en" ? "Loading daily KPIs..." : "Lade Tages-KPIs...")
                     .frame(maxWidth: .infinity, minHeight: 120)
             } else if let error = vm.errorMessage {
                 InlineErrorView(message: error, onRetry: {
@@ -58,8 +59,8 @@ struct AclKpiHistoryView: View {
             } else if vm.dailyKpis.isEmpty {
                 EmptyStateView(
                     icon: "chart.line.downtrend.xyaxis",
-                    title: "Keine Tages-KPIs",
-                    message: "Erfassen Sie Ihre ersten täglichen Werte."
+                    title: appLanguage == "en" ? "No Daily KPIs" : "Keine Tages-KPIs",
+                    message: appLanguage == "en" ? "Record your first daily values." : "Erfassen Sie Ihre ersten täglichen Werte."
                 )
                 .frame(minHeight: 200)
             } else {
@@ -80,7 +81,7 @@ struct AclKpiHistoryView: View {
     private var weeklyTabContent: some View {
         if let vm = weeklyVM {
             if vm.isLoadingHistory {
-                ProgressView("Lade Wochen-KPIs...")
+                ProgressView(appLanguage == "en" ? "Loading weekly KPIs..." : "Lade Wochen-KPIs...")
                     .frame(maxWidth: .infinity, minHeight: 120)
             } else if let error = vm.errorMessage {
                 InlineErrorView(message: error, onRetry: {
@@ -89,8 +90,8 @@ struct AclKpiHistoryView: View {
             } else if vm.weeklyKpis.isEmpty {
                 EmptyStateView(
                     icon: "calendar.badge.clock",
-                    title: "Keine Wochen-KPIs",
-                    message: "Erfassen Sie Ihre ersten wöchentlichen Werte."
+                    title: appLanguage == "en" ? "No Weekly KPIs" : "Keine Wochen-KPIs",
+                    message: appLanguage == "en" ? "Record your first weekly values." : "Erfassen Sie Ihre ersten wöchentlichen Werte."
                 )
                 .frame(minHeight: 200)
             } else {
@@ -111,7 +112,7 @@ struct AclKpiHistoryView: View {
     private var labTabContent: some View {
         if let vm = labVM {
             if vm.isLoading {
-                ProgressView("Lade Laborwerte...")
+                ProgressView(appLanguage == "en" ? "Loading lab values..." : "Lade Laborwerte...")
                     .frame(maxWidth: .infinity, minHeight: 120)
             } else if let error = vm.errorMessage {
                 InlineErrorView(message: error, onRetry: {
@@ -120,8 +121,8 @@ struct AclKpiHistoryView: View {
             } else if vm.assessments.isEmpty {
                 EmptyStateView(
                     icon: "flask",
-                    title: "Keine Laborwerte",
-                    message: "Laborwerte werden von Ihrem Therapeuten erfasst."
+                    title: appLanguage == "en" ? "No Lab Values" : "Keine Laborwerte",
+                    message: appLanguage == "en" ? "Lab values are recorded by your therapist." : "Laborwerte werden von Ihrem Therapeuten erfasst."
                 )
                 .frame(minHeight: 200)
             } else {
@@ -141,13 +142,14 @@ struct AclKpiHistoryView: View {
 
 private struct DailyKpiCard: View {
     let kpi: AclDailyKpi
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isExpanded = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             // Header row
             HStack {
-                Text(formattedDate(kpi.date))
+                Text(formattedDate(kpi.date, locale: appLanguage))
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
 
@@ -162,23 +164,23 @@ private struct DailyKpiCard: View {
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
-                .accessibilityLabel(isExpanded ? "Details ausblenden" : "Details anzeigen")
+                .accessibilityLabel(isExpanded ? (appLanguage == "en" ? "Hide details" : "Details ausblenden") : (appLanguage == "en" ? "Show details" : "Details anzeigen"))
             }
 
             // Summary row
             HStack(spacing: 16) {
-                KpiPill(label: "Schmerz", value: "\(kpi.painNrs)/10", color: dailyPainColor(kpi.painNrs))
+                KpiPill(label: appLanguage == "en" ? "Pain" : "Schmerz", value: "\(kpi.painNrs)/10", color: dailyPainColor(kpi.painNrs))
 
                 if let flexion = kpi.kneeFlexionDeg {
-                    KpiPill(label: "Flexion", value: "\(flexion)\u{00B0}", color: .textPrimary)
+                    KpiPill(label: appLanguage == "en" ? "Flexion" : "Flexion", value: "\(flexion)\u{00B0}", color: .textPrimary)
                 }
 
                 if let ext = kpi.extensionDeficitDeg {
-                    KpiPill(label: "Ext.def.", value: "\(ext)\u{00B0}", color: .textPrimary)
+                    KpiPill(label: appLanguage == "en" ? "Ext. def." : "Ext.def.", value: "\(ext)\u{00B0}", color: .textPrimary)
                 }
 
                 if let swelling = kpi.swellingGrade {
-                    KpiPill(label: "Erguss", value: "Grad \(swelling)", color: swellingColor(swelling))
+                    KpiPill(label: appLanguage == "en" ? "Effusion" : "Erguss", value: appLanguage == "en" ? "Grade \(swelling)" : "Grad \(swelling)", color: swellingColor(swelling))
                 }
             }
 
@@ -186,16 +188,16 @@ private struct DailyKpiCard: View {
             if isExpanded {
                 VStack(alignment: .leading, spacing: 6) {
                     if let location = kpi.painLocation, !location.isEmpty {
-                        detailRow(label: "Lokalisation", value: location)
+                        detailRow(label: appLanguage == "en" ? "Location" : "Lokalisation", value: location)
                     }
                     if let activity = kpi.painActivity, !activity.isEmpty {
-                        detailRow(label: "Aktivität", value: activity)
+                        detailRow(label: appLanguage == "en" ? "Activity" : "Aktivität", value: activity)
                     }
                     if let quadsLag = kpi.quadsLag {
-                        detailRow(label: "Quad-Lag", value: quadsLag ? "Ja" : "Nein")
+                        detailRow(label: "Quad-Lag", value: quadsLag ? (appLanguage == "en" ? "Yes" : "Ja") : (appLanguage == "en" ? "No" : "Nein"))
                     }
                     if let notes = kpi.notes, !notes.isEmpty {
-                        detailRow(label: "Notizen", value: notes)
+                        detailRow(label: appLanguage == "en" ? "Notes" : "Notizen", value: notes)
                     }
                 }
                 .transition(.opacity.combined(with: .move(edge: .top)))
@@ -236,10 +238,11 @@ private struct DailyKpiCard: View {
 
 private struct WeeklyKpiCard: View {
     let kpi: AclWeeklyKpi
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(formattedDate(kpi.weekDate))
+            Text(formattedDate(kpi.weekDate, locale: appLanguage))
                 .font(.appSubheadlineMedium)
                 .foregroundStyle(.textPrimary)
 
@@ -271,7 +274,7 @@ private struct WeeklyKpiCard: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.appCaption)
                         .foregroundStyle(.painAmber)
-                    Text("Erhöhte Bewegungsangst")
+                    Text(appLanguage == "en" ? "Elevated fear of movement" : "Erhöhte Bewegungsangst")
                         .font(.appCaption)
                         .foregroundStyle(.painAmber)
                 }
@@ -286,17 +289,18 @@ private struct WeeklyKpiCard: View {
 private struct LabAssessmentCard: View {
     let assessment: AclLabAssessment
     var athleteLevel: AclAthleteLevel?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
-                Text("Meilenstein \(assessment.milestone)")
+                Text(appLanguage == "en" ? "Milestone \(assessment.milestone)" : "Meilenstein \(assessment.milestone)")
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.textPrimary)
                 Spacer()
                 if let date = assessment.assessmentDate {
-                    Text(formattedDate(date))
+                    Text(formattedDate(date, locale: appLanguage))
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
@@ -304,42 +308,42 @@ private struct LabAssessmentCard: View {
 
             // Kraft-LSI Section
             if hasStrengthData {
-                sectionHeader("Kraft-LSI")
+                sectionHeader(appLanguage == "en" ? "Strength LSI" : "Kraft-LSI")
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                    lsiRow("Quadrizeps", value: assessment.quadLsi)
+                    lsiRow(appLanguage == "en" ? "Quadriceps" : "Quadrizeps", value: assessment.quadLsi)
                     lsiRow("Hamstring", value: assessment.hamstringLsi)
-                    lsiRow("Hüft-Abd.", value: assessment.hipAbdLsi)
-                    lsiRow("Hüft-Add.", value: assessment.hipAddLsi)
-                    lsiRow("Hüft-ER", value: assessment.hipErLsi)
-                    lsiRow("Wade", value: assessment.calfLsi)
+                    lsiRow(appLanguage == "en" ? "Hip abd." : "Hüft-Abd.", value: assessment.hipAbdLsi)
+                    lsiRow(appLanguage == "en" ? "Hip add." : "Hüft-Add.", value: assessment.hipAddLsi)
+                    lsiRow(appLanguage == "en" ? "Hip ER" : "Hüft-ER", value: assessment.hipErLsi)
+                    lsiRow(appLanguage == "en" ? "Calf" : "Wade", value: assessment.calfLsi)
                 }
             }
 
             // Explosivität Section
             if hasCmjData {
-                sectionHeader("Explosivität")
+                sectionHeader(appLanguage == "en" ? "Explosiveness" : "Explosivität")
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                    lsiRow("DL CMJ konz.", value: assessment.dlCmjConcentricLsi)
-                    lsiRow("DL CMJ exz.", value: assessment.dlCmjEccentricLsi)
-                    lsiRow("SL CMJ Höhe", value: assessment.slCmjHeightLsi)
+                    lsiRow(appLanguage == "en" ? "DL CMJ conc." : "DL CMJ konz.", value: assessment.dlCmjConcentricLsi)
+                    lsiRow(appLanguage == "en" ? "DL CMJ ecc." : "DL CMJ exz.", value: assessment.dlCmjEccentricLsi)
+                    lsiRow(appLanguage == "en" ? "SL CMJ height" : "SL CMJ Höhe", value: assessment.slCmjHeightLsi)
                 }
             }
 
             // Reaktivkraft Section
             if hasReactiveData {
-                sectionHeader("Reaktivkraft")
+                sectionHeader(appLanguage == "en" ? "Reactive Strength" : "Reaktivkraft")
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                     lsiRow("DL DJ RSI", value: assessment.dlDjRsi)
                     lsiRow("SL DJ RSI", value: assessment.slDjRsi)
-                    lsiRow("SL DJ Kontakt", value: assessment.slDjContactTimeLsi)
+                    lsiRow(appLanguage == "en" ? "SL DJ contact" : "SL DJ Kontakt", value: assessment.slDjContactTimeLsi)
                 }
             }
 
             // Running
             if let speed = assessment.runningSpeedKmh {
-                sectionHeader("Laufen")
+                sectionHeader(appLanguage == "en" ? "Running" : "Laufen")
                 HStack {
-                    Text("Geschwindigkeit")
+                    Text(appLanguage == "en" ? "Speed" : "Geschwindigkeit")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Spacer()
@@ -351,7 +355,7 @@ private struct LabAssessmentCard: View {
 
             // Clinical
             if hasClinicalData {
-                sectionHeader("Klinisch")
+                sectionHeader(appLanguage == "en" ? "Clinical" : "Klinisch")
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                     if let ikdc = assessment.ikdcScore {
                         clinicalRow("IKDC", value: String(format: "%.0f%%", ikdc))
@@ -366,7 +370,7 @@ private struct LabAssessmentCard: View {
                         clinicalRow("Ext.def.", value: String(format: "%.0f\u{00B0}", ext))
                     }
                     if let swelling = assessment.swellingGrade {
-                        clinicalRow("Erguss", value: "Grad \(swelling)")
+                        clinicalRow(appLanguage == "en" ? "Effusion" : "Erguss", value: appLanguage == "en" ? "Grade \(swelling)" : "Grad \(swelling)")
                     }
                 }
             }
@@ -374,7 +378,7 @@ private struct LabAssessmentCard: View {
             // Notes
             if let notes = assessment.notes, !notes.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Notizen")
+                    Text(appLanguage == "en" ? "Notes" : "Notizen")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Text(notes)
@@ -488,9 +492,16 @@ private enum KpiDateFormatters {
         return f
     }()
 
-    static let display: DateFormatter = {
+    static let displayDE: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "de_DE")
+        f.dateStyle = .medium
+        return f
+    }()
+
+    static let displayEN: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US")
         f.dateStyle = .medium
         return f
     }()
@@ -503,12 +514,13 @@ private enum KpiDateFormatters {
     }()
 }
 
-private func formattedDate(_ dateString: String) -> String {
+private func formattedDate(_ dateString: String, locale: String = "de") -> String {
+    let formatter = locale == "en" ? KpiDateFormatters.displayEN : KpiDateFormatters.displayDE
     if let date = KpiDateFormatters.iso.date(from: dateString) {
-        return KpiDateFormatters.display.string(from: date)
+        return formatter.string(from: date)
     }
     if let date = KpiDateFormatters.fallback.date(from: dateString) {
-        return KpiDateFormatters.display.string(from: date)
+        return formatter.string(from: date)
     }
     return dateString
 }

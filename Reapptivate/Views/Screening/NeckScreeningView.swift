@@ -4,6 +4,7 @@ struct NeckScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let isRescreening: Bool
     var isEmbedded = false
@@ -12,11 +13,13 @@ struct NeckScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "NDI-Fragebogen laden...")
+                        LoadingView(message: isEn ? "Loading NDI questionnaire..." : "NDI-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         NeckResultView(result: result) {
                             // Update AppState immediately - screening was successfully submitted
@@ -37,11 +40,11 @@ struct NeckScreeningView: View {
                                 .padding(.top, 8)
 
                             HStack {
-                                Text("Teil \(vm.currentPart)")
+                                Text(isEn ? "Part \(vm.currentPart)" : "Teil \(vm.currentPart)")
                                     .font(.appCaptionMedium)
                                     .foregroundStyle(.accent)
                                 Spacer()
-                                Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
+                                Text(isEn ? "\(vm.currentItemIndex + 1) of \(vm.items.count)" : "\(vm.currentItemIndex + 1) von \(vm.items.count)")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -78,7 +81,7 @@ struct NeckScreeningView: View {
                                         if vm.isSubmitting {
                                             ProgressView().tint(.white)
                                         } else {
-                                            Text("Auswertung anzeigen")
+                                            Text(isEn ? "Show results" : "Auswertung anzeigen")
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
@@ -99,7 +102,7 @@ struct NeckScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "NDI-Rescreening" : "NDI-Screening")
+            .navigationTitle(isRescreening ? (isEn ? "NDI Rescreening" : "NDI-Rescreening") : (isEn ? "NDI Screening" : "NDI-Screening"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -114,14 +117,14 @@ struct NeckScreeningView: View {
             }
             .interactiveDismissDisabled()
             .conditionalHaptic(.selection, trigger: selectionTrigger)
-            .alert("Fehler", isPresented: Binding(
+            .alert(isEn ? "Error" : "Fehler", isPresented: Binding(
                 get: { refreshError != nil },
                 set: { if !$0 { refreshError = nil } }
             )) {
-                Button("Erneut versuchen") {
+                Button(isEn ? "Try again" : "Erneut versuchen") {
                     Task { await refreshProfile() }
                 }
-                Button("Abbrechen", role: .cancel) {
+                Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) {
                     refreshError = nil
                 }
             } message: {
@@ -142,7 +145,7 @@ struct NeckScreeningView: View {
             let response: UserResponse = try await apiClient.request(APIEndpoints.me())
             appState.handleLogin(user: response.user)
         } catch {
-            refreshError = "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+            refreshError = appLanguage == "en" ? "Could not update profile. Please try again." : "Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
         }
     }
 }
@@ -150,9 +153,12 @@ struct NeckScreeningView: View {
 // MARK: - Part Transition
 
 struct PartTransitionView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let onContinue: () -> Void
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 24) {
             Spacer()
 
@@ -160,11 +166,11 @@ struct PartTransitionView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.painGreen)
 
-            Text("Teil A abgeschlossen!")
+            Text(isEn ? "Part A completed!" : "Teil A abgeschlossen!")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
-            Text("Jetzt folgt Teil B: Der Neck Disability Index (NDI) bewertet die Auswirkung Ihrer Nackenschmerzen auf den Alltag.")
+            Text(isEn ? "Now follows Part B: The Neck Disability Index (NDI) assesses the impact of your neck pain on daily life." : "Jetzt folgt Teil B: Der Neck Disability Index (NDI) bewertet die Auswirkung Ihrer Nackenschmerzen auf den Alltag.")
                 .font(.appBody)
                 .foregroundStyle(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -173,7 +179,7 @@ struct PartTransitionView: View {
             Button {
                 onContinue()
             } label: {
-                Text("Weiter zu Teil B")
+                Text(isEn ? "Continue to Part B" : "Weiter zu Teil B")
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
             }

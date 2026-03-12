@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NeckFocusAreasView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var focusAreas: [NdiFocusArea] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
@@ -13,14 +14,14 @@ struct NeckFocusAreasView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
                     .accessibilityHidden(true)
-                Text("Schwerpunktbereiche")
+                Text(appLanguage == "en" ? "Focus Areas" : "Schwerpunktbereiche")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("Schwerpunkte laden...")
+                ProgressView(appLanguage == "en" ? "Loading focus areas..." : "Schwerpunkte laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -31,7 +32,7 @@ struct NeckFocusAreasView: View {
                     }
                 )
             } else if focusAreas.isEmpty {
-                Text("Keine Schwerpunktbereiche verfügbar")
+                Text(appLanguage == "en" ? "No focus areas available" : "Keine Schwerpunktbereiche verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -54,7 +55,7 @@ struct NeckFocusAreasView: View {
             let response: NeckFocusAreasResponse = try await apiClient.request(APIEndpoints.neckFocusAreas())
             focusAreas = response.focusAreas
         } catch {
-            errorMessage = "Schwerpunkte konnten nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load focus areas." : "Schwerpunkte konnten nicht geladen werden."
         }
         isLoading = false
     }

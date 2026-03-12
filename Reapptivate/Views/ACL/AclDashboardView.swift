@@ -183,6 +183,7 @@ struct AclProfileQuickCard: View {
     let milestone: Int
     let weeksPostSurgery: Int
     let graftType: AclGraftType?
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         LazyVGrid(columns: [
@@ -202,7 +203,7 @@ struct AclProfileQuickCard: View {
                 value: "\(weeksPostSurgery)"
             )
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            .accessibilityLabel(appLanguage == "en"
                 ? "\(weeksPostSurgery) week\(weeksPostSurgery == 1 ? "" : "s") post surgery"
                 : "\(weeksPostSurgery) Wochen nach Operation")
 
@@ -270,6 +271,7 @@ struct AclNextCriteriaCard: View {
 struct AclActiveStreamsCard: View {
     let streams: [AclStream]
     let onViewAll: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @ScaledMetric(relativeTo: .body) private var streamIconSize: CGFloat = 32
 
@@ -304,7 +306,7 @@ struct AclActiveStreamsCard: View {
                         Text(stream.nameDE ?? stream.name)
                             .font(.appSubheadlineMedium)
                             .foregroundStyle(.textPrimary)
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(appLanguage == "en"
                             ? "\(stream.exerciseCount ?? 0) exercise\((stream.exerciseCount ?? 0) == 1 ? "" : "s")"
                             : "\(stream.exerciseCount ?? 0) Übungen")
                             .font(.appCaption)

@@ -6,6 +6,9 @@ struct ExerciseVideoPlayer: View {
     let urlString: String
     let title: String?
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
+    private var isEn: Bool { appLanguage == "en" }
 
     private var source: VideoSource {
         VideoSource.detect(urlString)
@@ -38,11 +41,11 @@ struct ExerciseVideoPlayer: View {
                                     .scaledToFit()
                             case .failure:
                                 ContentUnavailableView(
-                                    "GIF konnte nicht geladen werden",
+                                    isEn ? "Could not load GIF" : "GIF konnte nicht geladen werden",
                                     systemImage: "photo.badge.exclamationmark"
                                 )
                             case .empty:
-                                ProgressView("Lade GIF...")
+                                ProgressView(isEn ? "Loading GIF..." : "Lade GIF...")
                                     .frame(maxWidth: .infinity, minHeight: 300)
                             @unknown default:
                                 EmptyView()
@@ -52,12 +55,12 @@ struct ExerciseVideoPlayer: View {
 
                 case .unknown:
                     ContentUnavailableView {
-                        Label("Nicht unterstützt", systemImage: "exclamationmark.triangle")
+                        Label(isEn ? "Not supported" : "Nicht unterstützt", systemImage: "exclamationmark.triangle")
                     } description: {
-                        Text("Dieses Videoformat wird nicht unterstützt.")
+                        Text(isEn ? "This video format is not supported." : "Dieses Videoformat wird nicht unterstützt.")
                     } actions: {
                         if let url = URL(string: urlString) {
-                            Link("In Safari öffnen", destination: url)
+                            Link(isEn ? "Open in Safari" : "In Safari öffnen", destination: url)
                         }
                     }
                 }

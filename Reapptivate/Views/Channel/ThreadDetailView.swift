@@ -3,28 +3,31 @@ import SwiftUI
 struct ThreadDetailView: View {
     let threadId: String
     let viewModel: MessagingViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var messageText = ""
     @State private var hapticTrigger = false
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 0) {
             // Status Badge
             if let thread = viewModel.currentThread {
-                threadStatusBar(thread)
+                threadStatusBar(thread, isEn: isEn)
             }
 
             // Messages
             ScrollViewReader { proxy in
                 ScrollView {
                     if viewModel.isLoadingMessages && viewModel.currentMessages.isEmpty {
-                        ProgressView("Nachrichten laden...")
+                        ProgressView(isEn ? "Loading messages..." : "Nachrichten laden...")
                             .frame(maxWidth: .infinity, minHeight: 200)
                     } else if viewModel.currentMessages.isEmpty {
                         EmptyStateView(
                             icon: "bubble.left.and.bubble.right",
-                            title: "Noch keine Nachrichten",
-                            message: "Sende die erste Nachricht."
+                            title: isEn ? "No messages yet" : "Noch keine Nachrichten",
+                            message: isEn ? "Send the first message." : "Sende die erste Nachricht."
                         )
                         .padding(.top, 40)
                     } else {
@@ -48,10 +51,10 @@ struct ThreadDetailView: View {
             }
 
             // Reply Bar
-            replyBar
+            replyBar(isEn: isEn)
         }
         .background(Color.appBg)
-        .navigationTitle(viewModel.currentThread?.subject ?? "Nachricht")
+        .navigationTitle(viewModel.currentThread?.subject ?? (isEn ? "Message" : "Nachricht"))
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: hapticTrigger)
         .task {
@@ -65,17 +68,19 @@ struct ThreadDetailView: View {
 
     // MARK: - Status Bar
 
-    private func threadStatusBar(_ thread: ClinicalThread) -> some View {
+    private func threadStatusBar(_ thread: ClinicalThread, isEn: Bool) -> some View {
         HStack(spacing: 8) {
             Image(systemName: thread.threadTypeIcon)
                 .font(.appCaption)
 
-            Text(thread.threadTypeLabel)
+            Text(threadTypeLabel(for: thread, isEn: isEn))
                 .font(.appCaptionMedium)
 
             Spacer()
 
-            Text(thread.isOpen ? "Offen" : "Gelöst")
+            Text(thread.isOpen
+                ? (isEn ? "Open" : "Offen")
+                : (isEn ? "Resolved" : "Gelöst"))
                 .font(.appCaptionBold)
                 .foregroundStyle(thread.isOpen ? .painAmber : .painGreen)
                 .padding(.horizontal, 8)
@@ -94,9 +99,9 @@ struct ThreadDetailView: View {
 
     // MARK: - Reply Bar
 
-    private var replyBar: some View {
+    private func replyBar(isEn: Bool) -> some View {
         HStack(spacing: 12) {
-            TextField("Nachricht schreiben...", text: $messageText, axis: .vertical)
+            TextField(isEn ? "Write a message..." : "Nachricht schreiben...", text: $messageText, axis: .vertical)
                 .lineLimit(1...4)
                 .inputFieldStyle()
                 .focused($isTextFieldFocused)
@@ -114,7 +119,7 @@ struct ThreadDetailView: View {
                 }
             }
             .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isSending)
-            .accessibilityLabel("Senden")
+            .accessibilityLabel(isEn ? "Send" : "Senden")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -135,6 +140,16 @@ struct ThreadDetailView: View {
             messageText = ""
             hapticTrigger.toggle()
             isTextFieldFocused = false
+        }
+    }
+
+    private func threadTypeLabel(for thread: ClinicalThread, isEn: Bool) -> String {
+        switch thread.threadType {
+        case "flag_concern": return isEn ? "Concern" : "Bedenken"
+        case "exercise_question": return isEn ? "Question" : "Frage"
+        case "progress_share": return isEn ? "Progress" : "Fortschritt"
+        case "free_text": return isEn ? "Message" : "Nachricht"
+        default: return thread.threadType
         }
     }
 }

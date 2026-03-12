@@ -10,6 +10,7 @@ final class QuoteLoader: @unchecked Sendable {
     static let shared = QuoteLoader()
 
     private var cache: [MotivationalQuote]?
+    private var cachedLocale: String?
     private let lock = NSLock()
 
     private init() {}
@@ -18,15 +19,23 @@ final class QuoteLoader: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
 
-        if let cache { return cache }
+        let currentLocale = UserDefaults.standard.string(forKey: "appLanguage") ?? "de"
+        if let cache, cachedLocale == currentLocale {
+            return cache
+        }
 
-        guard let url = Bundle.main.url(forResource: "motivational-quotes", withExtension: "json"),
+        let isEnglish = currentLocale == "en"
+        let resourceName = isEnglish ? "motivational-quotes_en" : "motivational-quotes"
+        let resolvedName = Bundle.main.url(forResource: resourceName, withExtension: "json") != nil
+            ? resourceName : "motivational-quotes"
+        guard let url = Bundle.main.url(forResource: resolvedName, withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let quotes = try? JSONDecoder().decode([MotivationalQuote].self, from: data) else {
             return []
         }
 
         cache = quotes
+        cachedLocale = currentLocale
         return quotes
     }
 

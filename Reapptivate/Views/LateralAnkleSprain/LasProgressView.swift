@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LasProgressView: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var history: [LasHistoryEntry] = []
     @State private var isLoading = true
     @State private var showRescreening = false
@@ -14,14 +15,14 @@ struct LasProgressView: View {
                     .font(.appTitle3)
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
-                Text("CAIT-Verlauf")
+                Text(appLanguage == "en" ? "CAIT Progress" : "CAIT-Verlauf")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
             }
 
             if isLoading {
-                ProgressView("CAIT-Verlauf laden...")
+                ProgressView(appLanguage == "en" ? "Loading CAIT progress..." : "CAIT-Verlauf laden...")
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
@@ -32,7 +33,7 @@ struct LasProgressView: View {
                     }
                 )
             } else if history.isEmpty {
-                Text("Noch keine Screening-Daten")
+                Text(appLanguage == "en" ? "No screening data yet" : "Noch keine Screening-Daten")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
@@ -55,7 +56,7 @@ struct LasProgressView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Rescreening durchführen")
+                        Text(appLanguage == "en" ? "Perform rescreening" : "Rescreening durchführen")
                     }
                     .font(.appSubheadlineMedium)
                     .foregroundStyle(.accent)
@@ -84,7 +85,7 @@ struct LasProgressView: View {
             let response: LasHistoryResponse = try await apiClient.request(APIEndpoints.lasHistory())
             history = response.history
         } catch {
-            errorMessage = "CAIT-Verlauf konnte nicht geladen werden."
+            errorMessage = appLanguage == "en" ? "Could not load CAIT progress." : "CAIT-Verlauf konnte nicht geladen werden."
         }
         isLoading = false
     }
@@ -94,6 +95,7 @@ struct LasProgressView: View {
 
 private struct LasHistoryRow: View {
     let entry: LasHistoryEntry
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .caption) private var scoreCircleSize: CGFloat = 32
 
     var body: some View {
@@ -106,7 +108,7 @@ private struct LasHistoryRow: View {
                         .font(.appCaptionBold)
                         .foregroundStyle(.white)
                 }
-                .accessibilityLabel("CAIT-Score \(entry.caitScore)")
+                .accessibilityLabel(appLanguage == "en" ? "CAIT score \(entry.caitScore)" : "CAIT-Score \(entry.caitScore)")
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("CAIT: \(entry.caitScore)/30")
@@ -120,7 +122,7 @@ private struct LasHistoryRow: View {
             Spacer()
 
             if let date = entry.createdAtDate {
-                Text(date.formattedGerman)
+                Text(date.formattedLocalizedLong)
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -175,6 +177,6 @@ struct LasSparkline: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("CAIT-Verlaufsdiagramm")
+        .accessibilityLabel("CAIT progress chart")
     }
 }

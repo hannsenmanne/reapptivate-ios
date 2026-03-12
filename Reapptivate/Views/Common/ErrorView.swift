@@ -4,13 +4,17 @@ struct ErrorView: View {
     let message: String
     var retryAction: (() async -> Void)?
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
+
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 20) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 48))
                 .foregroundStyle(.painAmber)
 
-            Text("Fehler")
+            Text(isEn ? "Error" : "Fehler")
                 .font(.appTitle2)
                 .foregroundStyle(.textPrimary)
 
@@ -24,7 +28,7 @@ struct ErrorView: View {
                 Button {
                     Task { await retryAction() }
                 } label: {
-                    Label("Erneut versuchen", systemImage: "arrow.clockwise")
+                    Label(isEn ? "Try again" : "Erneut versuchen", systemImage: "arrow.clockwise")
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
                 }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MessagesTab: View {
     let viewModel: MessagingViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         NavigationStack {
@@ -9,7 +10,7 @@ struct MessagesTab: View {
                 .navigationDestination(for: String.self) { threadId in
                     ThreadDetailView(threadId: threadId, viewModel: viewModel)
                 }
-                .navigationTitle("Nachrichten")
+                .navigationTitle(appLanguage == "en" ? "Messages" : "Nachrichten")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }

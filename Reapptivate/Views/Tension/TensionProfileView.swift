@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TensionProfileView: View {
     let severity: TsiSeverityGrade
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
         VStack(spacing: 12) {
@@ -17,7 +18,7 @@ struct TensionProfileView: View {
                     }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("TSI-Schweregrad")
+                    Text(appLanguage == "en" ? "TSI Severity" : "TSI-Schweregrad")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                     Text(severity.displayName)
@@ -56,11 +57,17 @@ struct TensionProfileView: View {
     var severityDescription: String {
         switch severity {
         case .LEICHT:
-            "Leichte Verspannung. Standard-Übungsprogression mit allen Intensitätsstufen."
+            appLanguage == "en"
+                ? "Mild tension. Standard exercise progression with all intensity levels."
+                : "Leichte Verspannung. Standard-Übungsprogression mit allen Intensitätsstufen."
         case .MITTEL:
-            "Moderate Verspannung. Angepasste Übungen mit langsamerer Steigerung."
+            appLanguage == "en"
+                ? "Moderate tension. Adapted exercises with slower progression."
+                : "Moderate Verspannung. Angepasste Übungen mit langsamerer Steigerung."
         case .SCHWER, .unknown:
-            "Deutliche Verspannung. Sanfter Beginn mit verlängerten Phasen und reduzierter Belastung."
+            appLanguage == "en"
+                ? "Significant tension. Gentle start with extended phases and reduced load."
+                : "Deutliche Verspannung. Sanfter Beginn mit verlängerten Phasen und reduzierter Belastung."
         }
     }
 }

@@ -10,6 +10,7 @@ struct AclTodayExerciseRow: View {
     let onToggle: () -> Void
     var onTap: (() -> Void)?
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isExpanded = false
 
     var body: some View {
@@ -79,7 +80,9 @@ struct AclTodayExerciseRow: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(isSubmitting)
-                .accessibilityLabel(isCompleted ? "Als unerledigt markieren" : "Als erledigt markieren")
+                .accessibilityLabel(isCompleted
+                    ? (appLanguage == "en" ? "Mark as incomplete" : "Als unerledigt markieren")
+                    : (appLanguage == "en" ? "Mark as complete" : "Als erledigt markieren"))
                 .accessibilityHint(exercise.nameDE ?? exercise.name)
             }
 
@@ -219,7 +222,7 @@ struct AclTodayExerciseRow: View {
     private func buildParams() -> [ParamTag] {
         var tags: [ParamTag] = []
         if let sets = exercise.sets {
-            tags.append(ParamTag(label: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            tags.append(ParamTag(label: appLanguage == "en"
                 ? "\(sets) set\(sets == 1 ? "" : "s")"
                 : "\(sets) Sätze", color: .farBlue))
         }

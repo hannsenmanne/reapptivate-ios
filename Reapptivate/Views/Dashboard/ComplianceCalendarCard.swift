@@ -2,8 +2,13 @@ import SwiftUI
 
 struct ComplianceCalendarCard: View {
     let entries: [ProgressEntry]
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
-    private let dayLabels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    private var dayLabels: [String] {
+        appLanguage == "en"
+            ? ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+            : ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    }
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
 
     private var calendarDays: [CalendarDay] {
@@ -44,7 +49,7 @@ struct ComplianceCalendarCard: View {
             HStack(spacing: 8) {
                 Image(systemName: "calendar")
                     .foregroundStyle(.accent)
-                Text("Trainingskalender")
+                Text(appLanguage == "en" ? "Training Calendar" : "Trainingskalender")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -78,7 +83,7 @@ struct ComplianceCalendarCard: View {
 
             // Legend
             HStack(spacing: 16) {
-                LegendItem(color: Color.textSecondary.opacity(0.08), label: "Kein Training")
+                LegendItem(color: Color.textSecondary.opacity(0.08), label: appLanguage == "en" ? "No training" : "Kein Training")
                 LegendItem(color: Color.accent.opacity(0.35), label: "1-2")
                 LegendItem(color: Color.accent, label: "3+")
             }

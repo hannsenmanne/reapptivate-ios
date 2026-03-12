@@ -3,6 +3,7 @@ import SwiftUI
 struct FearHierarchyBuilderView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: LbpEnhancementsViewModel
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var items: [BuilderItem] = []
     @State private var isSaving = false
@@ -10,16 +11,11 @@ struct FearHierarchyBuilderView: View {
     @State private var saveTrigger = false
     @State private var validationError: String?
 
-    private let suggestions = [
-        "Schweres Heben",
-        "Langes Sitzen",
-        "Sport treiben",
-        "Bucken",
-        "Treppensteigen",
-        "Gartenarbeit",
-        "Einkaufen tragen",
-        "Laufen/Joggen"
-    ]
+    private var suggestions: [String] {
+        appLanguage == "en"
+            ? ["Heavy lifting", "Prolonged sitting", "Exercise", "Bending", "Climbing stairs", "Gardening", "Carrying groceries", "Running/Jogging"]
+            : ["Schweres Heben", "Langes Sitzen", "Sport treiben", "Bucken", "Treppensteigen", "Gartenarbeit", "Einkaufen tragen", "Laufen/Joggen"]
+    }
 
     var body: some View {
         NavigationStack {
@@ -27,10 +23,14 @@ struct FearHierarchyBuilderView: View {
                 VStack(spacing: 20) {
                     // Instructions
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Erstellen Sie eine Liste von Aktivitäten, vor denen Sie Angst haben oder die Sie vermeiden.")
+                        Text(appLanguage == "en"
+                            ? "Create a list of activities that you fear or avoid."
+                            : "Erstellen Sie eine Liste von Aktivitäten, vor denen Sie Angst haben oder die Sie vermeiden.")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
-                        Text("Bewerten Sie jede Aktivität mit einem Angst-Level von 0 (keine Angst) bis 10 (maximale Angst).")
+                        Text(appLanguage == "en"
+                            ? "Rate each activity with a fear level from 0 (no fear) to 10 (maximum fear)."
+                            : "Bewerten Sie jede Aktivität mit einem Angst-Level von 0 (keine Angst) bis 10 (maximale Angst).")
                             .font(.appSubheadline)
                             .foregroundStyle(.textSecondary)
                     }
@@ -40,7 +40,7 @@ struct FearHierarchyBuilderView: View {
                     // Suggested activities
                     if showSuggestions && items.count < 3 {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Vorschläge")
+                            Text(appLanguage == "en" ? "Suggestions" : "Vorschläge")
                                 .font(.appCaptionMedium)
                                 .foregroundStyle(.textSecondary)
 
@@ -69,7 +69,7 @@ struct FearHierarchyBuilderView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "plus")
-                            Text("Aktivität hinzufügen")
+                            Text(appLanguage == "en" ? "Add activity" : "Aktivität hinzufügen")
                         }
                         .font(.appSubheadlineMedium)
                         .foregroundStyle(.farBlue)
@@ -100,7 +100,7 @@ struct FearHierarchyBuilderView: View {
                                 if isSaving {
                                     ProgressView().tint(.white)
                                 } else {
-                                    Text("Hierarchie speichern")
+                                    Text(appLanguage == "en" ? "Save hierarchy" : "Hierarchie speichern")
                                 }
                             }
                             .font(.appBodySemibold)
@@ -116,11 +116,11 @@ struct FearHierarchyBuilderView: View {
                 .padding(24)
             }
             .background(Color.appBg)
-            .navigationTitle("Angst-Hierarchie")
+            .navigationTitle(appLanguage == "en" ? "Fear Hierarchy" : "Angst-Hierarchie")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button(appLanguage == "en" ? "Cancel" : "Abbrechen") { dismiss() }
                 }
             }
             .conditionalHaptic(.success, trigger: saveTrigger)
@@ -135,20 +135,28 @@ struct FearHierarchyBuilderView: View {
 
     private func validate() -> String? {
         guard !items.isEmpty else {
-            return "Fügen Sie mindestens eine Aktivität hinzu."
+            return appLanguage == "en"
+                ? "Add at least one activity."
+                : "Fügen Sie mindestens eine Aktivität hinzu."
         }
 
         guard items.count >= 3 else {
-            return "Eine Hierarchie benötigt mindestens 3 Aktivitäten."
+            return appLanguage == "en"
+                ? "A hierarchy requires at least 3 activities."
+                : "Eine Hierarchie benötigt mindestens 3 Aktivitäten."
         }
 
         for (index, item) in items.enumerated() {
             let trimmed = item.name.trimmingCharacters(in: .whitespaces)
             if trimmed.isEmpty {
-                return "Aktivität \(index + 1) benötigt einen Namen."
+                return appLanguage == "en"
+                    ? "Activity \(index + 1) needs a name."
+                    : "Aktivität \(index + 1) benötigt einen Namen."
             }
             if trimmed.count > 50 {
-                return "Aktivität \(index + 1) ist zu lang (max. 50 Zeichen)."
+                return appLanguage == "en"
+                    ? "Activity \(index + 1) is too long (max. 50 characters)."
+                    : "Aktivität \(index + 1) ist zu lang (max. 50 Zeichen)."
             }
         }
 
@@ -216,6 +224,7 @@ struct BuilderItemCard: View {
     let onMoveDown: (() -> Void)?
     let onDelete: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @ScaledMetric(relativeTo: .caption) private var rankCircleSize: CGFloat = 22
 
     var body: some View {
@@ -229,7 +238,7 @@ struct BuilderItemCard: View {
                             .foregroundStyle(onMoveUp != nil ? .textSecondary : .clear)
                     }
                     .disabled(onMoveUp == nil)
-                    .accessibilityLabel("Nach oben verschieben")
+                    .accessibilityLabel(appLanguage == "en" ? "Move up" : "Nach oben verschieben")
 
                     Text("\(rank)")
                         .font(.appCaptionBold)
@@ -244,12 +253,12 @@ struct BuilderItemCard: View {
                             .foregroundStyle(onMoveDown != nil ? .textSecondary : .clear)
                     }
                     .disabled(onMoveDown == nil)
-                    .accessibilityLabel("Nach unten verschieben")
+                    .accessibilityLabel(appLanguage == "en" ? "Move down" : "Nach unten verschieben")
                 }
 
                 VStack(spacing: 8) {
                     // Activity name
-                    TextField("Aktivität", text: $item.name)
+                    TextField(appLanguage == "en" ? "Activity" : "Aktivität", text: $item.name)
                         .font(.appSubheadline)
                         .padding(10)
                         .background(Color.appBg)
@@ -258,7 +267,7 @@ struct BuilderItemCard: View {
 
                     // Fear rating slider
                     HStack(spacing: 8) {
-                        Text("Angst:")
+                        Text(appLanguage == "en" ? "Fear:" : "Angst:")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
 
@@ -267,8 +276,8 @@ struct BuilderItemCard: View {
                             set: { item.fearRating = Int($0) }
                         ), in: 0...10, step: 1)
                         .tint(ratingColor)
-                        .accessibilityLabel("Angst-Bewertung")
-                        .accessibilityValue("\(item.fearRating) von 10")
+                        .accessibilityLabel(appLanguage == "en" ? "Fear rating" : "Angst-Bewertung")
+                        .accessibilityValue(appLanguage == "en" ? "\(item.fearRating) of 10" : "\(item.fearRating) von 10")
 
                         Text("\(item.fearRating)")
                             .font(.appSubheadlineSemibold.monospacedDigit())
@@ -284,7 +293,7 @@ struct BuilderItemCard: View {
                         .foregroundStyle(.painRed)
                         .frame(width: 32, height: 32)
                 }
-                .accessibilityLabel("Löschen")
+                .accessibilityLabel(appLanguage == "en" ? "Delete" : "Löschen")
             }
         }
         .padding(12)

@@ -133,13 +133,13 @@ enum ExerciseType: String, Codable {
         }
         switch self {
         case .isometric: return "Isometrisch"
-        case .hsr: return "Heavy-Slow Resistance"
+        case .hsr: return "Schwer-Langsam (HSR)"
         case .eccentric: return "Exzentrisch"
         case .concentric: return "Konzentrisch"
         case .motorControl: return "Motorische Kontrolle"
-        case .bodyAwareness: return "Korperwahrnehmung"
+        case .bodyAwareness: return "Körperwahrnehmung"
         case .pacing: return "Pacing"
-        case .gradedActivity: return "Graded Activity"
+        case .gradedActivity: return "Stufenweise Aktivität"
         case .relaxation: return "Entspannung"
         case .functional: return "Funktionell"
         case .unknown: return "Unbekannt"

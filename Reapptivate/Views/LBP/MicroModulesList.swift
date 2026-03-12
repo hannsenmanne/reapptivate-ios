@@ -2,6 +2,8 @@ import SwiftUI
 
 struct MicroModulesList: View {
     @Bindable var viewModel: LbpEnhancementsViewModel
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var markingReadKey: String?
     @State private var markReadTrigger = false
 
@@ -25,7 +27,7 @@ struct MicroModulesList: View {
                 Image(systemName: "book.fill")
                     .font(.appTitle3)
                     .foregroundStyle(.farBlue)
-                Text("Psychoedukation & Module")
+                Text(appLanguage == "en" ? "Psychoeducation & Modules" : "Psychoedukation & Module")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -34,11 +36,11 @@ struct MicroModulesList: View {
             // Progress card
             VStack(spacing: 8) {
                 HStack {
-                    Text("Fortschritt")
+                    Text(appLanguage == "en" ? "Progress" : "Fortschritt")
                         .font(.appCaptionMedium)
                         .foregroundStyle(.textSecondary)
                     Spacer()
-                    Text("\(completedCount) / \(totalCount) Module")
+                    Text(appLanguage == "en" ? "\(completedCount) / \(totalCount) Modules" : "\(completedCount) / \(totalCount) Module")
                         .font(.appCaptionBold)
                         .foregroundStyle(.farBlue)
                 }
@@ -46,7 +48,7 @@ struct MicroModulesList: View {
                 ProgressView(value: Double(completedCount), total: max(1, Double(totalCount)))
                     .tint(.farBlue)
 
-                Text("\(progressPercent)% abgeschlossen")
+                Text(appLanguage == "en" ? "\(progressPercent)% completed" : "\(progressPercent)% abgeschlossen")
                     .font(.appCaption2)
                     .foregroundStyle(.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -65,7 +67,7 @@ struct MicroModulesList: View {
             // Module cards
             if viewModel.microModules.isEmpty {
                 VStack(spacing: 8) {
-                    Text("Keine Module verfügbar")
+                    Text(appLanguage == "en" ? "No modules available" : "Keine Module verfügbar")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                 }

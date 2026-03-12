@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ExerciseListView: View {
     @Environment(AppState.self) private var appState
+    @AppStorage("appLanguage") private var appLanguage = "de"
     let exercises: [ExerciseWithPhase]
     let completedToday: Set<String>
     let onTap: (ExerciseWithPhase) -> Void
@@ -22,7 +23,7 @@ struct ExerciseListView: View {
                     .foregroundStyle(.textSecondary)
 
                 let totalMinutes = exercises.reduce(0) { $0 + $1.exercise.estimatedDurationMinutes }
-                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                Text(appLanguage == "en"
                     ? "~\(totalMinutes) min"
                     : "~\(totalMinutes) Min.")
                     .font(.appCaption)

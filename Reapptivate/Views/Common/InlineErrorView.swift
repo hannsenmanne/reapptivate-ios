@@ -7,6 +7,7 @@ struct InlineErrorView: View {
     let onRetry: (() -> Void)?
     let onDismiss: (() -> Void)?
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var hapticTrigger = false
 
     enum ErrorType {
@@ -59,6 +60,8 @@ struct InlineErrorView: View {
     }
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         HStack(spacing: 10) {
             Image(systemName: errorType.icon)
                 .foregroundStyle(errorType.color)
@@ -79,12 +82,12 @@ struct InlineErrorView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.clockwise")
                             .font(.system(size: 11, weight: .medium))
-                        Text("Erneut")
+                        Text(isEn ? "Retry" : "Erneut")
                             .font(.appCaptionMedium)
                     }
                     .foregroundStyle(.accent)
                 }
-                .accessibilityLabel("Erneut versuchen")
+                .accessibilityLabel(isEn ? "Retry" : "Erneut versuchen")
                 .sensoryFeedback(.selection, trigger: hapticTrigger)
             }
 
@@ -97,7 +100,7 @@ struct InlineErrorView: View {
                         .font(.system(size: 16))
                         .foregroundStyle(.textTertiary)
                 }
-                .accessibilityLabel("Fehler ausblenden")
+                .accessibilityLabel(isEn ? "Dismiss error" : "Fehler ausblenden")
                 .sensoryFeedback(.selection, trigger: hapticTrigger)
             }
         }
@@ -105,15 +108,15 @@ struct InlineErrorView: View {
         .background(errorType.color.opacity(0.08))
         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(errorTypeLabel): \(message)")
+        .accessibilityLabel("\(errorTypeLabel(isEn: isEn)): \(message)")
     }
 
-    private var errorTypeLabel: String {
+    private func errorTypeLabel(isEn: Bool) -> String {
         switch errorType {
-        case .network: return "Netzwerkfehler"
-        case .server: return "Serverfehler"
-        case .validation: return "Eingabefehler"
-        case .generic: return "Fehler"
+        case .network: return isEn ? "Network error" : "Netzwerkfehler"
+        case .server: return isEn ? "Server error" : "Serverfehler"
+        case .validation: return isEn ? "Validation error" : "Eingabefehler"
+        case .generic: return isEn ? "Error" : "Fehler"
         }
     }
 }

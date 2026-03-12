@@ -4,6 +4,7 @@ struct LasScreeningView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     let isRescreening: Bool
     @State private var viewModel: LasScreeningViewModel?
@@ -11,11 +12,13 @@ struct LasScreeningView: View {
     @State private var selectionTrigger = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             Group {
                 if let vm = viewModel {
                     if vm.isLoading {
-                        LoadingView(message: "CAIT-Fragebogen laden...")
+                        LoadingView(message: isEn ? "Loading CAIT questionnaire..." : "CAIT-Fragebogen laden...")
                     } else if showResult, let result = vm.result {
                         LasResultView(result: result) {
                             appState.currentUser?.lasScreeningCompleted = true
@@ -31,7 +34,7 @@ struct LasScreeningView: View {
 
                             HStack {
                                 Spacer()
-                                Text("\(vm.currentItemIndex + 1) von \(vm.items.count)")
+                                Text(isEn ? "\(vm.currentItemIndex + 1) of \(vm.items.count)" : "\(vm.currentItemIndex + 1) von \(vm.items.count)")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -66,7 +69,7 @@ struct LasScreeningView: View {
                                         if vm.isSubmitting {
                                             ProgressView().tint(.white)
                                         } else {
-                                            Text("Auswertung anzeigen")
+                                            Text(isEn ? "Show results" : "Auswertung anzeigen")
                                         }
                                     }
                                     .frame(maxWidth: .infinity)
@@ -83,7 +86,7 @@ struct LasScreeningView: View {
                             await vm.loadConfig()
                         }
                     } else {
-                        ErrorView(message: "CAIT-Fragebogen konnte nicht geladen werden.") {
+                        ErrorView(message: isEn ? "Could not load CAIT questionnaire." : "CAIT-Fragebogen konnte nicht geladen werden.") {
                             await vm.loadConfig()
                         }
                     }
@@ -92,7 +95,7 @@ struct LasScreeningView: View {
                 }
             }
             .background(Color.appBg)
-            .navigationTitle(isRescreening ? "CAIT-Rescreening" : "CAIT-Screening")
+            .navigationTitle(isRescreening ? (isEn ? "CAIT Rescreening" : "CAIT-Rescreening") : (isEn ? "CAIT Screening" : "CAIT-Screening"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

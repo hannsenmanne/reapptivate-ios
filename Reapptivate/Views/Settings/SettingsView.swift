@@ -9,17 +9,21 @@ struct SettingsView: View {
 
     @State private var notificationService = NotificationService.shared
     @State private var showLogoutConfirmation = false
+    @State private var hapticTrigger = false
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
+    @AppStorage("appLanguage") private var appLanguage: String = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         NavigationStack {
             List {
                 // Account
-                Section("Konto") {
+                Section(isEn ? "Account" : "Konto") {
                     if let user = appState.currentUser {
                         HStack {
-                            Text("Name")
+                            Text(isEn ? "Name" : "Name")
                                 .foregroundStyle(.textSecondary)
                             Spacer()
                             Text(user.name)
@@ -27,7 +31,7 @@ struct SettingsView: View {
                         }
 
                         HStack {
-                            Text("E-Mail")
+                            Text(isEn ? "Email" : "E-Mail")
                                 .foregroundStyle(.textSecondary)
                             Spacer()
                             Text(user.email)
@@ -35,7 +39,7 @@ struct SettingsView: View {
                         }
 
                         HStack {
-                            Text("Diagnose")
+                            Text(isEn ? "Diagnosis" : "Diagnose")
                                 .foregroundStyle(.textSecondary)
                             Spacer()
                             Text(user.tendinopathyType.displayName)
@@ -44,7 +48,7 @@ struct SettingsView: View {
 
                         if let subtype = user.aemSubtype {
                             HStack {
-                                Text("AEM-Subtyp")
+                                Text(isEn ? "AEM Subtype" : "AEM-Subtyp")
                                     .foregroundStyle(.textSecondary)
                                 Spacer()
                                 Text(subtype.displayName)
@@ -54,7 +58,7 @@ struct SettingsView: View {
 
                         if let severity = user.ndiSeverity {
                             HStack {
-                                Text("NDI-Stufe")
+                                Text(isEn ? "NDI Level" : "NDI-Stufe")
                                     .foregroundStyle(.textSecondary)
                                 Spacer()
                                 Text(severity.displayName)
@@ -64,7 +68,7 @@ struct SettingsView: View {
 
                         if let severity = user.tsiSeverity {
                             HStack {
-                                Text("TSI-Stufe")
+                                Text(isEn ? "TSI Level" : "TSI-Stufe")
                                     .foregroundStyle(.textSecondary)
                                 Spacer()
                                 Text(severity.displayName)
@@ -74,37 +78,59 @@ struct SettingsView: View {
                     }
                 }
 
+                // Language
+                Section {
+                    languageButton(
+                        flag: "\u{1F1E9}\u{1F1EA}",
+                        label: "Deutsch",
+                        languageCode: "de",
+                        appLang: .german
+                    )
+                    languageButton(
+                        flag: "\u{1F1EC}\u{1F1E7}",
+                        label: "English",
+                        languageCode: "en",
+                        appLang: .english
+                    )
+                } header: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "globe")
+                            .font(.appCaption)
+                        Text(isEn ? "Language" : "Sprache")
+                    }
+                }
+
                 // Schedule
-                Section("Trainingsplan") {
+                Section(isEn ? "Training Schedule" : "Trainingsplan") {
                     NavigationLink {
                         ScheduleEditorView()
                     } label: {
                         HStack(spacing: 12) {
                             Image(systemName: "calendar")
                                 .foregroundStyle(.accent)
-                            Text("Trainingstage & Uhrzeit")
+                            Text(isEn ? "Training Days & Time" : "Trainingstage & Uhrzeit")
                         }
                     }
                 }
 
                 // Notifications
-                Section("Benachrichtigungen") {
+                Section(isEn ? "Notifications" : "Benachrichtigungen") {
                     NavigationLink {
                         NotificationPrefsView()
                     } label: {
                         HStack(spacing: 12) {
                             Image(systemName: "bell.fill")
                                 .foregroundStyle(.accent)
-                            Text("Erinnerungen")
+                            Text(isEn ? "Reminders" : "Erinnerungen")
 
                             Spacer()
 
                             if notificationService.isAuthorized {
-                                Text("Aktiv")
+                                Text(isEn ? "Active" : "Aktiv")
                                     .font(.appCaption)
                                     .foregroundStyle(.painGreen)
                             } else {
-                                Text("Inaktiv")
+                                Text(isEn ? "Inactive" : "Inaktiv")
                                     .font(.appCaption)
                                     .foregroundStyle(.textSecondary)
                             }
@@ -112,47 +138,17 @@ struct SettingsView: View {
                     }
                 }
 
-                // Language
-                Section("Sprache / Language") {
-                    Button {
-                        languageManager.language = .german
-                    } label: {
-                        HStack {
-                            Text("Deutsch")
-                                .foregroundStyle(.textPrimary)
-                            Spacer()
-                            if languageManager.language == .german {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(.accent)
-                            }
-                        }
-                    }
-                    Button {
-                        languageManager.language = .english
-                    } label: {
-                        HStack {
-                            Text("English")
-                                .foregroundStyle(.textPrimary)
-                            Spacer()
-                            if languageManager.language == .english {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(.accent)
-                            }
-                        }
-                    }
-                }
-
                 // Appearance
-                Section("Darstellung") {
+                Section(isEn ? "Appearance" : "Darstellung") {
                     Picker(selection: $appearanceMode) {
                         ForEach(AppearanceMode.allCases, id: \.self) { mode in
-                            Text(mode.label).tag(mode)
+                            Text(appearanceModeLabel(mode, isEn: isEn)).tag(mode)
                         }
                     } label: {
                         HStack(spacing: 12) {
                             Image(systemName: "circle.lefthalf.filled")
                                 .foregroundStyle(.accent)
-                            Text("Erscheinungsbild")
+                            Text(isEn ? "Appearance" : "Erscheinungsbild")
                         }
                     }
 
@@ -160,33 +156,33 @@ struct SettingsView: View {
                         HStack(spacing: 12) {
                             Image(systemName: "hand.tap.fill")
                                 .foregroundStyle(.accent)
-                            Text("Haptisches Feedback")
+                            Text(isEn ? "Haptic Feedback" : "Haptisches Feedback")
                         }
                     }
                 }
 
                 // Achievements
-                Section("Erfolge") {
+                Section(isEn ? "Achievements" : "Erfolge") {
                     NavigationLink {
                         AchievementsView()
                     } label: {
                         HStack(spacing: 12) {
                             Image(systemName: "trophy.fill")
                                 .foregroundStyle(.accent)
-                            Text("Meine Erfolge")
+                            Text(isEn ? "My Achievements" : "Meine Erfolge")
                         }
                     }
                 }
 
                 // Data Privacy
-                Section("Datenschutz") {
+                Section(isEn ? "Privacy" : "Datenschutz") {
                     NavigationLink {
                         DataPrivacyView()
                     } label: {
                         HStack(spacing: 12) {
                             Image(systemName: "hand.raised.fill")
                                 .foregroundStyle(.accent)
-                            Text("Daten & Datenschutz")
+                            Text(isEn ? "Data & Privacy" : "Daten & Datenschutz")
                         }
                     }
                 }
@@ -199,7 +195,7 @@ struct SettingsView: View {
                         HStack(spacing: 12) {
                             Image(systemName: "info.circle")
                                 .foregroundStyle(.accent)
-                            Text("Über die App")
+                            Text(isEn ? "About the App" : "Über die App")
                         }
                     }
                 }
@@ -211,19 +207,20 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Spacer()
-                            Text("Abmelden")
+                            Text(isEn ? "Log Out" : "Abmelden")
                             Spacer()
                         }
                     }
                 }
             }
-            .navigationTitle("Einstellungen")
+            .navigationTitle(isEn ? "Settings" : "Einstellungen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Fertig") { dismiss() }
+                    Button(isEn ? "Done" : "Fertig") { dismiss() }
                 }
             }
+            .sensoryFeedback(.selection, trigger: hapticTrigger)
             .task {
                 await notificationService.checkStatus()
             }
@@ -237,15 +234,51 @@ struct SettingsView: View {
                 let breakCategory  = UNNotificationCategory(identifier: "WORK_TIMER_BREAK", actions: [completeAction, snoozeAction, skipAction], intentIdentifiers: [])
                 UNUserNotificationCenter.current().setNotificationCategories([breakCategory])
             }
-            .alert("Abmelden?", isPresented: $showLogoutConfirmation) {
-                Button("Abbrechen", role: .cancel) { }
-                Button("Abmelden", role: .destructive) {
+            .alert(isEn ? "Log Out?" : "Abmelden?", isPresented: $showLogoutConfirmation) {
+                Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) { }
+                Button(isEn ? "Log Out" : "Abmelden", role: .destructive) {
                     appState.performLogout(apiClient: apiClient)
                     dismiss()
                 }
             } message: {
-                Text("Sie werden ausgeloggt und müssen sich erneut anmelden.")
+                Text(isEn
+                    ? "You will be logged out and need to sign in again."
+                    : "Sie werden ausgeloggt und müssen sich erneut anmelden.")
             }
+        }
+    }
+
+    private func languageButton(flag: String, label: String, languageCode: String, appLang: AppLanguage) -> some View {
+        Button {
+            guard appLanguage != languageCode else { return }
+            appLanguage = languageCode
+            languageManager.language = appLang
+            hapticTrigger.toggle()
+        } label: {
+            HStack(spacing: 12) {
+                Text(flag)
+                    .font(.title3)
+                Text(label)
+                    .font(.appBody)
+                    .foregroundStyle(.textPrimary)
+                Spacer()
+                if appLanguage == languageCode {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.accent)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .contentShape(Rectangle())
+            .animation(.easeInOut(duration: 0.2), value: appLanguage)
+        }
+    }
+
+    private func appearanceModeLabel(_ mode: AppearanceMode, isEn: Bool) -> String {
+        switch mode {
+        case .system: return "System"
+        case .light: return isEn ? "Light" : "Hell"
+        case .dark: return isEn ? "Dark" : "Dunkel"
         }
     }
 }

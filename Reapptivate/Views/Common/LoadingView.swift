@@ -1,13 +1,17 @@
 import SwiftUI
 
 struct LoadingView: View {
-    var message: String = "Laden..."
+    var message: String?
+
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         VStack(spacing: 16) {
             ProgressView()
                 .controlSize(.large)
-            Text(message)
+            Text(message ?? (isEn ? "Loading..." : "Laden..."))
                 .font(.appSubheadline)
                 .foregroundStyle(.textSecondary)
         }

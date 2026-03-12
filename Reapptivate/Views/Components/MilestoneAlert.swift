@@ -8,6 +8,7 @@ struct MilestoneAlert: View {
     let milestone: Milestone
     let onDismiss: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var isVisible = false
     @State private var confettiTrigger = false
     @ScaledMetric(relativeTo: .largeTitle) private var iconSize: CGFloat = 56

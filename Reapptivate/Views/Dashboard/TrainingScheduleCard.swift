@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TrainingScheduleCard: View {
     @Environment(APIClient.self) private var apiClient
+    @AppStorage("appLanguage") private var appLanguage = "de"
 
     @State private var selectedDays: Set<Int> = [] // 1=Sunday, 2=Monday, ...
     @State private var reminderTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? .now
@@ -13,11 +14,13 @@ struct TrainingScheduleCard: View {
     @State private var saveTask: Task<Void, Never>?
     @State private var dayToggleTrigger = false
 
-    // Mo=2, Di=3, Mi=4, Do=5, Fr=6, Sa=7, So=1
-    private let days: [(id: Int, label: String)] = [
-        (2, "Mo"), (3, "Di"), (4, "Mi"),
-        (5, "Do"), (6, "Fr"), (7, "Sa"), (1, "So")
-    ]
+    private var days: [(id: Int, label: String)] {
+        let isEn = appLanguage == "en"
+        return [
+            (2, isEn ? "Mo" : "Mo"), (3, isEn ? "Tu" : "Di"), (4, isEn ? "We" : "Mi"),
+            (5, isEn ? "Th" : "Do"), (6, isEn ? "Fr" : "Fr"), (7, isEn ? "Sa" : "Sa"), (1, isEn ? "Su" : "So")
+        ]
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -27,7 +30,7 @@ struct TrainingScheduleCard: View {
                     .font(.appSubheadlineSemibold)
                     .foregroundStyle(.accent)
                     .accessibilityHidden(true)
-                Text("Trainingstage")
+                Text(appLanguage == "en" ? "Training Days" : "Trainingstage")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -37,7 +40,7 @@ struct TrainingScheduleCard: View {
             if isLoading {
                 HStack {
                     Spacer()
-                    ProgressView("Zeitplan laden...")
+                    ProgressView(appLanguage == "en" ? "Loading schedule..." : "Zeitplan laden...")
                     Spacer()
                 }
                 .frame(height: 44)
@@ -58,13 +61,13 @@ struct TrainingScheduleCard: View {
                         .font(.appCaption)
                         .foregroundStyle(.accent)
                         .accessibilityHidden(true)
-                    Text("Erinnerung")
+                    Text(appLanguage == "en" ? "Reminder" : "Erinnerung")
                         .font(.appSubheadline)
                         .foregroundStyle(.textSecondary)
                     Spacer()
-                    DatePicker("Erinnerungszeit", selection: $reminderTime, displayedComponents: .hourAndMinute)
+                    DatePicker(appLanguage == "en" ? "Reminder time" : "Erinnerungszeit", selection: $reminderTime, displayedComponents: .hourAndMinute)
                         .labelsHidden()
-                        .accessibilityLabel("Erinnerungszeit")
+                        .accessibilityLabel(appLanguage == "en" ? "Reminder time" : "Erinnerungszeit")
                         .onChange(of: reminderTime) {
                             scheduleAutoSave()
                         }
@@ -76,7 +79,7 @@ struct TrainingScheduleCard: View {
                         Spacer()
                         ProgressView()
                             .controlSize(.small)
-                        Text("Speichern...")
+                        Text(appLanguage == "en" ? "Saving..." : "Speichern...")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                         Spacer()
@@ -87,7 +90,7 @@ struct TrainingScheduleCard: View {
                         Spacer()
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.painGreen)
-                        Text("Gespeichert")
+                        Text(appLanguage == "en" ? "Saved" : "Gespeichert")
                             .font(.appCaption)
                             .foregroundStyle(.painGreen)
                         Spacer()
@@ -98,7 +101,7 @@ struct TrainingScheduleCard: View {
                         Spacer()
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(.painRed)
-                        Text("Speichern fehlgeschlagen")
+                        Text(appLanguage == "en" ? "Save failed" : "Speichern fehlgeschlagen")
                             .font(.appCaption)
                             .foregroundStyle(.painRed)
                         Spacer()

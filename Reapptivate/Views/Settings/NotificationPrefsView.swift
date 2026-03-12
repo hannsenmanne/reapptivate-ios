@@ -1,33 +1,36 @@
 import SwiftUI
 
 struct NotificationPrefsView: View {
+    @AppStorage("appLanguage") private var appLanguage = "de"
     @State private var notificationService = NotificationService.shared
     @State private var showTestSent = false
 
     var body: some View {
+        let isEn = appLanguage == "en"
+
         List {
             // Status
             Section("Status") {
                 HStack {
-                    Text("Benachrichtigungen")
+                    Text(isEn ? "Notifications" : "Benachrichtigungen")
                         .foregroundStyle(.textPrimary)
                     Spacer()
 
                     switch notificationService.authorizationStatus {
                     case .authorized:
-                        Label("Erlaubt", systemImage: "checkmark.circle.fill")
+                        Label(isEn ? "Allowed" : "Erlaubt", systemImage: "checkmark.circle.fill")
                             .font(.appCaption)
                             .foregroundStyle(.painGreen)
                     case .denied:
-                        Label("Blockiert", systemImage: "xmark.circle.fill")
+                        Label(isEn ? "Blocked" : "Blockiert", systemImage: "xmark.circle.fill")
                             .font(.appCaption)
                             .foregroundStyle(.painRed)
                     case .notDetermined:
-                        Label("Nicht angefragt", systemImage: "questionmark.circle")
+                        Label(isEn ? "Not requested" : "Nicht angefragt", systemImage: "questionmark.circle")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     default:
-                        Label("Unbekannt", systemImage: "questionmark.circle")
+                        Label(isEn ? "Unknown" : "Unbekannt", systemImage: "questionmark.circle")
                             .font(.appCaption)
                             .foregroundStyle(.textSecondary)
                     }
@@ -37,7 +40,7 @@ struct NotificationPrefsView: View {
                     Button {
                         Task { await notificationService.requestPermission() }
                     } label: {
-                        Text("Benachrichtigungen erlauben")
+                        Text(isEn ? "Allow Notifications" : "Benachrichtigungen erlauben")
                     }
                 }
 
@@ -45,7 +48,7 @@ struct NotificationPrefsView: View {
                     Button {
                         notificationService.openSettings()
                     } label: {
-                        Text("In Einstellungen öffnen")
+                        Text(isEn ? "Open Settings" : "In Einstellungen öffnen")
                     }
                 }
             }
@@ -62,7 +65,7 @@ struct NotificationPrefsView: View {
                         }
                     } label: {
                         HStack {
-                            Text("Test-Benachrichtigung senden")
+                            Text(isEn ? "Send Test Notification" : "Test-Benachrichtigung senden")
                             Spacer()
                             if showTestSent {
                                 Image(systemName: "checkmark")
@@ -76,16 +79,20 @@ struct NotificationPrefsView: View {
             // Info
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Trainings-Erinnerungen werden an Ihren geplanten Trainingstagen zur eingestellten Uhrzeit gesendet.")
+                    Text(isEn
+                        ? "Training reminders are sent on your scheduled training days at the configured time."
+                        : "Trainings-Erinnerungen werden an Ihren geplanten Trainingstagen zur eingestellten Uhrzeit gesendet.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
-                    Text("Sie können die Trainingstage in den Einstellungen unter 'Trainingsplan' anpassen.")
+                    Text(isEn
+                        ? "You can adjust training days in Settings under 'Training Schedule'."
+                        : "Sie können die Trainingstage in den Einstellungen unter 'Trainingsplan' anpassen.")
                         .font(.appCaption)
                         .foregroundStyle(.textSecondary)
                 }
             }
         }
-        .navigationTitle("Erinnerungen")
+        .navigationTitle(isEn ? "Reminders" : "Erinnerungen")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await notificationService.checkStatus()
