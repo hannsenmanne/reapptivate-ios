@@ -127,14 +127,15 @@ struct AclExerciseDetailView: View {
 
     private var parametersCard: some View {
         VStack(spacing: 12) {
+            let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
             if let sets = exercise.sets {
-                ParameterRow(label: "Sätze", value: "\(sets)")
+                ParameterRow(label: isEn ? "Sets" : "Sätze", value: "\(sets)")
             }
             if let reps = exercise.reps {
-                ParameterRow(label: "Wiederholungen", value: reps)
+                ParameterRow(label: isEn ? "Reps" : "Wiederholungen", value: reps)
             }
             if let holdTime = exercise.holdTime, holdTime > 0 {
-                ParameterRow(label: "Haltezeit", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ParameterRow(label: isEn ? "Hold time" : "Haltezeit", value: isEn
                     ? "\(holdTime) sec"
                     : "\(holdTime) Sek.")
             }
@@ -142,7 +143,7 @@ struct AclExerciseDetailView: View {
                 ParameterRow(label: "Tempo", value: tempo)
             }
             if let intensity = exercise.intensity {
-                ParameterRow(label: "Intensität", value: intensity)
+                ParameterRow(label: isEn ? "Intensity" : "Intensität", value: intensity)
             }
         }
         .cardStyle()

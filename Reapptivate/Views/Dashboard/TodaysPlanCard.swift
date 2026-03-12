@@ -45,12 +45,16 @@ struct TodaysPlanCard: View {
                 .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Heutiges Programm")
+                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        ? "Today's Program"
+                        : "Heutiges Programm")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
                     if allDone {
-                        Text("Alle Übungen abgeschlossen")
+                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            ? "All exercises completed"
+                            : "Alle Übungen abgeschlossen")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.painGreen)
                     } else if totalCount > 0 {
@@ -60,7 +64,9 @@ struct TodaysPlanCard: View {
                             .font(.appCaptionMedium)
                             .foregroundStyle(.accent)
                     } else {
-                        Text("Programm starten")
+                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            ? "Start program"
+                            : "Programm starten")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.accent)
                     }
@@ -79,7 +85,9 @@ struct TodaysPlanCard: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Heutiges Programm")
+        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Today's Program"
+            : "Heutiges Programm")
         .accessibilityValue(
             allDone
                 ? (UserDefaults.standard.string(forKey: "appLanguage") == "en"
@@ -89,6 +97,8 @@ struct TodaysPlanCard: View {
                     ? "\(completedCount) of \(totalCount) exercises completed"
                     : "\(completedCount) von \(totalCount) Übungen erledigt")
         )
-        .accessibilityHint("Antippen, um zum Trainingsprogramm zu gelangen")
+        .accessibilityHint(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Tap to go to the training program"
+            : "Antippen, um zum Trainingsprogramm zu gelangen")
     }
 }

@@ -111,11 +111,12 @@ struct ExerciseDetailView: View {
 
     private var parametersCard: some View {
         VStack(spacing: 12) {
-            ParameterRow(label: "Sätze", value: "\(exercise.exercise.sets)")
-            ParameterRow(label: "Wiederholungen", value: "\(exercise.exercise.reps)")
+            let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ParameterRow(label: isEn ? "Sets" : "Sätze", value: "\(exercise.exercise.sets)")
+            ParameterRow(label: isEn ? "Reps" : "Wiederholungen", value: "\(exercise.exercise.reps)")
 
             if let holdTime = exercise.exercise.holdTime {
-                ParameterRow(label: "Haltezeit", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ParameterRow(label: isEn ? "Hold time" : "Haltezeit", value: isEn
                     ? "\(holdTime) sec"
                     : "\(holdTime) Sek.")
             }
@@ -124,8 +125,8 @@ struct ExerciseDetailView: View {
                 ParameterRow(label: "Tempo", value: tempo)
             }
 
-            ParameterRow(label: "Intensität", value: exercise.exercise.intensity)
-            ParameterRow(label: "Pause zwischen Sätzen", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ParameterRow(label: isEn ? "Intensity" : "Intensität", value: exercise.exercise.intensity)
+            ParameterRow(label: isEn ? "Rest between sets" : "Pause zwischen Sätzen", value: isEn
                 ? "\(exercise.exercise.restBetweenSets) sec"
                 : "\(exercise.exercise.restBetweenSets) Sek.")
         }

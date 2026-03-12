@@ -113,11 +113,12 @@ struct CustomExerciseDetailView: View {
 
     private var parametersCard: some View {
         VStack(spacing: 12) {
-            ParameterRow(label: "Sätze", value: "\(exercise.sets)")
-            ParameterRow(label: "Wiederholungen", value: "\(exercise.reps)")
+            let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ParameterRow(label: isEn ? "Sets" : "Sätze", value: "\(exercise.sets)")
+            ParameterRow(label: isEn ? "Reps" : "Wiederholungen", value: "\(exercise.reps)")
 
             if let pauseSeconds = exercise.pauseSeconds, pauseSeconds > 0 {
-                ParameterRow(label: "Pause zwischen Sätzen", value: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                ParameterRow(label: isEn ? "Rest between sets" : "Pause zwischen Sätzen", value: isEn
                     ? "\(pauseSeconds) sec"
                     : "\(pauseSeconds) Sek.")
             }

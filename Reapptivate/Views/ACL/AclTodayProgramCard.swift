@@ -57,8 +57,9 @@ struct AclTodayProgramCard: View {
                 .frame(width: ringSize, height: ringSize)
                 .accessibilityHidden(true)
 
+                let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Heutiges Programm")
+                    Text(isEn ? "Today's Program" : "Heutiges Programm")
                         .font(.appHeadline)
                         .foregroundStyle(.textPrimary)
 
@@ -67,17 +68,17 @@ struct AclTodayProgramCard: View {
                         .foregroundStyle(.textSecondary)
 
                     if allDone {
-                        Text("Alle Übungen abgeschlossen")
+                        Text(isEn ? "All exercises completed" : "Alle Übungen abgeschlossen")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.painGreen)
                     } else if totalCount > 0 {
-                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                        Text(isEn
                             ? "\(completedCount) of \(totalCount) exercises completed"
                             : "\(completedCount) von \(totalCount) Übungen erledigt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.accent)
                     } else {
-                        Text("Programm starten")
+                        Text(isEn ? "Start program" : "Programm starten")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.accent)
                     }
@@ -95,7 +96,9 @@ struct AclTodayProgramCard: View {
         .buttonStyle(.plain)
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Heutiges Programm: \(todayLabel)")
+        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Today's Program: \(todayLabel)"
+            : "Heutiges Programm: \(todayLabel)")
         .accessibilityValue(
             allDone
                 ? (UserDefaults.standard.string(forKey: "appLanguage") == "en"
@@ -105,7 +108,9 @@ struct AclTodayProgramCard: View {
                     ? "\(completedCount) of \(totalCount) exercises completed"
                     : "\(completedCount) von \(totalCount) Übungen erledigt")
         )
-        .accessibilityHint("Antippen, um das Programm zu öffnen")
+        .accessibilityHint(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Tap to open the program"
+            : "Antippen, um das Programm zu öffnen")
         .accessibilityAddTraits(.isButton)
     }
 
@@ -120,11 +125,15 @@ struct AclTodayProgramCard: View {
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Heutiges Programm")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "Today's Program"
+                    : "Heutiges Programm")
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
 
-                Text("Ruhetag — Erholung genießen")
+                Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                    ? "Rest day — enjoy recovery"
+                    : "Ruhetag — Erholung genießen")
                     .font(.appCaption)
                     .foregroundStyle(.textSecondary)
             }
@@ -133,6 +142,8 @@ struct AclTodayProgramCard: View {
         }
         .cardStyle()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Heutiges Programm: Ruhetag")
+        .accessibilityLabel(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            ? "Today's Program: Rest day"
+            : "Heutiges Programm: Ruhetag")
     }
 }

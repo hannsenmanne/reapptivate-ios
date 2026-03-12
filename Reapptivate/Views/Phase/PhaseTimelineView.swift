@@ -101,7 +101,9 @@ struct TimelineEntryView: View {
                 // Metrics
                 HStack(spacing: 12) {
                     if let pain = record.avgPainLevel {
-                        Text("Schmerz: \(String(format: "%.1f", pain))")
+                        Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                            ? "Pain: \(String(format: "%.1f", pain))"
+                            : "Schmerz: \(String(format: "%.1f", pain))")
                             .font(.appCaption2)
                     }
                     if let compliance = record.compliancePct {

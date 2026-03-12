@@ -177,7 +177,9 @@ struct BaselineTrackerView: View {
                                         : "\(log.duration) Min")
                                         .font(.appCaption.monospacedDigit())
                                         .foregroundStyle(.textSecondary)
-                                    Text("Schmerz: \(log.painLevel)")
+                                    Text(UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                        ? "Pain: \(log.painLevel)"
+                                        : "Schmerz: \(log.painLevel)")
                                         .font(.appCaption)
                                         .foregroundStyle(Color.painColor(for: log.painLevel))
                                 }

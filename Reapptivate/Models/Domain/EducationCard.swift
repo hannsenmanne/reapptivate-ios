@@ -14,6 +14,7 @@ final class EducationCardLoader: @unchecked Sendable {
     static let shared = EducationCardLoader()
 
     private var cache: [EducationCard]?
+    private var cachedLocale: String?
     private let lock = NSLock()
 
     private init() {}
@@ -22,11 +23,12 @@ final class EducationCardLoader: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
 
-        if let cache {
+        let currentLocale = UserDefaults.standard.string(forKey: "appLanguage") ?? "de"
+        if let cache, cachedLocale == currentLocale {
             return cache
         }
 
-        let isEnglish = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+        let isEnglish = currentLocale == "en"
         let resourceName = isEnglish ? "education-cards_en" : "education-cards"
         let resolvedName = Bundle.main.url(forResource: resourceName, withExtension: "json") != nil
             ? resourceName : "education-cards"
@@ -37,6 +39,7 @@ final class EducationCardLoader: @unchecked Sendable {
         }
 
         cache = cards
+        cachedLocale = currentLocale
         return cards
     }
 

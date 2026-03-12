@@ -77,7 +77,9 @@ struct PacingTemplateSelector: View {
                                     .foregroundStyle(.textPrimary)
 
                                 if let increment = rules.quotaIncrementPercent {
-                                    RuleRow(icon: "chart.line.uptrend.xyaxis", text: "Steigerung: \(increment)% pro Woche")
+                                    RuleRow(icon: "chart.line.uptrend.xyaxis", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                                        ? "Increase: \(increment)% per week"
+                                        : "Steigerung: \(increment)% pro Woche")
                                 }
                                 if let pause = rules.mandatoryPauseMinutes, pause > 0 {
                                     RuleRow(icon: "pause.circle.fill", text: UserDefaults.standard.string(forKey: "appLanguage") == "en"

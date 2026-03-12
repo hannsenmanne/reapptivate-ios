@@ -142,7 +142,7 @@ private extension ReapptivateApp {
 enum AppearanceMode: String, CaseIterable {
     case system, light, dark
 
-    var label: String {
+    var label: LocalizedStringKey {
         switch self {
         case .system: "System"
         case .light: "Hell"

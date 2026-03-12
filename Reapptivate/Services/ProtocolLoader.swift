@@ -341,7 +341,7 @@ final class ProtocolLoader: @unchecked Sendable {
     private func lateralAnkleSprainPhaseName(_ phase: Int) -> String {
         if isEnglishLocale {
             switch phase {
-            case 1: return "Phase 1: Protection & Decongestioning"
+            case 1: return "Phase 1: Protection & Decongestion"
             case 2: return "Phase 2: Early Mobilization"
             case 3: return "Phase 3: Strengthening & Proprioception"
             case 4: return "Phase 4: Return to Sport"
