@@ -13,7 +13,6 @@ struct SettingsView: View {
     @AppStorage("hapticsEnabled") private var hapticsEnabled = true
 
     var body: some View {
-        @Bindable var lm = languageManager
         NavigationStack {
             List {
                 // Account
@@ -114,15 +113,33 @@ struct SettingsView: View {
                 }
 
                 // Language
-                Section {
-                    Picker("Sprache", selection: $lm.language) {
-                        ForEach(AppLanguage.allCases) { lang in
-                            Text(lang.displayName).tag(lang)
+                Section("Sprache / Language") {
+                    Button {
+                        languageManager.language = .german
+                    } label: {
+                        HStack {
+                            Text("Deutsch")
+                                .foregroundStyle(.textPrimary)
+                            Spacer()
+                            if languageManager.language == .german {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(.accent)
+                            }
                         }
                     }
-                    .pickerStyle(.segmented)
-                } header: {
-                    Text("Sprache / Language")
+                    Button {
+                        languageManager.language = .english
+                    } label: {
+                        HStack {
+                            Text("English")
+                                .foregroundStyle(.textPrimary)
+                            Spacer()
+                            if languageManager.language == .english {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(.accent)
+                            }
+                        }
+                    }
                 }
 
                 // Appearance

@@ -3,6 +3,7 @@ import SwiftUI
 struct DashboardView: View {
     @Environment(AppState.self) private var appState
     @Environment(APIClient.self) private var apiClient
+    @Environment(LanguageManager.self) private var languageManager
     @State private var viewModel: DashboardViewModel?
     @State private var exerciseVM: ExerciseViewModel?
     @State private var phaseVM: PhaseViewModel?
@@ -99,6 +100,7 @@ struct DashboardView: View {
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
+                    .environment(languageManager)
             }
             .alert("Abmelden?", isPresented: $showLogoutConfirmation) {
                 Button("Abbrechen", role: .cancel) { }
