@@ -7,13 +7,13 @@ import Foundation
 struct LasScreeningOption: Codable {
     let value: Int
     let labelDe: String
-    let labelEn: String?
+    var labelEn: String? = nil
 }
 
 struct LasScreeningItem: Codable, Identifiable {
     let id: String
     let textDe: String
-    let textEn: String?
+    var textEn: String? = nil
     let options: [LasScreeningOption]?
 }
 

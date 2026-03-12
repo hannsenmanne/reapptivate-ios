@@ -8,13 +8,13 @@ import Foundation
 struct TsiScreeningOption: Codable {
     let value: Int
     let labelDe: String
-    let labelEn: String?
+    var labelEn: String? = nil
 }
 
 struct TsiScreeningItem: Codable, Identifiable {
     let id: String
     let textDe: String
-    let textEn: String?
+    var textEn: String? = nil
     let options: [TsiScreeningOption]?
 }
 

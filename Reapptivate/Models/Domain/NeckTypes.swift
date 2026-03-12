@@ -8,14 +8,14 @@ import Foundation
 struct NeckScreeningOption: Codable {
     let value: Int
     let labelDe: String
-    let labelEn: String?
+    var labelEn: String? = nil
 }
 
 struct NeckScreeningItem: Codable, Identifiable {
     let id: String
     let part: String?  // "A" or "B" (added by client for flat access)
     let textDe: String
-    let textEn: String?
+    var textEn: String? = nil
     let type: String?  // "yesno", "scale", "likert"
     let options: [NeckScreeningOption]?
 }
