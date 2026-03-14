@@ -1,5 +1,5 @@
 import SwiftUI
-import UserNotifications
+@preconcurrency import UserNotifications
 
 @Observable
 @MainActor

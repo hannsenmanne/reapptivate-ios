@@ -128,7 +128,7 @@ final class DashboardViewModel {
             if let result = fsResult?.screening {
                 // Prefer backend-assigned severity; fall back to client-derived if nil/unknown
                 let backendSeverity = result.severityGrade
-                appState?.currentUser?.fsSeverity = (backendSeverity != nil && backendSeverity != .unknown)
+                appState?.currentUser?.fsSeverity = (backendSeverity != .unknown)
                     ? backendSeverity
                     : FsSeverityGrade.from(spadiScore: result.spadiTotalScore)
             }
