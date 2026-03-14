@@ -109,6 +109,7 @@ struct LbpEnhancementsView: View {
         }
         .sheet(isPresented: $showHierarchyBuilder) {
             FearHierarchyBuilderView(viewModel: vm)
+                .glassSheet()
         }
     }
 
@@ -144,6 +145,7 @@ struct LbpEnhancementsView: View {
                 }
                 .sheet(isPresented: $showActivityLog) {
                     PacingActivityLogSheet(viewModel: vm)
+                        .glassSheet()
                 }
 
                 // Quota progression
@@ -184,6 +186,7 @@ struct LbpEnhancementsView: View {
                 }
                 .sheet(isPresented: $showTemplateSelector) {
                     PacingTemplateSelector(viewModel: vm)
+                        .glassSheet()
                 }
             }
             .cardStyle(padding: 24)

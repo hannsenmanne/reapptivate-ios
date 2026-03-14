@@ -83,6 +83,7 @@
 		38BAAFDB2C972E13910190EE /* SiScreeningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18C844E4C0EAE4D82D64A4 /* SiScreeningViewModel.swift */; };
 		390DE7195E6D72A59D706AD5 /* PhaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430B90EA42D4C0186875A77B /* PhaseViewModel.swift */; };
 		39779E64FC2E99F49E2D82CB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70279B32E209B5885534BE9 /* Logger.swift */; };
+		3A626DED5053F09371A9DCA5 /* FloatingTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7C019D6D4C067EB1A8AC1B /* FloatingTabBar.swift */; };
 		3C0B31F64060B4C54CC3640B /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1467B6CD844471E3A9532B76 /* TokenManager.swift */; };
 		3C7C51C1A2B73F99251259F9 /* TsiScreeningViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A307873EBDFB86EB7F01850 /* TsiScreeningViewModelTests.swift */; };
 		402749A09E60A78F92ABF616 /* proximal_hamstring.json in Resources */ = {isa = PBXBuildFile; fileRef = AE2E3F636718CE0ABF694FA3 /* proximal_hamstring.json */; };
@@ -524,6 +525,7 @@
 		A96D30034B0571D6E4FF2839 /* AclKpiHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclKpiHistoryView.swift; sourceTree = "<group>"; };
 		AC5FB618B335773AD43D1623 /* NotificationPrefsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPrefsView.swift; sourceTree = "<group>"; };
 		ACFA8569BBD705E45B4D7874 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
+		AD7C019D6D4C067EB1A8AC1B /* FloatingTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTabBar.swift; sourceTree = "<group>"; };
 		ADF51000BAF6F90C62C46790 /* motivational-quotes_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "motivational-quotes_en.json"; sourceTree = "<group>"; };
 		AE2E3F636718CE0ABF694FA3 /* proximal_hamstring.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = proximal_hamstring.json; sourceTree = "<group>"; };
 		AE95ABCCA56801990DB6747D /* shoulder_impingement_mittel.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = shoulder_impingement_mittel.json; sourceTree = "<group>"; };
@@ -1250,6 +1252,7 @@
 				B567B098C79FA64DDC04CC8D /* ComplianceCalendarCard.swift */,
 				E006FE9330E514019A494DBA /* DashboardView.swift */,
 				5F26BAC5BAEB3F1E77BF7E3E /* EdukationTab.swift */,
+				AD7C019D6D4C067EB1A8AC1B /* FloatingTabBar.swift */,
 				352F1721F583F8738A887D2D /* InsightsTab.swift */,
 				D7F04853CB33232850CDB8D6 /* MotivationalQuoteCard.swift */,
 				98C609B2EEEA0B25CCA73910 /* OverviewTab.swift */,
@@ -1637,6 +1640,7 @@
 				8ACF898B0885277D5A3A2F32 /* FeatureWalkthroughView.swift in Sources */,
 				329967AD62AF1687899297A8 /* FirstExerciseGuide.swift in Sources */,
 				500FFBDBC6CDE32681396CAC /* FlagConcernSheet.swift in Sources */,
+				3A626DED5053F09371A9DCA5 /* FloatingTabBar.swift in Sources */,
 				FF810FAB0489406E5999F6BF /* Font+Theme.swift in Sources */,
 				91155BE1CC840141DFBF79AD /* FrozenShoulderFocusAreasView.swift in Sources */,
 				CEDFD71B4482C0B62B2A0223 /* FrozenShoulderMicroModulesView.swift in Sources */,

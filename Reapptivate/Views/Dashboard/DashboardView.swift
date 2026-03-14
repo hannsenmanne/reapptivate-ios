@@ -11,6 +11,7 @@ struct DashboardView: View {
     @State private var messagingVM: MessagingViewModel?
     @State private var selectedTab: DashboardTab = .overview
     @State private var showSettings = false
+    @State private var showMessages = false
     @State private var showLogoutConfirmation = false
     @State private var milestoneService = MilestoneService()
     @State private var activeMilestone: Milestone?
@@ -21,44 +22,43 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                // Tab Bar
-                DashboardTabBar(
-                    selectedTab: $selectedTab,
-                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl || appState.isShoulder || appState.isFrozenShoulder || appState.isLateralAnkleSprain,
-                    unreadCount: messagingVM?.unreadCount ?? 0
-                )
-
-                // Tab Content
-                ScrollView {
-                    VStack(spacing: 0) {
-                        if let error = viewModel?.error {
-                            InlineErrorView(
-                                message: error,
-                                errorType: .network,
-                                onRetry: {
-                                    Task { await loadAll() }
-                                },
-                                onDismiss: {
-                                    viewModel?.error = nil
-                                }
-                            )
-                            .padding(.horizontal, 16)
-                            .padding(.top, 12)
-                        }
-
-                        Group {
-                            defaultTabContent
-                        }
+            ScrollView {
+                VStack(spacing: 0) {
+                    if let error = viewModel?.error {
+                        InlineErrorView(
+                            message: error,
+                            errorType: .network,
+                            onRetry: {
+                                Task { await loadAll() }
+                            },
+                            onDismiss: {
+                                viewModel?.error = nil
+                            }
+                        )
                         .padding(.horizontal, 16)
-                        .padding(.top, 16)
+                        .padding(.top, 12)
                     }
-                }
-                .refreshable {
-                    await loadAll()
+
+                    Group {
+                        defaultTabContent
+                    }
+                    .animation(.easeOut(duration: 0.15), value: selectedTab)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
                 }
             }
-            .background(Color.appBg)
+            .refreshable {
+                await loadAll()
+            }
+            .safeAreaInset(edge: .bottom) {
+                FloatingTabBar(
+                    selectedTab: $selectedTab,
+                    showInsights: appState.isLbp || appState.isNeck || appState.isTension || appState.isAcl || appState.isShoulder || appState.isFrozenShoulder || appState.isLateralAnkleSprain
+                )
+                .padding(.bottom, 4)
+            }
+            .appBackground()
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Text(brandWordmark)
@@ -68,6 +68,31 @@ struct DashboardView: View {
 
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 12) {
+                        Button {
+                            guard messagingVM != nil else { return }
+                            showMessages = true
+                        } label: {
+                            Image(systemName: "bubble.left.and.bubble.right")
+                                .font(.appBody)
+                                .overlay(alignment: .topTrailing) {
+                                    if appState.unreadMessageCount > 0 {
+                                        Text("\(min(appState.unreadMessageCount, 99))")
+                                            .font(.system(size: 9, weight: .bold))
+                                            .foregroundStyle(.white)
+                                            .frame(minWidth: 15, minHeight: 15)
+                                            .background(Color.red)
+                                            .clipShape(Circle())
+                                            .offset(x: 8, y: -8)
+                                    }
+                                }
+                        }
+                        .accessibilityLabel(isEn ? "Messages" : "Nachrichten")
+                        .accessibilityValue(
+                            appState.unreadMessageCount > 0
+                                ? "\(appState.unreadMessageCount) \(isEn ? "unread" : "ungelesen")"
+                                : ""
+                        )
+
                         Button {
                             showSettings = true
                         } label: {
@@ -104,6 +129,19 @@ struct DashboardView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsView()
                     .environment(languageManager)
+                    .glassSheet()
+            }
+            .fullScreenCover(isPresented: $showMessages) {
+                if let messagingVM {
+                    MessagesTab(viewModel: messagingVM)
+                        .environment(appState)
+                        .environment(apiClient)
+                        .environment(languageManager)
+                } else {
+                    ProgressView(isEn ? "Loading messages..." : "Nachrichten laden...")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.appBg)
+                }
             }
             .alert(isEn ? "Log out?" : "Abmelden?", isPresented: $showLogoutConfirmation) {
                 Button(isEn ? "Cancel" : "Abbrechen", role: .cancel) { }
@@ -189,12 +227,7 @@ struct DashboardView: View {
         case .insights:
             InsightsTab(viewModel: viewModel, phaseVM: phaseVM)
         case .messages:
-            if let messagingVM {
-                MessagesTab(viewModel: messagingVM)
-            } else {
-                ProgressView(isEn ? "Loading messages..." : "Nachrichten laden...")
-                    .frame(maxWidth: .infinity, minHeight: 200)
-            }
+            EmptyView()
         }
     }
 
@@ -271,69 +304,3 @@ struct DashboardView: View {
     }
 }
 
-// MARK: - Tab Bar
-
-struct DashboardTabBar: View {
-    @Binding var selectedTab: DashboardTab
-    let showInsights: Bool
-    var unreadCount: Int = 0
-
-    var tabs: [DashboardTab] {
-        var result: [DashboardTab] = [.overview, .program, .edukation, .progress]
-        if showInsights {
-            result.append(.insights)
-        }
-        result.append(.messages)
-        return result
-    }
-
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 0) {
-                ForEach(tabs, id: \.self) { tab in
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            selectedTab = tab
-                        }
-                    } label: {
-                        VStack(spacing: 8) {
-                            HStack(spacing: 4) {
-                                Text(tab.displayName.uppercased())
-                                    .font(.appCaptionMedium)
-                                    .tracking(0.8)
-                                    .foregroundStyle(selectedTab == tab ? .textPrimary : .textSecondary)
-
-                                // Unread badge on messages tab
-                                if tab == .messages && unreadCount > 0 {
-                                    Text("\(unreadCount)")
-                                        .font(.system(size: 10, weight: .bold))
-                                        .foregroundStyle(.white)
-                                        .frame(minWidth: 16, minHeight: 16)
-                                        .background(Color.red)
-                                        .clipShape(Circle())
-                                }
-                            }
-
-                            Rectangle()
-                                .frame(height: 2)
-                                .foregroundStyle(selectedTab == tab ? .textPrimary : .clear)
-                        }
-                        .padding(.horizontal, 16)
-                        .frame(minHeight: 44)
-                        .contentShape(Rectangle())
-                    }
-                    .accessibilityAddTraits(selectedTab == tab ? .isSelected : [])
-                }
-            }
-            .padding(.horizontal, 8)
-        }
-        .padding(.top, 8)
-        .background(Color.appBg)
-        .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(Color.gray200)
-                .frame(height: 1)
-        }
-        .conditionalHaptic(.selection, trigger: selectedTab)
-    }
-}

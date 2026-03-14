@@ -69,6 +69,7 @@ struct LasProgressView: View {
                     Task { await loadHistory() }
                 }) {
                     LasScreeningView(isRescreening: true)
+                        .glassSheet()
                 }
             }
         }

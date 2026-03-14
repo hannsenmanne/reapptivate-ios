@@ -71,6 +71,7 @@ struct NdiProgressView: View {
                 }
                 .sheet(isPresented: $showRescreening) {
                     NeckScreeningView(isRescreening: true)
+                        .glassSheet()
                 }
             }
         }

@@ -29,6 +29,7 @@ struct VideoThumbnailView: View {
         .accessibilityLabel(isEn ? "Play video" : "Video abspielen")
         .sheet(isPresented: $isExpanded) {
             ExerciseVideoPlayer(urlString: urlString, title: nil)
+                .glassSheet()
         }
     }
 

@@ -53,6 +53,7 @@ struct ThreadListView: View {
         }
         .sheet(isPresented: $showNewMessageSheet) {
             NewMessageSheet(viewModel: viewModel)
+                .glassSheet()
         }
         .task {
             await viewModel.fetchThreads()
@@ -253,6 +254,7 @@ private struct NewMessageSheet: View {
                 FlagConcernSheet(viewModel: viewModel) {
                     dismiss()
                 }
+                .glassSheet()
             }
         }
     }

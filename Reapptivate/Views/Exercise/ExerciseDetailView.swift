@@ -66,6 +66,7 @@ struct ExerciseDetailView: View {
         }
         .sheet(isPresented: $showLibrary) {
             VideoLibraryPicker(onVideoPicked: { url in Task { await saveVideo(from: url) } })
+                .glassSheet()
         }
         .sensoryFeedback(.success, trigger: hapticTrigger)
     }

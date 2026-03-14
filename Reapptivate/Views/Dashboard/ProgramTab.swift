@@ -130,6 +130,7 @@ struct ProgramTab: View {
                 activeSheet = pending
             }
         }) { sheet in
+            Group {
             switch sheet {
             case .progressLog(let exercise):
                 ProgressLogSheet(
@@ -194,6 +195,8 @@ struct ProgramTab: View {
                     }
                 )
             }
+            }
+            .glassSheet()
         }
     }
 

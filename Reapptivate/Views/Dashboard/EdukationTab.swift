@@ -225,12 +225,14 @@ struct WissenExpandableCard: View {
                 }
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: iconName(for: card.icon))
-                        .font(.appSubheadline)
-                        .foregroundStyle(.accent)
-                        .frame(width: 32, height: 32)
-                        .background(Color.accent.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.iconRadius, style: .continuous))
+                    GlowingIconContainer(
+                        icon: iconName(for: card.icon),
+                        color: .accent,
+                        size: 32,
+                        iconSize: 14,
+                        radius: DesignTokens.iconRadius,
+                        isFilled: false
+                    )
 
                     Text(card.title)
                         .font(.appSubheadlineMedium)

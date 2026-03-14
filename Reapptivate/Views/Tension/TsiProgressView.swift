@@ -71,6 +71,7 @@ struct TsiProgressView: View {
                 }
                 .sheet(isPresented: $showRescreening) {
                     TsiScreeningView(isRescreening: true)
+                        .glassSheet()
                 }
             }
         }

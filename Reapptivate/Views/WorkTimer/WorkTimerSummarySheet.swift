@@ -121,6 +121,7 @@ struct WorkTimerSummarySheet: View {
         .presentationDetents([.medium, .large])
         .sheet(isPresented: $viewModel.showingHistory) {
             WorkTimerHistoryView(viewModel: viewModel)
+                .glassSheet()
         }
     }
 

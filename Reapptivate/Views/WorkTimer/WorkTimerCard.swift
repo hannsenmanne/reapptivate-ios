@@ -123,9 +123,11 @@ struct WorkTimerCard: View {
         .cardStyle()
         .sheet(isPresented: Bindable(vm).showingSettings) {
             WorkTimerSettingsSheet(viewModel: vm)
+                .glassSheet()
         }
         .sheet(isPresented: Bindable(vm).showingSummary) {
             WorkTimerSummarySheet(viewModel: vm)
+                .glassSheet()
         }
     }
 
@@ -162,8 +164,15 @@ struct WorkTimerCard: View {
             // Countdown ring
             ZStack {
                 Circle()
-                    .stroke(Color.gray200, lineWidth: 6)
+                    .stroke(Color.textSecondary.opacity(0.1), lineWidth: 6)
                     .frame(width: ringSize, height: ringSize)
+
+                Circle()
+                    .trim(from: 0, to: vm.progress)
+                    .stroke(Color.accent.opacity(0.3), style: StrokeStyle(lineWidth: 14, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                    .frame(width: ringSize, height: ringSize)
+                    .blur(radius: 6)
 
                 Circle()
                     .trim(from: 0, to: vm.progress)
@@ -214,15 +223,20 @@ struct WorkTimerCard: View {
         .sheet(isPresented: Bindable(vm).showingBreak) {
             WorkTimerBreakView(viewModel: vm)
                 .interactiveDismissDisabled()
+                .glassSheet()
+                .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: Bindable(vm).showingSummary) {
             WorkTimerSummarySheet(viewModel: vm)
+                .glassSheet()
         }
         .sheet(isPresented: Bindable(vm).showingSettings) {
             WorkTimerSettingsSheet(viewModel: vm)
+                .glassSheet()
         }
         .sheet(isPresented: Bindable(vm).showingHistory) {
             WorkTimerHistoryView(viewModel: vm)
+                .glassSheet()
         }
     }
 }

@@ -235,6 +235,7 @@ struct ExerciseSessionView: View {
                         dismiss()
                     }
                 )
+                .glassSheet()
             }
         }
     }

@@ -51,6 +51,7 @@ struct AclStreamDetailView: View {
                     }
                 }
             }
+            .glassSheet()
         }
         .task {
             if viewModel == nil {

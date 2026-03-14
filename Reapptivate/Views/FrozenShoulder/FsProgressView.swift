@@ -69,6 +69,7 @@ struct FsProgressView: View {
                     Task { await loadHistory() }
                 }) {
                     FsScreeningView(isRescreening: true)
+                        .glassSheet()
                 }
             }
         }

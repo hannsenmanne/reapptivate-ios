@@ -34,6 +34,7 @@ struct ExerciseQuestionButton: View {
                     exerciseId: exerciseId,
                     exerciseName: exerciseName
                 )
+                .glassSheet()
             }
         }
         .task {

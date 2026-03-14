@@ -142,6 +142,7 @@ struct LoginView: View {
                 QRScannerView { code in
                     viewModel.handleScannedCode(code)
                 }
+                .glassSheet()
             }
             .navigationDestination(isPresented: $viewModel.showOnboarding) {
                 OnboardingView(viewModel: viewModel)

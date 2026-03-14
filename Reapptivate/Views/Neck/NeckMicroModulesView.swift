@@ -158,13 +158,15 @@ struct NeckModuleCard: View {
                 }
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: "book.fill")
-                        .font(.appCaption)
-                        .foregroundStyle(.farBlue)
-                        .frame(width: 28, height: 28)
-                        .background(Color.farBlue.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
-                        .accessibilityHidden(true)
+                    GlowingIconContainer(
+                        icon: "book.fill",
+                        color: .farBlue,
+                        size: 28,
+                        iconSize: 12,
+                        radius: DesignTokens.smallRadius,
+                        isFilled: false
+                    )
+                    .accessibilityHidden(true)
 
                     Text(module.title)
                         .font(.appSubheadlineMedium)

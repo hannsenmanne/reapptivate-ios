@@ -97,8 +97,6 @@ final class AppState {
         defaults.removeObject(forKey: "rating_prompt_count")
         defaults.removeObject(forKey: "rating_last_prompt_date")
         defaults.removeObject(forKey: "hasCompletedFirstExercise")
-        defaults.removeObject(forKey: "hasSeenWelcome")
-        defaults.removeObject(forKey: "hasSeenWalkthrough")
     }
 
     /// Single consolidated logout path — clears tokens, resets API guard, and updates state.

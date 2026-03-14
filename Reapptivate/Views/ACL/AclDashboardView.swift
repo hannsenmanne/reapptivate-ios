@@ -42,11 +42,13 @@ struct AclDashboardView: View {
             AclDailyKpiLoggerView(onSuccess: {
                 Task { await viewModel?.loadAll() }
             })
+            .glassSheet()
         }
         .sheet(isPresented: $showWeeklyKpi) {
             AclWeeklyKpiLoggerView(onSuccess: {
                 Task { await viewModel?.loadAll() }
             })
+            .glassSheet()
         }
         .fullScreenCover(isPresented: $showTodayProgram) {
             AclTodayProgramView(

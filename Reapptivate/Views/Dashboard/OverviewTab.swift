@@ -111,14 +111,12 @@ struct ExerciseLinkCard: View {
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 14) {
-                RoundedRectangle(cornerRadius: DesignTokens.badgeRadius, style: .continuous)
-                    .fill(Color.accent)
-                    .frame(width: iconContainerSize, height: iconContainerSize)
-                    .overlay {
-                        Image(systemName: "figure.strengthtraining.traditional")
-                            .font(.appBody)
-                            .foregroundStyle(.white)
-                    }
+                GlowingIconContainer(
+                    icon: "figure.strengthtraining.traditional",
+                    color: .accent,
+                    size: iconContainerSize,
+                    iconSize: 17
+                )
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(isEn ? "Exercise program" : "Übungsprogramm")

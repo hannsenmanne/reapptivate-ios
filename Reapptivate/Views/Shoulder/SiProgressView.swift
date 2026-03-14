@@ -67,6 +67,7 @@ struct SiProgressView: View {
                 }
                 .sheet(isPresented: $showRescreening) {
                     SiScreeningView(isRescreening: true)
+                        .glassSheet()
                 }
             }
         }

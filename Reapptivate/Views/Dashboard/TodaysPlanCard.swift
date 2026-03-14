@@ -22,15 +22,25 @@ struct TodaysPlanCard: View {
                 // Progress ring
                 ZStack {
                     Circle()
-                        .stroke(Color.textSecondary.opacity(0.15), lineWidth: 4)
+                        .stroke(Color.textSecondary.opacity(0.1), lineWidth: 5)
+
+                    Circle()
+                        .trim(from: 0, to: progress)
+                        .stroke(
+                            allDone ? Color.painGreen.opacity(0.3) : Color.accent.opacity(0.3),
+                            style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                        )
+                        .rotationEffect(.degrees(-90))
+                        .blur(radius: 6)
+
                     Circle()
                         .trim(from: 0, to: progress)
                         .stroke(
                             allDone ? Color.painGreen : Color.accent,
-                            style: StrokeStyle(lineWidth: 4, lineCap: .round)
+                            style: StrokeStyle(lineWidth: 5, lineCap: .round)
                         )
                         .rotationEffect(.degrees(-90))
-                        .animation(.spring(duration: 0.4), value: progress)
+                        .animation(.spring(duration: 0.6), value: progress)
 
                     if allDone {
                         Image(systemName: "checkmark")

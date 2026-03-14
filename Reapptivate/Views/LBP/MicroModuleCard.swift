@@ -28,12 +28,14 @@ struct MicroModuleCard: View {
                 }
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: moduleIcon)
-                        .font(.appSubheadline)
-                        .foregroundStyle(.farBlue)
-                        .frame(width: 32, height: 32)
-                        .background(Color.farBlue.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.iconRadius, style: .continuous))
+                    GlowingIconContainer(
+                        icon: moduleIcon,
+                        color: .farBlue,
+                        size: 32,
+                        iconSize: 14,
+                        radius: DesignTokens.iconRadius,
+                        isFilled: false
+                    )
 
                     Text(module.title)
                         .font(.appSubheadlineMedium)

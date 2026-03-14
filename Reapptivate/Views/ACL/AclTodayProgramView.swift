@@ -64,6 +64,7 @@ struct AclTodayProgramView: View {
                     }
                 }
             }
+            .glassSheet()
         }
         .conditionalHaptic(.success, trigger: completionHaptic)
         .task {

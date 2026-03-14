@@ -26,14 +26,14 @@ struct ExerciseCardView: View {
                         .frame(width: thumbnailSize, height: thumbnailSize)
                         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
                 } else {
-                    RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous)
-                        .fill(isCompleted ? Color.painGreen.opacity(0.15) : Color.accent.opacity(0.12))
-                        .frame(width: thumbnailSize, height: thumbnailSize)
-                        .overlay {
-                            Image(systemName: exerciseTypeIcon)
-                                .font(.appTitle3)
-                                .foregroundStyle(isCompleted ? .painGreen : .accent)
-                        }
+                    GlowingIconContainer(
+                        icon: exerciseTypeIcon,
+                        color: isCompleted ? .painGreen : .accent,
+                        size: thumbnailSize,
+                        iconSize: 22,
+                        radius: DesignTokens.smallRadius,
+                        isFilled: false
+                    )
                 }
 
                 VStack(alignment: .leading, spacing: 3) {

@@ -61,6 +61,7 @@ struct FearHierarchyView: View {
                     item: item,
                     viewModel: viewModel
                 )
+                .glassSheet()
             }
         }
     }

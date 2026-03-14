@@ -19,6 +19,17 @@ enum DashboardTab: String, CaseIterable {
         case .messages: return isEn ? "Messages" : "Nachrichten"
         }
     }
+
+    var icon: String {
+        switch self {
+        case .overview: return "house"
+        case .program: return "figure.run"
+        case .edukation: return "book"
+        case .progress: return "chart.bar"
+        case .insights: return "lightbulb"
+        case .messages: return "message"
+        }
+    }
 }
 
 @Observable

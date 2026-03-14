@@ -50,6 +50,7 @@ extension Color {
 
     // MARK: - UI Accents & Text
     static let accent = adaptive(light: "10B981", dark: "34D399")
+    static let accentDeep = Color(hex: "059669")
     static let textPrimary = adaptive(light: "1A1A1A", dark: "F2F2F7")
     static let textSecondary = adaptive(light: "6B7280", dark: "8E8E93")
     static let textTertiary = adaptive(light: "9CA3AF", dark: "636366")
