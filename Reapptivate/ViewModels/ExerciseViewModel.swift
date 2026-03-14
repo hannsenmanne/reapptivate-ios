@@ -65,6 +65,10 @@ final class ExerciseViewModel {
                 APIEndpoints.customExercises()
             )
             customExercises = response.exercises
+        } catch is CancellationError {
+            return
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            return
         } catch {
             Log.exercise.error("Failed to load custom exercises: \(error)")
         }

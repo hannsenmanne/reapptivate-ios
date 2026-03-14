@@ -118,17 +118,18 @@ The ViewModel is always `Optional` and created once inside `.task`. **Exception:
 
 ### Environment Injection
 
-Three shared `@Observable` objects injected via SwiftUI environment from `ReapptivateApp`:
-- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `isTension`, `isShoulder`, `isFrozenShoulder`, `isAcl`, `needsAemScreening`, `needsNeckScreening`, `needsTsiScreening`, `needsShoulderScreening`, `needsFsScreening`, `needsAclScreening`
+Four shared `@Observable` objects injected via SwiftUI environment from `ReapptivateApp`:
+- `AppState` — auth state, current user, computed flags: `isLbp`, `isNeck`, `isTension`, `isShoulder`, `isFrozenShoulder`, `isAcl`, `isLateralAnkleSprain`, `needsAemScreening`, `needsNeckScreening`, `needsTsiScreening`, `needsShoulderScreening`, `needsFsScreening`, `needsAclScreening`, `needsLasScreening`
 - `APIClient` — networking with auto JWT injection, 401 detection + logout callback, 1 retry on network failure
 - `NetworkMonitor` — NWPathMonitor wrapper for connectivity
+- `LanguageManager` — language state (`AppLanguage` enum: `.german`/`.english`), persisted to UserDefaults(`"appLanguage"`), also set as `.environment(\.locale)` on WindowGroup
 
 SwiftData `ModelContainer` is configured at `WindowGroup` level (not in AppState): `.modelContainer(for: [CachedUser.self, CachedProgress.self, PendingSync.self])`. `SyncService` receives its `ModelContext` via a deferred `setModelContext()` call — not at init — because the context comes from the view environment.
 
 ### Navigation Flow (RootView)
 
 ```
-RootView
+ReapptivateApp (root)
 ├── LoadingView (isCheckingAuth)
 ├── LoginView (not authenticated)
 ├── AemScreeningView (LBP + needsAemScreening)
@@ -137,19 +138,21 @@ RootView
 ├── AclScreeningView (ACL + needsAclScreening)
 ├── SiScreeningView (Shoulder + needsShoulderScreening)
 ├── FsScreeningView (FrozenShoulder + needsFsScreening)
+├── LasScreeningView (LateralAnkleSprain + needsLasScreening)
 ├── ScreeningCompleteView (first login, after screening)
 ├── FeatureWalkthroughView (first login, after welcome)
 └── DashboardView (authenticated + screened + onboarded)
     ├── OverviewTab — Phase status, Wissen daily card (tendinopathy only), condition info
     ├── ProgramTab — Exercise list + LBP enhancements
-    ├── EdukationTab — Micro-modules (LBP/Neck/Tension/SI/FS) or Wissen cards (tendinopathy only)
+    ├── EdukationTab — Micro-modules (LBP/Neck/Tension/SI/FS/LAS) or Wissen cards (tendinopathy only)
     ├── ProgressTab — Pain history, statistics
-    └── InsightsTab — Analytics (LBP/Neck only)
+    ├── InsightsTab — Analytics (LBP/Neck only)
+    └── MessagesTab — Clinical messaging threads (all conditions)
 ```
 
-EdukationTab is always visible. InsightsTab only appears for LBP/Neck patients. Tab visibility is controlled by `DashboardTabBar.tabs` computed property (not by `DashboardViewModel.availableTabs`, which is unused).
+EdukationTab is always visible. InsightsTab only appears for LBP/Neck patients. MessagesTab is available for all conditions. Tab visibility is controlled by `FloatingTabBar.tabs` computed property (not by `DashboardViewModel.availableTabs`, which is unused).
 
-**WissenCardView / WissenAllCardsView** are only shown for tendinopathy patients. SI, FS, ACL patients do NOT show these — they use condition-specific micro-modules in EdukationTab and have no daily Wissen card in OverviewTab.
+**WissenCardView / WissenAllCardsView** are only shown for tendinopathy patients. SI, FS, ACL, LAS patients do NOT show these — they use condition-specific micro-modules in EdukationTab and have no daily Wissen card in OverviewTab.
 
 ### Networking
 
@@ -186,9 +189,42 @@ Backend wraps responses in containers (`{user: ...}`, `{plan: ...}`). All wrappe
 
 `ProtocolLoader.shared` (`@unchecked Sendable` singleton with in-memory cache) loads bundled JSON from `Resources/Protocols/`. Falls back to bundle root if subdirectory not found (XcodeGen bundles files flat). Uses `convertFromSnakeCase` key decoding. Cache is never invalidated (protocol changes require app restart).
 
-Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`, `.neckShoulderTension` + `.LEICHT` → `neck_shoulder_tension_leicht.json`, `.shoulderImpingement` + `.LEICHT` → `shoulder_impingement_leicht.json`, `.frozenShoulder` + `.SCHWER` → `frozen_shoulder_schwer.json`).
+Protocol key mapping: `TendinopathyType` → filename (e.g., `.achilles` → `achilles.json`, `.lbpNonspecific` + `.FAR` → `lbp_far.json`, `.neckShoulderTension` + `.LEICHT` → `neck_shoulder_tension_leicht.json`, `.shoulderImpingement` + `.LEICHT` → `shoulder_impingement_leicht.json`, `.frozenShoulder` + `.SCHWER` → `frozen_shoulder_schwer.json`, `.lateralAnkleSprain` + `.LEICHT` → `lateral_ankle_sprain_leicht.json`).
 
 **Dosage modifier application**: `ExerciseWithPhase.dosageModifier` is a `[String: DosageMultipliers]` keyed by severity raw value. Applied at load time in `ExerciseViewModel.loadExercises()` for FS SCHWER patients via `applyingDosageModifier(severityKey:)`. For example, SCHWER applies 67% sets and 80% reps. Must call `max(1, ...)` when applying to prevent zero values.
+
+### Localization (German/English)
+
+The app uses a **runtime language switching** pattern — NOT native iOS `String(localized:)` or `NSLocalizedString`. All 124 view files, 6 ViewModels, and 2 services are localized.
+
+**In Views** — use `@AppStorage("appLanguage")` with ternaries:
+```swift
+@AppStorage("appLanguage") private var appLanguage = "de"
+// Then for every user-visible string:
+Text(appLanguage == "en" ? "English text" : "German text")
+```
+
+**In ViewModels/Services** — use `UserDefaults` directly (no `@AppStorage` available):
+```swift
+private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
+// Then: errorMessage = isEn ? "English error" : "German error"
+```
+
+**For `displayName` on enums** (in `SharedTypes.swift`, `ProtocolLoader.swift`) — use file-level helper:
+```swift
+private var isEnglishLocale: Bool {
+    UserDefaults.standard.string(forKey: "appLanguage") == "en"
+}
+```
+
+**Protocol JSON files** have language variants: `lbp_far.json` (German) / `lbp_far_en.json` (English). `ProtocolLoader.resolveFilename()` automatically resolves `_en` variants when English is active, with fallback to German if no English file exists. Cache keys are language-aware.
+
+**Rules for new code:**
+- Every new View MUST include `@AppStorage("appLanguage")` and localize all user-visible strings
+- Every new ViewModel error/success message MUST use the `isEn` pattern
+- German is the default language (`appLanguage` defaults to `"de"`)
+- Language choice persists across app restarts (UserDefaults) and is NOT cleared on logout
+- `Localizable.xcstrings` exists (239 entries) but is NOT used by the runtime pattern — it's a reference catalog
 
 ### Content Filtering Pattern (Condition-Specific Content)
 
@@ -221,15 +257,19 @@ To prevent cross-contamination of condition-specific educational content:
 
 ## Domain Models (Models/Domain/)
 
-- `SharedTypes.swift` — All shared enums: `TendinopathyType` (14 cases: achilles, patellar, tennisElbow, golfersElbow, rotatorCuff, gluteal, proximalHamstring, plantarFascia, lbpNonspecific, neckPain, neckShoulderTension, aclReconstruction, shoulderImpingement, frozenShoulder), `ExerciseType`, `AdaptationDecision`, `AemSubtype`, `NdiSeverityGrade`, `SymptomResponse`
+- `SharedTypes.swift` — All shared enums: `TendinopathyType` (15 cases: achilles, patellar, tennisElbow, golfersElbow, rotatorCuff, gluteal, proximalHamstring, plantarFascia, lbpNonspecific, neckPain, neckShoulderTension, aclReconstruction, shoulderImpingement, frozenShoulder, lateralAnkleSprain), `ExerciseType`, `AdaptationDecision`, `AemSubtype`, `NdiSeverityGrade`, `LasSeverityGrade`, `SymptomResponse`
 - `LbpTypes.swift` — Largest model file: fear hierarchies, exposure logs, pacing plans/templates/logs, plan adjustments, micro-modules, analytics types, `AnyCodable`
 - `NeckTypes.swift` — NDI screening config/results, focus areas, NDI history
 - `TensionTypes.swift` — TSI screening config/results/submission, focus areas, history, micro-modules
 - `ShoulderImpingementTypes.swift` — QuickDASH screening config/results/submission, `SiSeverityGrade` (LEICHT/MITTEL/SCHWER from QuickDASH score), focus areas, history, micro-modules
 - `FrozenShoulderTypes.swift` — SPADI screening config/results/submission, `FsSeverityGrade` (LEICHT ≤34 / MITTEL 35–59 / SCHWER ≥60), focus areas, history, micro-modules
 - `AclTypes.swift` — ACL stream/exercise models, milestone status, schedule data, KPI types. `AclStreamExercise` has custom decoder for flexible backend shapes.
+- `LateralAnkleSprainTypes.swift` — CAIT screening config/results/submission, `LasSeverityGrade` (LEICHT ≥24 / MITTEL 12–23 / SCHWER ≤11 from CAIT score), focus areas, history, micro-modules
 - `AemTypes.swift` — AEM screening config/results/submission
 - `AuthTypes.swift` — Login/onboarding request/response types
+- `MorningCheckin.swift` — Morning check-in models, smart day response, streak info
+- `ClinicalThread.swift` / `ClinicalMessage.swift` — Clinical messaging thread and message models
+- `MotivationalQuote.swift` — Quote model + `QuoteLoader` singleton (loads bundled quotes, daily rotation)
 - `APIResponses.swift` — All backend response wrappers (`{user:}`, `{plan:}`, `{hierarchy:}`, etc.)
 - `EducationCard.swift` — Education card model + `EducationCardLoader` singleton (loads bundled `education-cards.json`, filters by phase/condition, daily rotation via day-of-year modulo). Cards with `condition == nil` are generic tendinopathy cards — SI/FS/ACL patients never see them.
 - `CustomExercise.swift` — Custom exercises added by users (displayed in ProgramTab alongside protocol exercises)
@@ -286,13 +326,13 @@ Applied to: tab selection (`.selection`), set completion (`.impact`), exercise/p
 - `.accessibilityAddTraits(.isSelected)` on tab bar, symptom picker, AEM Likert options
 - `.accessibilityHidden(true)` on decorative header icons
 - `.accessibilityLabel()` on icon-only buttons (settings gear, profile menu, move/delete)
-- Contextual loading labels: `ProgressView("Nacken-Module laden...")` instead of bare `ProgressView()`
+- Contextual loading labels: `ProgressView(isEn ? "Loading neck modules..." : "Nacken-Module laden...")` instead of bare `ProgressView()`
 
 ### Error Handling in Views
 Views that load data from API use a consistent pattern:
 ```swift
 @State private var errorMessage: String?
-// In catch block: errorMessage = "Descriptive German message."
+// In catch block: errorMessage = isEn ? "English message." : "German message."
 // In body: if let error = errorMessage { InlineErrorView(message: error) { Task { await reload() } } }
 ```
 
@@ -306,6 +346,8 @@ Views that load data from API use a consistent pattern:
 - **Shoulder Impingement (SI)**: QuickDASH severity grading (`SiSeverityGrade`), phase-based protocol with severity-keyed JSON files (`shoulder_impingement_{leicht|mittel|schwer}.json`), focus areas, micro-modules, SPADI-style rescreening via `SiScreeningView`
 - **Frozen Shoulder (FS)**: SPADI severity grading (`FsSeverityGrade`: LEICHT ≤34 / MITTEL 35–59 / SCHWER ≥60), phase-based protocol with severity-keyed files (`frozen_shoulder_{leicht|mittel|schwer}.json`), focus areas, micro-modules, rescreening via `FsScreeningView`. SCHWER patients get dosage-modified exercises (67% sets, 80% reps) via `DosageModifier`.
 - **ACL**: Milestone-based progression, stream-based exercise programs, weekly schedule is client-side (`AclScheduleData`), stream unlocking is backend-controlled via milestone
+- **Lateral Ankle Sprain (LAS)**: CAIT severity grading (`LasSeverityGrade`: LEICHT ≥24 / MITTEL 12–23 / SCHWER ≤11), phase-based protocol with severity-keyed files (`lateral_ankle_sprain_{leicht|mittel|schwer}.json`), focus areas, micro-modules, rescreening via `LasScreeningView`
+
 ### Pain-Adaptive Phase Progression
 After every progress log, backend returns `AdaptationResult` with potential phase change (PROGRESS/HOLD/REGRESS). Frontend shows `PhaseChangeAlert` overlay.
 
@@ -317,6 +359,7 @@ After every progress log, backend returns `AdaptationResult` with potential phas
 - Tension: Focus areas + TSI rescreening + tension micro-modules — shown in EdukationTab via `TensionMicroModulesView`
 - Shoulder Impingement: Focus areas + QuickDASH rescreening + SI micro-modules — shown in EdukationTab via `SiMicroModulesView`
 - Frozen Shoulder: Focus areas + SPADI rescreening + FS micro-modules — shown in EdukationTab via `FsMicroModulesView`
+- Lateral Ankle Sprain: Focus areas + CAIT rescreening + LAS micro-modules — shown in EdukationTab via `LateralAnkleSprainMicroModulesView`
 - Tendinopathy (no micro-modules): EdukationTab shows all `EducationCard`s for current phase via `WissenAllCardsView`
 
 ### Exercise Video Recording
@@ -330,10 +373,16 @@ ACL patients have a separate dashboard (`AclDashboardView`) with milestone-based
 - **Exercise model** — `AclStreamExercise` (not `ExerciseWithPhase`): optional fields, German name/description variants (`nameDE`, `descriptionDE`), graft modifiers, concomitant precautions
 - **Today's program** — `AclTodayProgramView` loads stream details in parallel via `withTaskGroup`, silently skips locked/failed streams
 
+### Clinical Messaging
+Patient-clinician messaging via threads. `MessagingViewModel` manages thread list, messages, and unread count with polling timers. Views in `Views/Channel/`: `MessagesTab`, `ThreadListView`, `ThreadDetailView`, `FlagConcernSheet`. `ExerciseQuestionButton` lets patients ask questions about specific exercises. Available to all conditions via the MessagesTab in DashboardView.
+
+### Smart Day & Morning Check-in (Bridge)
+Daily health check-in flow (`MorningCheckinView`) that feeds into the smart day system (`SmartDayView`). `SmartDayViewModel` loads today's check-in status and smart day recommendations from the backend. `SmartDayGateView` acts as the entry point. Views in `Views/Bridge/`. API routes under `/bridge/*`.
+
 ### Work Timer (Bewegungspause)
 `WorkTimerViewModel` manages work-break cycle with UserDefaults persistence. Both work timer state AND break state are persisted — on app relaunch during a break, remaining time is recalculated from the persisted `breakStartedAt` timestamp. `handleForegroundReturn()` handles both work and break timer restoration when returning from background.
 
-## Backend API (~50 endpoints)
+## Backend API (~60 endpoints)
 
 | Route group | Prefix | Purpose |
 |-------------|--------|---------|
@@ -345,7 +394,10 @@ ACL patients have a separate dashboard (`AclDashboardView`) with milestone-based
 | LBP | `/lbp-enhancements/*` | Fear hierarchy, pacing, micro-modules, analytics |
 | Shoulder Impingement | `/shoulder-impingement/*` | QuickDASH screening, focus areas, micro-modules, history |
 | Frozen Shoulder | `/frozen-shoulder/*` | SPADI screening, focus areas, micro-modules, history |
+| Lateral Ankle Sprain | `/lateral-ankle-sprain/*` | CAIT screening, focus areas, micro-modules, history |
 | ACL | `/acl/*` | Streams, milestones, schedule, KPI logging |
+| Bridge | `/bridge/*` | Morning check-in, smart day recommendations |
+| Clinical Channel | `/clinical-channel/*` | Messaging threads, messages |
 | Work Timer | `/work-timer/*` | Settings, exercises, break logging, summary |
 | Config | `/config/*` | Feature flags, health check |
 

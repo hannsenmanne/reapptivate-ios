@@ -189,10 +189,15 @@ final class DashboardViewModel {
     private func loadSafely<T: Sendable>(_ work: @Sendable () async throws -> T) async -> T? {
         do {
             return try await work()
+        } catch is CancellationError {
+            return nil
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            return nil
         } catch {
             Log.api.error("Dashboard load error: \(error.localizedDescription)")
             if self.error == nil {
-                self.error = "Daten konnten nicht geladen werden."
+                let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+                self.error = isEn ? "Data could not be loaded." : "Daten konnten nicht geladen werden."
             }
             return nil
         }

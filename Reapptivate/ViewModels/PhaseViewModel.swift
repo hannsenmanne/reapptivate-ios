@@ -18,6 +18,10 @@ final class PhaseViewModel {
         do {
             let response: PhaseStatusResponse = try await apiClient.request(APIEndpoints.phaseStatus())
             phaseStatus = response.phaseStatus
+        } catch is CancellationError {
+            return
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            return
         } catch {
             self.error = "Phasenstatus konnte nicht geladen werden."
             Log.api.error("Failed to load phase status: \(error)")
@@ -29,6 +33,12 @@ final class PhaseViewModel {
         do {
             let response: PhaseHistoryResponse = try await apiClient.request(APIEndpoints.phaseHistory())
             phaseHistory = response.history
+        } catch is CancellationError {
+            isLoading = false
+            return
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            isLoading = false
+            return
         } catch {
             self.error = "Phasenverlauf konnte nicht geladen werden."
             Log.api.error("Failed to load phase history: \(error)")
