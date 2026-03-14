@@ -167,7 +167,8 @@ final class DashboardViewModel {
 
     var isRestDay: Bool {
         guard let schedule = scheduleResponse else { return false }
-        return !schedule.isTrainingDay
+        let todayWeekday = Calendar.current.component(.weekday, from: Date())
+        return !schedule.iosWeekdays.contains(todayWeekday)
     }
 
     func isExerciseCompletedToday(_ exerciseId: String) -> Bool {

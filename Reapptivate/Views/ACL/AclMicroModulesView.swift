@@ -192,10 +192,7 @@ struct AclModuleCard: View {
                 Divider().padding(.horizontal, 12)
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(module.content)
-                        .font(.appCaption)
-                        .foregroundStyle(.textSecondary)
-                        .lineSpacing(3)
+                    MarkdownContentView(module.content, font: .appCaption)
 
                     if let takeHome = module.takeHome, !takeHome.isEmpty {
                         HStack(alignment: .top, spacing: 8) {

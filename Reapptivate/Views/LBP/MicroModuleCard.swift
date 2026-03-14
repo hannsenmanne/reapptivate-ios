@@ -67,10 +67,7 @@ struct MicroModuleCard: View {
 
                 VStack(alignment: .leading, spacing: 16) {
                     // Body text
-                    Text(module.content)
-                        .font(.appSubheadline)
-                        .foregroundStyle(.textSecondary)
-                        .lineSpacing(4)
+                    MarkdownContentView(module.content, font: .appSubheadline)
 
                     // Take-home message
                     if let takeHome = module.takeHome, !takeHome.isEmpty {

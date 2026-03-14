@@ -62,10 +62,12 @@ final class WorkTimerViewModel {
     private static let udKeyBreakStartedAt = "workTimer_breakStartedAt"
     private static let udKeyAutoStart = "workTimer_autoStart"
     private static let udKeySnoozesUsed = "workTimer_snoozesUsed"
+    private static let udKeyWasAutoStarted = "workTimer_wasAutoStarted"
 
     private static let maxSnoozes = 2
     private var isAutoStopping = false
     private var isCompletingBreak = false
+    private var wasAutoStarted = false
 
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -259,6 +261,7 @@ final class WorkTimerViewModel {
     // MARK: - Workday Control
 
     func startWorkday() {
+        wasAutoStarted = false
         let now = Date()
         timerStartedAt = now
         isRunning = true
@@ -414,6 +417,7 @@ final class WorkTimerViewModel {
     func checkAutoStart() {
         guard autoStartEnabled, isWithinWorkHours, !isRunning, settings != nil else { return }
         startWorkday()
+        wasAutoStarted = true
     }
 
     // MARK: - Timer Persistence
@@ -427,6 +431,7 @@ final class WorkTimerViewModel {
         defaults.set(breaksSkippedToday, forKey: Self.udKeyBreaksSkipped)
         defaults.set(currentBreakNumber, forKey: Self.udKeyCurrentBreakNumber)
         defaults.set(snoozesUsed, forKey: Self.udKeySnoozesUsed)
+        defaults.set(wasAutoStarted, forKey: Self.udKeyWasAutoStarted)
         defaults.set(todayDateString(), forKey: Self.udKeyDate)
     }
 
@@ -453,6 +458,7 @@ final class WorkTimerViewModel {
         breaksSkippedToday = defaults.integer(forKey: Self.udKeyBreaksSkipped)
         currentBreakNumber = defaults.integer(forKey: Self.udKeyCurrentBreakNumber)
         snoozesUsed = defaults.integer(forKey: Self.udKeySnoozesUsed)
+        wasAutoStarted = defaults.bool(forKey: Self.udKeyWasAutoStarted)
         isRunning = true
 
         // Check if we were in the middle of a break
@@ -637,8 +643,8 @@ final class WorkTimerViewModel {
     private func workTimerTick() {
         guard isRunning, !isOnBreak else { return }
 
-        // Auto-stop when work hours end
-        if !isWithinWorkHours {
+        // Auto-stop only when the timer was auto-started (not manually by the user)
+        if wasAutoStarted, !isWithinWorkHours {
             autoStopWorkday()
             return
         }
@@ -760,6 +766,7 @@ final class WorkTimerViewModel {
         defaults.removeObject(forKey: udKeyBreakStartedAt)
         defaults.removeObject(forKey: udKeyAutoStart)
         defaults.removeObject(forKey: udKeySnoozesUsed)
+        defaults.removeObject(forKey: udKeyWasAutoStarted)
     }
 
     private func cancelPendingNotifications() {
