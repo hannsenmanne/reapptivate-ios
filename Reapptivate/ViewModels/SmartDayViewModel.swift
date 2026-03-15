@@ -15,11 +15,19 @@ final class SmartDayViewModel {
     init(apiClient: APIClient, appState: AppState) {
         self.apiClient = apiClient
         self.appState = appState
+        // Preserve check-in state from AppState so tab switches don't re-show the check-in
+        self.hasCheckedIn = appState.hasCheckedInToday
     }
 
     func checkTodayStatus() async {
         isLoading = true
         errorMessage = nil
+
+        // Already checked in this session — skip the check-in API, load smart day directly
+        if hasCheckedIn {
+            await loadSmartDay()
+            return
+        }
 
         do {
             let response: CheckinTodayResponse = try await apiClient.request(
