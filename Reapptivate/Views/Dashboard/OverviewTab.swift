@@ -9,13 +9,19 @@ struct OverviewTab: View {
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
-        overviewContent
+        SmartDayGateView(
+            completedCount: viewModel?.completedToday.count ?? 0,
+            totalCount: exerciseVM?.exercises.count ?? 0,
+            onNavigateToProgram: onNavigateToProgram
+        ) {
+            overviewFallbackContent
+        }
     }
 
-    // MARK: - Overview Content
+    // MARK: - Fallback Content (shown when Smart Day API is unavailable)
 
     @ViewBuilder
-    private var overviewContent: some View {
+    private var overviewFallbackContent: some View {
         VStack(spacing: 20) {
             // Stats Row
             if let user = appState.currentUser {
@@ -66,6 +72,10 @@ struct OverviewTab: View {
             // Exercise Link
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
                 .cardEntryAnimation(index: 6)
+
+            // Training Schedule
+            TrainingScheduleCard()
+                .cardEntryAnimation(index: 7)
 
             // Compliance Calendar
             if let entries = viewModel?.recentEntries, !entries.isEmpty {

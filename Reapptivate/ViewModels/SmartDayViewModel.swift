@@ -26,6 +26,7 @@ final class SmartDayViewModel {
                 APIEndpoints.morningCheckinToday()
             )
             hasCheckedIn = response.checkedIn
+            appState?.hasCheckedInToday = response.checkedIn
 
             if response.checkedIn {
                 await loadSmartDay()
@@ -55,6 +56,7 @@ final class SmartDayViewModel {
 
     func onCheckinComplete() async {
         hasCheckedIn = true
+        appState?.hasCheckedInToday = true
         await loadSmartDay()
     }
 }

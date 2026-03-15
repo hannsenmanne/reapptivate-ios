@@ -9,6 +9,7 @@ final class AppState {
     var isCheckingAuth = true
     var isLoading = false
     var unreadMessageCount = 0
+    var hasCheckedInToday = false
 
     /// Called during logout to clear caches (set by ReapptivateApp)
     var onLogout: (() -> Void)?
@@ -78,6 +79,7 @@ final class AppState {
         currentUser = nil
         isAuthenticated = false
         unreadMessageCount = 0
+        hasCheckedInToday = false
         WorkTimerViewModel.clearPersistedState()
         ExerciseVideoStore.shared.deleteAllVideos()
         clearUserScopedDefaults()
