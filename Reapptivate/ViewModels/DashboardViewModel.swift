@@ -167,13 +167,6 @@ final class DashboardViewModel {
         await loadDashboard()
     }
 
-    func fetchTodayCheckin() async {
-        let response: CheckinTodayResponse? = await loadSafely { [apiClient] in
-            try await apiClient.request(APIEndpoints.morningCheckinToday())
-        }
-        appState?.hasCheckedInToday = response?.checkedIn ?? false
-    }
-
     // MARK: - Helpers
 
     var isRestDay: Bool {

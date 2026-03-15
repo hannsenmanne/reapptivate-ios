@@ -35,7 +35,6 @@ final class MorningCheckinViewModel {
             let _: MorningCheckin = try await apiClient.request(
                 APIEndpoints.submitMorningCheckin(body: request)
             )
-            appState?.hasCheckedInToday = true
             isSubmitting = false
             return true
         } catch {

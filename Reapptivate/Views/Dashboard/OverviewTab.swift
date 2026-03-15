@@ -9,13 +9,13 @@ struct OverviewTab: View {
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
-        overviewFallbackContent
+        overviewContent
     }
 
-    // MARK: - Fallback Content (shown when Smart Day API is unavailable)
+    // MARK: - Overview Content
 
     @ViewBuilder
-    private var overviewFallbackContent: some View {
+    private var overviewContent: some View {
         VStack(spacing: 20) {
             // Stats Row
             if let user = appState.currentUser {
