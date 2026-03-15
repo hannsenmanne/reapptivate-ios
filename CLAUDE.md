@@ -142,7 +142,7 @@ ReapptivateApp (root)
 ├── ScreeningCompleteView (first login, after screening)
 ├── FeatureWalkthroughView (first login, after welcome)
 └── DashboardView (authenticated + screened + onboarded)
-    ├── OverviewTab — Phase status, Wissen daily card (tendinopathy only), condition info
+    ├── OverviewTab — Phase status, today's plan, streak, schedule, Wissen daily card (tendinopathy only)
     ├── ProgramTab — Exercise list + LBP enhancements
     ├── EdukationTab — Micro-modules (LBP/Neck/Tension/SI/FS/LAS) or Wissen cards (tendinopathy only)
     ├── ProgressTab — Pain history, statistics
@@ -377,7 +377,7 @@ ACL patients have a separate dashboard (`AclDashboardView`) with milestone-based
 Patient-clinician messaging via threads. `MessagingViewModel` manages thread list, messages, and unread count with polling timers. Views in `Views/Channel/`: `MessagesTab`, `ThreadListView`, `ThreadDetailView`, `FlagConcernSheet`. `ExerciseQuestionButton` lets patients ask questions about specific exercises. Available to all conditions via the MessagesTab in DashboardView.
 
 ### Smart Day & Morning Check-in (Bridge)
-Daily health check-in flow (`MorningCheckinView`) that feeds into the smart day system (`SmartDayView`). `SmartDayViewModel` loads today's check-in status and smart day recommendations from the backend. `SmartDayGateView` acts as the entry point. Views in `Views/Bridge/`. API routes under `/bridge/*`.
+Daily health check-in flow (`MorningCheckinView`) and smart day recommendations (`SmartDayView`). `SmartDayViewModel` loads today's check-in status from the backend. `SmartDayGateView` exists but is **not used as the OverviewTab entry point** — the overview shows cards directly without gating on check-in completion. Views in `Views/Bridge/`. API routes under `/bridge/*`.
 
 ### Work Timer (Bewegungspause)
 `WorkTimerViewModel` manages work-break cycle with UserDefaults persistence. Both work timer state AND break state are persisted — on app relaunch during a break, remaining time is recalculated from the persisted `breakStartedAt` timestamp. `handleForegroundReturn()` handles both work and break timer restoration when returning from background.

@@ -145,7 +145,40 @@
 - DashboardTabBar: LAS gets Insights tab (via showInsights flag)
 - FsScreeningView does NOT have isEmbedded property (correcting earlier memory note)
 
+## Localization (DE/EN Bilingual) Review (2026-03-12)
+- **LanguageManager**: `@Observable @MainActor final class`, stores in UserDefaults "appLanguage"
+- **Two localization patterns coexist**: (1) Localizable.xcstrings for SwiftUI `Text("literal")`, (2) inline `isEnglishLocale ? "en" : "de"` ternaries for non-literal String contexts
+- **EducationCardLoader cache bug**: Caches cards on first load, never invalidates on language switch -- user sees stale language
+- **ProtocolLoader cache**: Correctly uses locale-aware cache keys (`key_en_cache` vs `key`)
+- **AppearanceMode.label bug**: Returns raw String, used via `Text(mode.label)` which does NOT invoke LocalizedStringKey lookup
+- **Accept-Language header**: Sends bare "de"/"en" (valid but minimal RFC 7231)
+- **Info.plist permission strings**: German-only in project.yml, no InfoPlist.strings for English
+- **Inconsistent localization**: Values localized but labels not (e.g., "Haltezeit", "Wiederholungen" labels still German)
+- **Accessibility strings partially missed**: Some .accessibilityLabel/.accessibilityHint still German while .accessibilityValue localized
+- **micro-modules_en.json**: All entries have `"locale": "de"` instead of `"en"` (backend seed file, not iOS runtime issue)
+- **Pattern**: File-private `isEnglishLocale` computed var reads UserDefaults directly; works because locale environment change triggers full re-render
+
+## Liquid Glass Design Refresh Review (2026-03-14)
+- **CardStyle/AccentCardStyle**: Now use `ultraThinMaterial + cardBg.opacity(0.72)` overlay + `glassStroke` border
+- **Button styles**: Primary/Accent use gradient fill + inner highlight stroke; Secondary uses `ultraThinMaterial`
+- **CardEntryAnimation**: Added `reduceMotion` check and `scaleEffect` to stagger animation
+- **AppBackgroundModifier**: RadialGradient accent glow (0.06 opacity) behind `appBg`
+- **GlassSheetModifier**: `.presentationCornerRadius(28) + .presentationBackground(.regularMaterial) + .presentationDragIndicator(.visible)` applied to ~30 sheets
+- **GlowingIconContainer**: Reusable component with filled/unfilled modes, gradient fill, optional inner stroke, colored shadow
+- **FloatingTabBar**: New file, replaces DashboardTabBar. Floating capsule with `.regularMaterial`, `matchedGeometryEffect` indicator, `reduceMotion` support
+- **Messages moved**: From tab to toolbar button + fullScreenCover with dismiss button
+- **DashboardTab.messages**: Now dead code (never selectable), returns EmptyView
+- **accentDeep**: Defined but unused
+- **Inconsistency**: ExerciseCardView, MicroModuleCard, WissenExpandableCard still use solid `Color.cardBg` (not glass material)
+- **Glow rings**: TodaysPlanCard + WorkTimerCard use `blur(radius: 6)` on trimmed circles for ambient glow
+- **hasSeenWelcome/hasSeenWalkthrough**: FIXED -- no longer cleared on logout (was previously flagged)
+- **DashboardVM.loadSafely error**: Still German-only ("Daten konnten nicht geladen werden.")
+
 ## Reviewer Notes
+- SwiftUI `Text(stringVariable)` uses String init, NOT LocalizedStringKey -- no automatic xcstrings lookup
+- SwiftUI `Text("literal")` uses LocalizedStringKey init -- automatic xcstrings lookup
 - SwiftUI Slider has built-in VoiceOver adjustable action
 - ScreeningCompleteView uses ASCII-only German -- pre-existing pattern
 - PendingSync.syncId @Attribute(.unique) was fixed (no longer an issue)
+- `glassStroke` file-level `let` with `Color(UIColor{...})` IS reactive to trait changes -- UIColor closure re-evaluates on render
+- `.id(selectedTab)` on tab content causes full subtree teardown/rebuild on tab switch (scroll pos lost, .task re-fires)

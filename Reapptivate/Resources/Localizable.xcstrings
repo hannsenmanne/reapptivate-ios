@@ -1,266 +1,2922 @@
 {
   "sourceLanguage" : "de",
   "strings" : {
+    "--" : {
 
-    "Laden..." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading..." } } } },
-    "Tagesplan wird geladen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading daily plan" } } } },
-    "Ihr personalisierter Tagesplan wird erstellt." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your personalized daily plan is being created." } } } },
-    "Tagesstatus laden..." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading daily status..." } } } },
+    },
+    "*" : {
 
-    "Trainingstag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training Day" } } } },
-    "Ruhetag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Rest Day" } } } },
-    "Erholungstag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recovery Day" } } } },
-    "Heute ist ein guter Tag zur Erholung. Nutze die Zeit für leichte Bewegung oder Entspannung." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today is a good day for recovery. Use the time for light movement or relaxation." } } } },
-    "Wochen post-OP" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Weeks Post-Op" } } } },
-    "Meilenstein" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Milestone" } } } },
-    "Tag Streak" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Day Streak" } } } },
-    "Tage Streak" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Day Streak" } } } },
-    "Rekord:" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Record:" } } } },
-    "Empfohlene Lektüre" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recommended Reading" } } } },
-    "Einführung in Phase " : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Introduction to Phase " } } } },
+    },
+    "/ %@%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "/ %1$@%2$@"
+          }
+        }
+      }
+    },
+    "/10" : {
 
-    "Übungsprogramm" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exercise Program" } } } },
-    "Übungen anzeigen und protokollieren" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "View and log exercises" } } } },
-    "Heutiges Programm" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's Program" } } } },
-    "Diagnose" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Diagnosis" } } } },
-    "Training seit" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training since" } } } },
-    "Phase" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Phase" } } } },
-    "Tage" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Days" } } } },
-    "Willkommen bei Reapptivate!" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome to Reapptivate!" } } } },
-    "Starten Sie Ihr erstes Training, um Ihren Fortschritt zu verfolgen." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start your first training session to track your progress." } } } },
+    },
+    "%@" : {
 
-    "Konto" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Account" } } } },
-    "Trainingsplan" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training Schedule" } } } },
-    "Benachrichtigungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } } } },
-    "Darstellung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Appearance" } } } },
-    "Erfolge" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Achievements" } } } },
-    "Datenschutz" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } } } },
-    "Einstellungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } } } },
-    "Abmelden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign Out" } } } },
-    "Abmelden?" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign Out?" } } } },
-    "Abbrechen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } } } },
-    "Sie werden ausgeloggt und müssen sich erneut anmelden." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You will be signed out and need to sign in again." } } } },
-    "Trainingstage & Uhrzeit" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training Days & Time" } } } },
-    "Erinnerungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders" } } } },
-    "Erscheinungsbild" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Appearance" } } } },
-    "Systemstandard" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "System Default" } } } },
-    "Hell" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } } } },
-    "Dunkel" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Dark" } } } },
-    "Haptisches Feedback" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Haptic Feedback" } } } },
-    "Meine Erfolge" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "My Achievements" } } } },
-    "Sprache" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } } } },
-    "Sprache / Language" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } } } },
-    "Profil und Abmelden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Profile and Sign Out" } } } },
-    "Aktiv" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Active" } } } },
-    "Inaktiv" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Inactive" } } } },
-    "Benachrichtigungen erlauben" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow Notifications" } } } },
-    "In iOS Einstellungen öffnen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open iOS Settings" } } } },
-    "Über Reapptivate" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "About Reapptivate" } } } },
-    "Datenschutzerklärung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Policy" } } } },
-    "AEM-Subtyp" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "AEM Subtype" } } } },
-    "NDI-Stufe" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "NDI Level" } } } },
-    "TSI-Stufe" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "TSI Level" } } } },
+    },
+    "%@ / %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "%@ %@ %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@ %3$@"
+          }
+        }
+      }
+    },
+    "%@ Freeze" : {
 
-    "Übungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exercises" } } } },
-    "Sets" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sets" } } } },
-    "Wiederholungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Repetitions" } } } },
-    "Sekunden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Seconds" } } } },
-    "Minuten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Minutes" } } } },
-    "Protokollieren" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log" } } } },
-    "Erledigt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } } } },
-    "Abgeschlossen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Completed" } } } },
-    "Schmerzlevel" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pain Level" } } } },
-    "Schmerzwert" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pain Level" } } } },
-    "Symptomreaktion" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Symptom Response" } } } },
-    "Besser" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Better" } } } },
-    "Gleich" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Same" } } } },
-    "Schlechter" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Worse" } } } },
-    "Training protokollieren" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log Training" } } } },
-    "Heute" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } } } },
-    "Gestern" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Yesterday" } } } },
-    "Keine Übungen für heute geplant." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No exercises planned for today." } } } },
-    "Übungsdetails" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exercise Details" } } } },
-    "Eigene Übungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Custom Exercises" } } } },
-    "Übung hinzufügen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Add Exercise" } } } },
-    "Übung bearbeiten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit Exercise" } } } },
-    "Übung löschen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete Exercise" } } } },
-    "Keine eigenen Übungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No custom exercises" } } } },
-    "Übung speichern" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Save Exercise" } } } },
-    "Name der Übung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exercise Name" } } } },
-    "Beschreibung (optional)" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Description (optional)" } } } },
-    "Empfohlene Reihenfolge" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recommended Order" } } } },
-    "Video aufnehmen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Record Video" } } } },
-    "Video aus Bibliothek" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose from Library" } } } },
-    "Video entfernen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove Video" } } } },
+    },
+    "%@ von %@ freigeschaltet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ von %2$@ freigeschaltet"
+          }
+        }
+      }
+    },
+    "%@ von %@ Kriterien erfüllt" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ von %2$@ Kriterien erfüllt"
+          }
+        }
+      }
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "%@/%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@/%2$@"
+          }
+        }
+      }
+    },
+    "%@/%@%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@/%2$@%3$@"
+          }
+        }
+      }
+    },
+    "%@/5" : {
 
-    "Fortschritt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Progress" } } } },
-    "Statistiken" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Statistics" } } } },
-    "Trainingseinheiten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training Sessions" } } } },
-    "Compliance" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Compliance" } } } },
-    "Schmerzverlauf" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pain History" } } } },
-    "Keine Daten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No Data" } } } },
-    "Wochen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Weeks" } } } },
-    "Noch kein Training protokolliert." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No training logged yet." } } } },
-    "Letzte 30 Tage" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Last 30 Days" } } } },
-    "Letzte 7 Tage" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Last 7 Days" } } } },
-    "Schmerz" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pain" } } } },
-    "Sitzungen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sessions" } } } },
-    "Gesamt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Total" } } } },
-    "Ø Schmerz" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Avg Pain" } } } },
+    },
+    "%@/10" : {
 
-    "Verbindungsfehler" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Connection Error" } } } },
-    "Keine Verbindung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No Connection" } } } },
-    "Erneut versuchen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Retry" } } } },
-    "Schließen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Close" } } } },
-    "Speichern" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } } } },
-    "Bestätigen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Confirm" } } } },
-    "Weiter" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue" } } } },
-    "Zurück" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } } } },
-    "Fertig" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } } } },
-    "Bearbeiten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit" } } } },
-    "Löschen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } } } },
-    "Hinzufügen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Add" } } } },
-    "Ja" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Yes" } } } },
-    "Nein" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No" } } } },
-    "Senden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Send" } } } },
-    "Nachrichten laden..." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading messages..." } } } },
+    },
+    "%@%%" : {
 
-    "Trainingstage" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training Days" } } } },
-    "Montag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Monday" } } } },
-    "Dienstag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tuesday" } } } },
-    "Mittwoch" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Wednesday" } } } },
-    "Donnerstag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Thursday" } } } },
-    "Freitag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Friday" } } } },
-    "Samstag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Saturday" } } } },
-    "Sonntag" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sunday" } } } },
-    "Mo" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mon" } } } },
-    "Di" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tue" } } } },
-    "Mi" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Wed" } } } },
-    "Do" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Thu" } } } },
-    "Fr" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Fri" } } } },
-    "Sa" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sat" } } } },
-    "So" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sun" } } } },
-    "Trainingszeit" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Training Time" } } } },
-    "Kein Training geplant" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No training scheduled" } } } },
+    },
+    "%@%% — %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%% — %2$@"
+          }
+        }
+      }
+    },
+    "%@x" : {
 
-    "Analyse" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Analytics" } } } },
-    "Einblicke" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Insights" } } } },
-    "Nachrichten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Messages" } } } },
-    "Übersicht" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Overview" } } } },
-    "Programm" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Program" } } } },
-    "Edukation" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Education" } } } },
+    },
+    "0" : {
 
-    "Bewegungspause" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Movement Break" } } } },
-    "Pause starten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start Break" } } } },
-    "Pause" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Break" } } } },
-    "Sitzen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sitting" } } } },
-    "Zeit am Stück" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Time at a stretch" } } } },
-    "Pausendauer" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Break Duration" } } } },
-    "Arbeitszeit" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Work Time" } } } },
-    "Übungen absolviert" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exercises completed" } } } },
-    "Pausen heute" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Breaks today" } } } },
-    "Verlauf" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } } } },
-    "Heute keine Pausen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No breaks today" } } } },
-    "Bewegungspause beendet" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Movement break completed" } } } },
-    "Timer" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Timer" } } } },
-    "Übung wählen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose exercise" } } } },
+    },
+    "0 (kein Schmerz)" : {
 
-    "Guten Morgen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Good morning" } } } },
-    "Wie geht es Ihnen heute?" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "How are you feeling today?" } } } },
-    "Wie sind Ihre Schmerzen heute?" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "What is your pain level today?" } } } },
-    "Check-in abschließen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete Check-in" } } } },
-    "Tages-Check-in" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily Check-in" } } } },
-    "Morgen-Check-in" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Morning Check-in" } } } },
+    },
+    "10" : {
 
-    "Screening" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Screening" } } } },
-    "Screening abschließen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete Screening" } } } },
-    "Rescreening durchführen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Perform Rescreening" } } } },
-    "Weiter zur App" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue to App" } } } },
-    "Ergebnis" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Result" } } } },
-    "Leichte Einschränkung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mild Impairment" } } } },
-    "Mittlere Einschränkung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate Impairment" } } } },
-    "Schwere Einschränkung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Severe Impairment" } } } },
-    "Keine Einschränkung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No Impairment" } } } },
-    "Screening abgeschlossen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Screening Completed" } } } },
-    "Fragebogen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Questionnaire" } } } },
-    "Frage" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Question" } } } },
-    "von" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "of" } } } },
+    },
+    "10 (stärkster)" : {
 
-    "Angst-Hierarchie" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Fear Hierarchy" } } } },
-    "Exposition" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exposure" } } } },
-    "Pacing-Plan" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pacing Plan" } } } },
-    "Baseline" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Baseline" } } } },
-    "Aktivität" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Activity" } } } },
-    "Aktivitäten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Activities" } } } },
-    "Angst-Level" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Fear Level" } } } },
-    "Expositions-Level" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Exposure Level" } } } },
+    },
+    "Abbrechen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Abgeschlossen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
+          }
+        }
+      }
+    },
+    "Abmelden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign Out"
+          }
+        }
+      }
+    },
+    "Abmelden?" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign Out?"
+          }
+        }
+      }
+    },
+    "ACL-Rehabilitation" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ACL Rehabilitation"
+          }
+        }
+      }
+    },
+    "AEM-Subtyp" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AEM Subtype"
+          }
+        }
+      }
+    },
+    "Aktiv" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active"
+          }
+        }
+      }
+    },
+    "Aktive Streams" : {
 
-    "Fokus-Bereiche" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus Areas" } } } },
-    "Micro-Module" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Micro-Modules" } } } },
-    "Modul lesen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Read Module" } } } },
-    "Modul abgeschlossen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Module completed" } } } },
-    "Gelesen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Read" } } } },
-    "Noch nicht gelesen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Not yet read" } } } },
+    },
+    "Aktivität" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity"
+          }
+        }
+      }
+    },
+    "Aktivitäten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activities"
+          }
+        }
+      }
+    },
+    "Alle anzeigen" : {
 
-    "NDI-Verlauf" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "NDI History" } } } },
-    "TSI-Verlauf" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "TSI History" } } } },
-    "QuickDASH-Verlauf" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "QuickDASH History" } } } },
-    "SPADI-Verlauf" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "SPADI History" } } } },
-    "Noch keine Screening-Daten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No screening data yet" } } } },
-    "NDI-Verlauf konnte nicht geladen werden." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Could not load NDI history." } } } },
-    "TSI-Verlauf konnte nicht geladen werden." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Could not load TSI history." } } } },
-    "QuickDASH-Verlauf konnte nicht geladen werden." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Could not load QuickDASH history." } } } },
-    "SPADI-Verlauf konnte nicht geladen werden." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Could not load SPADI history." } } } },
+    },
+    "Alle Übungen erledigt!" : {
 
-    "ACL-Rehabilitation" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "ACL Rehabilitation" } } } },
-    "Meilenstein erreicht" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Milestone Reached" } } } },
-    "Nächster Meilenstein" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Next Milestone" } } } },
-    "Wochen nach OP" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Weeks Post-Op" } } } },
-    "Kriterien" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Criteria" } } } },
-    "Kriterium erfüllt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Criterion met" } } } },
-    "Strom" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Stream" } } } },
-    "Ströme" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Streams" } } } },
-    "Gesperrt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Locked" } } } },
-    "Freigeschaltet" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Unlocked" } } } },
-    "KPI protokollieren" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log KPI" } } } },
-    "Wöchentlicher Fortschritt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly Progress" } } } },
-    "Entlassungsfortschritt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Discharge Progress" } } } },
+    },
+    "Analyse" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analytics"
+          }
+        }
+      }
+    },
+    "Angst-Hierarchie" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fear Hierarchy"
+          }
+        }
+      }
+    },
+    "Angst-Level" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fear Level"
+          }
+        }
+      }
+    },
+    "Anmelden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign In"
+          }
+        }
+      }
+    },
+    "Anmeldung fehlgeschlagen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in failed"
+          }
+        }
+      }
+    },
+    "Anrufen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call"
+          }
+        }
+      }
+    },
+    "app" : {
 
-    "Phase-Status" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Phase Status" } } } },
-    "Nächste Auswertung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Next Evaluation" } } } },
-    "Halten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Hold" } } } },
-    "Rückschritt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Regress" } } } },
-    "Phase geändert" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Phase Changed" } } } },
-    "Sie sind in Phase" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You are in Phase" } } } },
-    "Neue Phase" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "New Phase" } } } },
+    },
+    "Arbeitszeit" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work Time"
+          }
+        }
+      }
+    },
+    "Baseline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baseline"
+          }
+        }
+      }
+    },
+    "Bearbeiten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
+    "Bedenken melden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flag Concern"
+          }
+        }
+      }
+    },
+    "Benachrichtigungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
+          }
+        }
+      }
+    },
+    "Benachrichtigungen erlauben" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Notifications"
+          }
+        }
+      }
+    },
+    "Beschreibung (optional)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description (optional)"
+          }
+        }
+      }
+    },
+    "Besser" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Better"
+          }
+        }
+      }
+    },
+    "Bestätigen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        }
+      }
+    },
+    "Bewegungspause" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movement Break"
+          }
+        }
+      }
+    },
+    "Bewegungspause beendet" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movement break completed"
+          }
+        }
+      }
+    },
+    "Bitte erlauben Sie den Kamera-Zugriff in den Einstellungen." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please allow camera access in Settings."
+          }
+        }
+      }
+    },
+    "CAIT-Score: %@/30" : {
 
-    "Anmelden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign In" } } } },
-    "E-Mail" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Email" } } } },
-    "Passwort" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Password" } } } },
-    "Anmeldung fehlgeschlagen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign in failed" } } } },
-    "QR-Code scannen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Scan QR Code" } } } },
-    "Kamera-Zugriff benötigt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Camera Access Required" } } } },
-    "Bitte erlauben Sie den Kamera-Zugriff in den Einstellungen." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Please allow camera access in Settings." } } } },
+    },
+    "CAIT: %@/30" : {
 
-    "Täglich" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily" } } } },
-    "Wöchentlich" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly" } } } },
-    "Monatlich" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Monthly" } } } },
-    "Nacken & Schulter" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Neck & Shoulder" } } } },
-    "Verspannung" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tension" } } } },
-    "Leicht" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mild" } } } },
-    "Mittel" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate" } } } },
-    "Schwer" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Severe" } } } },
-    "Keine" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "None" } } } },
-    "Unbekannt" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Unknown" } } } },
+    },
+    "Check-in abschließen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete Check-in"
+          }
+        }
+      }
+    },
+    "Compliance" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compliance"
+          }
+        }
+      }
+    },
+    "Compliance: %@%%" : {
 
-    "Anrufen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call" } } } },
-    "Bedenken melden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Flag Concern" } } } },
-    "Nachricht senden" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Send Message" } } } },
-    "Keine Nachrichten" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No Messages" } } } },
-    "Tippen um zu schreiben..." : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap to write..." } } } },
+    },
+    "Darstellung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appearance"
+          }
+        }
+      }
+    },
+    "Datenschutz" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy"
+          }
+        }
+      }
+    },
+    "Datenschutzerklärung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        }
+      }
+    },
+    "Di" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tue"
+          }
+        }
+      }
+    },
+    "Diagnose" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnosis"
+          }
+        }
+      }
+    },
+    "Dienstag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuesday"
+          }
+        }
+      }
+    },
+    "Do" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thu"
+          }
+        }
+      }
+    },
+    "Donnerstag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thursday"
+          }
+        }
+      }
+    },
+    "Dunkel" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark"
+          }
+        }
+      }
+    },
+    "E-Mail" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        }
+      }
+    },
+    "Edukation" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Education"
+          }
+        }
+      }
+    },
+    "Eigene Übungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Exercises"
+          }
+        }
+      }
+    },
+    "Einblicke" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insights"
+          }
+        }
+      }
+    },
+    "Einführung in Phase " : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduction to Phase "
+          }
+        }
+      }
+    },
+    "Einstellungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Empfohlene Lektüre" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommended Reading"
+          }
+        }
+      }
+    },
+    "Empfohlene Reihenfolge" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommended Order"
+          }
+        }
+      }
+    },
+    "Entlassungsfortschritt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discharge Progress"
+          }
+        }
+      }
+    },
+    "Entlassungskriterien" : {
 
-    "Später (5 Min.)" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Later (5 min)" } } } },
-    "Überspringen" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Skip" } } } }
+    },
+    "Entnahmestellen-Schmerz (NRS)" : {
+
+    },
+    "Erfolge" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Achievements"
+          }
+        }
+      }
+    },
+    "Ergebnis" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Result"
+          }
+        }
+      }
+    },
+    "Erguss (Stroke Test)" : {
+
+    },
+    "Erholungstag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery Day"
+          }
+        }
+      }
+    },
+    "Erinnerungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders"
+          }
+        }
+      }
+    },
+    "Erledigt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "Erneut versuchen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        }
+      }
+    },
+    "Erscheinungsbild" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appearance"
+          }
+        }
+      }
+    },
+    "Exposition" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposure"
+          }
+        }
+      }
+    },
+    "Expositions-Level" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposure Level"
+          }
+        }
+      }
+    },
+    "Ext.-Defizit (0-30°)" : {
+
+    },
+    "Fertig" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "Fertig!" : {
+
+    },
+    "Flexion (0-160°)" : {
+
+    },
+    "Fokus-Bereiche" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focus Areas"
+          }
+        }
+      }
+    },
+    "Fortschritt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress"
+          }
+        }
+      }
+    },
+    "Fr" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fri"
+          }
+        }
+      }
+    },
+    "Frage" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question"
+          }
+        }
+      }
+    },
+    "Fragebogen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questionnaire"
+          }
+        }
+      }
+    },
+    "Freigeschaltet" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked"
+          }
+        }
+      }
+    },
+    "Freitag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Friday"
+          }
+        }
+      }
+    },
+    "Gelesen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read"
+          }
+        }
+      }
+    },
+    "Gesamt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        }
+      }
+    },
+    "Gesperrt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locked"
+          }
+        }
+      }
+    },
+    "Gestern" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
+          }
+        }
+      }
+    },
+    "Gleich" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same"
+          }
+        }
+      }
+    },
+    "Gut gemacht. Gönnen Sie sich Erholung bis zum nächsten Training." : {
+
+    },
+    "Guten Morgen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning"
+          }
+        }
+      }
+    },
+    "Halten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold"
+          }
+        }
+      }
+    },
+    "Haptisches Feedback" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptic Feedback"
+          }
+        }
+      }
+    },
+    "Hell" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light"
+          }
+        }
+      }
+    },
+    "Heute" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
+    },
+    "Heute ist ein guter Tag zur Erholung. Nutze die Zeit für leichte Bewegung oder Entspannung." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today is a good day for recovery. Use the time for light movement or relaxation."
+          }
+        }
+      }
+    },
+    "Heute keine Pausen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No breaks today"
+          }
+        }
+      }
+    },
+    "Heutige Übungen" : {
+
+    },
+    "Heutiges Programm" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's Program"
+          }
+        }
+      }
+    },
+    "Hinzufügen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "Ihr personalisierter Tagesplan wird erstellt." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your personalized daily plan is being created."
+          }
+        }
+      }
+    },
+    "In iOS Einstellungen öffnen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open iOS Settings"
+          }
+        }
+      }
+    },
+    "Inaktiv" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inactive"
+          }
+        }
+      }
+    },
+    "Ja" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        }
+      }
+    },
+    "Kamera-Zugriff benötigt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera Access Required"
+          }
+        }
+      }
+    },
+    "Kein Training geplant" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No training scheduled"
+          }
+        }
+      }
+    },
+    "Keine" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        }
+      }
+    },
+    "Keine Daten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Data"
+          }
+        }
+      }
+    },
+    "Keine eigenen Übungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No custom exercises"
+          }
+        }
+      }
+    },
+    "Keine Einschränkung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Impairment"
+          }
+        }
+      }
+    },
+    "Keine Nachrichten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Messages"
+          }
+        }
+      }
+    },
+    "Keine Übungen für heute geplant." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No exercises planned for today."
+          }
+        }
+      }
+    },
+    "Keine Verbindung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Connection"
+          }
+        }
+      }
+    },
+    "Konto" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
+    "KPI protokollieren" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log KPI"
+          }
+        }
+      }
+    },
+    "KPIs erfassen" : {
+
+    },
+    "KPIs speichern" : {
+
+    },
+    "Kriterien" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criteria"
+          }
+        }
+      }
+    },
+    "Kriterium erfüllt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criterion met"
+          }
+        }
+      }
+    },
+    "Laden..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
+          }
+        }
+      }
+    },
+    "Leicht" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mild"
+          }
+        }
+      }
+    },
+    "Leichte Einschränkung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mild Impairment"
+          }
+        }
+      }
+    },
+    "Letzte 7 Tage" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last 7 Days"
+          }
+        }
+      }
+    },
+    "Letzte 30 Tage" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last 30 Days"
+          }
+        }
+      }
+    },
+    "Löschen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "M%@" : {
+
+    },
+    "Max. %@/10" : {
+
+    },
+    "Meilenstein" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milestone"
+          }
+        }
+      }
+    },
+    "Meilenstein %@" : {
+
+    },
+    "Meilenstein erreicht" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milestone Reached"
+          }
+        }
+      }
+    },
+    "Meine Erfolge" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Achievements"
+          }
+        }
+      }
+    },
+    "Mi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wed"
+          }
+        }
+      }
+    },
+    "Micro-Module" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Micro-Modules"
+          }
+        }
+      }
+    },
+    "Minuten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minutes"
+          }
+        }
+      }
+    },
+    "Mittel" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderate"
+          }
+        }
+      }
+    },
+    "Mittlere Einschränkung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderate Impairment"
+          }
+        }
+      }
+    },
+    "Mittwoch" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wednesday"
+          }
+        }
+      }
+    },
+    "Mo" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mon"
+          }
+        }
+      }
+    },
+    "Modul abgeschlossen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module completed"
+          }
+        }
+      }
+    },
+    "Modul lesen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read Module"
+          }
+        }
+      }
+    },
+    "Monatlich" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly"
+          }
+        }
+      }
+    },
+    "Montag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monday"
+          }
+        }
+      }
+    },
+    "Morgen-Check-in" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morning Check-in"
+          }
+        }
+      }
+    },
+    "Nachricht senden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Message"
+          }
+        }
+      }
+    },
+    "Nachrichten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Messages"
+          }
+        }
+      }
+    },
+    "Nachrichten laden..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading messages..."
+          }
+        }
+      }
+    },
+    "Nächste Auswertung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Evaluation"
+          }
+        }
+      }
+    },
+    "Nächste Ziele" : {
+
+    },
+    "Nächster Meilenstein" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Milestone"
+          }
+        }
+      }
+    },
+    "Nacken & Schulter" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neck & Shoulder"
+          }
+        }
+      }
+    },
+    "Name der Übung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercise Name"
+          }
+        }
+      }
+    },
+    "NDI-Score: %@/50" : {
+
+    },
+    "NDI-Stufe" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NDI Level"
+          }
+        }
+      }
+    },
+    "NDI-Verlauf" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NDI History"
+          }
+        }
+      }
+    },
+    "NDI-Verlauf konnte nicht geladen werden." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load NDI history."
+          }
+        }
+      }
+    },
+    "NDI: %@/50" : {
+
+    },
+    "Nein" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
+    },
+    "Neue Phase" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Phase"
+          }
+        }
+      }
+    },
+    "Noch kein Training protokolliert." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No training logged yet."
+          }
+        }
+      }
+    },
+    "Noch keine Screening-Daten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No screening data yet"
+          }
+        }
+      }
+    },
+    "Noch nicht gelesen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not yet read"
+          }
+        }
+      }
+    },
+    "Notizen (optional)" : {
+
+    },
+    "Ø Schmerz" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avg Pain"
+          }
+        }
+      }
+    },
+    "Pacing-Plan" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pacing Plan"
+          }
+        }
+      }
+    },
+    "Passwort" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
+          }
+        }
+      }
+    },
+    "Pause" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Break"
+          }
+        }
+      }
+    },
+    "Pause starten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Break"
+          }
+        }
+      }
+    },
+    "Pausen heute" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breaks today"
+          }
+        }
+      }
+    },
+    "Pausendauer" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Break Duration"
+          }
+        }
+      }
+    },
+    "Phase" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phase"
+          }
+        }
+      }
+    },
+    "Phase %@" : {
+
+    },
+    "Phase %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Phase %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Phase %@/%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Phase %1$@/%2$@"
+          }
+        }
+      }
+    },
+    "Phase geändert" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phase Changed"
+          }
+        }
+      }
+    },
+    "Phase-Status" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phase Status"
+          }
+        }
+      }
+    },
+    "Profil und Abmelden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile and Sign Out"
+          }
+        }
+      }
+    },
+    "Programm" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Program"
+          }
+        }
+      }
+    },
+    "Protokollieren" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log"
+          }
+        }
+      }
+    },
+    "QR-Code scannen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan QR Code"
+          }
+        }
+      }
+    },
+    "Quadrizeps-Lag" : {
+
+    },
+    "QuickDASH-Verlauf" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "QuickDASH History"
+          }
+        }
+      }
+    },
+    "QuickDASH-Verlauf konnte nicht geladen werden." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load QuickDASH history."
+          }
+        }
+      }
+    },
+    "QuickDASH: %@%%" : {
+
+    },
+    "re" : {
+
+    },
+    "Rekord:" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record:"
+          }
+        }
+      }
+    },
+    "Rescreening durchführen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perform Rescreening"
+          }
+        }
+      }
+    },
+    "Rückschritt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regress"
+          }
+        }
+      }
+    },
+    "Ruhetag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rest Day"
+          }
+        }
+      }
+    },
+    "Sa" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sat"
+          }
+        }
+      }
+    },
+    "Samstag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saturday"
+          }
+        }
+      }
+    },
+    "Schlechter" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worse"
+          }
+        }
+      }
+    },
+    "Schließen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "Schmerz" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pain"
+          }
+        }
+      }
+    },
+    "Schmerz an der Transplantat-Entnahmestelle" : {
+
+    },
+    "Schmerzauslösende Aktivität (optional)" : {
+
+    },
+    "Schmerzintensität (NRS)" : {
+
+    },
+    "Schmerzlevel" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pain Level"
+          }
+        }
+      }
+    },
+    "Schmerzlokalisation (optional)" : {
+
+    },
+    "Schmerzverlauf" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pain History"
+          }
+        }
+      }
+    },
+    "Schmerzwert" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pain Level"
+          }
+        }
+      }
+    },
+    "Schwer" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Severe"
+          }
+        }
+      }
+    },
+    "Schwere Einschränkung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Severe Impairment"
+          }
+        }
+      }
+    },
+    "Screening" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screening"
+          }
+        }
+      }
+    },
+    "Screening abgeschlossen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screening Completed"
+          }
+        }
+      }
+    },
+    "Screening abschließen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete Screening"
+          }
+        }
+      }
+    },
+    "Sekunden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seconds"
+          }
+        }
+      }
+    },
+    "Senden" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "Sets" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sets"
+          }
+        }
+      }
+    },
+    "Sie sind in Phase" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You are in Phase"
+          }
+        }
+      }
+    },
+    "Sie werden ausgeloggt und müssen sich erneut anmelden." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will be signed out and need to sign in again."
+          }
+        }
+      }
+    },
+    "Sitzen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sitting"
+          }
+        }
+      }
+    },
+    "Sitzungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sessions"
+          }
+        }
+      }
+    },
+    "So" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
+          }
+        }
+      }
+    },
+    "Sonntag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunday"
+          }
+        }
+      }
+    },
+    "SPADI-Verlauf" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SPADI History"
+          }
+        }
+      }
+    },
+    "SPADI-Verlauf konnte nicht geladen werden." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load SPADI history."
+          }
+        }
+      }
+    },
+    "SPADI: %@%%" : {
+
+    },
+    "Später (5 Min.)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later (5 min)"
+          }
+        }
+      }
+    },
+    "Speichern" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
+    "Sprache" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        }
+      }
+    },
+    "Sprache / Language" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        }
+      }
+    },
+    "Starten Sie Ihr erstes Training, um Ihren Fortschritt zu verfolgen." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start your first training session to track your progress."
+          }
+        }
+      }
+    },
+    "Statistiken" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistics"
+          }
+        }
+      }
+    },
+    "Strom" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stream"
+          }
+        }
+      }
+    },
+    "Ströme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Streams"
+          }
+        }
+      }
+    },
+    "Symptomreaktion" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Symptom Response"
+          }
+        }
+      }
+    },
+    "Systemstandard" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System Default"
+          }
+        }
+      }
+    },
+    "Tag Streak" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day Streak"
+          }
+        }
+      }
+    },
+    "Tage" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Days"
+          }
+        }
+      }
+    },
+    "Tage Streak" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day Streak"
+          }
+        }
+      }
+    },
+    "Tages-Check-in" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Check-in"
+          }
+        }
+      }
+    },
+    "Tagesplan wird geladen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading daily plan"
+          }
+        }
+      }
+    },
+    "Tagesstatus laden..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading daily status..."
+          }
+        }
+      }
+    },
+    "Täglich" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily"
+          }
+        }
+      }
+    },
+    "Tägliche KPIs" : {
+
+    },
+    "Tempo: %@" : {
+
+    },
+    "Timer" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer"
+          }
+        }
+      }
+    },
+    "Tipp des Tages" : {
+
+    },
+    "Tippen um zu schreiben..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to write..."
+          }
+        }
+      }
+    },
+    "tivate" : {
+
+    },
+    "Training protokollieren" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log Training"
+          }
+        }
+      }
+    },
+    "Training seit" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training since"
+          }
+        }
+      }
+    },
+    "Trainings-Streams" : {
+
+    },
+    "Trainingseinheiten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training Sessions"
+          }
+        }
+      }
+    },
+    "Trainingsplan" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training Schedule"
+          }
+        }
+      }
+    },
+    "Trainingstag" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training Day"
+          }
+        }
+      }
+    },
+    "Trainingstage" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training Days"
+          }
+        }
+      }
+    },
+    "Trainingstage & Uhrzeit" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training Days & Time"
+          }
+        }
+      }
+    },
+    "Trainingszeit" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training Time"
+          }
+        }
+      }
+    },
+    "Transplantat-Hinweis" : {
+
+    },
+    "TSI-Score: %@/50" : {
+
+    },
+    "TSI-Stufe" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TSI Level"
+          }
+        }
+      }
+    },
+    "TSI-Verlauf" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TSI History"
+          }
+        }
+      }
+    },
+    "TSI-Verlauf konnte nicht geladen werden." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load TSI history."
+          }
+        }
+      }
+    },
+    "TSI: %@/50" : {
+
+    },
+    "Über Reapptivate" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Reapptivate"
+          }
+        }
+      }
+    },
+    "Übersicht" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overview"
+          }
+        }
+      }
+    },
+    "Überspringen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
+          }
+        }
+      }
+    },
+    "Übung bearbeiten" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Exercise"
+          }
+        }
+      }
+    },
+    "Übung hinzufügen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Exercise"
+          }
+        }
+      }
+    },
+    "Übung löschen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Exercise"
+          }
+        }
+      }
+    },
+    "Übung speichern" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save Exercise"
+          }
+        }
+      }
+    },
+    "Übung wählen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose exercise"
+          }
+        }
+      }
+    },
+    "Übungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercises"
+          }
+        }
+      }
+    },
+    "Übungen absolviert" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercises completed"
+          }
+        }
+      }
+    },
+    "Übungen anzeigen und protokollieren" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View and log exercises"
+          }
+        }
+      }
+    },
+    "Übungsdetails" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercise Details"
+          }
+        }
+      }
+    },
+    "Übungsprogramm" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercise Program"
+          }
+        }
+      }
+    },
+    "Unbekannt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "Verbindungsfehler" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection Error"
+          }
+        }
+      }
+    },
+    "Verlauf" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
+          }
+        }
+      }
+    },
+    "Version %@ (%@)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Version %1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "Verspannung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tension"
+          }
+        }
+      }
+    },
+    "Video" : {
+
+    },
+    "Video aufnehmen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record Video"
+          }
+        }
+      }
+    },
+    "Video aus Bibliothek" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose from Library"
+          }
+        }
+      }
+    },
+    "Video entfernen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Video"
+          }
+        }
+      }
+    },
+    "von" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "of"
+          }
+        }
+      }
+    },
+    "Vorsicht" : {
+
+    },
+    "Weiter" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
+    "Weiter zur App" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue to App"
+          }
+        }
+      }
+    },
+    "Wie geht es Ihnen heute?" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How are you feeling today?"
+          }
+        }
+      }
+    },
+    "Wie sind Ihre Schmerzen heute?" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is your pain level today?"
+          }
+        }
+      }
+    },
+    "Wiederholungen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repetitions"
+          }
+        }
+      }
+    },
+    "Willkommen bei Reapptivate!" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to Reapptivate!"
+          }
+        }
+      }
+    },
+    "Wochen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weeks"
+          }
+        }
+      }
+    },
+    "Wochen nach OP" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weeks Post-Op"
+          }
+        }
+      }
+    },
+    "Wochen post-OP" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weeks Post-Op"
+          }
+        }
+      }
+    },
+    "Wöchentlich" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly"
+          }
+        }
+      }
+    },
+    "Wöchentliche KPIs" : {
+
+    },
+    "Wöchentlicher Fortschritt" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly Progress"
+          }
+        }
+      }
+    },
+    "Zeit am Stück" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time at a stretch"
+          }
+        }
+      }
+    },
+    "Zurück" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }

@@ -9,13 +9,7 @@ struct OverviewTab: View {
     var onNavigateToProgram: (() -> Void)?
 
     var body: some View {
-        SmartDayGateView(
-            completedCount: viewModel?.completedToday.count ?? 0,
-            totalCount: exerciseVM?.exercises.count ?? 0,
-            onNavigateToProgram: onNavigateToProgram
-        ) {
-            overviewFallbackContent
-        }
+        overviewFallbackContent
     }
 
     // MARK: - Fallback Content (shown when Smart Day API is unavailable)
