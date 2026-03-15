@@ -27,8 +27,10 @@ final class ProtocolLoader: @unchecked Sendable {
         fsSeverity: FsSeverityGrade? = nil,
         lasSeverity: LasSeverityGrade? = nil
     ) -> ExerciseProtocol? {
+        // Capture locale once to avoid TOCTOU race between cache key and file resolution
+        let isEnglish = isEnglishLocale
         let key = protocolKey(for: type, aemSubtype: aemSubtype, tsiSeverity: tsiSeverity, siSeverity: siSeverity, fsSeverity: fsSeverity, lasSeverity: lasSeverity)
-        let cacheKey = UserDefaults.standard.string(forKey: "appLanguage") == "en" ? "\(key)_en_cache" : key
+        let cacheKey = isEnglish ? "\(key)_en_cache" : key
 
         lock.lock()
         defer { lock.unlock() }
@@ -37,7 +39,7 @@ final class ProtocolLoader: @unchecked Sendable {
             return cached
         }
 
-        guard let proto = loadProtocol(filename: key) else {
+        guard let proto = loadProtocol(filename: key, isEnglish: isEnglish) else {
             Log.general.error("Failed to load protocol: \(key)")
             return nil
         }
@@ -187,8 +189,8 @@ final class ProtocolLoader: @unchecked Sendable {
         }
     }
 
-    private func loadProtocol(filename: String) -> ExerciseProtocol? {
-        let effectiveFilename = resolveFilename(filename)
+    private func loadProtocol(filename: String, isEnglish: Bool) -> ExerciseProtocol? {
+        let effectiveFilename = resolveFilename(filename, isEnglish: isEnglish)
         guard let url = Bundle.main.url(forResource: effectiveFilename, withExtension: "json", subdirectory: "Protocols") else {
             // Try without subdirectory
             guard let url = Bundle.main.url(forResource: effectiveFilename, withExtension: "json") else {
@@ -200,10 +202,10 @@ final class ProtocolLoader: @unchecked Sendable {
         return decodeProtocol(from: url)
     }
 
-    /// Resolves the effective filename based on current app language.
+    /// Resolves the effective filename based on the given language preference.
     /// When English is active, tries `{filename}_en` first, falling back to the German default.
-    private func resolveFilename(_ filename: String) -> String {
-        guard UserDefaults.standard.string(forKey: "appLanguage") == "en" else { return filename }
+    private func resolveFilename(_ filename: String, isEnglish: Bool) -> String {
+        guard isEnglish else { return filename }
         let enFilename = "\(filename)_en"
         // Check if English variant exists in Protocols subdirectory
         if Bundle.main.url(forResource: enFilename, withExtension: "json", subdirectory: "Protocols") != nil {

@@ -14,18 +14,13 @@ final class MessagingViewModel {
 
     private let apiClient: APIClient
     private weak var appState: AppState?
-    nonisolated(unsafe) private var unreadTimer: Timer?
-    nonisolated(unsafe) private var messageTimer: Timer?
+    private var unreadTimer: Timer?
+    private var messageTimer: Timer?
     private var activeThreadId: String?
 
     init(apiClient: APIClient, appState: AppState) {
         self.apiClient = apiClient
         self.appState = appState
-    }
-
-    deinit {
-        unreadTimer?.invalidate()
-        messageTimer?.invalidate()
     }
 
     // MARK: - Thread List

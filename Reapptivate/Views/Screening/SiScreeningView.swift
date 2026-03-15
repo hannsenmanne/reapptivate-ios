@@ -77,6 +77,7 @@ struct SiScreeningView: View {
                                     .frame(height: 48)
                                 }
                                 .buttonStyle(.accentFilled)
+                                .disabled(vm.isSubmitting)
                                 .padding(.horizontal, 24)
                                 .padding(.bottom, 24)
                             }

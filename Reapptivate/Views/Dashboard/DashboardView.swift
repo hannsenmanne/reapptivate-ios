@@ -156,11 +156,12 @@ struct DashboardView: View {
             await loadAll()
         }
         .onChange(of: languageManager.language) { _, _ in
-            // Reset data ViewModels so they reload with the new language
-            viewModel = nil
-            exerciseVM = nil
-            phaseVM = nil
-            Task { await loadAll() }
+            // Only exercise data needs reloading — protocol JSON files have language variants.
+            // View strings use @AppStorage ternaries and update reactively.
+            // API data (phase status, progress stats, schedule) is language-independent.
+            if let user = appState.currentUser {
+                exerciseVM?.loadExercises(for: user, trainingDays: viewModel?.scheduleResponse?.iosWeekdays)
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             switch phase {

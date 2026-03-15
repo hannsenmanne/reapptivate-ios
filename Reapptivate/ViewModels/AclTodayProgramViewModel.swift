@@ -31,24 +31,22 @@ final class AclTodayProgramViewModel {
         self.userConcomitantInjuries = userConcomitantInjuries
     }
 
-    // MARK: - Computed
+    // MARK: - Cached Counts
 
-    var totalCount: Int {
-        streamGroups.reduce(0) { $0 + $1.exercises.count }
-    }
-
-    var completedCount: Int {
-        streamGroups.reduce(0) { sum, group in
-            sum + group.exercises.filter { completedExerciseIds.contains($0.id) }.count
-        }
-    }
+    private(set) var totalCount: Int = 0
+    private(set) var completedCount: Int = 0
+    private(set) var progress: Double = 0
 
     var allDone: Bool {
         totalCount > 0 && completedCount >= totalCount
     }
 
-    var progress: Double {
-        totalCount > 0 ? Double(completedCount) / Double(totalCount) : 0
+    private func updateCounts() {
+        totalCount = streamGroups.reduce(0) { $0 + $1.exercises.count }
+        completedCount = streamGroups.reduce(0) { sum, group in
+            sum + group.exercises.filter { completedExerciseIds.contains($0.id) }.count
+        }
+        progress = totalCount > 0 ? Double(completedCount) / Double(totalCount) : 0
     }
 
     func isCompleted(_ exerciseId: String) -> Bool {
@@ -83,6 +81,8 @@ final class AclTodayProgramViewModel {
         ) {
             completedExerciseIds = Set(today.completedExercises)
         }
+
+        updateCounts()
 
         if streamGroups.isEmpty {
             errorMessage = isEn ? "No unlocked streams for today." : "Keine freigeschalteten Streams für heute."
@@ -139,12 +139,14 @@ final class AclTodayProgramViewModel {
         if wasCompleted {
             // Unchecking — just remove locally (no server undo endpoint)
             completedExerciseIds.remove(exerciseId)
+            updateCounts()
             submittingExerciseIds.remove(exerciseId)
             return
         }
 
         // Optimistic: mark as completed immediately
         completedExerciseIds.insert(exerciseId)
+        updateCounts()
 
         do {
             let setsValue = exercise.sets ?? 3
@@ -170,6 +172,7 @@ final class AclTodayProgramViewModel {
         } catch {
             // Revert on failure
             completedExerciseIds.remove(exerciseId)
+            updateCounts()
             Log.api.error("Failed to log exercise \(exerciseId): \(error.localizedDescription)")
         }
 

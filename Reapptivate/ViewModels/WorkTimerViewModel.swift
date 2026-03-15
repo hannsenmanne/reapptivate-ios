@@ -493,7 +493,7 @@ final class WorkTimerViewModel {
                 skipped: false,
                 exercisesShown: []
             )
-            Task {
+            Task { [apiClient] in
                 do {
                     try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
                 } catch {
@@ -543,7 +543,7 @@ final class WorkTimerViewModel {
 
                 if remaining <= 0 {
                     // Break expired while in background — auto-complete
-                    Task { await completeBreak() }
+                    Task { [weak self] in await self?.completeBreak() }
                     return
                 }
 
@@ -661,9 +661,9 @@ final class WorkTimerViewModel {
     private func autoStopWorkday() {
         guard !isAutoStopping else { return }
         isAutoStopping = true
-        Task {
-            await stopWorkday()
-            isAutoStopping = false
+        Task { [weak self] in
+            await self?.stopWorkday()
+            self?.isAutoStopping = false
         }
     }
 
@@ -674,7 +674,7 @@ final class WorkTimerViewModel {
         if breakSecondsRemaining <= 0 {
             breakSecondsRemaining = 0
             // Auto-complete the break
-            Task { await completeBreak() }
+            Task { [weak self] in await self?.completeBreak() }
         }
     }
 
