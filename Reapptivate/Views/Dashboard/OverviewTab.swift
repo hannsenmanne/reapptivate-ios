@@ -67,10 +67,6 @@ struct OverviewTab: View {
             ExerciseLinkCard(onTap: { onNavigateToProgram?() })
                 .cardEntryAnimation(index: 6)
 
-            // Training Schedule
-            TrainingScheduleCard()
-                .cardEntryAnimation(index: 7)
-
             // Compliance Calendar
             if let entries = viewModel?.recentEntries, !entries.isEmpty {
                 ComplianceCalendarCard(entries: entries)
