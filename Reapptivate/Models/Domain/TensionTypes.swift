@@ -43,7 +43,7 @@ struct TsiScreeningResult: Codable {
 // MARK: - TSI Focus Area
 
 // API response from GET /api/tension/focus-areas: { focusAreas: [...] }
-struct TsiFocusArea: Codable, Identifiable {
+struct TsiFocusArea: Codable, Identifiable, FocusAreaProtocol {
     let domainId: String
     let domainLabel: String
     let score: Int

@@ -43,7 +43,7 @@ struct SiScreeningResult: Codable {
 // MARK: - SI Focus Area
 
 // API response from GET /api/shoulder-impingement/focus-areas: { focusAreas: [...] }
-struct SiFocusArea: Codable, Identifiable {
+struct SiFocusArea: Codable, Identifiable, FocusAreaProtocol {
     let domainId: String
     let domainLabel: String
     let score: Int

@@ -4,6 +4,19 @@
 
 import Foundation
 
+// MARK: - Shared Focus Area Protocol
+
+/// Common interface for all condition-specific focus area models (NDI, TSI, SI, FS, LAS).
+/// Enables a single generic FocusAreasView for all conditions.
+protocol FocusAreaProtocol: Codable, Identifiable {
+    var domainId: String { get }
+    var domainLabel: String { get }
+    var score: Int { get }
+    var maxScore: Int { get }
+    var dailyTips: [String]? { get }
+    var percentage: Double { get }
+}
+
 // File-private language helper — reads AppStorage backing store directly
 private var isEnglishLocale: Bool {
     UserDefaults.standard.string(forKey: "appLanguage") == "en"

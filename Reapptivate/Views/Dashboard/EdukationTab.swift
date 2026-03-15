@@ -16,7 +16,7 @@ struct EdukationTab: View {
                 }
             } else if appState.isNeck {
                 if let severity = appState.currentUser?.ndiSeverity {
-                    NeckMicroModulesView(severity: severity)
+                    ConditionMicroModulesView(config: .neck(severity: severity))
                 } else {
                     ProgressView(appLanguage == "en" ? "Loading neck modules..." : "Nacken-Module laden...")
                         .frame(maxWidth: .infinity)
@@ -28,7 +28,7 @@ struct EdukationTab: View {
                 }
             } else if appState.isTension {
                 if let severity = appState.currentUser?.tsiSeverity {
-                    TensionMicroModulesView(severity: severity)
+                    ConditionMicroModulesView(config: .tension(severity: severity))
                 } else {
                     ProgressView(appLanguage == "en" ? "Loading tension modules..." : "Verspannungs-Module laden...")
                         .frame(maxWidth: .infinity)
@@ -40,7 +40,7 @@ struct EdukationTab: View {
                 }
             } else if appState.isShoulder {
                 if let severity = appState.currentUser?.siSeverity {
-                    ShoulderMicroModulesView(severity: severity)
+                    ConditionMicroModulesView(config: .shoulder(severity: severity))
                 } else {
                     ProgressView(appLanguage == "en" ? "Loading shoulder modules..." : "Schulter-Module laden...")
                         .frame(maxWidth: .infinity)
@@ -48,7 +48,7 @@ struct EdukationTab: View {
                 }
             } else if appState.isFrozenShoulder {
                 if let severity = appState.currentUser?.fsSeverity {
-                    FrozenShoulderMicroModulesView(severity: severity)
+                    ConditionMicroModulesView(config: .frozenShoulder(severity: severity))
                 } else {
                     ProgressView(appLanguage == "en" ? "Loading frozen shoulder modules..." : "Frozen Shoulder-Module laden...")
                         .frame(maxWidth: .infinity)
@@ -56,7 +56,7 @@ struct EdukationTab: View {
                 }
             } else if appState.isLateralAnkleSprain {
                 if let severity = appState.currentUser?.lasSeverity {
-                    LateralAnkleSprainMicroModulesView(severity: severity)
+                    ConditionMicroModulesView(config: .lateralAnkleSprain(severity: severity))
                 } else {
                     ProgressView(appLanguage == "en" ? "Loading ankle modules..." : "Sprunggelenk-Module laden...")
                         .frame(maxWidth: .infinity)

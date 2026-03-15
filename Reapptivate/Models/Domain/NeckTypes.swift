@@ -65,7 +65,7 @@ struct NeckScreeningResult: Codable {
 // MARK: - NDI Focus Area
 
 // API response from GET /api/neck/focus-areas: { focusAreas: [...] }
-struct NdiFocusArea: Codable, Identifiable {
+struct NdiFocusArea: Codable, Identifiable, FocusAreaProtocol {
     let domainId: String
     let domainLabel: String
     let score: Int

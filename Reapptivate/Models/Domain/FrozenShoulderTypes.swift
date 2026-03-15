@@ -45,7 +45,7 @@ struct FsScreeningResult: Codable {
 // MARK: - FS Focus Area
 
 // API response from GET /api/frozen-shoulder/focus-areas: { focusAreas: [...] }
-struct FsFocusArea: Codable, Identifiable {
+struct FsFocusArea: Codable, Identifiable, FocusAreaProtocol {
     let domainId: String
     let domainLabel: String
     let score: Int

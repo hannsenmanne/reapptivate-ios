@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -130,7 +130,6 @@
 		61032FF229C0AFF74BABC4F2 /* AclExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884DD19C41804CB8932F6DE7 /* AclExerciseDetailView.swift */; };
 		6120308E1587C9E1C3628410 /* Color+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC38F175D682C73EEC92448 /* Color+Theme.swift */; };
 		61E804948DE98EE251D0C9EB /* CachedProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8215E083211512080FE72C52 /* CachedProgress.swift */; };
-		62206D72186DEC9D79E93AF5 /* ShoulderMicroModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42ABD09AA637A2236CC61EA7 /* ShoulderMicroModulesView.swift */; };
 		62D72B495B9703E1C67039DF /* VideoCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C793528267FA9D82D1E1E5BF /* VideoCaptureView.swift */; };
 		6322345B1632DE880ABE5927 /* WorkTimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7161F66473CA1253CD1B0D /* WorkTimerViewModelTests.swift */; };
 		63C1B1ABDFCD6BBABC4ED937 /* MessagesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740130DB81474539A042F1AF /* MessagesTab.swift */; };
@@ -149,7 +148,6 @@
 		6E4CDD1FFD870696AFFF5B34 /* frozen_shoulder_leicht_en.json in Resources */ = {isa = PBXBuildFile; fileRef = B1488C5653DA7F97A9D608BF /* frozen_shoulder_leicht_en.json */; };
 		6F74E79456ECCF70F32AF717 /* Milestone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9721A6B9839E31C514A4 /* Milestone.swift */; };
 		70998B74D9030F8E9DCBC8A9 /* WorkTimerTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF59312C6FF1927BEEA076F /* WorkTimerTypesTests.swift */; };
-		7153D7AC2CF8100D955564CC /* ShoulderFocusAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187E924625DACEF30DFE3E8 /* ShoulderFocusAreasView.swift */; };
 		73F3E0102E1260CAF2EDFFBB /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBADD85BB3402B9C79ED3ADC /* ErrorView.swift */; };
 		74000A88ABCB4E450CE9FEB3 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFA8569BBD705E45B4D7874 /* ExerciseViewModel.swift */; };
 		764FD3D15982D6EF9CA57A87 /* neck_pain_en.json in Resources */ = {isa = PBXBuildFile; fileRef = A390C14CF287C49554FA1D54 /* neck_pain_en.json */; };
@@ -171,21 +169,18 @@
 		82581F4C0A8155BA45478461 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5A892251DFEC39975E5E0C /* UserProfile.swift */; };
 		825885CEEC5D358DBEC8CC6A /* ComplianceCalendarCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B567B098C79FA64DDC04CC8D /* ComplianceCalendarCard.swift */; };
 		830D42CDFD5298C8DA318A17 /* SymptomResponsePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B511E7D9EC14ADF58D5BB8BD /* SymptomResponsePicker.swift */; };
-		8550A57F89AA8B67D74B6B76 /* TensionFocusAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14A0D709DB2D2FD371DC3F7 /* TensionFocusAreasView.swift */; };
 		8602C9E5220DCFF353115690 /* ThreadDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F45E597178D17EC528DCAB8 /* ThreadDetailView.swift */; };
 		87D39E918BB8218ECFB7140F /* AclAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96C22E28B4B2477A9BDB24 /* AclAnalyticsView.swift */; };
 		882F7A12520FCCDD93E5DA74 /* TensionTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CD31AA5D8CCB1D71286A5C /* TensionTypesTests.swift */; };
-		88518B594A63ADB08C34E676 /* TensionMicroModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7447CD3D18E62465BB7BDC69 /* TensionMicroModulesView.swift */; };
 		888B0593194C9D8600704510 /* MicroModuleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E1B8EE60C0DA2AE59F9AB3 /* MicroModuleCard.swift */; };
 		8951925A50F268EBA2EF4993 /* AclStreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822139A6C1EDBDEC520B5314 /* AclStreamViewModel.swift */; };
 		8ACF898B0885277D5A3A2F32 /* FeatureWalkthroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFBCF847AEAD0FE64E5D671 /* FeatureWalkthroughView.swift */; };
-		8CEB0F9BB999DD68EC3F4AEF /* LateralAnkleSprainMicroModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C576373248B5058585E7973 /* LateralAnkleSprainMicroModulesView.swift */; };
+		8BC355CDFD5B3C6F022C8FCD /* ConditionFocusAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFACD66DE869373879775918 /* ConditionFocusAreasView.swift */; };
 		8E126430EE5B645823D41782 /* AclKpiHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D30034B0571D6E4FF2839 /* AclKpiHistoryView.swift */; };
 		8F7677EC5BAB98DD7538EF84 /* FsProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB39F9F79869832FFC17889 /* FsProgressView.swift */; };
 		8F9C364A4165E7213C2399F6 /* plantar_fascia_en.json in Resources */ = {isa = PBXBuildFile; fileRef = 52AD857678846C8AD594012F /* plantar_fascia_en.json */; };
 		9027B54A497E3AF677AC91DF /* BaselineTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D93FB08E6105E1C60B44F5 /* BaselineTrackerView.swift */; };
 		9063B4432534F7532D367284 /* CodableRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE89289F8064305976025A5D /* CodableRoundTripTests.swift */; };
-		91155BE1CC840141DFBF79AD /* FrozenShoulderFocusAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28781F07B3D7F8EACFCC8D32 /* FrozenShoulderFocusAreasView.swift */; };
 		912608E49E73E3219687ADC6 /* frozen_shoulder_leicht.json in Resources */ = {isa = PBXBuildFile; fileRef = 22DD3E968FFF4DEEBA09BC7F /* frozen_shoulder_leicht.json */; };
 		91F5600D5A4C17D59169A85E /* CustomExercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BC93FF473C546400EA52E7 /* CustomExercise.swift */; };
 		921FB687084365764DF89E4F /* FsScreeningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23735ABD5FC294B704F1AF6E /* FsScreeningViewModel.swift */; };
@@ -200,6 +195,7 @@
 		9B474BF387213A3DC0845B0A /* patellar.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D3555FAB63B67598763587C /* patellar.json */; };
 		9BEB419BC0697D4C63B0F7D1 /* PainSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE21B35C9D66F92733D103F /* PainSliderView.swift */; };
 		9D4C760145AEB19FE7C53F09 /* aem-screening-config.json in Resources */ = {isa = PBXBuildFile; fileRef = A37C62531734065DA5BB4BBF /* aem-screening-config.json */; };
+		9DC7DA21A70D8C81D206E192 /* ConditionMicroModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C171045CB52190E723976A /* ConditionMicroModulesView.swift */; };
 		9DD0A8E2175324BD6697BE1A /* AclDischargeProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3502B3E86E7A340FDE9C177C /* AclDischargeProgressView.swift */; };
 		9ED72F5717F25DF484041F3A /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F2B7B9CD9B65FCCAFFA9EC /* LoadingView.swift */; };
 		9F4B72B55183EBB6D91B67E0 /* AclTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68405C4F24EE5E4BD00FFEB8 /* AclTypes.swift */; };
@@ -217,7 +213,6 @@
 		AC4D2BBEC148D74C8AA8AF5D /* ProgressLogSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A92C5532298BE0377F9B51 /* ProgressLogSheet.swift */; };
 		ACB26D38EF5E44E661F6489A /* AclWeeklyKpiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AE05D45E47C56B833FC6A /* AclWeeklyKpiViewModel.swift */; };
 		ACFC5C0E0216E8EDDC20E700 /* CachedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE57CDA14EF0B9C87FE9F79 /* CachedUser.swift */; };
-		B0C5CDD5DE82FF08C83248BA /* NeckMicroModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C46A81F698CFFDDD29BCA84 /* NeckMicroModulesView.swift */; };
 		B15DC49107E6DDE034F551D2 /* LasQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED4F7C29A6D8B0EFBFC1379 /* LasQuestionView.swift */; };
 		B16C49EDE47B7C7B099B0B38 /* lateral_ankle_sprain_leicht_en.json in Resources */ = {isa = PBXBuildFile; fileRef = 03649CD8C28944C8F2E863B5 /* lateral_ankle_sprain_leicht_en.json */; };
 		B20945C6DDCBD9DA0EF26CF5 /* pacing-templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 8E1DC38E816BB3777FD0B564 /* pacing-templates.json */; };
@@ -237,7 +232,6 @@
 		C8F30ACBDD5205D9AE7212F0 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7946204640E8D568AD0B55 /* APIClient.swift */; };
 		C913BFB8A225F91D74313ABD /* SiResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE4807579943CA5813F7A9 /* SiResultView.swift */; };
 		C97C1A9DD3359CAB8466EC35 /* neck_radiculopathy.json in Resources */ = {isa = PBXBuildFile; fileRef = FAD36D90B928542F3E6CC232 /* neck_radiculopathy.json */; };
-		CA4B4A96806D25B424C3A9CF /* NeckFocusAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4CFD0A552B79B9A7793EBA /* NeckFocusAreasView.swift */; };
 		CA885466E815FCC537927808 /* FearHierarchyBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C86CFE6D63043610BB04C1 /* FearHierarchyBuilderView.swift */; };
 		CAA7ECA89DF2690DF03882B8 /* SmartDayGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239BA995A5EEB2BB0BDCF70C /* SmartDayGateView.swift */; };
 		CAF21AFE8DE8B58206B2CF71 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373E22A55F35A9693E68AB24 /* AboutView.swift */; };
@@ -247,7 +241,6 @@
 		CE4E5C5FC24BC21F9B935357 /* NeckQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE83D167C57552EC1AAFF6 /* NeckQuestionView.swift */; };
 		CE906B30A3F1FA7427DBA831 /* motivational-quotes_en.json in Resources */ = {isa = PBXBuildFile; fileRef = ADF51000BAF6F90C62C46790 /* motivational-quotes_en.json */; };
 		CECC728C0A13EFA69180BDCB /* WorkTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45F943F055D981DE0A96CB7 /* WorkTimerViewModel.swift */; };
-		CEDFD71B4482C0B62B2A0223 /* FrozenShoulderMicroModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6950C3039D3CB8EDE0C67414 /* FrozenShoulderMicroModulesView.swift */; };
 		D01D565720CDDE809FCDDC4A /* lbp_ar_en.json in Resources */ = {isa = PBXBuildFile; fileRef = B2CB44ACD1355B5333FF7B17 /* lbp_ar_en.json */; };
 		D1126E8FFC2E6ED290A77EE2 /* pacing-defaults.json in Resources */ = {isa = PBXBuildFile; fileRef = 37AEC0537B40A6B6453E0A47 /* pacing-defaults.json */; };
 		D18B02DD2A3830A47AA1979C /* MorningCheckin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5D18538B6ECF2FDE5A0385 /* MorningCheckin.swift */; };
@@ -286,7 +279,6 @@
 		EE9EE046BC71E364099E3834 /* lateral_ankle_sprain_mittel.json in Resources */ = {isa = PBXBuildFile; fileRef = 8C60932970125093CAEAA1A1 /* lateral_ankle_sprain_mittel.json */; };
 		EEE2C1D18624411E6E199AA1 /* lbp_far_en.json in Resources */ = {isa = PBXBuildFile; fileRef = C0F3FEF550185DC87BF807FD /* lbp_far_en.json */; };
 		EF702429B241315761783C7D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4A16B4B26941CCD45C333D /* NotificationService.swift */; };
-		EFD3C6E3D16B685D7B388C73 /* LateralAnkleSprainFocusAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158E9BC08F1A54171D79E99F /* LateralAnkleSprainFocusAreasView.swift */; };
 		F1D8AD66F0796B857513A7B0 /* patellar_en.json in Resources */ = {isa = PBXBuildFile; fileRef = E51A37464FFC1E4F47089490 /* patellar_en.json */; };
 		F1DCED3DEBF93F66E5B9780C /* Outfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9089F64CC75D40ACDDB4379 /* Outfit-Bold.ttf */; };
 		F287D6FFABFBCCD978E31174 /* NotificationPrefsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5FB618B335773AD43D1623 /* NotificationPrefsView.swift */; };
@@ -343,17 +335,15 @@
 		0B7BADE86F091E3E408174AA /* Font+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Theme.swift"; sourceTree = "<group>"; };
 		0BEFAF598403E1781FD3E3AF /* tennis_elbow_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tennis_elbow_en.json; sourceTree = "<group>"; };
 		0C4FA044FD9156380429ED38 /* TodaysPlanCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodaysPlanCard.swift; sourceTree = "<group>"; };
-		0C576373248B5058585E7973 /* LateralAnkleSprainMicroModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LateralAnkleSprainMicroModulesView.swift; sourceTree = "<group>"; };
 		0CF59312C6FF1927BEEA076F /* WorkTimerTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkTimerTypesTests.swift; sourceTree = "<group>"; };
 		0D6887D7E49ADEB30F6109F5 /* AclWeeklyScheduleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclWeeklyScheduleCard.swift; sourceTree = "<group>"; };
-		0E4CFD0A552B79B9A7793EBA /* NeckFocusAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckFocusAreasView.swift; sourceTree = "<group>"; };
 		0ED4F7C29A6D8B0EFBFC1379 /* LasQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LasQuestionView.swift; sourceTree = "<group>"; };
 		100914CCC4C060502AA993F5 /* NeckProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckProfileView.swift; sourceTree = "<group>"; };
+		10C171045CB52190E723976A /* ConditionMicroModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionMicroModulesView.swift; sourceTree = "<group>"; };
 		12688AC945D0160C1DA85FF0 /* achilles_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = achilles_en.json; sourceTree = "<group>"; };
 		12F2B7B9CD9B65FCCAFFA9EC /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		13972BC249F91C297D472ED3 /* AnalyticsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsDashboardView.swift; sourceTree = "<group>"; };
 		1467B6CD844471E3A9532B76 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
-		158E9BC08F1A54171D79E99F /* LateralAnkleSprainFocusAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LateralAnkleSprainFocusAreasView.swift; sourceTree = "<group>"; };
 		15C00F57E59D22204B132DA9 /* ScheduleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEditorView.swift; sourceTree = "<group>"; };
 		17BF06A2499669BBEA54C546 /* Outfit-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Medium.ttf"; sourceTree = "<group>"; };
 		18040656876AA536FE86AEAE /* ExerciseVideoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseVideoStore.swift; sourceTree = "<group>"; };
@@ -363,7 +353,6 @@
 		1B1DC731193E22ADD63979F6 /* AclStreamOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclStreamOverviewView.swift; sourceTree = "<group>"; };
 		1B51A90F3F1E56BC45B839F2 /* AclScreeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclScreeningView.swift; sourceTree = "<group>"; };
 		1C0A2A58E7CB87854406B06B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		1C46A81F698CFFDDD29BCA84 /* NeckMicroModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeckMicroModulesView.swift; sourceTree = "<group>"; };
 		1C532275607E8B1426956558 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 		1CEDBA2853252E21C8938DB5 /* ClinicalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicalMessage.swift; sourceTree = "<group>"; };
 		1EC38F175D682C73EEC92448 /* Color+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Theme.swift"; sourceTree = "<group>"; };
@@ -379,7 +368,6 @@
 		267D91718D10D56835E7F0FA /* motivational-quotes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "motivational-quotes.json"; sourceTree = "<group>"; };
 		2698836B2EC21A2EA2292F15 /* FsQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FsQuestionView.swift; sourceTree = "<group>"; };
 		27A0C67F1E7B67D02C60D4FF /* PacingTemplateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacingTemplateSelector.swift; sourceTree = "<group>"; };
-		28781F07B3D7F8EACFCC8D32 /* FrozenShoulderFocusAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrozenShoulderFocusAreasView.swift; sourceTree = "<group>"; };
 		28A92C5532298BE0377F9B51 /* ProgressLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLogSheet.swift; sourceTree = "<group>"; };
 		2923A63448A699A2472EE25C /* LoginFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowUITests.swift; sourceTree = "<group>"; };
 		2969D7FDCC873423CD7B01F2 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
@@ -412,9 +400,7 @@
 		3F3BCD2AA9F0C9AA061809D0 /* RestDayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDayCard.swift; sourceTree = "<group>"; };
 		40AB3DE141026BAFAF84404A /* AclLabAssessmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclLabAssessmentViewModel.swift; sourceTree = "<group>"; };
 		40ECF62F579A2A97EB11E1DD /* PacingTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacingTimerView.swift; sourceTree = "<group>"; };
-		4187E924625DACEF30DFE3E8 /* ShoulderFocusAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoulderFocusAreasView.swift; sourceTree = "<group>"; };
 		4240921E7208B889828163AA /* RatingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingService.swift; sourceTree = "<group>"; };
-		42ABD09AA637A2236CC61EA7 /* ShoulderMicroModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoulderMicroModulesView.swift; sourceTree = "<group>"; };
 		430B90EA42D4C0186875A77B /* PhaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhaseViewModel.swift; sourceTree = "<group>"; };
 		43D63B6441B04786BF94538E /* lbp_far.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = lbp_far.json; sourceTree = "<group>"; };
 		440050E209B850AC57C696CB /* VideoThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbnailView.swift; sourceTree = "<group>"; };
@@ -431,7 +417,7 @@
 		4D091C40616A3407751C6238 /* AclTodayProgramCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTodayProgramCard.swift; sourceTree = "<group>"; };
 		4F45E597178D17EC528DCAB8 /* ThreadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailView.swift; sourceTree = "<group>"; };
 		4F76FC19CE5EF7FE3F37C107 /* ExerciseSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSessionView.swift; sourceTree = "<group>"; };
-		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522523B00DA8A09984ACA606 /* UserProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		52AD857678846C8AD594012F /* plantar_fascia_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = plantar_fascia_en.json; sourceTree = "<group>"; };
 		52C5C9F2D2ADDB53A0EE3208 /* NdiProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NdiProgressView.swift; sourceTree = "<group>"; };
@@ -453,7 +439,6 @@
 		67A81ED8962E6CD45426EA8F /* NotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDelegate.swift; sourceTree = "<group>"; };
 		67DA0C464450131FFC399CDF /* neck_shoulder_tension_mittel_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = neck_shoulder_tension_mittel_en.json; sourceTree = "<group>"; };
 		68405C4F24EE5E4BD00FFEB8 /* AclTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTypes.swift; sourceTree = "<group>"; };
-		6950C3039D3CB8EDE0C67414 /* FrozenShoulderMicroModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrozenShoulderMicroModulesView.swift; sourceTree = "<group>"; };
 		6A307873EBDFB86EB7F01850 /* TsiScreeningViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TsiScreeningViewModelTests.swift; sourceTree = "<group>"; };
 		6BC31BABF9F1BF461A014C18 /* neck-screening-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "neck-screening-config.json"; sourceTree = "<group>"; };
 		6C0D9C495191CB22806366AB /* neck_shoulder_tension_schwer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = neck_shoulder_tension_schwer.json; sourceTree = "<group>"; };
@@ -465,7 +450,6 @@
 		734E983E0E2C8D130D67D966 /* VideoURLDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoURLDetector.swift; sourceTree = "<group>"; };
 		740130DB81474539A042F1AF /* MessagesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesTab.swift; sourceTree = "<group>"; };
 		7406FF253E906D4676439290 /* rotator_cuff_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = rotator_cuff_en.json; sourceTree = "<group>"; };
-		7447CD3D18E62465BB7BDC69 /* TensionMicroModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensionMicroModulesView.swift; sourceTree = "<group>"; };
 		748161E2A78EECA7ADAB9733 /* Outfit-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Outfit-Regular.ttf"; sourceTree = "<group>"; };
 		74BC17DC908FE85B1201C19E /* LbpEnhancementsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LbpEnhancementsViewModel.swift; sourceTree = "<group>"; };
 		75B94AB4C6939224E51A895B /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -502,7 +486,7 @@
 		91D1051695F6EC94743F3119 /* LbpTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LbpTypes.swift; sourceTree = "<group>"; };
 		91E67766317FB311903F8A59 /* micro-modules_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "micro-modules_en.json"; sourceTree = "<group>"; };
 		91FA7C2D2B9F416E14A5D8B4 /* gluteal_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = gluteal_en.json; sourceTree = "<group>"; };
-		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModifiers+Design.swift"; sourceTree = "<group>"; };
 		96C4D86D3E196AC40EE4E657 /* shoulder_impingement_schwer_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = shoulder_impingement_schwer_en.json; sourceTree = "<group>"; };
 		9888D0F8D964CAB893649437 /* ShoulderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoulderTypes.swift; sourceTree = "<group>"; };
@@ -576,6 +560,7 @@
 		CD2FAE1A94FAC7F063982A79 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		CD551033BFDEE99C71D77B2F /* SmartDayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDayViewModel.swift; sourceTree = "<group>"; };
 		CE16408E2B67A4FEA27B5456 /* PhaseStatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhaseStatusCard.swift; sourceTree = "<group>"; };
+		CFACD66DE869373879775918 /* ConditionFocusAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionFocusAreasView.swift; sourceTree = "<group>"; };
 		D0389A5C71CA1537780E62FD /* MicroModulesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroModulesList.swift; sourceTree = "<group>"; };
 		D0E1B8EE60C0DA2AE59F9AB3 /* MicroModuleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroModuleCard.swift; sourceTree = "<group>"; };
 		D1B5808C89151E796CEBF07B /* CustomExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExerciseDetailView.swift; sourceTree = "<group>"; };
@@ -623,7 +608,6 @@
 		F00C94651470E6C0D45A2DE3 /* PhaseTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhaseTimelineView.swift; sourceTree = "<group>"; };
 		F00F40C190828020A69B0D18 /* WorkTimerBreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkTimerBreakView.swift; sourceTree = "<group>"; };
 		F02E485B5F508215BDF9B628 /* FsScreeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FsScreeningView.swift; sourceTree = "<group>"; };
-		F14A0D709DB2D2FD371DC3F7 /* TensionFocusAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensionFocusAreasView.swift; sourceTree = "<group>"; };
 		F32D9721A6B9839E31C514A4 /* Milestone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Milestone.swift; sourceTree = "<group>"; };
 		F40ED328FCE7C3338B2D1A1C /* Date+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Helpers.swift"; sourceTree = "<group>"; };
 		F66D5732F85B3047C76C5642 /* View+ConditionalHaptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ConditionalHaptic.swift"; sourceTree = "<group>"; };
@@ -738,8 +722,6 @@
 		1690D84AE2DA009256C3197B /* Shoulder */ = {
 			isa = PBXGroup;
 			children = (
-				4187E924625DACEF30DFE3E8 /* ShoulderFocusAreasView.swift */,
-				42ABD09AA637A2236CC61EA7 /* ShoulderMicroModulesView.swift */,
 				7630849E237A4E4D75800D6A /* SiProgressView.swift */,
 			);
 			path = Shoulder;
@@ -792,8 +774,6 @@
 			isa = PBXGroup;
 			children = (
 				BCDDE8F9FF4410A7068295E7 /* LasProgressView.swift */,
-				158E9BC08F1A54171D79E99F /* LateralAnkleSprainFocusAreasView.swift */,
-				0C576373248B5058585E7973 /* LateralAnkleSprainMicroModulesView.swift */,
 			);
 			path = LateralAnkleSprain;
 			sourceTree = "<group>";
@@ -855,6 +835,8 @@
 		39291E0E5B4D90DF900CBC46 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				CFACD66DE869373879775918 /* ConditionFocusAreasView.swift */,
+				10C171045CB52190E723976A /* ConditionMicroModulesView.swift */,
 				CD2FAE1A94FAC7F063982A79 /* EmptyStateView.swift */,
 				EBADD85BB3402B9C79ED3ADC /* ErrorView.swift */,
 				C2F4CBEE5796A50514969469 /* InlineErrorView.swift */,
@@ -1054,8 +1036,6 @@
 		B272FF5FBF463C0C55B5976B /* FrozenShoulder */ = {
 			isa = PBXGroup;
 			children = (
-				28781F07B3D7F8EACFCC8D32 /* FrozenShoulderFocusAreasView.swift */,
-				6950C3039D3CB8EDE0C67414 /* FrozenShoulderMicroModulesView.swift */,
 				3BB39F9F79869832FFC17889 /* FsProgressView.swift */,
 			);
 			path = FrozenShoulder;
@@ -1168,8 +1148,6 @@
 			isa = PBXGroup;
 			children = (
 				52C5C9F2D2ADDB53A0EE3208 /* NdiProgressView.swift */,
-				0E4CFD0A552B79B9A7793EBA /* NeckFocusAreasView.swift */,
-				1C46A81F698CFFDDD29BCA84 /* NeckMicroModulesView.swift */,
 				100914CCC4C060502AA993F5 /* NeckProfileView.swift */,
 			);
 			path = Neck;
@@ -1324,8 +1302,6 @@
 		FE29375E31E7C2775006707A /* Tension */ = {
 			isa = PBXGroup;
 			children = (
-				F14A0D709DB2D2FD371DC3F7 /* TensionFocusAreasView.swift */,
-				7447CD3D18E62465BB7BDC69 /* TensionMicroModulesView.swift */,
 				1F63B0FE6C0D405A1F990FA8 /* TensionProfileView.swift */,
 				E55E0E3FEAF5E77B08154139 /* TsiProgressView.swift */,
 			);
@@ -1439,6 +1415,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					A7AECD66B703CF0A134DD96F = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1454,6 +1431,7 @@
 			);
 			mainGroup = 085D8C9692D8AA7A0ABF3326;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1609,6 +1587,8 @@
 				D838A2CF7973C917113038E7 /* ClinicalThread.swift in Sources */,
 				6120308E1587C9E1C3628410 /* Color+Theme.swift in Sources */,
 				825885CEEC5D358DBEC8CC6A /* ComplianceCalendarCard.swift in Sources */,
+				8BC355CDFD5B3C6F022C8FCD /* ConditionFocusAreasView.swift in Sources */,
+				9DC7DA21A70D8C81D206E192 /* ConditionMicroModulesView.swift in Sources */,
 				91F5600D5A4C17D59169A85E /* CustomExercise.swift in Sources */,
 				B30AFB5F27512344416AC339 /* CustomExerciseCardView.swift in Sources */,
 				B28A961519B85A61A164AB78 /* CustomExerciseDetailView.swift in Sources */,
@@ -1640,8 +1620,6 @@
 				500FFBDBC6CDE32681396CAC /* FlagConcernSheet.swift in Sources */,
 				3A626DED5053F09371A9DCA5 /* FloatingTabBar.swift in Sources */,
 				FF810FAB0489406E5999F6BF /* Font+Theme.swift in Sources */,
-				91155BE1CC840141DFBF79AD /* FrozenShoulderFocusAreasView.swift in Sources */,
-				CEDFD71B4482C0B62B2A0223 /* FrozenShoulderMicroModulesView.swift in Sources */,
 				96E2A83BEFF6EB86D148647B /* FrozenShoulderTypes.swift in Sources */,
 				8F7677EC5BAB98DD7538EF84 /* FsProgressView.swift in Sources */,
 				4DEF0AFDEE5B1393AA34AF1C /* FsQuestionView.swift in Sources */,
@@ -1657,8 +1635,6 @@
 				3388614F865473D26D3E31C0 /* LasResultView.swift in Sources */,
 				E6B9CAFE10298D729BAB7895 /* LasScreeningView.swift in Sources */,
 				66746B57A0AB4E1CD5F2FAA3 /* LasScreeningViewModel.swift in Sources */,
-				EFD3C6E3D16B685D7B388C73 /* LateralAnkleSprainFocusAreasView.swift in Sources */,
-				8CEB0F9BB999DD68EC3F4AEF /* LateralAnkleSprainMicroModulesView.swift in Sources */,
 				7FC941BFBF8E5AA66B8A8D6F /* LateralAnkleSprainTypes.swift in Sources */,
 				2B69E6C5029896BDDDADBC39 /* LbpEnhancementsView.swift in Sources */,
 				D1C22AE471F6142DBE0F164B /* LbpEnhancementsViewModel.swift in Sources */,
@@ -1680,8 +1656,6 @@
 				E88F0CD99616C9D05E2D4E67 /* MotivationalQuote.swift in Sources */,
 				E00883BB4C7D2AEE8FB78C80 /* MotivationalQuoteCard.swift in Sources */,
 				E2E4F394AA98B049D9CB48B7 /* NdiProgressView.swift in Sources */,
-				CA4B4A96806D25B424C3A9CF /* NeckFocusAreasView.swift in Sources */,
-				B0C5CDD5DE82FF08C83248BA /* NeckMicroModulesView.swift in Sources */,
 				088B915F9453DB5984BA1DF6 /* NeckProfileView.swift in Sources */,
 				CE4E5C5FC24BC21F9B935357 /* NeckQuestionView.swift in Sources */,
 				3588FA6800122031D56192D8 /* NeckResultView.swift in Sources */,
@@ -1722,8 +1696,6 @@
 				E8FF417145BE71B0869CA8BB /* ScreeningCompleteView.swift in Sources */,
 				44FBA137629EE8222BCA490F /* SettingsView.swift in Sources */,
 				BFCAE9F42A203C63C80A246D /* SharedTypes.swift in Sources */,
-				7153D7AC2CF8100D955564CC /* ShoulderFocusAreasView.swift in Sources */,
-				62206D72186DEC9D79E93AF5 /* ShoulderMicroModulesView.swift in Sources */,
 				9720FC61ADAE90CA6EDEFD14 /* ShoulderTypes.swift in Sources */,
 				40BCD984847E9B2A2BBD2532 /* SiProgressView.swift in Sources */,
 				2B8CA37735440AF8058B4425 /* SiQuestionView.swift in Sources */,
@@ -1736,8 +1708,6 @@
 				EAC10AF700E935758C5FC47F /* SmartDayViewModel.swift in Sources */,
 				830D42CDFD5298C8DA318A17 /* SymptomResponsePicker.swift in Sources */,
 				0E07DA0265AA3ED55FD60E9F /* SyncService.swift in Sources */,
-				8550A57F89AA8B67D74B6B76 /* TensionFocusAreasView.swift in Sources */,
-				88518B594A63ADB08C34E676 /* TensionMicroModulesView.swift in Sources */,
 				45DBC6C5BDEA6DC79906ACE6 /* TensionProfileView.swift in Sources */,
 				FAC7F2FF557E38191F8CB4FA /* TensionTypes.swift in Sources */,
 				8602C9E5220DCFF353115690 /* ThreadDetailView.swift in Sources */,
@@ -1901,7 +1871,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
@@ -2059,7 +2028,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;

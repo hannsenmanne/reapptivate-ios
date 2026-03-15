@@ -43,7 +43,7 @@ struct LasScreeningResult: Codable {
 // MARK: - LAS Focus Area
 
 // API response from GET /api/lateral-ankle-sprain/focus-areas: { focusAreas: [...] }
-struct LasFocusArea: Codable, Identifiable {
+struct LasFocusArea: Codable, Identifiable, FocusAreaProtocol {
     let domainId: String
     let domainLabel: String
     let score: Int

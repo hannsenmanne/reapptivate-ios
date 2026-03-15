@@ -40,7 +40,7 @@ struct NeckInsightsSection: View {
     var body: some View {
         VStack(spacing: 20) {
             NdiProgressView()
-            NeckFocusAreasView()
+            ConditionFocusAreasView(config: .neck)
         }
         .padding(.bottom, 32)
     }
@@ -52,7 +52,7 @@ struct TensionInsightsSection: View {
     var body: some View {
         VStack(spacing: 20) {
             TsiProgressView()
-            TensionFocusAreasView()
+            ConditionFocusAreasView(config: .tension)
         }
         .padding(.bottom, 32)
     }
@@ -64,7 +64,7 @@ struct ShoulderInsightsSection: View {
     var body: some View {
         VStack(spacing: 20) {
             SiProgressView()
-            ShoulderFocusAreasView()
+            ConditionFocusAreasView(config: .shoulder)
         }
         .padding(.bottom, 32)
     }
@@ -76,7 +76,7 @@ struct FrozenShoulderInsightsSection: View {
     var body: some View {
         VStack(spacing: 20) {
             FsProgressView()
-            FrozenShoulderFocusAreasView()
+            ConditionFocusAreasView(config: .frozenShoulder)
         }
         .padding(.bottom, 32)
     }
@@ -88,7 +88,7 @@ struct LateralAnkleSprainInsightsSection: View {
     var body: some View {
         VStack(spacing: 20) {
             LasProgressView()
-            LateralAnkleSprainFocusAreasView()
+            ConditionFocusAreasView(config: .lateralAnkleSprain)
         }
         .padding(.bottom, 32)
     }

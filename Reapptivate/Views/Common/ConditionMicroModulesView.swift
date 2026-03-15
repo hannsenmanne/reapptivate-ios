@@ -1,9 +1,99 @@
 import SwiftUI
 
-struct TensionMicroModulesView: View {
+// MARK: - Configuration
+
+/// Configuration for condition-specific micro-modules views.
+/// Each condition provides its own config with localized strings and API endpoints.
+struct MicroModulesConfig {
+    let titleEN: String
+    let titleDE: String
+    let loadingEN: String
+    let loadingDE: String
+    let targetCondition: String
+    let accentColor: Color
+
+    /// API endpoint closures — each condition maps to its own route
+    let fetchModules: @Sendable (APIClient) async throws -> MicroModulesResponse
+    let fetchCompleted: @Sendable (APIClient) async throws -> CompletedModulesResponse
+    let startModule: @Sendable (APIClient, String) async throws -> ModuleCompletionResponse
+    let completeModule: @Sendable (APIClient, String) async throws -> [String: Bool]
+}
+
+// MARK: - Condition Configs
+
+extension MicroModulesConfig {
+    static func neck(severity: NdiSeverityGrade) -> MicroModulesConfig {
+        MicroModulesConfig(
+            titleEN: "Neck Knowledge", titleDE: "Nacken-Wissen",
+            loadingEN: "Loading neck modules...", loadingDE: "Nacken-Module laden...",
+            targetCondition: "NECK_PAIN",
+            accentColor: Color.severityColor(for: severity),
+            fetchModules: { try await $0.request(APIEndpoints.neckMicroModules(severity: severity.rawValue)) },
+            fetchCompleted: { try await $0.request(APIEndpoints.neckCompletedModules()) },
+            startModule: { api, key in try await api.request(APIEndpoints.startNeckModule(key: key)) },
+            completeModule: { api, id in try await api.request(APIEndpoints.completeNeckModule(completionId: id)) }
+        )
+    }
+
+    static func tension(severity: TsiSeverityGrade) -> MicroModulesConfig {
+        MicroModulesConfig(
+            titleEN: "Tension Knowledge", titleDE: "Verspannungs-Wissen",
+            loadingEN: "Loading tension modules...", loadingDE: "Verspannungs-Module laden...",
+            targetCondition: "NECK_SHOULDER_TENSION",
+            accentColor: Color.severityColor(for: severity),
+            fetchModules: { try await $0.request(APIEndpoints.tensionMicroModules(severity: severity.rawValue)) },
+            fetchCompleted: { try await $0.request(APIEndpoints.tensionCompletedModules()) },
+            startModule: { api, key in try await api.request(APIEndpoints.startTensionModule(key: key)) },
+            completeModule: { api, id in try await api.request(APIEndpoints.completeTensionModule(completionId: id)) }
+        )
+    }
+
+    static func shoulder(severity: SiSeverityGrade) -> MicroModulesConfig {
+        MicroModulesConfig(
+            titleEN: "Shoulder Knowledge", titleDE: "Schulter-Wissen",
+            loadingEN: "Loading shoulder modules...", loadingDE: "Schulter-Module laden...",
+            targetCondition: "SHOULDER_IMPINGEMENT",
+            accentColor: Color.severityColor(for: severity),
+            fetchModules: { try await $0.request(APIEndpoints.siMicroModules(severity: severity.rawValue)) },
+            fetchCompleted: { try await $0.request(APIEndpoints.siCompletedModules()) },
+            startModule: { api, key in try await api.request(APIEndpoints.startSiModule(key: key)) },
+            completeModule: { api, id in try await api.request(APIEndpoints.completeSiModule(completionId: id)) }
+        )
+    }
+
+    static func frozenShoulder(severity: FsSeverityGrade) -> MicroModulesConfig {
+        MicroModulesConfig(
+            titleEN: "Frozen Shoulder Knowledge", titleDE: "Frozen Shoulder-Wissen",
+            loadingEN: "Loading frozen shoulder modules...", loadingDE: "Frozen Shoulder-Module laden...",
+            targetCondition: "FROZEN_SHOULDER",
+            accentColor: Color.severityColor(for: severity),
+            fetchModules: { try await $0.request(APIEndpoints.fsMicroModules(severity: severity.rawValue)) },
+            fetchCompleted: { try await $0.request(APIEndpoints.fsCompletedModules()) },
+            startModule: { api, key in try await api.request(APIEndpoints.startFsModule(key: key)) },
+            completeModule: { api, id in try await api.request(APIEndpoints.completeFsModule(completionId: id)) }
+        )
+    }
+
+    static func lateralAnkleSprain(severity: LasSeverityGrade) -> MicroModulesConfig {
+        MicroModulesConfig(
+            titleEN: "Ankle Knowledge", titleDE: "Sprunggelenk-Wissen",
+            loadingEN: "Loading ankle modules...", loadingDE: "Sprunggelenk-Module laden...",
+            targetCondition: "LATERAL_ANKLE_SPRAIN",
+            accentColor: Color.severityColor(for: severity),
+            fetchModules: { try await $0.request(APIEndpoints.lasMicroModules(severity: severity.rawValue)) },
+            fetchCompleted: { try await $0.request(APIEndpoints.lasCompletedModules()) },
+            startModule: { api, key in try await api.request(APIEndpoints.startLasModule(key: key)) },
+            completeModule: { api, id in try await api.request(APIEndpoints.completeLasModule(completionId: id)) }
+        )
+    }
+}
+
+// MARK: - Generic Micro Modules View
+
+struct ConditionMicroModulesView: View {
     @Environment(APIClient.self) private var apiClient
     @Environment(LanguageManager.self) private var languageManager
-    let severity: TsiSeverityGrade
+    let config: MicroModulesConfig
 
     @AppStorage("appLanguage") private var appLanguage = "de"
 
@@ -15,6 +105,8 @@ struct TensionMicroModulesView: View {
     @State private var markReadError: String?
     @State private var markReadTrigger = false
 
+    private var isEn: Bool { appLanguage == "en" }
+
     var completedCount: Int {
         modules.filter { completedKeys.contains($0.key) }.count
     }
@@ -25,9 +117,9 @@ struct TensionMicroModulesView: View {
             HStack(spacing: 10) {
                 Image(systemName: "book.fill")
                     .font(.appTitle3)
-                    .foregroundStyle(Color.severityColor(for: severity))
+                    .foregroundStyle(config.accentColor)
                     .accessibilityHidden(true)
-                Text(appLanguage == "en" ? "Tension Knowledge" : "Verspannungs-Wissen")
+                Text(isEn ? config.titleEN : config.titleDE)
                     .font(.appHeadline)
                     .foregroundStyle(.textPrimary)
                 Spacer()
@@ -37,21 +129,21 @@ struct TensionMicroModulesView: View {
             if !modules.isEmpty {
                 VStack(spacing: 6) {
                     HStack {
-                        Text(appLanguage == "en" ? "Progress" : "Fortschritt")
+                        Text(isEn ? "Progress" : "Fortschritt")
                             .font(.appCaptionMedium)
                             .foregroundStyle(.textSecondary)
                         Spacer()
                         Text("\(completedCount) / \(modules.count)")
                             .font(.appCaptionBold)
-                            .foregroundStyle(Color.severityColor(for: severity))
+                            .foregroundStyle(config.accentColor)
                     }
                     ProgressView(value: Double(completedCount), total: max(1, Double(modules.count)))
-                        .tint(Color.severityColor(for: severity))
-                        .accessibilityLabel(appLanguage == "en" ? "Module progress" : "Modulfortschritt")
-                        .accessibilityValue(appLanguage == "en" ? "\(completedCount) of \(modules.count) completed" : "\(completedCount) von \(modules.count) abgeschlossen")
+                        .tint(config.accentColor)
+                        .accessibilityLabel(isEn ? "Module progress" : "Modulfortschritt")
+                        .accessibilityValue(isEn ? "\(completedCount) of \(modules.count) completed" : "\(completedCount) von \(modules.count) abgeschlossen")
                 }
                 .padding(12)
-                .background(Color.severityColor(for: severity).opacity(0.06))
+                .background(config.accentColor.opacity(0.06))
                 .clipShape(RoundedRectangle(cornerRadius: DesignTokens.smallRadius, style: .continuous))
             }
 
@@ -59,31 +151,27 @@ struct TensionMicroModulesView: View {
                 InlineErrorView(
                     message: markError,
                     errorType: .server,
-                    onDismiss: {
-                        markReadError = nil
-                    }
+                    onDismiss: { markReadError = nil }
                 )
             }
 
             if isLoading {
-                ProgressView(appLanguage == "en" ? "Loading tension modules..." : "Verspannungs-Module laden...")
+                ProgressView(isEn ? config.loadingEN : config.loadingDE)
                     .padding(.vertical, 16)
             } else if let error = errorMessage {
                 InlineErrorView(
                     message: error,
                     errorType: .network,
-                    onRetry: {
-                        Task { await loadModules() }
-                    }
+                    onRetry: { Task { await loadModules() } }
                 )
             } else if modules.isEmpty {
-                Text(appLanguage == "en" ? "No modules available" : "Keine Module verfügbar")
+                Text(isEn ? "No modules available" : "Keine Module verfügbar")
                     .font(.appSubheadline)
                     .foregroundStyle(.textSecondary)
                     .padding(.vertical, 16)
             } else {
                 ForEach(modules) { module in
-                    TensionModuleCard(
+                    ConditionModuleCard(
                         module: module,
                         isCompleted: completedKeys.contains(module.key),
                         isMarking: markingKey == module.key,
@@ -107,19 +195,18 @@ struct TensionMicroModulesView: View {
         isLoading = true
         errorMessage = nil
         do {
-            async let modsResp: MicroModulesResponse = apiClient.request(APIEndpoints.tensionMicroModules(severity: severity.rawValue))
-            async let completedResp: CompletedModulesResponse = apiClient.request(APIEndpoints.tensionCompletedModules())
+            async let modsResp = config.fetchModules(apiClient)
+            async let completedResp = config.fetchCompleted(apiClient)
 
             let (loadedModules, loadedCompleted) = try await (modsResp, completedResp)
 
-            // Client-side defensive filtering: Only show Tension modules
-            // Excludes LBP and Neck modules that may leak from backend
+            // Client-side defensive filtering: only show modules for this condition
             modules = loadedModules.modules.filter { module in
-                module.targetCondition == nil || module.targetCondition == "NECK_SHOULDER_TENSION"
+                module.targetCondition == nil || module.targetCondition == config.targetCondition
             }
             completedKeys = Set(loadedCompleted.completedModules ?? [])
         } catch {
-            errorMessage = appLanguage == "en" ? "Could not load modules." : "Module konnten nicht geladen werden."
+            errorMessage = isEn ? "Could not load modules." : "Module konnten nicht geladen werden."
         }
         isLoading = false
     }
@@ -128,20 +215,20 @@ struct TensionMicroModulesView: View {
         markingKey = key
         markReadError = nil
         do {
-            let start: ModuleCompletionResponse = try await apiClient.request(APIEndpoints.startTensionModule(key: key))
-            let _: [String: Bool] = try await apiClient.request(APIEndpoints.completeTensionModule(completionId: start.completion.id))
+            let start = try await config.startModule(apiClient, key)
+            let _ = try await config.completeModule(apiClient, start.completion.id)
             completedKeys.insert(key)
             markReadTrigger.toggle()
         } catch {
-            markReadError = appLanguage == "en" ? "Error saving. Please try again." : "Fehler beim Speichern. Bitte erneut versuchen."
+            markReadError = isEn ? "Error saving. Please try again." : "Fehler beim Speichern. Bitte erneut versuchen."
         }
         markingKey = nil
     }
 }
 
-// MARK: - Tension Module Card
+// MARK: - Shared Module Card
 
-struct TensionModuleCard: View {
+struct ConditionModuleCard: View {
     let module: MicroModule
     let isCompleted: Bool
     let isMarking: Bool
