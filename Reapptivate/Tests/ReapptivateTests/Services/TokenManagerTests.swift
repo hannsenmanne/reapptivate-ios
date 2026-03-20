@@ -5,14 +5,12 @@ import XCTest
 final class TokenManagerTests: XCTestCase {
     private let tokenManager = TokenManager.shared
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
         tokenManager.clearAll()
     }
 
-    override func tearDown() {
+    override func tearDown() async throws {
         tokenManager.clearAll()
-        super.tearDown()
     }
 
     // MARK: - Token CRUD
