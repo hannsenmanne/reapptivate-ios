@@ -92,6 +92,10 @@ final class WorkTimerViewModel {
         return f
     }()
 
+    private static let isTestEnvironment: Bool = {
+        NSClassFromString("XCTestCase") != nil
+    }()
+
     // MARK: - Init
 
     init(apiClient: APIClient) {
@@ -311,8 +315,10 @@ final class WorkTimerViewModel {
         saveTimerState()
         scheduleBreakNotification()
 
-        AudioService.shared.activateSession()
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        if !Self.isTestEnvironment {
+            AudioService.shared.activateSession()
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }
     }
 
     func stopWorkday() async {
@@ -337,7 +343,7 @@ final class WorkTimerViewModel {
         stopWorkTimer()
         stopBreakTimer()
         cancelPendingNotifications()
-        AudioService.shared.deactivateSession()
+        if !Self.isTestEnvironment { AudioService.shared.deactivateSession() }
 
         // Build local summary (backend endpoint returns raw break logs, not aggregated)
         let totalMinutes: Int
@@ -378,7 +384,7 @@ final class WorkTimerViewModel {
         saveBreakState()
 
         if !silent {
-            AudioService.shared.playAlarm()
+            if !Self.isTestEnvironment { AudioService.shared.playAlarm() }
         }
     }
 
@@ -417,7 +423,7 @@ final class WorkTimerViewModel {
         saveTimerState()
         scheduleBreakNotification()
 
-        AudioService.shared.playComplete()
+        if !Self.isTestEnvironment { AudioService.shared.playComplete() }
     }
 
     func skipBreak() async {
@@ -464,7 +470,7 @@ final class WorkTimerViewModel {
         saveTimerState()
         scheduleBreakNotification()
 
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        if !Self.isTestEnvironment { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
     }
 
     func checkAutoStart() {
@@ -538,7 +544,7 @@ final class WorkTimerViewModel {
                     showingBreak = true
                     startBreakTimer()
                     startWorkTimer()
-                    AudioService.shared.activateSession()
+                    if !Self.isTestEnvironment { AudioService.shared.activateSession() }
                     return
                 }
             }
@@ -595,7 +601,7 @@ final class WorkTimerViewModel {
 
         startWorkTimer()
         scheduleBreakNotification()
-        AudioService.shared.activateSession()
+        if !Self.isTestEnvironment { AudioService.shared.activateSession() }
     }
 
     // MARK: - Foreground Return
