@@ -704,9 +704,19 @@ final class WorkTimerViewModel {
         }
     }
 
+    /// Stop all running timers. Called from test tearDown to prevent timer
+    /// callbacks from firing after the test completes.
+    func stopTimers() {
+        workTimer?.invalidate()
+        workTimer = nil
+        breakTimer?.invalidate()
+        breakTimer = nil
+    }
+
     // MARK: - Private: Timer Management
 
     private func startWorkTimer() {
+        guard !Self.isTestEnvironment else { return }
         stopWorkTimer()
         workTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
@@ -721,6 +731,7 @@ final class WorkTimerViewModel {
     }
 
     private func startBreakTimer() {
+        guard !Self.isTestEnvironment else { return }
         stopBreakTimer()
         breakTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in

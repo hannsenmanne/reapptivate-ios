@@ -15,6 +15,7 @@ final class WorkTimerViewModelTests: XCTestCase {
 
     override func tearDown() async throws {
         MockURLProtocol.requestHandler = nil
+        viewModel?.stopTimers()
         viewModel = nil
         apiClient = nil
 
