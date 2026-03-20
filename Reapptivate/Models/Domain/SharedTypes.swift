@@ -8,7 +8,7 @@ import Foundation
 
 /// Common interface for all condition-specific focus area models (NDI, TSI, SI, FS, LAS).
 /// Enables a single generic FocusAreasView for all conditions.
-protocol FocusAreaProtocol: Codable, Identifiable {
+protocol FocusAreaProtocol: Codable, Identifiable, Sendable {
     var domainId: String { get }
     var domainLabel: String { get }
     var score: Int { get }
