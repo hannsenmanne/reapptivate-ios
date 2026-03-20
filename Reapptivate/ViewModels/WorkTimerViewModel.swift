@@ -49,8 +49,8 @@ final class WorkTimerViewModel {
     // MARK: - Private
 
     private let apiClient: APIClient
-    private var workTimer: Timer?
-    private var breakTimer: Timer?
+    nonisolated(unsafe) private var workTimer: Timer?
+    nonisolated(unsafe) private var breakTimer: Timer?
     private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
 
     private static let udKeyIsRunning = "workTimer_isRunning"
@@ -99,10 +99,12 @@ final class WorkTimerViewModel {
     }
 
     deinit {
-        MainActor.assumeIsolated {
-            workTimer?.invalidate()
-            breakTimer?.invalidate()
-        }
+        // Capture timer references before accessing them outside MainActor.
+        // Timer.invalidate() is thread-safe per Apple docs.
+        let work = workTimer
+        let brk = breakTimer
+        work?.invalidate()
+        brk?.invalidate()
     }
 
     // MARK: - Computed Properties
