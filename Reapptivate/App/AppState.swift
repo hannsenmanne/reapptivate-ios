@@ -80,7 +80,7 @@ final class AppState {
         isAuthenticated = false
         unreadMessageCount = 0
         hasCheckedInToday = false
-        WorkTimerViewModel.clearPersistedState()
+        WorkTimerViewModel.clearPersistedState(includingPreferences: true)
         clearUserScopedDefaults()
         NotificationDelegate.shared.onBreakComplete = nil
         NotificationDelegate.shared.onBreakSnooze = nil

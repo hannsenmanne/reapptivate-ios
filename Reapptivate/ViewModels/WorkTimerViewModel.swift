@@ -11,6 +11,8 @@ final class WorkTimerViewModel {
     var endTime: Date = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
     var breakIntervalMinutes: Int = 60
     var breakDurationMinutes: Int = 3
+    var patientCondition: String?
+    var patientPhase: Int = 1
 
     // MARK: - Timer State
 
@@ -63,16 +65,30 @@ final class WorkTimerViewModel {
     private static let udKeyAutoStart = "workTimer_autoStart"
     private static let udKeySnoozesUsed = "workTimer_snoozesUsed"
     private static let udKeyWasAutoStarted = "workTimer_wasAutoStarted"
+    private static let udKeySnoozePending = "workTimer_snoozePending"
 
     private static let maxSnoozes = 2
+    private static let maxMissedBreaks = 10
     private var isAutoStopping = false
     private var isCompletingBreak = false
+    private var isRestoringState = false
+    private var isSnoozePending = false
     private var wasAutoStarted = false
 
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
         f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
+    /// Local-timezone date formatter for "same local day?" comparisons.
+    /// NOT for API communication (use `DateFormatters.dateOnly` for that).
+    private static let localDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        // Uses local timezone (default) — NOT UTC
         return f
     }()
 
@@ -106,7 +122,6 @@ final class WorkTimerViewModel {
     }
 
     var formattedWorkTime: String {
-        let isEn = UserDefaults.standard.string(forKey: "appLanguage") == "en"
         guard let startedAt = timerStartedAt else { return isEn ? "0 min" : "0 Min." }
         let elapsed = max(0, Int(Date().timeIntervalSince(startedAt)))
         let hours = elapsed / 3600
@@ -186,10 +201,24 @@ final class WorkTimerViewModel {
     }
 
     var currentStreak: Int {
-        var streak = 0
         let sorted = weekHistory.sorted { $0.date > $1.date }
+        guard !sorted.isEmpty else { return 0 }
+
+        var streak = 0
+        var previousDate: Date?
+
         for day in sorted {
-            if day.breaksCompleted > 0 { streak += 1 } else { break }
+            guard day.breaksCompleted > 0 else { break }
+
+            if let prev = previousDate,
+               let dayDate = Self.localDateFormatter.date(from: day.date) {
+                let calendar = Calendar.current
+                let diff = calendar.dateComponents([.day], from: dayDate, to: prev).day ?? 0
+                if diff != 1 { break } // Gap in dates — streak broken
+            }
+
+            streak += 1
+            previousDate = Self.localDateFormatter.date(from: day.date)
         }
         return streak
     }
@@ -226,6 +255,11 @@ final class WorkTimerViewModel {
             )
             settings = response.settings
             applySettings(response.settings)
+            if isRunning {
+                calculateNextBreak(from: Date())
+                saveTimerState()
+                scheduleBreakNotification()
+            }
         } catch {
             errorMessage = isEn ? "Could not save settings." : "Einstellungen konnten nicht gespeichert werden."
             Log.api.error("Failed to save work timer settings: \(error.localizedDescription)")
@@ -280,12 +314,12 @@ final class WorkTimerViewModel {
     }
 
     func stopWorkday() async {
-        // If a snoozed break is pending, count it as skipped
-        if snoozesUsed > 0, !isOnBreak, let next = nextBreakAt, next > Date() {
+        // If a snoozed break is pending (not yet re-triggered), count it as skipped
+        if isSnoozePending, !isOnBreak {
             breaksSkippedToday += 1
             let log = WorkTimerBreakLog(
                 date: DateFormatters.dateOnly.string(from: Date()),
-                breakNumber: currentBreakNumber + 1,
+                breakNumber: currentBreakNumber,
                 completed: false,
                 skipped: true,
                 exercisesShown: []
@@ -325,17 +359,25 @@ final class WorkTimerViewModel {
 
     // MARK: - Break Management
 
-    func triggerBreak() {
-        currentBreakNumber += 1
-        snoozesUsed = 0
+    func triggerBreak(silent: Bool = false) {
+        guard !isOnBreak else { return }
+        if isSnoozePending {
+            // Re-triggering after snooze — keep the same break number and snooze count
+            isSnoozePending = false
+        } else {
+            currentBreakNumber += 1
+            snoozesUsed = 0
+        }
         selectBreakExercises()
         breakSecondsRemaining = isMicroBreak ? microBreakDuration : breakDurationMinutes * 60
         isOnBreak = true
-        showingBreak = true
+        showingBreak = !silent
         startBreakTimer()
         saveBreakState()
 
-        AudioService.shared.playAlarm()
+        if !silent {
+            AudioService.shared.playAlarm()
+        }
     }
 
     func completeBreak() async {
@@ -346,6 +388,8 @@ final class WorkTimerViewModel {
         isOnBreak = false
         showingBreak = false
         breaksTakenToday += 1
+        snoozesUsed = 0
+        isSnoozePending = false
         stopBreakTimer()
         clearBreakState()
 
@@ -374,6 +418,8 @@ final class WorkTimerViewModel {
         isOnBreak = false
         showingBreak = false
         breaksSkippedToday += 1
+        snoozesUsed = 0
+        isSnoozePending = false
         stopBreakTimer()
         clearBreakState()
 
@@ -402,6 +448,7 @@ final class WorkTimerViewModel {
         stopBreakTimer()
         clearBreakState()
         snoozesUsed += 1
+        isSnoozePending = true
 
         // Schedule next break in 5 minutes (short snooze, not full interval)
         let next = Date().addingTimeInterval(5 * 60)
@@ -415,9 +462,10 @@ final class WorkTimerViewModel {
     }
 
     func checkAutoStart() {
-        guard autoStartEnabled, isWithinWorkHours, !isRunning, settings != nil else { return }
+        guard autoStartEnabled, isWithinWorkHours, !isRunning else { return }
         startWorkday()
         wasAutoStarted = true
+        saveTimerState()
     }
 
     // MARK: - Timer Persistence
@@ -432,10 +480,15 @@ final class WorkTimerViewModel {
         defaults.set(currentBreakNumber, forKey: Self.udKeyCurrentBreakNumber)
         defaults.set(snoozesUsed, forKey: Self.udKeySnoozesUsed)
         defaults.set(wasAutoStarted, forKey: Self.udKeyWasAutoStarted)
+        defaults.set(isSnoozePending, forKey: Self.udKeySnoozePending)
         defaults.set(todayDateString(), forKey: Self.udKeyDate)
     }
 
     func restoreTimerState() {
+        guard !isRestoringState else { return }
+        isRestoringState = true
+        defer { isRestoringState = false }
+
         let defaults = UserDefaults.standard
 
         guard defaults.bool(forKey: Self.udKeyIsRunning) else { return }
@@ -459,6 +512,7 @@ final class WorkTimerViewModel {
         currentBreakNumber = defaults.integer(forKey: Self.udKeyCurrentBreakNumber)
         snoozesUsed = defaults.integer(forKey: Self.udKeySnoozesUsed)
         wasAutoStarted = defaults.bool(forKey: Self.udKeyWasAutoStarted)
+        isSnoozePending = defaults.bool(forKey: Self.udKeySnoozePending)
         isRunning = true
 
         // Check if we were in the middle of a break
@@ -482,22 +536,23 @@ final class WorkTimerViewModel {
                     return
                 }
             }
-            // Break expired while app was closed — user completed the full duration
-            breaksTakenToday += 1
+            // Break expired while app was closed — conservatively count as skipped
+            // (user may have force-quit to avoid the break)
+            breaksSkippedToday += 1
             clearBreakState()
-            // Log completed break to backend
+            saveTimerState()
             let log = WorkTimerBreakLog(
                 date: DateFormatters.dateOnly.string(from: Date()),
                 breakNumber: currentBreakNumber,
-                completed: true,
-                skipped: false,
+                completed: false,
+                skipped: true,
                 exercisesShown: []
             )
             Task { [apiClient] in
                 do {
                     try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
                 } catch {
-                    Log.api.error("Failed to log expired break as completed: \(error.localizedDescription)")
+                    Log.api.error("Failed to log expired break as skipped: \(error.localizedDescription)")
                 }
             }
         }
@@ -662,8 +717,8 @@ final class WorkTimerViewModel {
         guard !isAutoStopping else { return }
         isAutoStopping = true
         Task { [weak self] in
+            defer { self?.isAutoStopping = false }
             await self?.stopWorkday()
-            self?.isAutoStopping = false
         }
     }
 
@@ -692,6 +747,23 @@ final class WorkTimerViewModel {
             return
         }
 
+        // Defense-in-depth: filter by patient condition and phase
+        let eligible = allExercises.filter { exercise in
+            if let conditions = exercise.targetConditions, let condition = patientCondition {
+                guard conditions.contains(condition) else { return false }
+            }
+            if let minPhase = exercise.minPhase {
+                guard patientPhase >= minPhase else { return false }
+            }
+            return true
+        }
+
+        guard !eligible.isEmpty else {
+            // Fallback to all exercises if filtering removes everything
+            breakExercises = Array(allExercises.prefix(isMicroBreak ? 1 : 3))
+            return
+        }
+
         // Stable seed based on date + break number for deterministic rotation across relaunches
         let dayString = todayDateString()
         var seed: UInt64 = 5381
@@ -701,7 +773,7 @@ final class WorkTimerViewModel {
         seed = seed &+ UInt64(bitPattern: Int64(currentBreakNumber))
 
         var rng = SeededRandomNumberGenerator(seed: seed)
-        let shuffled = allExercises.shuffled(using: &rng)
+        let shuffled = eligible.shuffled(using: &rng)
         breakExercises = Array(shuffled.prefix(isMicroBreak ? 1 : 3))
     }
 
@@ -709,7 +781,7 @@ final class WorkTimerViewModel {
         let elapsed = Date().timeIntervalSince(date)
         let intervalSeconds = Double(breakIntervalMinutes * 60)
         guard intervalSeconds > 0 else { return 0 }
-        return max(0, Int(elapsed / intervalSeconds))
+        return min(Self.maxMissedBreaks, max(0, Int(elapsed / intervalSeconds)))
     }
 
     // MARK: - Private: Helpers
@@ -731,7 +803,7 @@ final class WorkTimerViewModel {
     }
 
     private func todayDateString() -> String {
-        DateFormatters.dateOnly.string(from: Date())
+        Self.localDateFormatter.string(from: Date())
     }
 
     private func saveBreakState() {
@@ -753,7 +825,8 @@ final class WorkTimerViewModel {
 
     /// Clear all persisted work timer state from UserDefaults.
     /// Called on logout to prevent state bleeding between users.
-    static func clearPersistedState() {
+    /// Note: `udKeyAutoStart` is a user preference cleared only on logout, not on workday stop.
+    static func clearPersistedState(includingPreferences: Bool = false) {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: udKeyIsRunning)
         defaults.removeObject(forKey: udKeyStartedAt)
@@ -764,9 +837,12 @@ final class WorkTimerViewModel {
         defaults.removeObject(forKey: udKeyDate)
         defaults.removeObject(forKey: udKeyIsOnBreak)
         defaults.removeObject(forKey: udKeyBreakStartedAt)
-        defaults.removeObject(forKey: udKeyAutoStart)
         defaults.removeObject(forKey: udKeySnoozesUsed)
         defaults.removeObject(forKey: udKeyWasAutoStarted)
+        defaults.removeObject(forKey: udKeySnoozePending)
+        if includingPreferences {
+            defaults.removeObject(forKey: udKeyAutoStart)
+        }
     }
 
     private func cancelPendingNotifications() {

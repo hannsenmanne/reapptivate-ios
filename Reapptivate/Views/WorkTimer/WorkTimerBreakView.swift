@@ -147,15 +147,11 @@ struct WorkTimerBreakView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .conditionalHaptic(.success, trigger: completeTrigger)
-        .onChange(of: viewModel.breakSecondsRemaining) { _, newValue in
-            guard viewModel.isMicroBreak, newValue <= 0, !autoCompleted, !isLogging else { return }
-            autoCompleted = true
-            isLogging = true
-            Task {
-                try? await Task.sleep(for: .milliseconds(500))
-                await viewModel.completeBreak()
+        .onChange(of: viewModel.isOnBreak) { _, isActive in
+            // ViewModel auto-completes the break via breakTimerTick — dismiss the sheet
+            if !isActive, !autoCompleted {
+                autoCompleted = true
                 completeTrigger.toggle()
-                isLogging = false
                 dismiss()
             }
         }

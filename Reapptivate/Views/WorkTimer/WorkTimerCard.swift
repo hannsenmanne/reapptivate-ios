@@ -29,32 +29,28 @@ struct WorkTimerCard: View {
                     vm.handleForegroundReturn()
                 }
             }
-            .onDisappear {
-                NotificationDelegate.shared.onBreakComplete = nil
-                NotificationDelegate.shared.onBreakSnooze = nil
-                NotificationDelegate.shared.onBreakSkip = nil
-            }
             .task {
                 let vm = WorkTimerViewModel(apiClient: apiClient)
                 viewModel = vm
 
                 NotificationDelegate.shared.onBreakComplete = { [weak vm] in
-                    guard let vm, vm.isOnBreak else { return }
+                    guard let vm, vm.isRunning else { return }
+                    if !vm.isOnBreak { vm.triggerBreak(silent: true) }
                     Task { await vm.completeBreak() }
                 }
                 NotificationDelegate.shared.onBreakSnooze = { [weak vm] in
-                    guard let vm else { return }
-                    if vm.isOnBreak {
-                        vm.snoozeBreak()
-                    }
+                    guard let vm, vm.isRunning else { return }
+                    if !vm.isOnBreak { vm.triggerBreak(silent: true) }
+                    vm.snoozeBreak()
                 }
                 NotificationDelegate.shared.onBreakSkip = { [weak vm] in
-                    guard let vm else { return }
-                    if vm.isOnBreak {
-                        Task { await vm.skipBreak() }
-                    }
+                    guard let vm, vm.isRunning else { return }
+                    if !vm.isOnBreak { vm.triggerBreak(silent: true) }
+                    Task { await vm.skipBreak() }
                 }
 
+                vm.patientCondition = appState.currentUser?.tendinopathyType.rawValue
+                vm.patientPhase = appState.currentUser?.currentPhase ?? 1
                 vm.requestNotificationPermission()
                 await vm.loadSettings()
                 vm.restoreTimerState()
