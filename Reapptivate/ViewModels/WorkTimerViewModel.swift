@@ -380,7 +380,11 @@ final class WorkTimerViewModel {
         }
     }
 
-    func completeBreak() async {
+    /// Complete the current break and schedule the next one.
+    /// - Parameter nextBreakFrom: When to calculate the next break from.
+    ///   Defaults to now, but should be the break's actual end time when auto-completing
+    ///   an expired break (so work interval isn't lost).
+    func completeBreak(nextBreakFrom: Date? = nil) async {
         guard isOnBreak, !isCompletingBreak else { return }
         isCompletingBreak = true
         defer { isCompletingBreak = false }
@@ -407,7 +411,7 @@ final class WorkTimerViewModel {
             Log.api.error("Failed to log completed break: \(error.localizedDescription)")
         }
 
-        calculateNextBreak(from: Date())
+        calculateNextBreak(from: nextBreakFrom ?? Date())
         saveTimerState()
         scheduleBreakNotification()
 
@@ -536,23 +540,34 @@ final class WorkTimerViewModel {
                     return
                 }
             }
-            // Break expired while app was closed — conservatively count as skipped
-            // (user may have force-quit to avoid the break)
-            breaksSkippedToday += 1
+            // Break expired while app was closed — count as completed
+            // (user had the break running for the full duration before app was closed)
+            let totalBreakSecondsForLog = isMicroBreak ? microBreakDuration : breakDurationMinutes * 60
+            let breakEndTime: Date
+            if breakStartInterval > 0 {
+                breakEndTime = Date(timeIntervalSince1970: breakStartInterval)
+                    .addingTimeInterval(Double(totalBreakSecondsForLog))
+            } else {
+                breakEndTime = Date()
+            }
+
+            breaksTakenToday += 1
             clearBreakState()
+            // Schedule next break from when the break actually ended, not from now
+            calculateNextBreak(from: breakEndTime)
             saveTimerState()
             let log = WorkTimerBreakLog(
                 date: DateFormatters.dateOnly.string(from: Date()),
                 breakNumber: currentBreakNumber,
-                completed: false,
-                skipped: true,
+                completed: true,
+                skipped: false,
                 exercisesShown: []
             )
             Task { [apiClient] in
                 do {
                     try await apiClient.requestVoid(APIEndpoints.logWorkTimerBreak(body: log))
                 } catch {
-                    Log.api.error("Failed to log expired break as skipped: \(error.localizedDescription)")
+                    Log.api.error("Failed to log expired break as completed: \(error.localizedDescription)")
                 }
             }
         }
@@ -615,7 +630,23 @@ final class WorkTimerViewModel {
             secondsUntilBreak = max(0, Int(nextBreak.timeIntervalSinceNow))
 
             if secondsUntilBreak <= 0 {
-                triggerBreak()
+                // Break was due while in background — calculate conceptual timing
+                let nextBreakNum = isSnoozePending ? currentBreakNumber : currentBreakNumber + 1
+                let nextIsMicro = nextBreakNum % 2 == 1
+                let duration = nextIsMicro ? microBreakDuration : breakDurationMinutes * 60
+                let breakEndTime = nextBreak.addingTimeInterval(Double(duration))
+
+                if Date() >= breakEndTime {
+                    // Break fully expired in background — auto-complete
+                    triggerBreak(silent: true)
+                    Task { [weak self] in
+                        await self?.completeBreak(nextBreakFrom: breakEndTime)
+                    }
+                } else {
+                    // Break still in progress — show with correct remaining time
+                    triggerBreak()
+                    breakSecondsRemaining = Int(breakEndTime.timeIntervalSinceNow)
+                }
                 return
             }
         }

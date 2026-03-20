@@ -467,7 +467,7 @@ final class WorkTimerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.breaksTakenToday, 2) // not incremented
     }
 
-    func testRestoreExpiredBreakCountsAsSkipped() {
+    func testRestoreExpiredBreakCountsAsCompleted() {
         let defaults = UserDefaults.standard
         let now = Date()
         let breakStart = now.addingTimeInterval(-300) // started 5 min ago (expired for 3-min break)
@@ -497,8 +497,16 @@ final class WorkTimerViewModelTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isRunning)
         XCTAssertFalse(viewModel.isOnBreak, "Expired break should not leave isOnBreak true")
-        XCTAssertEqual(viewModel.breaksSkippedToday, 1, "Should increment breaksSkipped for expired break")
-        XCTAssertEqual(viewModel.breaksTakenToday, 1, "breaksTaken should not change")
+        XCTAssertEqual(viewModel.breaksTakenToday, 2, "Should increment breaksTaken for expired break")
+        XCTAssertEqual(viewModel.breaksSkippedToday, 0, "breaksSkipped should not change")
+
+        // Next break should be scheduled from break end time, not from now
+        // breakStart was 300s ago, break duration = 3min (180s for even break), so breakEnd = 300-180 = 120s ago
+        // nextBreak = breakEnd + 60min interval
+        XCTAssertNotNil(viewModel.nextBreakAt)
+        let breakEnd = breakStart.addingTimeInterval(Double(viewModel.breakDurationMinutes * 60))
+        let expectedNext = breakEnd.addingTimeInterval(Double(viewModel.breakIntervalMinutes * 60))
+        XCTAssertEqual(viewModel.nextBreakAt!.timeIntervalSince1970, expectedNext.timeIntervalSince1970, accuracy: 2.0)
     }
 
     func testRestoreWithMissedBreaksTriggers() {
@@ -599,15 +607,54 @@ final class WorkTimerViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isOnBreak)
     }
 
-    func testForegroundReturnTriggersMissedBreak() {
+    func testForegroundReturnShowsBreakStillInProgress() {
         viewModel.startWorkday()
-        // Set break to the past
+        viewModel.breakDurationMinutes = 3
+        // Break was due 10 seconds ago — micro-break (30s) still has 20s remaining
         viewModel.nextBreakAt = Date().addingTimeInterval(-10)
 
         viewModel.handleForegroundReturn()
 
-        XCTAssertTrue(viewModel.isOnBreak, "Should trigger break when missed")
+        XCTAssertTrue(viewModel.isOnBreak, "Should show break when still in progress")
         XCTAssertEqual(viewModel.currentBreakNumber, 1)
+        XCTAssertEqual(viewModel.breakSecondsRemaining, 20, accuracy: 2)
+    }
+
+    func testForegroundReturnAutoCompletesFullyExpiredBreak() {
+        viewModel.startWorkday()
+        viewModel.breakDurationMinutes = 3
+        // Break was due 60 seconds ago — micro-break (30s) fully expired
+        viewModel.nextBreakAt = Date().addingTimeInterval(-60)
+
+        viewModel.handleForegroundReturn()
+
+        // Break was silently triggered and auto-completed via Task
+        // isOnBreak is true momentarily (triggerBreak sets it) but completeBreak runs async
+        XCTAssertEqual(viewModel.currentBreakNumber, 1)
+    }
+
+    func testForegroundReturnExpiredBreakSchedulesFromBreakEnd() async {
+        MockURLProtocol.requestHandler = { _ in
+            (TestHelpers.makeHTTPResponse(statusCode: 200), Data())
+        }
+
+        viewModel.startWorkday()
+        viewModel.breakIntervalMinutes = 60
+        viewModel.breakDurationMinutes = 3
+        // Break was due 120s ago — micro-break (30s) expired 90s ago
+        let breakDueTime = Date().addingTimeInterval(-120)
+        viewModel.nextBreakAt = breakDueTime
+
+        viewModel.handleForegroundReturn()
+
+        // Let the async completeBreak run
+        try? await Task.sleep(for: .milliseconds(100))
+
+        // Next break should be from breakEnd (breakDueTime + 30s), NOT from now
+        let expectedBreakEnd = breakDueTime.addingTimeInterval(30) // micro-break = 30s
+        let expectedNext = expectedBreakEnd.addingTimeInterval(3600) // + 60 min interval
+        XCTAssertNotNil(viewModel.nextBreakAt)
+        XCTAssertEqual(viewModel.nextBreakAt!.timeIntervalSince1970, expectedNext.timeIntervalSince1970, accuracy: 2.0)
     }
 
     func testForegroundReturnDuringBreakRecalculatesRemaining() {

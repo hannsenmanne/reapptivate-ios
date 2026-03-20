@@ -26,7 +26,11 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         let actionId = response.actionIdentifier
         await MainActor.run {
             switch actionId {
-            case "COMPLETE_BREAK", UNNotificationDefaultActionIdentifier:
+            case UNNotificationDefaultActionIdentifier:
+                // User tapped notification banner — just open the app.
+                // handleForegroundReturn() will show the break with correct timing.
+                break
+            case "COMPLETE_BREAK":
                 onBreakComplete?()
             case "SNOOZE_BREAK":
                 onBreakSnooze?()
