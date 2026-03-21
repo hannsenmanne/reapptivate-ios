@@ -36,18 +36,16 @@
 - **MessagingVM Timer leak**: FIXED -- deinit now present, invalidates both timers
 - **WorkTimerVM cancelPendingNotifications()**: FIXED -- now filters by `work_timer_break_` prefix
 - **NotificationDelegate data race**: Callback closures are unprotected mutable state on @unchecked Sendable type
-- **WorkTimerBreakView micro-break auto-complete**: Races with manual complete button, can double-count breaks
 
 ### High
 - **AemScreeningVM/NeckScreeningVM**: selectResponse spawns untracked Tasks
 - **DashboardVM.loadSafely**: FIXED -- now sets `self.error` on first failure
 - **WorkTimerVM formatTime()/applySettings()**: FIXED -- now uses static DateFormatter with POSIX locale
 - **WorkTimerVM snoozesUsed**: FIXED -- now persisted and restored from UserDefaults
-- **WorkTimerVM autoStopWorkday()**: Untracked Task can fire multiple times from consecutive ticks
-- **WorkTimerVM expired break during background**: FIXED -- micro-breaks auto-complete, regular breaks count as skipped
-- **WorkTimerCard notification callbacks**: Stale VM reference if view recreated; never cleared
+- **WorkTimerVM autoStopWorkday()**: FIXED -- defer reset added
+- **WorkTimerCard notification callbacks**: FIXED -- .onDisappear removed, callbacks set once in .task with [weak vm], cleared on logout
 - **PhaseViewModel.loadPhaseStatus**: Error logged but no user-facing error state
-- **WorkTimerVM clearPersistedState()**: FIXED -- now clears autoStart and snoozesUsed
+- **WorkTimerVM clearPersistedState()**: FIXED -- parameterized with `includingPreferences:` (default false). autoStart preserved on workday stop, only cleared on logout. `checkAutoStart()` now calls `saveTimerState()` after setting `wasAutoStarted`.
 
 ## ACL Findings (2026-02-24)
 - **CRITICAL**: AclCompletedModulesResponse type mismatch -- backend returns string[], iOS expects objects
@@ -85,8 +83,8 @@
 ## Condition-Specific Views Review (2026-03-09)
 - **FIXED**: NeckMicroModulesView + TensionMicroModulesView NOW HAVE targetCondition defensive filtering
 - **CRITICAL**: ExposureLogSheet hardcodes prePain=0 instead of collecting from user -- corrupts FAR clinical data
-- **WorkTimerBreakView micro-break auto-complete**: Still races with manual button (unchanged since last review)
-- **WorkTimerCard notification callbacks**: Still never cleared on disappear (unchanged)
+- **WorkTimerBreakView micro-break auto-complete**: FIXED -- View now uses `onChange(of: viewModel.isOnBreak)` instead of `onChange(of: breakSecondsRemaining)`. VM is sole completion authority.
+- **WorkTimerCard notification callbacks**: FIXED -- .onDisappear removed, callbacks set once in .task with [weak vm], cleared on logout
 - **FearHierarchyView**: N parallel API calls for exposures (one per hierarchy item)
 - **PacingTimerView**: Timer completion does not auto-log activity to backend
 - **AemScreeningView**: Dead refreshProfile code with disconnected alert binding
@@ -158,21 +156,32 @@
 - **micro-modules_en.json**: All entries have `"locale": "de"` instead of `"en"` (backend seed file, not iOS runtime issue)
 - **Pattern**: File-private `isEnglishLocale` computed var reads UserDefaults directly; works because locale environment change triggers full re-render
 
-## Liquid Glass Design Refresh Review (2026-03-14)
-- **CardStyle/AccentCardStyle**: Now use `ultraThinMaterial + cardBg.opacity(0.72)` overlay + `glassStroke` border
-- **Button styles**: Primary/Accent use gradient fill + inner highlight stroke; Secondary uses `ultraThinMaterial`
-- **CardEntryAnimation**: Added `reduceMotion` check and `scaleEffect` to stagger animation
-- **AppBackgroundModifier**: RadialGradient accent glow (0.06 opacity) behind `appBg`
-- **GlassSheetModifier**: `.presentationCornerRadius(28) + .presentationBackground(.regularMaterial) + .presentationDragIndicator(.visible)` applied to ~30 sheets
-- **GlowingIconContainer**: Reusable component with filled/unfilled modes, gradient fill, optional inner stroke, colored shadow
-- **FloatingTabBar**: New file, replaces DashboardTabBar. Floating capsule with `.regularMaterial`, `matchedGeometryEffect` indicator, `reduceMotion` support
+## Liquid Glass Design Refresh Review (2026-03-14, updated 2026-03-20)
+- **CardStyle/AccentCardStyle**: Now use `ultraThinMaterial + glassFill(0.50 light/0.65 dark)` overlay + gradient `glassStroke` + dual shadow (ambient r:16 y:6 + contact r:2 y:1)
+- **Button styles**: Primary/Accent use gradient fill + glass stroke gradient; Secondary uses `ultraThinMaterial` + glass stroke
+- **InputFieldStyle**: Now uses `ultraThinMaterial + cardBg.opacity(0.65)` + glass stroke (was solid cardBg + gray300 1px border)
+- **Glass helpers**: File-private `glassFill`, `glassAmbientShadow`, `glassContactShadow` + `glassStroke` gradient -- all use UIColor trait collection pattern for dark mode reactivity
+- **FloatingTabBar duplicates glass colors**: Own `glassFill` (white 0.55 light/0.06 dark) and `glassStroke` -- intentionally different values from ViewModifiers+Design but creates maintenance risk
+- **DashboardTab.iconFilled**: Added for filled/unfilled icon toggle on tab selection; `.messages` case unreachable from FloatingTabBar
+- **CardEntryAnimation**: Has `reduceMotion` check and `scaleEffect` to stagger animation
+- **AppBackgroundModifier**: Dual RadialGradient accent glow (0.05 topLeading + 0.03 bottomTrailing)
+- **GlassSheetModifier**: `.presentationCornerRadius(28) + .presentationBackground(.regularMaterial) + .presentationDragIndicator(.visible)` applied to ~31 sheets
+- **GlowingIconContainer**: Gradient glass stroke on filled badges, dual-layer shadow
+- **FloatingTabBar**: Floating capsule with `ultraThinMaterial`, `matchedGeometryEffect` indicator, `reduceMotion` support, `@Environment(\.colorScheme)` for glass colors
 - **Messages moved**: From tab to toolbar button + fullScreenCover with dismiss button
 - **DashboardTab.messages**: Now dead code (never selectable), returns EmptyView
 - **accentDeep**: Defined but unused
-- **Inconsistency**: ExerciseCardView, MicroModuleCard, WissenExpandableCard still use solid `Color.cardBg` (not glass material)
+- **INCONSISTENCY (10+ views)**: ExerciseCardView, CustomExerciseCardView, MicroModuleCard, WissenCardView, WissenExpandableCard, FearHierarchyView, FearHierarchyBuilderView, PacingActivityLogSheet still use solid `Color.cardBg` + `Color.gray200` stroke (not glass treatment)
+- **DesignTokens.cardShadow* nearly dead**: Only ExerciseCardView + CustomExerciseCardView still reference cardShadowColor/Radius/Y
 - **Glow rings**: TodaysPlanCard + WorkTimerCard use `blur(radius: 6)` on trimmed circles for ambient glow
 - **hasSeenWelcome/hasSeenWalkthrough**: FIXED -- no longer cleared on logout (was previously flagged)
 - **DashboardVM.loadSafely error**: Still German-only ("Daten konnten nicht geladen werden.")
+
+## Work Timer Deep Review (2026-03-20, updated after second fix pass)
+- See [work_timer_deep_review.md](work_timer_deep_review.md) for full findings
+- FIXED: UTC/local timezone, triggerBreak double-trigger, notification callbacks, break completion race, expired break as skipped, phantom skip via isSnoozePending, settings recalc when running, exercise filtering, autoStopWorkday defer, currentStreak date continuity, missedBreakCount cap, checkAutoStart without settings, formattedWorkTime dedup
+- REMAINING: isSnoozePending not persisted, notification triggerBreak alarm flash, expired break log message stale, currentStreak malformed date tolerance
+- Test coverage: 82 VM tests (up from 65)
 
 ## Reviewer Notes
 - SwiftUI `Text(stringVariable)` uses String init, NOT LocalizedStringKey -- no automatic xcstrings lookup

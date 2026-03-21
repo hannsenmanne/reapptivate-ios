@@ -285,9 +285,7 @@ struct WissenExpandableCard: View {
                 .padding(14)
             }
         }
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
+        .cardStyle(padding: 0)
         .conditionalHaptic(.success, trigger: hapticTrigger)
     }
 

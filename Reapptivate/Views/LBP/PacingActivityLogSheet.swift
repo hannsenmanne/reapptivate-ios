@@ -169,9 +169,15 @@ struct PacingActivityLogSheet: View {
                             .font(.appSubheadline)
                             .frame(minHeight: 60)
                             .padding(8)
-                            .background(Color.cardBg)
+                            .background {
+                                RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                                    .fill(.ultraThinMaterial)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                                            .fill(Color.cardBg.opacity(0.65))
+                                    }
+                            }
                             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
                     }
 
                     // Info box

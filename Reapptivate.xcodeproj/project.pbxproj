@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -417,7 +417,7 @@
 		4D091C40616A3407751C6238 /* AclTodayProgramCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AclTodayProgramCard.swift; sourceTree = "<group>"; };
 		4F45E597178D17EC528DCAB8 /* ThreadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailView.swift; sourceTree = "<group>"; };
 		4F76FC19CE5EF7FE3F37C107 /* ExerciseSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSessionView.swift; sourceTree = "<group>"; };
-		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		507E58B1C33B72C2F4BA5D06 /* Reapptivate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reapptivate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522523B00DA8A09984ACA606 /* UserProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
 		52AD857678846C8AD594012F /* plantar_fascia_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = plantar_fascia_en.json; sourceTree = "<group>"; };
 		52C5C9F2D2ADDB53A0EE3208 /* NdiProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NdiProgressView.swift; sourceTree = "<group>"; };
@@ -486,7 +486,7 @@
 		91D1051695F6EC94743F3119 /* LbpTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LbpTypes.swift; sourceTree = "<group>"; };
 		91E67766317FB311903F8A59 /* micro-modules_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "micro-modules_en.json"; sourceTree = "<group>"; };
 		91FA7C2D2B9F416E14A5D8B4 /* gluteal_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = gluteal_en.json; sourceTree = "<group>"; };
-		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		9303CE639F3CD255FBD1D2AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		94FEBABC52A1D54EAF21061A /* ViewModifiers+Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModifiers+Design.swift"; sourceTree = "<group>"; };
 		96C4D86D3E196AC40EE4E657 /* shoulder_impingement_schwer_en.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = shoulder_impingement_schwer_en.json; sourceTree = "<group>"; };
 		9888D0F8D964CAB893649437 /* ShoulderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoulderTypes.swift; sourceTree = "<group>"; };
@@ -1415,7 +1415,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					A7AECD66B703CF0A134DD96F = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1431,7 +1430,6 @@
 			);
 			mainGroup = 085D8C9692D8AA7A0ABF3326;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1871,6 +1869,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
@@ -2028,6 +2027,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M8UA883Y3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Reapptivate/Info.plist;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;

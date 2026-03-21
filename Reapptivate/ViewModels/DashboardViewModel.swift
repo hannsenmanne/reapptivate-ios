@@ -30,6 +30,17 @@ enum DashboardTab: String, CaseIterable {
         case .messages: return "message"
         }
     }
+
+    var iconFilled: String {
+        switch self {
+        case .overview: return "house.fill"
+        case .program: return "figure.run" // no .fill variant in SF Symbols
+        case .edukation: return "book.fill"
+        case .progress: return "chart.bar.fill"
+        case .insights: return "lightbulb.fill"
+        case .messages: return "message.fill"
+        }
+    }
 }
 
 @Observable
