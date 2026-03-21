@@ -639,6 +639,7 @@ private extension APIEndpoints {
             request.httpBody = try JSONEncoder().encode(encodable)
         } catch {
             Log.api.error("Failed to encode POST body for \(path): \(error)")
+            assertionFailure("Encoding failed for POST \(path): \(error)")
         }
         return request
     }
@@ -673,6 +674,7 @@ private extension APIEndpoints {
             request.httpBody = try JSONEncoder().encode(encodable)
         } catch {
             Log.api.error("Failed to encode PUT body for \(path): \(error)")
+            assertionFailure("Encoding failed for PUT \(path): \(error)")
         }
         return request
     }

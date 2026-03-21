@@ -122,6 +122,7 @@ struct AemScreeningView: View {
             }
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = AemScreeningViewModel(apiClient: apiClient)
             viewModel = vm
             await vm.loadConfig()

@@ -133,6 +133,7 @@ struct NeckScreeningView: View {
             }
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = NeckScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()

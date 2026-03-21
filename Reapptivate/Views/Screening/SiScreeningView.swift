@@ -109,6 +109,7 @@ struct SiScreeningView: View {
             .conditionalHaptic(.selection, trigger: selectionTrigger)
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = SiScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()

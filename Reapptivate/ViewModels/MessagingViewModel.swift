@@ -18,6 +18,8 @@ final class MessagingViewModel {
     private var messageTimer: Timer?
     private var activeThreadId: String?
 
+    private var isEn: Bool { UserDefaults.standard.string(forKey: "appLanguage") == "en" }
+
     init(apiClient: APIClient, appState: AppState) {
         self.apiClient = apiClient
         self.appState = appState
@@ -39,7 +41,7 @@ final class MessagingViewModel {
             isLoading = false
         } catch {
             Log.api.error("Fetch threads failed: \(error.localizedDescription)")
-            errorMessage = "Nachrichten konnten nicht geladen werden."
+            errorMessage = isEn ? "Could not load messages." : "Nachrichten konnten nicht geladen werden."
             isLoading = false
         }
     }
@@ -64,7 +66,7 @@ final class MessagingViewModel {
             isLoadingMessages = false
         } catch {
             Log.api.error("Fetch thread detail failed: \(error.localizedDescription)")
-            errorMessage = "Nachrichten konnten nicht geladen werden."
+            errorMessage = isEn ? "Could not load messages." : "Nachrichten konnten nicht geladen werden."
             isLoadingMessages = false
         }
     }
@@ -86,7 +88,7 @@ final class MessagingViewModel {
             return true
         } catch {
             Log.api.error("Send message failed: \(error.localizedDescription)")
-            errorMessage = "Nachricht konnte nicht gesendet werden."
+            errorMessage = isEn ? "Could not send message." : "Nachricht konnte nicht gesendet werden."
             isSending = false
             return false
         }
@@ -107,7 +109,7 @@ final class MessagingViewModel {
             return response.thread
         } catch {
             Log.api.error("Create thread failed: \(error.localizedDescription)")
-            errorMessage = "Konversation konnte nicht erstellt werden."
+            errorMessage = isEn ? "Could not create conversation." : "Konversation konnte nicht erstellt werden."
             isSending = false
             return nil
         }

@@ -112,6 +112,7 @@ struct FsScreeningView: View {
             .conditionalHaptic(.selection, trigger: selectionTrigger)
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = FsScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()

@@ -54,6 +54,7 @@ struct AclScreeningView: View {
             .conditionalHaptic(.selection, trigger: selectionTrigger)
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = AclScreeningViewModel(apiClient: apiClient)
             viewModel = vm
             await vm.loadConfig()
