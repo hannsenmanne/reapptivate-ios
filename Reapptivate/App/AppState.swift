@@ -81,6 +81,7 @@ final class AppState {
         unreadMessageCount = 0
         hasCheckedInToday = false
         WorkTimerViewModel.clearPersistedState(includingPreferences: true)
+        ExerciseVideoStore.shared.deleteAllVideos()
         clearUserScopedDefaults()
         NotificationDelegate.shared.onBreakComplete = nil
         NotificationDelegate.shared.onBreakSnooze = nil

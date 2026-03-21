@@ -26,6 +26,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         set {
             trackedLanguage = newValue
             UserDefaults.standard.set(newValue.rawValue, forKey: "appLanguage")
+            ProtocolLoader.shared.clearCache()
         }
     }
 

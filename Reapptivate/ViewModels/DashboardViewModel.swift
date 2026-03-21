@@ -229,19 +229,26 @@ final class DashboardViewModel {
     }
 
     private func applySeverityResult(_ result: SeverityFetchResult) {
-        switch result {
-        case .none:
-            break
-        case .ndiSeverity(let grade):
-            appState?.currentUser?.ndiSeverity = grade
-        case .tsiSeverity(let grade):
-            appState?.currentUser?.tsiSeverity = grade
-        case .siSeverity(let grade):
-            appState?.currentUser?.siSeverity = grade
-        case .fsSeverity(let grade):
-            appState?.currentUser?.fsSeverity = grade
-        case .lasSeverity(let grade):
-            appState?.currentUser?.lasSeverity = grade
+        guard case .none = result else {
+            guard let appState else {
+                Log.api.error("AppState deallocated during severity fetch — skipping update")
+                return
+            }
+            switch result {
+            case .none:
+                break
+            case .ndiSeverity(let grade):
+                appState.currentUser?.ndiSeverity = grade
+            case .tsiSeverity(let grade):
+                appState.currentUser?.tsiSeverity = grade
+            case .siSeverity(let grade):
+                appState.currentUser?.siSeverity = grade
+            case .fsSeverity(let grade):
+                appState.currentUser?.fsSeverity = grade
+            case .lasSeverity(let grade):
+                appState.currentUser?.lasSeverity = grade
+            }
+            return
         }
     }
 

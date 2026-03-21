@@ -46,6 +46,13 @@ final class SyncService {
 
     func cacheProgress(_ entries: [ProgressEntry]) {
         for entry in entries {
+            let entryId = entry.id
+            let descriptor = FetchDescriptor<CachedProgress>(
+                predicate: #Predicate { $0.entryId == entryId }
+            )
+            let existing = (try? modelContext.fetch(descriptor))?.first
+            if existing != nil { continue }
+
             let cached = CachedProgress(from: entry)
             modelContext.insert(cached)
         }
