@@ -670,7 +670,7 @@ final class WorkTimerViewModel {
     // MARK: - Local Notifications
 
     func scheduleBreakNotification() {
-        guard let nextBreak = nextBreakAt else { return }
+        guard !Self.isTestEnvironment, let nextBreak = nextBreakAt else { return }
 
         let content = UNMutableNotificationContent()
         content.title = isEn ? "Time for a break!" : "Zeit für eine Pause!"
@@ -696,6 +696,7 @@ final class WorkTimerViewModel {
     }
 
     func requestNotificationPermission() {
+        guard !Self.isTestEnvironment else { return }
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error {
                 Log.notification.error("Notification permission error: \(error.localizedDescription)")
@@ -896,6 +897,7 @@ final class WorkTimerViewModel {
     }
 
     private func cancelPendingNotifications() {
+        guard !Self.isTestEnvironment else { return }
         let center = UNUserNotificationCenter.current()
         center.getPendingNotificationRequests { requests in
             let ids = requests
