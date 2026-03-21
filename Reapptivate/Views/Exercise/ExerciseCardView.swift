@@ -83,14 +83,7 @@ struct ExerciseCardView: View {
                     }
                 }
             }
-            .padding(12)
-            .background(Color.cardBg)
-            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
-            .shadow(
-                color: DesignTokens.cardShadowColor,
-                radius: DesignTokens.cardShadowRadius,
-                y: DesignTokens.cardShadowY
-            )
+            .cardStyle(padding: 12)
         }
         .buttonStyle(.plain)
         .task(id: exercise.id) { await loadVideoThumbnail() }

@@ -20,26 +20,48 @@ enum DesignTokens {
     static let cardShadowY: CGFloat = 2
 }
 
-// MARK: - Glass Card Helpers
+// MARK: - Liquid Glass Helpers
 
+/// Glass edge highlight — brighter top-left, fading bottom-right
 private let glassStroke = LinearGradient(
     colors: [
         Color(UIColor { tc in
             tc.userInterfaceStyle == .dark
-                ? .white.withAlphaComponent(0.12)
-                : .white.withAlphaComponent(0.25)
+                ? .white.withAlphaComponent(0.18)
+                : .white.withAlphaComponent(0.45)
         }),
         Color(UIColor { tc in
             tc.userInterfaceStyle == .dark
-                ? .white.withAlphaComponent(0.02)
-                : .white.withAlphaComponent(0.05)
+                ? .white.withAlphaComponent(0.04)
+                : .white.withAlphaComponent(0.08)
         })
     ],
     startPoint: .topLeading,
     endPoint: .bottomTrailing
 )
 
-// MARK: - Card Style (Glass, frosted, subtle stroke)
+/// Translucent fill overlay for glass surfaces
+private let glassFill = Color(UIColor { tc in
+    tc.userInterfaceStyle == .dark
+        ? UIColor(white: 0.11, alpha: 0.65)
+        : UIColor(white: 1.0, alpha: 0.50)
+})
+
+/// Ambient shadow — soft, wide spread for spatial depth
+private let glassAmbientShadow = Color(UIColor { tc in
+    tc.userInterfaceStyle == .dark
+        ? UIColor.black.withAlphaComponent(0.30)
+        : UIColor.black.withAlphaComponent(0.06)
+})
+
+/// Contact shadow — tight, close for grounding
+private let glassContactShadow = Color(UIColor { tc in
+    tc.userInterfaceStyle == .dark
+        ? UIColor.black.withAlphaComponent(0.15)
+        : UIColor.black.withAlphaComponent(0.04)
+})
+
+// MARK: - Card Style (Liquid Glass — frosted, translucent, layered)
 
 struct CardStyle: ViewModifier {
     var padding: CGFloat = 16
@@ -52,7 +74,7 @@ struct CardStyle: ViewModifier {
                     .fill(.ultraThinMaterial)
                     .overlay {
                         RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous)
-                            .fill(Color.cardBg.opacity(0.72))
+                            .fill(glassFill)
                     }
             }
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
@@ -60,11 +82,8 @@ struct CardStyle: ViewModifier {
                 RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous)
                     .strokeBorder(glassStroke, lineWidth: 0.5)
             }
-            .shadow(
-                color: DesignTokens.cardShadowColor,
-                radius: DesignTokens.cardShadowRadius,
-                y: DesignTokens.cardShadowY
-            )
+            .shadow(color: glassAmbientShadow, radius: 16, y: 6)
+            .shadow(color: glassContactShadow, radius: 2, y: 1)
     }
 }
 
@@ -81,7 +100,7 @@ struct AccentCardStyle: ViewModifier {
                     .fill(.ultraThinMaterial)
                     .overlay {
                         RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous)
-                            .fill(Color.cardBg.opacity(0.72))
+                            .fill(glassFill)
                     }
             }
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
@@ -100,11 +119,8 @@ struct AccentCardStyle: ViewModifier {
                 RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous)
                     .strokeBorder(glassStroke, lineWidth: 0.5)
             }
-            .shadow(
-                color: DesignTokens.cardShadowColor,
-                radius: DesignTokens.cardShadowRadius,
-                y: DesignTokens.cardShadowY
-            )
+            .shadow(color: glassAmbientShadow, radius: 16, y: 6)
+            .shadow(color: glassContactShadow, radius: 2, y: 1)
     }
 }
 
@@ -118,7 +134,7 @@ extension View {
     }
 }
 
-// MARK: - Primary Button Style (Gradient, inner highlight, spring press)
+// MARK: - Primary Button Style (Glass gradient, edge highlight, spring press)
 
 struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
@@ -134,7 +150,7 @@ struct PrimaryButtonStyle: ButtonStyle {
                     .fill(
                         isEnabled
                             ? LinearGradient(
-                                colors: [Color.textPrimary, Color.textPrimary.opacity(0.85)],
+                                colors: [Color.textPrimary.opacity(0.92), Color.textPrimary.opacity(0.78)],
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
@@ -146,11 +162,12 @@ struct PrimaryButtonStyle: ButtonStyle {
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous)
-                            .strokeBorder(Color.white.opacity(0.08), lineWidth: 0.5)
+                            .strokeBorder(glassStroke, lineWidth: 0.5)
                     }
             }
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
-            .shadow(color: Color.black.opacity(0.12), radius: 4, y: 2)
+            .shadow(color: .black.opacity(0.12), radius: 8, y: 3)
+            .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .opacity(configuration.isPressed ? 0.9 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
@@ -180,7 +197,7 @@ struct SecondaryButtonStyle: ButtonStyle {
     }
 }
 
-// MARK: - Accent Button Style (Emerald gradient, inner highlight, spring press)
+// MARK: - Accent Button Style (Emerald glass gradient, edge highlight, spring press)
 
 struct AccentButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
@@ -208,11 +225,19 @@ struct AccentButtonStyle: ButtonStyle {
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous)
-                            .strokeBorder(Color.white.opacity(0.15), lineWidth: 0.5)
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [Color.white.opacity(0.25), Color.white.opacity(0.05)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 0.5
+                            )
                     }
             }
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.buttonRadius, style: .continuous))
-            .shadow(color: Color.accent.opacity(0.25), radius: 6, y: 3)
+            .shadow(color: Color.accent.opacity(0.20), radius: 12, y: 4)
+            .shadow(color: Color.accent.opacity(0.10), radius: 2, y: 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .opacity(configuration.isPressed ? 0.9 : 1.0)
             .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
@@ -231,18 +256,25 @@ extension ButtonStyle where Self == AccentButtonStyle {
     static var accentFilled: AccentButtonStyle { AccentButtonStyle() }
 }
 
-// MARK: - Input Field Style (Rounded text fields)
+// MARK: - Input Field Style (Frosted glass text fields)
 
 struct InputFieldStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.appBody)
             .padding(12)
-            .background(Color.cardBg)
+            .background {
+                RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
+                            .fill(Color.cardBg.opacity(0.65))
+                    }
+            }
             .clipShape(RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: DesignTokens.inputRadius, style: .continuous)
-                    .stroke(Color.gray300, lineWidth: 1)
+                    .strokeBorder(glassStroke, lineWidth: 0.5)
             )
     }
 }
@@ -326,7 +358,7 @@ extension View {
     }
 }
 
-// MARK: - App Background (Ambient gradient)
+// MARK: - App Background (Dual ambient gradient)
 
 struct AppBackgroundModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -337,12 +369,23 @@ struct AppBackgroundModifier: ViewModifier {
 
                     RadialGradient(
                         colors: [
-                            Color.accent.opacity(0.06),
+                            Color.accent.opacity(0.05),
                             Color.clear
                         ],
-                        center: .top,
+                        center: .topLeading,
                         startRadius: 0,
-                        endRadius: 500
+                        endRadius: 600
+                    )
+                    .ignoresSafeArea()
+
+                    RadialGradient(
+                        colors: [
+                            Color.accent.opacity(0.03),
+                            Color.clear
+                        ],
+                        center: .bottomTrailing,
+                        startRadius: 0,
+                        endRadius: 400
                     )
                     .ignoresSafeArea()
                 }
@@ -402,7 +445,14 @@ struct GlowingIconContainer: View {
             .overlay {
                 if isFilled {
                     RoundedRectangle(cornerRadius: radius, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.2), lineWidth: 0.5)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.30), Color.white.opacity(0.05)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 0.5
+                        )
                 }
             }
             .overlay {
@@ -410,6 +460,7 @@ struct GlowingIconContainer: View {
                     .font(.system(size: iconSize, weight: .semibold))
                     .foregroundStyle(isFilled ? .white : color)
             }
-            .shadow(color: color.opacity(isFilled ? 0.3 : 0.15), radius: 8, y: 2)
+            .shadow(color: color.opacity(isFilled ? 0.25 : 0.12), radius: 12, y: 4)
+            .shadow(color: color.opacity(isFilled ? 0.12 : 0.06), radius: 2, y: 1)
     }
 }

@@ -296,10 +296,7 @@ struct BuilderItemCard: View {
                 .accessibilityLabel(appLanguage == "en" ? "Delete" : "Löschen")
             }
         }
-        .padding(12)
-        .background(Color.cardBg)
-        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.cardRadius, style: .continuous).stroke(Color.gray200, lineWidth: 1))
+        .cardStyle(padding: 12)
     }
 
     var ratingColor: Color {
