@@ -157,6 +157,12 @@ final class APIClient {
             throw APIError.rateLimited(retryAfter: retryAfter)
 
         default:
+            if statusCode >= 500 {
+                let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data)
+                if let message = errorResponse?.displayMessage {
+                    Log.api.error("Server error \(statusCode): \(message)")
+                }
+            }
             throw APIError.serverError(statusCode)
         }
     }

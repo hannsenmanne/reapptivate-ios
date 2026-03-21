@@ -17,7 +17,13 @@ final class SyncService {
 
     func cacheUser(_ profile: UserProfile) {
         let descriptor = FetchDescriptor<CachedUser>()
-        let existing = (try? modelContext.fetch(descriptor))?.first
+        let existing: CachedUser?
+        do {
+            existing = try modelContext.fetch(descriptor).first
+        } catch {
+            Log.sync.error("Failed to fetch cached user: \(error)")
+            existing = nil
+        }
 
         if let cached = existing {
             cached.update(from: profile)
@@ -39,7 +45,11 @@ final class SyncService {
             )
             modelContext.insert(cached)
         }
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            Log.sync.error("Failed to save cached user: \(error)")
+        }
     }
 
     // MARK: - Cache Progress Entries
@@ -50,13 +60,17 @@ final class SyncService {
             let descriptor = FetchDescriptor<CachedProgress>(
                 predicate: #Predicate { $0.entryId == entryId }
             )
-            let existing = (try? modelContext.fetch(descriptor))?.first
-            if existing != nil { continue }
+            let exists = ((try? modelContext.fetch(descriptor))?.first) != nil
+            if exists { continue }
 
             let cached = CachedProgress(from: entry)
             modelContext.insert(cached)
         }
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            Log.sync.error("Failed to save cached progress: \(error)")
+        }
     }
 
     // MARK: - Clear All Cached Data (Logout)

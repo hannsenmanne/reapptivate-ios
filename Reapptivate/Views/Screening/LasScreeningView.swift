@@ -112,6 +112,7 @@ struct LasScreeningView: View {
             .conditionalHaptic(.selection, trigger: selectionTrigger)
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = LasScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()

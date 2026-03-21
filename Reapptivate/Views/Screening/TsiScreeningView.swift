@@ -126,6 +126,7 @@ struct TsiScreeningView: View {
             }
         }
         .task {
+            guard viewModel == nil else { return }
             let vm = TsiScreeningViewModel(apiClient: apiClient, isRescreening: isRescreening)
             viewModel = vm
             await vm.loadConfig()
