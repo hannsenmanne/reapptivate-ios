@@ -16,6 +16,14 @@ final class ProtocolLoader: @unchecked Sendable {
 
     private init() {}
 
+    /// Clears the in-memory protocol cache.
+    /// Call when the app language changes so stale cached protocols are not served.
+    func clearCache() {
+        lock.lock()
+        defer { lock.unlock() }
+        cache.removeAll()
+    }
+
     // MARK: - Protocol Loading
 
     /// Get the correct protocol for a patient based on their condition and subtype
