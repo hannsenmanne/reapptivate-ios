@@ -842,4 +842,78 @@ enum TestFixtures {
         ]
         return try! JSONSerialization.data(withJSONObject: json)
     }
+
+    // MARK: - AEM Screening
+
+    static func aemScreeningConfigResponseData() -> Data {
+        let json: [String: Any] = [
+            "version": "1.0",
+            "items": [
+                ["id": "aem-1", "text_de": "Frage 1", "text_en": "Question 1", "subscale": "fearAvoidance", "reverse": false],
+                ["id": "aem-2", "text_de": "Frage 2", "text_en": "Question 2", "subscale": "distressEndurance", "reverse": false],
+                ["id": "aem-3", "text_de": "Frage 3", "text_en": "Question 3", "subscale": "eustressEndurance", "reverse": true],
+            ],
+            "likert_scale": ["min": 0, "max": 6],
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func aemScreeningResultResponseData() -> Data {
+        let json: [String: Any] = [
+            "screening": [
+                "id": "aem-result-1",
+                "subscale_scores": [
+                    "fear_avoidance": 4.5,
+                    "distress_endurance": 2.0,
+                    "eustress_endurance": 1.5,
+                ],
+                "subtype": "FAR",
+                "completed_at": "2025-01-15T10:00:00.000Z",
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    // MARK: - Neck Screening
+
+    static func neckScreeningConfigResponseData() -> Data {
+        let json: [String: Any] = [
+            "version": "1.0",
+            "part_a": [
+                "title": "Part A",
+                "description": "Radiculopathy classification",
+                "items": [
+                    ["id": "neck-a1", "text_de": "Haben Sie ausstrahlende Schmerzen?", "type": "yesno"],
+                    ["id": "neck-a2", "text_de": "Taubheitsgefühl?", "type": "yesno"],
+                ],
+            ],
+            "part_b": [
+                "title": "Part B",
+                "description": "NDI Assessment",
+                "items": [
+                    ["id": "neck-b1", "text_de": "Schmerzintensität", "type": "likert",
+                     "options": [["value": 0, "label_de": "Keine"], ["value": 1, "label_de": "Leicht"]]],
+                    ["id": "neck-b2", "text_de": "Körperpflege", "type": "likert",
+                     "options": [["value": 0, "label_de": "Keine Probleme"], ["value": 1, "label_de": "Leichte Probleme"]]],
+                    ["id": "neck-b3", "text_de": "Heben", "type": "likert",
+                     "options": [["value": 0, "label_de": "Keine Probleme"], ["value": 1, "label_de": "Leichte Probleme"]]],
+                ],
+            ],
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    static func neckScreeningResultResponseData() -> Data {
+        let json: [String: Any] = [
+            "screening": [
+                "id": "neck-result-1",
+                "subtype": "standard",
+                "subtype_score": 2,
+                "ndi_score": 14,
+                "ndi_category": "LEICHT",
+                "created_at": "2025-01-15T10:00:00.000Z",
+            ]
+        ]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
 }
